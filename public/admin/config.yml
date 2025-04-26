@@ -11,7 +11,7 @@ collections:
     label: "Noticias"
     folder: "public/content/noticias"
     create: true
-    slug: "{{slug}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - { label: "Título", name: "titulo", widget: "string" }
       - { label: "Fecha", name: "fecha", widget: "datetime" }

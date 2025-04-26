@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "../../../components/ui/button";
 import ReactMarkdown from "react-markdown";
 import { getNewsBySlug, getAllNewsSlugs } from "../../../modules/news/data/news";
+import { formatearFecha } from '../../../lib/utils';
 
 type Props = {
     params: { id: string }
@@ -21,7 +22,7 @@ export async function generateStaticParams() {
 // Componente de página
 export default async function NewsArticlePage({ params }: Props) {
   const post: Record<string, any> = await getNewsBySlug(params.id);
-
+  
   if (!post) {
     return (
       <div className="container mx-auto px-4 py-12 bg-gray-50">
@@ -78,7 +79,7 @@ export default async function NewsArticlePage({ params }: Props) {
                 </span>
                 <span className="text-sm flex items-center gap-1">
                   {/* <Calendar size={14} /> */}
-                  {post.fecha ?? ""}
+                  {formatearFecha(post.fecha)}
                 </span>
               </div>
               <h1 className="text-3xl md:text-4xl font-bold text-white">
