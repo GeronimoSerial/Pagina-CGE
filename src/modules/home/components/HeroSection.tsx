@@ -2,27 +2,16 @@
 import React from "react";
 import { Button } from "../../../components/ui/button";
 import { motion } from "framer-motion";
-interface HeroSectionProps {
-  title?: string;
-  subtitle?: string;
-  ctaText?: string;
-  backgroundImage?: string;
-  onCtaClick?: () => void;
-}
+import Link from "next/link";
 
-const HeroSection = ({
-  title = "Consejo General de Educación de Corrientes",
-  subtitle = "Trabajando por una educación pública de calidad",
-  ctaText = "Conocé nuestras acciones",
-  backgroundImage = "/images/header2.png",
-  onCtaClick = () => console.log("CTA clicked"),
-}: HeroSectionProps) => {
+
+const HeroSection = () => {
   return (
     <div className="relative w-full h-[520px] md:h-[600px] bg-[#F7FAF9] overflow-hidden flex items-center">
       {/* Imagen de fondo con overlay */}
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
+        style={{ backgroundImage: `url(/images/header2.png)` }}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-[#205C3B]/80 via-[#205C3B]/60 to-[#F7FAF9]/60" />
       </div>
@@ -36,20 +25,22 @@ const HeroSection = ({
           className="max-w-2xl"
         >
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-4 drop-shadow-xl leading-tight">
-            {title}
+          Consejo General de Educación de Corrientes
           </h1>
 
           <p className="text-lg md:text-xl text-white/90 mb-8 font-medium drop-shadow-lg">
-            {subtitle}
+          Trabajando por una educación pública de calidad
           </p>
 
-          <Button
-            onClick={onCtaClick}
-            size="default"
-            className="bg-[#217A4B] hover:bg-[#205C3B] text-white font-bold px-6 py-3 rounded-xl text-base shadow-lg transition-colors border-2 border-white/10 focus:ring-2 focus:ring-[#205C3B]"
-          >
-            {ctaText}
-          </Button>
+            <Button
+              asChild
+              size="default"
+              className="bg-[#217A4B] hover:bg-[#205C3B] text-white font-bold px-6 py-3 rounded-xl text-base shadow-lg transition-colors border-2 border-white/10 focus:ring-2 focus:ring-[#205C3B]"
+            >
+              <Link href="/institucional">
+              Conocé nuestras acciones
+              </Link>
+            </Button>
         </motion.div>
       </div>
 

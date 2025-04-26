@@ -1,0 +1,47 @@
+// lib/news.ts
+import fs from 'fs'
+import path from 'path'
+import matter from 'gray-matter'
+
+function getDirectory(type: 'noticias' | 'tramites') {
+  return path.join(process.cwd(), `content/${type}`)
+}
+
+export async function getContentBySlug(type: 'noticias' | 'tramites', slug: string) {
+  const directory = getDirectory(type)
+  const fullPath = path.join(directory, `${slug}.md`)
+  const fileContents = fs.readFileSync(fullPath, 'utf8')
+
+  const { data, content } = matter(fileContents)
+
+  return {
+    slug,
+    ...data,
+    content
+  }
+}
+
+export function getAllContentSlugs(type: 'noticias' | 'tramites') {
+  const directory = getDirectory(type)
+  const filenames = fs.readdirSync(directory)
+
+  return filenames.map((filename) => ({
+    id: filename.replace(/\.md$/, '')
+  }))
+}
+
+export function getAllContent(type: 'noticias' | 'tramites') {
+  const directory = getDirectory(type)
+  const filenames = fs.readdirSync(directory);
+  return filenames.map((filename) => {
+    const slug = filename.replace(/\.md$/, '');
+    const fullPath = path.join(directory, filename);
+    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    const { data, content } = matter(fileContents);
+    return {
+      slug,
+      ...data,
+      content,
+    };
+  });
+}
