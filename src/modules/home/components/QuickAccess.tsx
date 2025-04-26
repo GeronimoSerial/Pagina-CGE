@@ -16,14 +16,22 @@ const QuickAccessItem = ({
   href = "#",
 }: QuickAccessItemProps) => {
   return (
-    <a href={href} className="block group">
-      <Card className="h-full transition-all hover:shadow-md hover:border-primary/50 bg-white">
-        <CardContent className="flex flex-col items-center text-center p-4">
-          <div className="p-3 rounded-full bg-primary/10 text-primary mb-3 mt-3 group-hover:bg-primary group-hover:text-white transition-colors">
+    <a
+      href={href}
+      className="block group focus:outline-none focus:ring-2 focus:ring-[#205C3B] rounded-xl transition-all"
+      tabIndex={0}
+    >
+      <Card className="h-full transition-all border-0 shadow-md hover:shadow-xl hover:scale-[1.03] via-white to-[#E6F4EA] group-hover:border-[#217A4B]/40 rounded-xl">
+        <CardContent className="flex flex-col items-center text-center p-6">
+          <div className="p-4 rounded-full bg-gradient-to-br from-[#217A4B]/90 to-[#205C3B]/80 text-white mb-4 mt-2 shadow-lg group-hover:scale-110 transition-transform">
             {icon}
           </div>
-          <h3 className="font-semibold text-lg mb-1">{title}</h3>
-          <p className="text-sm text-muted-foreground">{description}</p>
+          <h3 className="font-bold text-lg mb-1 group-hover:text-[#217A4B] transition-colors">
+            {title}
+          </h3>
+          <p className="text-sm text-gray-700 font-medium">
+            {description}
+          </p>
         </CardContent>
       </Card>
     </a>
@@ -65,12 +73,12 @@ const QuickAccess = ({ items = [] }: QuickAccessProps) => {
   const displayItems = items.length > 0 ? items : defaultItems;
 
   return (
-    <section className="py-12 px-4 bg-gray-50">
+    <section className="w-full py-12">
       <div className="container mx-auto max-w-7xl">
-        <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">
+        <h2 className="text-3xl font-extrabold text-center mb-10 tracking-tight drop-shadow-sm">
           Accesos Rápidos
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {displayItems.map((item, index) => (
             <QuickAccessItem
               key={index}

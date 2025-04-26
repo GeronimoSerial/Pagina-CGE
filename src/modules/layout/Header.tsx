@@ -1,79 +1,169 @@
-import React from "react";
+'use client'
+
+import React, { useState } from "react";
 import Link from "next/link";
+import { Menu, X } from "lucide-react";
+import Image from "next/image";
 
 const Header = () => {
+const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+const toggleMenu = () => {
+  setIsMenuOpen(!isMenuOpen);
+};
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <div className="flex items-center">
+    <header className="sticky top-0 z-50 w-full bg-white shadow-md">
+      {/* Desktop Header */}
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="flex h-20 items-center justify-between">
           <Link href="/" className="flex items-center">
-            <img
-              src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=200&q=80"
-              alt="CGE Logo"
-              className="h-10 w-auto"
-            />
-            <span className="ml-2 text-lg font-semibold text-[#3D8B37] hidden md:inline">
-              Consejo General de Educación
-            </span>
+            <div className="relative h-12 w-12 overflow-hidden rounded-full">
+              <Image
+                src="/images/logo.png"
+                alt="CGE Logo"
+                className="h-full w-full object-cover"
+                width={500}
+                height={500}
+
+              />
+            </div>
+            <div className="ml-3">
+              <span className="block text-lg font-bold md:text-xl">
+                Consejo General
+              </span>
+              <span className="block text-xs text-gray-600 md:text-sm">
+                de Educación
+              </span>
+            </div>
           </Link>
+
+          <nav className="hidden md:block">
+            <ul className="flex space-x-1">
+              <li>
+                <Link
+                  href="/"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-[#3D8B37] hover:bg-[#3D8B37]/10"
+                >
+                  Inicio
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/institucional"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
+                >
+                  Institucional
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/niveles"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
+                >
+                  Niveles
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/noticias"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
+                >
+                  Noticias
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="#documentacion"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
+                >
+                  Documentación
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contacto"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
+                >
+                  Contacto
+                </Link>
+              </li>
+            </ul>
+          </nav>
+
+          <button
+            onClick={toggleMenu}
+            className="rounded-full p-2 text-gray-700 hover:bg-gray-100 md:hidden"
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
-        <nav className="hidden md:flex space-x-6">
-          <Link
-            href="/"
-            className="text-sm font-medium text-[#3D8B37] hover:text-[#2D6A27]"
-          >
-            Inicio
-          </Link>
-          <Link
-            href="/institucional"
-            className="text-sm font-medium text-gray-700 hover:text-[#3D8B37]"
-          >
-            Institucional
-          </Link>
-          <Link
-            href="/niveles"
-            className="text-sm font-medium text-gray-700 hover:text-[#3D8B37]"
-          >
-            Niveles
-          </Link>
-          <Link
-            href="/noticias"
-            className="text-sm font-medium text-gray-700 hover:text-[#3D8B37]"
-          >
-            Noticias
-          </Link>
-          <Link
-            href="/documentacion"
-            className="text-sm font-medium text-gray-700 hover:text-[#3D8B37]"
-          >
-            Documentación
-          </Link>
-          <Link
-            href="/contacto"
-            className="text-sm font-medium text-gray-700 hover:text-[#3D8B37]"
-          >
-            Contacto
-          </Link>
-        </nav>
-        <button className="md:hidden p-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="text-gray-700"
-          >
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
       </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="border-t border-gray-200 bg-white px-4 py-3 md:hidden">
+          <nav>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href="/"
+                  className="block rounded-md px-3 py-2 text-base font-medium text-[#3D8B37] hover:bg-[#3D8B37]/10"
+                  onClick={toggleMenu}
+                >
+                  Inicio
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/institucional"
+                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
+                  onClick={toggleMenu}
+                >
+                  Institucional
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/niveles"
+                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
+                  onClick={toggleMenu}
+                >
+                  Niveles
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/noticias"
+                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
+                  onClick={toggleMenu}
+                >
+                  Noticias
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/documentacion"
+                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
+                  onClick={toggleMenu}
+                >
+                  Documentación
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contacto"
+                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
+                  onClick={toggleMenu}
+                >
+                  Contacto
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      )}
     </header>
   );
 };

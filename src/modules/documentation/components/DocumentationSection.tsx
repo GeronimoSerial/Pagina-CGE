@@ -34,11 +34,6 @@ interface DocumentItem {
 }
 
 const DocumentationSection = ({
-  title = "Documentación Institucional",
-  description = "Accedé a todos los recursos, guías y normativas vigentes del Consejo General de Educación",
-}: {
-  title?: string;
-  description?: string;
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
@@ -146,14 +141,14 @@ const DocumentationSection = ({
   };
 
   return (
-    <section className="w-full py-12 bg-white">
+    <section id="documentacion" className="w-full py-12">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">{title}</h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+        {/* <div className="text-center mb-10">
+          <h2 className="text-3xl font-bold text-[#205C3B] mb-3">{title}</h2>
+          <p className="text-lg text-gray-700 max-w-3xl mx-auto">
             {description}
           </p>
-        </div>
+        </div> */}
 
         <div className="flex flex-col md:flex-row gap-6 mb-8">
           <div className="relative flex-grow">

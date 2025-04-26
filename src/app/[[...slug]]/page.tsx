@@ -2,7 +2,12 @@
 import HomePage from "../home";
 import { getAllNews } from "../../modules/news/data/news";
 
-export default function Page() {
+export async function generateStaticParams() {
+  return [
+    { slug: [] }, // Ruta principal: "/"
+  ];
+}
+export default function PagPrincipal() {
   const rawNews = getAllNews();
   const news = rawNews.map((item: any) => ({
     id: item.slug,
@@ -15,14 +20,8 @@ export default function Page() {
     fecha: item.fecha,
     imageUrl: item.imageUrl || item.imagen,
     imagen: item.imagen,
-    category: item.category,
+    categoria: item.categoria,
     content: item.content,
   }));
   return <HomePage news={news} />;
-}
-
-export async function generateStaticParams() {
-  return [
-    { slug: [] }, // Ruta principal: "/"
-  ];
 }

@@ -1,6 +1,7 @@
 import type {Metadata} from 'next'
 import "./index.css"
 import { Footer, Header } from '../modules/layout'
+import { montserrat } from '../styles/fonts'
 
 
 export const metadata: Metadata = {
@@ -15,7 +16,7 @@ export default function RootLayout({
   }) {
     return (
       <html lang="en">
-        <body>
+        <body className={`${montserrat.className} antialiased`}>
         <Header/>
           <div id="root">{children}</div>
         <Footer/>
