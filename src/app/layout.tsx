@@ -1,6 +1,7 @@
 import type {Metadata} from 'next'
 import "./index.css"
-import { Footer, Header } from '../modules/layout'
+import Footer from '../modules/layout/Footer'
+import Header from '../modules/layout/Header'
 import { montserrat } from '../styles/fonts'
 
 

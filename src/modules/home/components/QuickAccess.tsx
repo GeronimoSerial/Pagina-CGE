@@ -1,13 +1,7 @@
 import React from "react";
 import { Card, CardContent} from "../../../components/ui/card"
-import { FileText, School, Calendar, Phone } from "lucide-react";
-
-interface QuickAccessItemProps {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  href: string;
-}
+import { FileText, School, Mail, Newspaper } from "lucide-react";
+import { QuickAccessItemProps } from "../../../interfaces";
 
 const QuickAccessItem = ({
   icon,
@@ -52,18 +46,18 @@ const QuickAccess = ({ items = [] }: QuickAccessProps) => {
     },
     {
       icon: <School size={24} />,
-      title: "Niveles educativos",
-      description: "Información sobre los niveles educativos",
-      href: "/niveles",
+      title: "Documentación Institucional",
+      description: "Toda la documentación institucional necesaria",
+      href: "/documentacion",
     },
     {
-      icon: <Calendar size={24} />,
-      title: "Calendario escolar",
-      description: "Consulte el calendario escolar vigente",
-      href: "/calendario",
+      icon: <Newspaper size={24} />,
+      title: "Noticias",
+      description: "Consulte las ultimas noticias institucionales",
+      href: "#noticias",
     },
     {
-      icon: <Phone size={24} />,
+      icon: <Mail size={24} />,
       title: "Contacto",
       description: "Comuníquese con nosotros",
       href: "/contacto",

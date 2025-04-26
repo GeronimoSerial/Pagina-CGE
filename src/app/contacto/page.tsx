@@ -6,12 +6,8 @@ import { Textarea } from '../../components/ui/textarea';
 import { Button } from '../../components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '../../components/ui/alert';
 import { useState } from 'react';
+import { ContactoForm } from '../../interfaces';
 
-interface ContactoForm {
-  nombre: string;
-  email: string;
-  mensaje: string;
-}
 
 export default function Contacto() {
   const [enviado, setEnviado] = useState(false);
@@ -19,7 +15,7 @@ export default function Contacto() {
     defaultValues: { nombre: '', email: '', mensaje: '' },
   });
 
-  const onSubmit: SubmitHandler<ContactoForm> = (data) => {
+  const onSubmit: SubmitHandler<ContactoForm> = () => {
     setEnviado(true);
     form.reset();
     setTimeout(() => setEnviado(false), 4000);

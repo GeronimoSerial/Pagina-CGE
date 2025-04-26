@@ -3,19 +3,38 @@ backend:
   repo: geronimoserial/Pagina-CGE
   branch: main
 
-media_folder: "public/images"
-public_folder: "/images"
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
 
 collections:
   - name: "noticias"
     label: "Noticias"
-    folder: "public/content/noticias"
+    folder: "content/noticias"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    identifier_field: "titulo"
+    slug: "{{slug}}"
+    media_folder: "public/images/noticias"
+    public_folder: "/images/noticias"
     fields:
       - { label: "Título", name: "titulo", widget: "string" }
       - { label: "Fecha", name: "fecha", widget: "datetime" }
       - { label: "Resumen", name: "resumen", widget: "string" }
       - { label: "Imagen", name: "imagen", widget: "image" }
-      - { label: "Categoría", name: "categoria", widget: "string" }
+      - { label: "Subcategoría", name: "subcategoria", widget: "select", options: ["General", "Educación", "Docentes", "Estudiantes", "Licencias", ""] }
+      - { label: "Contenido", name: "body", widget: "markdown" }
+
+  - name: "tramites"
+    label: "Trámites"
+    folder: "content/tramites"
+    create: true
+    identifier_field: "titulo"
+    slug: "{{slug}}"
+    media_folder: "public/images/tramites"
+    public_folder: "/images/tramites"
+    fields:
+      - { label: "Título", name: "titulo", widget: "string" }
+      - { label: "Fecha", name: "fecha", widget: "datetime" }
+      - { label: "Resumen", name: "resumen", widget: "string" }
+      - { label: "Imagen", name: "imagen", widget: "image" }
+      - { label: "Subcategoría", name: "subcategoria", widget: "select", options: ["Inscripción", "Certificados", "Títulos"] }
       - { label: "Contenido", name: "body", widget: "markdown" }

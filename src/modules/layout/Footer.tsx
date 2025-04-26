@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Separator } from "../../components/ui/separator";
-import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter } from "lucide-react";
+import { Facebook, Instagram, Mail, MapPin, Phone,  } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -50,11 +50,11 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="/niveles"
+                  href="/documentacion"
                   className="text-sm text-white/80 hover:text-white transition-colors flex items-center"
                 >
                   <span className="w-1.5 h-1.5 bg-white/60 rounded-full mr-2"></span>
-                  Niveles Educativos
+                  Documentacion Institucional
                 </Link>
               </li>
               <li>

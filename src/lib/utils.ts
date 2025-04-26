@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-
+import { articlesItem } from "../interfaces";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -16,4 +16,11 @@ export function formatearFecha(fechaStr: string | Date) {
     month: "2-digit",
     year: "numeric",
   });
+}
+
+export interface ArticlesGridProp
+ {
+  articles?: articlesItem[];
+  title?: string;
+  subtitle?: string;
 }

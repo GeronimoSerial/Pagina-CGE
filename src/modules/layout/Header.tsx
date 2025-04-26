@@ -50,23 +50,7 @@ const toggleMenu = () => {
               </li>
               <li>
                 <Link
-                  href="/institucional"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
-                >
-                  Institucional
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/niveles"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
-                >
-                  Niveles
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/noticias"
+                  href="/#noticias"
                   className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
                 >
                   Noticias
@@ -74,10 +58,18 @@ const toggleMenu = () => {
               </li>
               <li>
                 <Link
-                  href="#documentacion"
+                  href="/tramites"
                   className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
                 >
-                  Documentación
+                  Tramites
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/documentacion"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
+                >
+                  Documentacion
                 </Link>
               </li>
               <li>
@@ -86,6 +78,14 @@ const toggleMenu = () => {
                   className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
                 >
                   Contacto
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/institucional"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
+                >
+                  Institucional
                 </Link>
               </li>
             </ul>
@@ -126,11 +126,11 @@ const toggleMenu = () => {
               </li>
               <li>
                 <Link
-                  href="/niveles"
+                  href="/documentacion"
                   className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
                   onClick={toggleMenu}
                 >
-                  Niveles
+                  Documentacion
                 </Link>
               </li>
               <li>
