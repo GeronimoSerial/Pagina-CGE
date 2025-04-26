@@ -1,20 +1,26 @@
-'use client'
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 
-const Header = () => {
-const [isMenuOpen, setIsMenuOpen] = useState(false);
+const navLinks = [
+  { href: "/", label: "Inicio" },
+  { href: "/#noticias", label: "Noticias" },
+  { href: "/tramites", label: "Trámites" },
+  { href: "/documentacion", label: "Documentación" },
+  { href: "/contacto", label: "Contacto" },
+  { href: "/institucional", label: "Institucional" },
+];
 
-const toggleMenu = () => {
-  setIsMenuOpen(!isMenuOpen);
-};
+const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-md">
-      {/* Desktop Header */}
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex h-20 items-center justify-between">
           <Link href="/" className="flex items-center">
@@ -25,7 +31,6 @@ const toggleMenu = () => {
                 className="h-full w-full object-cover"
                 width={500}
                 height={500}
-
               />
             </div>
             <div className="ml-3">
@@ -38,59 +43,30 @@ const toggleMenu = () => {
             </div>
           </Link>
 
+          {/* Desktop Menu */}
           <nav className="hidden md:block">
-            <ul className="flex space-x-1">
-              <li>
-                <Link
-                  href="/"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-[#3D8B37] hover:bg-[#3D8B37]/10"
-                >
-                  Inicio
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/#noticias"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
-                >
-                  Noticias
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tramites"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
-                >
-                  Tramites
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/documentacion"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
-                >
-                  Documentacion
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contacto"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
-                >
-                  Contacto
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/institucional"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
-                >
-                  Institucional
-                </Link>
-              </li>
+            <ul className="flex space-x-6">
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="group relative inline-block px-3 py-2 text-sm font-medium text-gray-700 hover:text-[#3D8B37] transition-colors"
+                  >
+                    {link.label}
+                    <span className="absolute left-0 bottom-0 h-[2px] w-full scale-x-0 origin-left bg-[#3D8B37] transition-transform duration-300 group-hover:scale-x-100"></span>
+                  </Link>
+                </li>
+              ))}
             </ul>
           </nav>
+            <Link
+              href="https://relevamiento.geroserial.com"
+              className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white bg-[#3D8B37] hover:bg-[#2b6e28] focus:outline-none focus:ring-2 focus:ring-[#3D8B37] focus:ring-offset-2 transition-colors"
+            >
+              Acceder a SIRE
+            </Link>
 
+          {/* Mobile Menu Button */}
           <button
             onClick={toggleMenu}
             className="rounded-full p-2 text-gray-700 hover:bg-gray-100 md:hidden"
@@ -103,63 +79,19 @@ const toggleMenu = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="border-t border-gray-200 bg-white px-4 py-3 md:hidden">
+        <div className="border-t border-gray-200 bg-white px-4 py-4 md:hidden">
           <nav>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-[#3D8B37] hover:bg-[#3D8B37]/10"
-                  onClick={toggleMenu}
-                >
-                  Inicio
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/institucional"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
-                  onClick={toggleMenu}
-                >
-                  Institucional
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/documentacion"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
-                  onClick={toggleMenu}
-                >
-                  Documentacion
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/noticias"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
-                  onClick={toggleMenu}
-                >
-                  Noticias
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/documentacion"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
-                  onClick={toggleMenu}
-                >
-                  Documentación
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contacto"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-[#3D8B37]/10 hover:text-[#3D8B37]"
-                  onClick={toggleMenu}
-                >
-                  Contacto
-                </Link>
-              </li>
+            <ul className="flex flex-col space-y-6 text-lg">
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="block px-3 py-2 font-medium text-gray-700 hover:text-[#3D8B37] transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </nav>
         </div>
