@@ -1,6 +1,6 @@
 // src/app/noticia/[id]/page.tsx
-import HomePage from "../home";
-import { getAllNews } from "../../modules/news/data/news";
+import HomePage from "./home";
+import { getAllNews } from "../modules/news/data/news";
 
 export async function generateStaticParams() {
   return [

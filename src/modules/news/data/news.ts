@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 
-const newsDirectory = path.join(process.cwd(), 'src/content/noticias')
+const newsDirectory = path.join(process.cwd(), 'public/content/noticias')
 
 export async function getNewsBySlug(slug: string) {
   const fullPath = path.join(newsDirectory, `${slug}.md`)

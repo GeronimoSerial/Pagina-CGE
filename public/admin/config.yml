@@ -1,0 +1,21 @@
+backend:
+  name: github
+  repo: geronimoserial/Pagina-CGE
+  branch: main
+
+media_folder: "public/images"
+public_folder: "/images"
+
+collections:
+  - name: "noticias"
+    label: "Noticias"
+    folder: "public/content/noticias"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Título", name: "titulo", widget: "string" }
+      - { label: "Fecha", name: "fecha", widget: "datetime" }
+      - { label: "Resumen", name: "resumen", widget: "string" }
+      - { label: "Imagen", name: "imagen", widget: "image" }
+      - { label: "Categoría", name: "categoria", widget: "string" }
+      - { label: "Contenido", name: "body", widget: "markdown" }
