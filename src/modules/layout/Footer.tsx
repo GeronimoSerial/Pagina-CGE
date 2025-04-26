@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Separator } from "../../components/ui/separator";
-import { Facebook, Instagram, Mail, MapPin, Phone,  } from "lucide-react";
+import { Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -120,11 +120,11 @@ const Footer = () => {
             <address className="not-italic space-y-3">
               <p className="text-sm text-white/80 flex items-center">
                 <MapPin size={16} className="mr-2 text-white/70" />
-                Calle Principal 123, Corrientes
+                Calle Catamarca 640, Corrientes Capital
               </p>
               <p className="text-sm text-white/80 flex items-center">
                 <Mail size={16} className="mr-2 text-white/70" />
-                contacto@cge.gov.ar
+                cge@mec.gob.ar
               </p>
               <p className="text-sm text-white/80 flex items-center">
                 <Phone size={16} className="mr-2 text-white/70" />
@@ -136,7 +136,21 @@ const Footer = () => {
         <Separator className="my-10 bg-white/20" />
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-white/70">
-            © 2023 Consejo General de Educación. Todos los derechos reservados.
+            © 2023 Consejo General de Educación.{" "}
+            <Link
+              href="https://www.mec.gob.ar/"
+              className="text-white no-underline hover:underline"
+            >
+              {" "}
+              Ministero de Educación.
+            </Link> 
+            {" "}
+            <Link
+              href="https://www.corrientes.gob.ar/"
+              className="text-white no-underline hover:underline"
+            >
+              Gobierno de la Provincia de Corrientes.
+            </Link>
           </p>
           <div className="flex space-x-4 mt-6 md:mt-0">
             <a
