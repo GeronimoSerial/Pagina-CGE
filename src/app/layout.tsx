@@ -1,14 +1,10 @@
-import type {Metadata} from 'next'
 import "./index.css"
 import Footer from '../modules/layout/Footer'
 import Header from '../modules/layout/Header'
 import { montserrat } from '../styles/fonts'
+import metadata from './metadata'
 
-
-export const metadata: Metadata = {
-    title: 'My App',
-    description: 'My app is a..'
-}
+export {metadata}
 
 export default function RootLayout({
     children,
