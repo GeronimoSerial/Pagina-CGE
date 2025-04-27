@@ -4,7 +4,7 @@ fecha: 2025-04-26T02:20:00.000Z
 resumen: Este instructivo detalla cómo solicitar la licencia por razones
   particulares (Art. 28) en el ámbito docente, incluyendo requisitos,
   condiciones y procedimiento administrativo.
-imagen: /images/news.png
+imagen: /images/tramites/news.png
 categoria: Licencias
 ---
 # Instructivo para la Solicitud de Licencia – Artículo 28
