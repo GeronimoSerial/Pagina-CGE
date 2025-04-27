@@ -23,7 +23,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
+.cursor
 !node_modules/.vite
 
 **/tempobook/dynamic/

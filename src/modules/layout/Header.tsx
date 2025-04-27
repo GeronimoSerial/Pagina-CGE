@@ -35,10 +35,10 @@ const Header = () => {
             </div>
             <div className="ml-3">
               <span className="block text-lg font-bold md:text-xl">
-                Consejo General
+                CGE
               </span>
               <span className="block text-xs text-gray-600 md:text-sm">
-                de Educación
+                Corrientes
               </span>
             </div>
           </Link>
