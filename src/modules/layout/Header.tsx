@@ -11,7 +11,7 @@ const navLinks = [
   { href: "/tramites", label: "Trámites" },
   { href: "/documentacion", label: "Documentación" },
   { href: "/contacto", label: "Contacto" },
-  { href: "/institucional", label: "Institucional" },
+  { href: "/institucional", label: "Nuestra Institución" },
 ];
 
 const Header = () => {
@@ -60,10 +60,10 @@ const Header = () => {
             </ul>
           </nav>
             <Link
-              href="https://relevamiento.geroserial.com"
+              href=""
               className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white bg-[#3D8B37] hover:bg-[#2b6e28] focus:outline-none focus:ring-2 focus:ring-[#3D8B37] focus:ring-offset-2 transition-colors"
             >
-              Acceder a SIRE
+             <span>Acceder a SIRE</span> 
             </Link>
 
           {/* Mobile Menu Button */}
