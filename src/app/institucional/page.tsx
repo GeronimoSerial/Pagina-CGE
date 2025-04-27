@@ -22,12 +22,12 @@ export default function Institucional() {
                 Nuestro compromiso es garantizar una educación inclusiva, equitativa y de calidad, a través del trabajo en red, la evaluación constante de nuestras prácticas y el cumplimiento riguroso de las normativas vigentes.
               </p>
             </div>
-            <a
+            {/* <a
               href="#"
               className="inline-flex items-center text-[#217A4B] font-semibold hover:underline hover:text-[#205C3B] transition-colors mt-2"
             >
-              Conocer más sobre nosotros
-            </a>
+              
+            </a> */}
           </div>
           <div className="relative h-[300px] md:h-[400px] rounded-xl overflow-hidden shadow-lg">
             <Image
