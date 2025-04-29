@@ -13,7 +13,7 @@ export async function generateStaticParams() {
 }
 
 export default function PagPrincipal() {
-  const rawNews = getAllContent('noticias');
+  const rawNews = getAllContent("noticias");
   const news = rawNews.map((item: any) => {
     const date = formatearFecha(item.date || item.fecha);
     return {
@@ -27,7 +27,7 @@ export default function PagPrincipal() {
       fecha: date,
       imageUrl: item.imageUrl || item.imagen,
       imagen: item.imagen,
-      categoria: item.categoria,
+      categoria: item.subcategoria,
       content: item.content,
     };
   });
@@ -48,11 +48,10 @@ export default function PagPrincipal() {
         <section id="noticias" className="py-16 bg-transparent">
           <div className="container mx-auto px-4 md:px-6">
             <div className="mb-10">
-              <h2 className="text-3xl font-bold mb-2">
-                Noticias y Novedades
-              </h2>
+              <h2 className="text-3xl font-bold mb-2">Noticias y Novedades</h2>
               <p className="text-gray-700 max-w-3xl">
-                Mantente informado sobre las últimas novedades, publicaciones y resoluciones del Consejo General de Educación.
+                Mantente informado sobre las últimas novedades, publicaciones y
+                resoluciones del Consejo General de Educación.
               </p>
             </div>
             <ArticlesGrid articles={news} />
