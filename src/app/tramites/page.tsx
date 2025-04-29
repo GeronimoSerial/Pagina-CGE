@@ -28,7 +28,7 @@ export default function TramitesGrid() {
       fecha: date,
       imageUrl: item.imageUrl || item.imagen,
       imagen: item.imagen,
-      categoria: item.categoria,
+      categoria: item.subcategoria,
       content: item.content,
       esUrgente: item.esUrgente || false,
     };
