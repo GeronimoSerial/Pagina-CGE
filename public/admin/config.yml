@@ -3,8 +3,8 @@ backend:
   repo: geronimoserial/Pagina-CGE
   branch: main
 
-media_folder: "public/images/uploads"
-public_folder: "/images/uploads"
+media_folder: "public/images"
+public_folder: "/images"
 
 collections:
   - name: "noticias"
@@ -13,14 +13,28 @@ collections:
     create: true
     identifier_field: "titulo"
     slug: "{{slug}}"
-    media_folder: "public/images/noticias"
+    media_folder: ""
     public_folder: "/images/noticias"
     fields:
       - { label: "Título", name: "titulo", widget: "string" }
+      - { label: "Título corto", name: "titulo_corto", widget: "string" }
       - { label: "Fecha", name: "fecha", widget: "datetime" }
       - { label: "Resumen", name: "resumen", widget: "string" }
       - { label: "Imagen", name: "imagen", widget: "image" }
-      - { label: "Subcategoría", name: "subcategoria", widget: "select", options: ["General", "Educación", "Docentes", "Estudiantes", "Licencias", ""] }
+      - {
+          label: "Subcategoría",
+          name: "subcategoria",
+          widget: "select",
+          options:
+            [
+              "General",
+              "Educación",
+              "Docentes",
+              "Estudiantes",
+              "Licencias",
+              "",
+            ],
+        }
       - { label: "Contenido", name: "body", widget: "markdown" }
 
   - name: "tramites"
@@ -29,12 +43,18 @@ collections:
     create: true
     identifier_field: "titulo"
     slug: "{{slug}}"
-    media_folder: "public/images/tramites"
+    media_folder: ""
     public_folder: "/images/tramites"
     fields:
       - { label: "Título", name: "titulo", widget: "string" }
+      - { label: "Título corto", name: "titulo_corto", widget: "string" }
       - { label: "Fecha", name: "fecha", widget: "datetime" }
       - { label: "Resumen", name: "resumen", widget: "string" }
       - { label: "Imagen", name: "imagen", widget: "image" }
-      - { label: "Subcategoría", name: "subcategoria", widget: "select", options: ["Inscripción", "Certificados", "Títulos"] }
+      - {
+          label: "Subcategoría",
+          name: "subcategoria",
+          widget: "select",
+          options: ["Inscripción", "Certificados", "Títulos"],
+        }
       - { label: "Contenido", name: "body", widget: "markdown" }
