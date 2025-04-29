@@ -1,0 +1,23 @@
+---
+titulo: Prórroga Extendida para Inscripciones a Interinatos 2026 y Concurso
+  Docente N° 45 (Inicial, Primario, Secundario y más)
+fecha: 2025-04-29T18:07:00.000Z
+resumen: "La Junta de Clasificación Rama Primaria de Corrientes informa la
+  prórroga hasta el 20 de mayo de 2025 para las inscripciones a los padrones de
+  Interinatos y Suplencias 2026 y al Concurso de Ingreso a la Docencia N° 45 "
+imagen: /images/noticias/news.png
+subcategoria: General
+---
+## Prórroga en las Inscripciones a Padrones de Interinatos y Suplencias 2026 y Concurso Docente N° 45 - Diversos Niveles
+
+**Corrientes, 29 de abril de 2025** - La **Junta de Clasificación Rama Primaria** informa a los aspirantes a los **padrones de Interinatos y Suplencias 2026** para los niveles **Inicial, Primario, Secundario, Técnico, Adultos y Educación Especial**, así como al **Concurso de Ingreso a la Docencia N° 45** para los mismos niveles, que **se han prorrogado las inscripciones** para ambos procesos.
+
+Originalmente con fecha límite anterior, los interesados ahora tendrán tiempo hasta el **20 de mayo de 2025** para completar su inscripción a través de la plataforma de [gestión educativa](https://ge.mec.gob.ar).
+
+Esta prórroga brinda una extensión crucial para aquellos aspirantes de los diversos niveles educativos que aún no han podido completar su registro, permitiéndoles reunir la documentación necesaria y realizar el proceso de inscripción de manera adecuada.
+
+Se recuerda a los aspirantes de los niveles Inicial, Primario, Secundario, Técnico, Adultos y Educación Especial la importancia de cumplir con todos los requisitos establecidos en la convocatoria correspondiente a su nivel y de realizar la inscripción dentro del nuevo plazo fijado.
+
+Para más información, se recomienda a los interesados consultar en la sección [contacto](consejo.geroserial.com/contacto) o comunicarse a través del correo **cge@mec.gob.ar**.
+
+**Manténgase informado a través de nuestros canales oficiales para cualquier novedad o actualización.**
