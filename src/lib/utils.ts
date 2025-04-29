@@ -24,3 +24,20 @@ export interface ArticlesGridProp
   title?: string;
   subtitle?: string;
 }
+
+// Filtra articulos por término de búsqueda y categoría
+export function filtrarArticulos(article: any[], searchTerm: string, categoriaSeleccionada: string) {
+  return article.filter((item) => {
+    const coincideCategoria =
+      !categoriaSeleccionada || item.categoria === categoriaSeleccionada;
+    const coincideBusqueda =
+      !searchTerm ||
+      item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.titulo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.resumen?.toLowerCase().includes(searchTerm.toLowerCase());
+    return coincideCategoria && coincideBusqueda;
+  });
+}
+
+
