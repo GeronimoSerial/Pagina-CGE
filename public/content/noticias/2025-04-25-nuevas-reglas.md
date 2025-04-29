@@ -2,7 +2,7 @@
 titulo: "Se lanza nueva reglamentacion educativa"
 fecha: "2025-04-25"
 resumen: "El CGE presenta una nueva reglamentación para mejorar la inclusión escolar."
-imagen: "/images/noticias/news.png"
+imagen: "/images/news.png"
 subcategoria: "reglamento"
 ---
 

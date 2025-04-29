@@ -2,7 +2,7 @@
 titulo: "Se lanza nueva política educativa"
 fecha: "2025-04-24"
 resumen: "El CGE presenta una nueva iniciativa para mejorar la inclusión escolar."
-imagen: "/images/noticias/news.png"
+imagen: "/images/news.png"
 subcategoria: "politica"
 ---
 

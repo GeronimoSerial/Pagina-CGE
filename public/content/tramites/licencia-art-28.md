@@ -4,14 +4,15 @@ fecha: 2025-04-26T02:20:00.000Z
 resumen: Este instructivo detalla cómo solicitar la licencia por razones
   particulares (Art. 28) en el ámbito docente, incluyendo requisitos,
   condiciones y procedimiento administrativo.
-imagen: /images/tramites/news.png
+imagen: /images/news.png
 categoria: Licencias
 ---
+
 # Instructivo para la Solicitud de Licencia – Artículo 28
 
 ## ¿Qué es la Licencia Artículo 28?
 
-La Licencia contemplada en el **Artículo 28** del Régimen de Licencias (Decreto Nº 1482/79 – 1620/79) corresponde a **licencias extraordinarias por razones particulares**, **sin goce de haberes**, por un **año cada decenio de servicios**. 
+La Licencia contemplada en el **Artículo 28** del Régimen de Licencias (Decreto Nº 1482/79 – 1620/79) corresponde a **licencias extraordinarias por razones particulares**, **sin goce de haberes**, por un **año cada decenio de servicios**.
 
 Se puede solicitar fraccionada en **dos períodos mínimos de seis (6) meses**, siempre y cuando se cumplan los requisitos establecidos y no afecte el normal funcionamiento del servicio educativo.
 
