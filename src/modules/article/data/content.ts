@@ -4,7 +4,7 @@ import path from 'path'
 import matter from 'gray-matter'
 
 function getDirectory(type: 'noticias' | 'tramites') {
-  return path.join(process.cwd(), `content/${type}`)
+  return path.join(process.cwd(), `/public/content/${type}`)
 }
 
 export async function getContentBySlug(type: 'noticias' | 'tramites', slug: string) {
