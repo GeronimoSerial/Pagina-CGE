@@ -9,11 +9,11 @@ public_folder: "/images"
 collections:
   - name: "noticias"
     label: "Noticias"
-    folder: "content/noticias"
+    folder: "public/content/noticias"
     create: true
     identifier_field: "titulo"
     slug: "{{slug}}"
-    media_folder: ""
+    media_folder: "../../images/"
     public_folder: "/images/noticias"
     fields:
       - { label: "Título", name: "titulo", widget: "string" }
@@ -39,11 +39,11 @@ collections:
 
   - name: "tramites"
     label: "Trámites"
-    folder: "content/tramites"
+    folder: "public/content/tramites"
     create: true
     identifier_field: "titulo"
     slug: "{{slug}}"
-    media_folder: ""
+    media_folder: "../../images/"
     public_folder: "/images/tramites"
     fields:
       - { label: "Título", name: "titulo", widget: "string" }
