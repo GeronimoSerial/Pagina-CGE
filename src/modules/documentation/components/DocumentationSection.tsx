@@ -157,13 +157,13 @@ const DocumentationSection = ({}) => {
 
             <TabsContent value="all" className="mt-6">
               {/* Contenedor con altura fija para las tarjetas */}
-              <div className="relative h-[600px] overflow-y-auto rounded-lg border border-gray-100  shadow-sm">
+              <div className="relative h-[750px] overflow-y-auto rounded-lg border border-gray-100  shadow-sm">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
                   {currentDocuments.length > 0 ? (
                     currentDocuments.map((doc) => (
                       <Card
                         key={doc.id}
-                        className="h-full border-gray-200 hover:border-green-300 hover:shadow-md transition-all"
+                        className="flex flex-col h-full border-gray-200 hover:border-green-300 hover:shadow-md transition-all"
                       >
                         <CardHeader className="pb-3">
                           <div className="flex justify-between items-start">
@@ -184,7 +184,7 @@ const DocumentationSection = ({}) => {
                             {doc.title}
                           </CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="flex-grow">
                           <CardDescription className="text-gray-600">
                             {doc.description}
                           </CardDescription>
@@ -273,13 +273,13 @@ const DocumentationSection = ({}) => {
             ].map((category) => (
               <TabsContent key={category} value={category} className="mt-6">
                 {/* Contenedor con altura fija para las tarjetas */}
-                <div className="relative h-[600px] overflow-y-auto rounded-lg border border-gray-100 bg-white shadow-sm">
+                <div className="relative h-[800px] overflow-y-auto rounded-lg border border-gray-100 shadow-sm">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
                     {currentDocuments.length > 0 ? (
                       currentDocuments.map((doc) => (
                         <Card
                           key={doc.id}
-                          className="h-full border-gray-200 hover:border-green-300 hover:shadow-md transition-all"
+                          className="flex flex-col h-full border-gray-200 hover:border-green-300 hover:shadow-md transition-all"
                         >
                           <CardHeader className="pb-3">
                             <div className="flex justify-between items-start">
@@ -300,7 +300,7 @@ const DocumentationSection = ({}) => {
                               {doc.title}
                             </CardTitle>
                           </CardHeader>
-                          <CardContent>
+                          <CardContent className="flex-grow">
                             <CardDescription className="text-gray-600">
                               {doc.description}
                             </CardDescription>
