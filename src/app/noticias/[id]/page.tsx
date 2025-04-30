@@ -3,6 +3,7 @@
 import {
   getContentBySlug,
   getAllContentSlugs,
+  getAllContent,
 } from "../../../modules/article/data/content";
 
 import FullArticle from "../../../modules/article/components/FullArticle";
@@ -21,5 +22,17 @@ export default async function Page(props: PageProps) {
   const params = await props.params;
   const id = String(params.id);
   const post = await getContentBySlug("noticias", id);
-  return <FullArticle post={post} sectionTitle="Noticias" />;
+  const todosLosArticulos = getAllContent("noticias");
+  const articulosRelacionados = (await todosLosArticulos).filter(
+    (articulo) =>
+      (articulo as any).subcategoria === (post as any).subcategoria &&
+      articulo.slug !== post.slug
+  );
+  return (
+    <FullArticle
+      post={post}
+      sectionTitle="Noticias"
+      articulosRelacionados={articulosRelacionados}
+    />
+  );
 }
