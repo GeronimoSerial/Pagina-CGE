@@ -1,0 +1,220 @@
+{
+  "documents": [
+    {
+      "id": "8",
+      "title": "Constitución Nacional Argentina - Norma Fundamental",
+      "description": "Establece la organización del Estado y los derechos y garantías de los ciudadanos.",
+      "category": "normativas",
+      "type": "constitución",
+      "date": "01/05/1853",
+      "downloadUrl": "https://geronimoserial.github.io/pdf-cge/Constituci%C3%B3n%20de%20la%20Naci%C3%B3n.pdf"
+    },
+    {
+      "id": "9",
+      "title": "Constitución de la Provincia de Corrientes - Norma Fundamental",
+      "description": "Establece la organización del Estado provincial y los derechos de sus ciudadanos.",
+      "category": "normativas",
+      "type": "constitución",
+      "date": "13/12/2007",
+      "downloadUrl": "https://drive.google.com/uc?id=1ebHOqsfJvrUKcTM7jeTaa743tELmKokD"
+    },
+    {
+      "id": "10",
+      "title": "Ley 26.206 - Ley de Educación Nacional",
+      "description": "Establece la estructura, principios y objetivos del sistema educativo nacional.",
+      "category": "normativas",
+      "type": "ley",
+      "date": "14/12/2006",
+      "downloadUrl": "https://drive.google.com/uc?id=1-jQP5VkFF2TqLwJZL6SjQY0bmTj7mRsI"
+    },
+    {
+      "id": "11",
+      "title": "Ley 6475/18 - Ley Provincial de Educación",
+      "description": "Regula el sistema educativo de la provincia de Corrientes en concordancia con la normativa nacional.",
+      "category": "normativas",
+      "type": "ley",
+      "date": "21/12/2018",
+      "downloadUrl": "https://drive.google.com/uc?id=12vqvNE7NKaoLXN9E873g3fSwegYsw244"
+    },
+    {
+      "id": "12",
+      "title": "Ley 3723 - Estatuto del Docente",
+      "description": "Norma que regula los derechos, deberes y condiciones laborales del personal docente en Corrientes.",
+      "category": "normativas",
+      "type": "ley",
+      "date": "10/12/1983",
+      "downloadUrl": "https://drive.google.com/uc?id=1QNea0dSaP5w6TbUV42UdpzO_fojy9uAN"
+    },
+    {
+      "id": "13",
+      "title": "Ley 4067 - Estatuto del Empleado Público",
+      "description": "Regula los derechos, obligaciones y régimen laboral del personal público provincial.",
+      "category": "normativas",
+      "type": "ley",
+      "date": "15/06/1985",
+      "downloadUrl": "https://drive.google.com/uc?id=1d5UkqCxPEeGk-lkerceh3u2cROYxrzGA"
+    },
+    {
+      "id": "14",
+      "title": "Instructivo de Asamblea de Interinatos y Suplencias",
+      "description": "Guía oficial sobre el procedimiento para cubrir cargos docentes interinos y suplentes.",
+      "category": "guias",
+      "type": "instructivo",
+      "date": "01/02/2023",
+      "downloadUrl": "https://drive.google.com/uc?id=1aV7R_og23ttJmjoGfcVr8kPg8qhx2F49"
+    },
+    {
+      "id": "15",
+      "title": "Disposición H N° 7/24 - Reglamento de Asambleas de Interinatos y Suplencias",
+      "description": "Reconoce la validez legal del reglamento vigente para la cobertura de interinatos y suplencias docentes.",
+      "category": "normativas",
+      "type": "disposición",
+      "date": "15/02/2024",
+      "downloadUrl": "https://drive.google.com/uc?id=1tnH52nnq9OaxqoUd98Z_gYnJgrG3PLU2"
+    },
+    {
+      "id": "16",
+      "title": "Reglamento de Asamblea de Designación de Interinos y Suplentes",
+      "description": "Detalla el procedimiento para la designación de interinos y suplentes en establecimientos educativos de la provincia.",
+      "category": "guias",
+      "type": "reglamento",
+      "date": "01/02/2024",
+      "downloadUrl": "https://drive.google.com/uc?id=1tJliDJufnnmABF89eWj0D8ti_v3C19H9"
+    },
+    {
+      "id": "17",
+      "title": "Resolución CFE N° 311-16 - Promoción, Acreditación, Certificación y Titulación de Estudiantes con Discapacidad",
+      "description": "Establece los lineamientos para la promoción, acreditación, certificación y titulación de estudiantes con discapacidad en el sistema educativo.",
+      "category": "normativas",
+      "type": "resolución",
+      "date": "06/12/2016",
+      "downloadUrl": "https://drive.google.com/uc?id=1lAX6WklvauysHoXDl_MXOHfCt9eQ2Gx-"
+    },
+    {
+      "id": "18",
+      "title": "Resolución Ministerial N° 284/15 - Criterios Organizativos de la Modalidad EDyH",
+      "description": "Define criterios organizativos para la modalidad Educación Domiciliaria y Hospitalaria en los niveles Inicial y Primario.",
+      "category": "normativas",
+      "type": "resolución",
+      "date": "03/11/2015",
+      "downloadUrl": "https://drive.google.com/uc?id=1P-NUvOFau28H582gV-pedDHM--It6OjC"
+    },
+    {
+      "id": "19",
+      "title": "Ley 26.061 - Protección Integral de Derechos de Niñas, Niños y Adolescentes",
+      "description": "Establece el marco legal para la protección integral de los derechos de niñas, niños y adolescentes en Argentina.",
+      "category": "normativas",
+      "type": "ley",
+      "date": "26/10/2005",
+      "downloadUrl": "https://drive.google.com/uc?id=1gpk81P_zdeRcXu1kouEneCz5ydhN8Kyw"
+    },
+    {
+      "id": "20",
+      "title": "Ley 6516 - Violencia en el Ámbito Escolar",
+      "description": "Establece medidas para la prevención, abordaje y erradicación de la violencia en contextos escolares en la provincia de Corrientes.",
+      "category": "normativas",
+      "type": "ley",
+      "date": "12/12/2019",
+      "downloadUrl": "https://drive.google.com/uc?id=1xEQFFlO1wtLaje-wOrxewi079u24CNbA"
+    },
+    {
+      "id": "21",
+      "title": "Reglamento Interno de Escuelas - Resolución N° 22782 ",
+      "description": "Establece el reglamento interno que rige la organización y el funcionamiento de las instituciones educativas.",
+      "category": "guias",
+      "type": "Reglamento",
+      "date": "15/11/2010",
+      "downloadUrl": "https://drive.google.com/uc?id=1vkL7JG3aOwH5hbbWhLQk_2SOKM0-2n6B"
+    },
+    {
+      "id": "22",
+      "title": "Resolución N° 6589/24 - Calendario Escolar",
+      "description": "Normativa vigente que establece el calendario escolar para el ciclo lectivo 2024.",
+      "category": "normativas",
+      "type": "resolución",
+      "date": "05/02/2024",
+      "downloadUrl": "https://drive.google.com/uc?id=1qGOeBo1GOxEHvpTF7xResG0EDoLMh2Kb"
+    },
+    {
+      "id": "23",
+      "title": "Decreto 2837/95 - Circular 9/96 - Reglamento de Abanderados y Escoltas",
+      "description": "Establece los criterios y procedimientos para la designación de abanderados y escoltas en instituciones educativas.",
+      "category": "normativas",
+      "type": "Reglamento",
+      "date": "12/04/1996",
+      "downloadUrl": "https://drive.google.com/uc?id=1To3ifWFQUe4JgwTmAud67gbrPjXzOSyn"
+    },
+    {
+      "id": "24",
+      "title": "Resolución M° 2930/07 y Decreto 3415/22 - Uso de la Bandera del Ejército de los Andes",
+      "description": "Reglamenta el uso ceremonial de la Bandera del Ejército de los Andes en instituciones educativas.",
+      "category": "normativas",
+      "type": "Resolución y Decreto",
+      "date": "20/06/2015",
+      "downloadUrl": "https://drive.google.com/uc?id=1tGzjdgXrFEvunoc7bUGC6JHlj9f8jlrh"
+    },
+    {
+      "id": "25",
+      "title": "Resolución N° 1434/14 - Bandera de la Ciudad de Corrientes",
+      "description": "Establece el uso y características de la Bandera Oficial de la Ciudad de Corrientes en actos escolares.",
+      "category": "normativas",
+      "type": "resolución",
+      "date": "26/06/2014",
+      "downloadUrl": "https://drive.google.com/uc?id=1e1-e4XD54afcrgkIBnBtTaQzT8Do-m5L"
+    },
+    {
+      "id": "26",
+      "title": "Resolución N° 2190 - Cierre de Puertas en Establecimientos Educativos",
+      "description": "Dispone la prohibición del ingreso de personas ajenas al personal durante el horario de clases, por seguridad de niños, niñas y adolescentes.",
+      "category": "normativas",
+      "type": "resolución",
+      "date": "10/10/2018",
+      "downloadUrl": "#"
+    },
+    {
+      "id": "27",
+      "title": "Resolución N° 224/2006 - Carga Horaria de Talleres y Servicios Escolares",
+      "description": "Establece la carga horaria para talleres de computación, gabinetes psicopedagógicos y servicios odontológicos en instituciones educativas.",
+      "category": "normativas",
+      "type": "resolución",
+      "date": "15/03/2006",
+      "downloadUrl": "https://drive.google.com/uc?id=1Xj_t2nZd3Yg4xwSagfoou-CJlWgsxJnR"
+    },
+    {
+      "id": "28",
+      "title": "Circular - Hora de Dictado de Clases Especiales",
+      "description": "Aclara criterios sobre la carga horaria y el horario de inicio de clases especiales en las instituciones educativas.",
+      "category": "normativas",
+      "type": "circular",
+      "date": "07/04/2022",
+      "downloadUrl": "https://drive.google.com/uc?id=1JTBzIh1NxUTSvlr7pFBTZs9UVxM9PgXA"
+    },
+    {
+      "id": "29",
+      "title": "Resolución N° 109/2003 - Actividades Prácticas y Orientación Laboral",
+      "description": "Dispone la extinción natural y la no inscripción de aspirantes a concursos docentes en espacios de actividades prácticas y orientación vocacional.",
+      "category": "normativas",
+      "type": "resolución",
+      "date": "10/03/2003",
+      "downloadUrl": "https://drive.google.com/uc?id=1PNg5ivD8lWXS1pc8xU1gFiQOqP3y5iFZ"
+    },
+    {
+      "id": "30",
+      "title": "Resolución Min. N° 4720/16 - Acuerdos Escolares de Convivencia",
+      "description": "Aprueba los lineamientos para la elaboración de acuerdos escolares de convivencia en los niveles Inicial y Primario.",
+      "category": "normativas",
+      "type": "resolución",
+      "date": "12/09/2016",
+      "downloadUrl": "https://geronimoserial.github.io/pdf-cge/2016-Res.%20Min.%20N%C2%BA4720-16_Acuerdos%20Escolares%20de%20Convivencia%20N.%20Inicial%20y%20N.%20Primario.pdf"
+    },
+    {
+      "id": "31",
+      "title": "Resolución Min. N° 4720/18 - Acuerdos Escolares de Convivencia",
+      "description": "Actualiza los lineamientos para los acuerdos escolares de convivencia en las instituciones educativas.",
+      "category": "normativas",
+      "type": "resolución",
+      "date": "05/06/2018",
+      "downloadUrl": "https://geronimoserial.github.io/pdf-cge/2018-Res. Min. Nº4720-18_Acuerdo Esc Convivencia.pdf"
+    }
+  ]
+}
