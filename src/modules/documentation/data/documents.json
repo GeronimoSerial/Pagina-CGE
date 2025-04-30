@@ -1,67 +1,13 @@
 {
   "documents": [
     {
-      "id": "1",
-      "title": "Licencia por Artículo 28",
-      "description": "Guía completa para solicitar licencias según el Artículo 28. Incluye requisitos y formularios.",
-      "category": "licencias",
-      "type": "guias",
-      "date": "15/04/2023",
-      "downloadUrl": "#"
-    },
-    {
-      "id": "2",
-      "title": "Generación de Expedientes Administrativos",
-      "description": "Procedimiento paso a paso para la generación y seguimiento de expedientes administrativos.",
-      "category": "expedientes",
-      "type": "procedimiento",
-      "date": "10/03/2023",
-      "downloadUrl": "#"
-    },
-    {
-      "id": "3",
-      "title": "Formulario de Licencia Médica",
-      "description": "Formulario oficial para la solicitud de licencias por razones médicas.",
-      "category": "formularios",
-      "type": "formulario",
-      "date": "05/02/2023",
-      "downloadUrl": "#"
-    },
-    {
-      "id": "4",
-      "title": "Resolución 1234/2023 - Calendario Escolar",
-      "description": "Normativa vigente que establece el calendario escolar para el ciclo lectivo 2023.",
-      "category": "normativas",
-      "type": "resolucion",
-      "date": "20/12/2022",
-      "downloadUrl": "#"
-    },
-    {
-      "id": "5",
-      "title": "Guía para Directivos Escolares",
-      "description": "Manual práctico con orientaciones para la gestión directiva de establecimientos educativos.",
-      "category": "guias",
-      "type": "manual",
-      "date": "18/01/2023",
-      "downloadUrl": "#"
-    },
-    {
-      "id": "6",
-      "title": "Formulario de Inscripción Docente",
-      "description": "Formulario para la inscripción en el registro de aspirantes a cargos docentes.",
-      "category": "formularios",
-      "type": "formulario",
-      "date": "01/03/2023",
-      "downloadUrl": "#"
-    },
-    {
       "id": "8",
       "title": "Constitución Nacional Argentina - Norma Fundamental",
       "description": "Establece la organización del Estado y los derechos y garantías de los ciudadanos.",
       "category": "normativas",
       "type": "constitución",
       "date": "01/05/1853",
-      "downloadUrl": "https://drive.google.com/uc?id=1MKOHb09TW0Bf1aKGh_NTyqH3TTNDG6Oq"
+      "downloadUrl": "https://geronimoserial.github.io/pdf-cge/Constituci%C3%B3n%20de%20la%20Naci%C3%B3n.pdf"
     },
     {
       "id": "9",
@@ -235,15 +181,6 @@
       "downloadUrl": "https://drive.google.com/uc?id=1Xj_t2nZd3Yg4xwSagfoou-CJlWgsxJnR"
     },
     {
-      "id": "27",
-      "title": "Resolución N° 224/2006 99/07 - Carga Horaria de Talleres y Servicios Escolares",
-      "description": "Establece la carga horaria para talleres de computación, gabinetes psicopedagógicos y servicios odontológicos en instituciones educativas.",
-      "category": "normativas",
-      "type": "resolución",
-      "date": "15/03/2006",
-      "downloadUrl": "https://drive.google.com/uc?id=1Xj_t2nZd3Yg4xwSagfoou-CJlWgsxJnR"
-    },
-    {
       "id": "28",
       "title": "Circular - Hora de Dictado de Clases Especiales",
       "description": "Aclara criterios sobre la carga horaria y el horario de inicio de clases especiales en las instituciones educativas.",
@@ -268,7 +205,7 @@
       "category": "normativas",
       "type": "resolución",
       "date": "12/09/2016",
-      "downloadUrl": "https://drive.google.com/uc?id=1W7ZPWnDxSXGkl4DB-xgsMrErjMk0gbjL"
+      "downloadUrl": "https://geronimoserial.github.io/pdf-cge/2016-Res.%20Min.%20N%C2%BA4720-16_Acuerdos%20Escolares%20de%20Convivencia%20N.%20Inicial%20y%20N.%20Primario.pdf"
     },
     {
       "id": "31",
@@ -277,7 +214,7 @@
       "category": "normativas",
       "type": "resolución",
       "date": "05/06/2018",
-      "downloadUrl": "https://drive.google.com/uc?id=1vkjWDnPi9zeQYQ368b_e_gesPMYWPTkA"
+      "downloadUrl": "https://geronimoserial.github.io/pdf-cge/2018-Res. Min. Nº4720-18_Acuerdo Esc Convivencia.pdf"
     }
   ]
 }
