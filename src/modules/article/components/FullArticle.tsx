@@ -2,11 +2,8 @@ import {
   ArrowLeftIcon,
   Tag,
   Clock,
-  Share2,
-  Bookmark,
   ExternalLink,
   Mail,
-  Printer,
   FileText,
 } from "lucide-react";
 import Link from "next/link";
@@ -68,28 +65,11 @@ export default function FullArticle({
       titulo: "Articulos relacionados",
       url: `/${sectionTitle.toLowerCase()}`,
     },
+    {
+      titulo: "Documentación",
+      url: "/documentacion",
+    },
   ];
-
-  // function handleShare() {
-  //   const url = typeof window !== "undefined" ? window.location.href : "";
-  //   if (navigator.share) {
-  //     navigator
-  //       .share({
-  //         title: post.titulo,
-  //         text: "Mira este articulo del Consejo General de Educación",
-  //         url,
-  //       })
-  //       .catch((error) => {
-  //         console.log("Error al compartir", error);
-  //       });
-  //   } else if (navigator.clipboard) {
-  //     navigator.clipboard.writeText(url).then(() => {
-  //       alert("¡Enlace copiado al portapapeles!");
-  //     });
-  //   } else {
-  //     prompt("Copia el enlace:", url);
-  //   }
-  // }
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -250,7 +230,7 @@ export default function FullArticle({
               </div>
 
               {/* Table of Contents - Displayed as links on smaller screens */}
-              <div className="mt-12 lg:hidden block pt-6 border-t border-slate-100">
+              {/* <div className="mt-12 lg:hidden block pt-6 border-t border-slate-100">
                 <h3 className="text-lg font-semibold text-emerald-800 mb-4">
                   En esta página
                 </h3>
@@ -274,7 +254,7 @@ export default function FullArticle({
                     <span className="mr-2">•</span> Conclusiones
                   </a>
                 </nav>
-              </div>
+              </div> */}
 
               {/* Contact Info */}
               <div className="mt-12 pt-6 border-t border-slate-100 bg-slate-50/50 p-6 rounded-lg">
@@ -313,33 +293,6 @@ export default function FullArticle({
 
           {/* Sidebar - Complementary Column */}
           <aside className="lg:col-span-4 space-y-8">
-            {/* Table of Contents */}
-            <div className="hidden lg:block bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 p-6">
-              <h3 className="text-lg font-semibold text-emerald-800 mb-4 border-b border-slate-100 pb-2">
-                En esta página
-              </h3>
-              <nav className="flex flex-col space-y-2">
-                <a
-                  href="#"
-                  className="text-emerald-700 hover:text-emerald-800 hover:underline flex items-center"
-                >
-                  <span className="mr-2">•</span> Introducción
-                </a>
-                <a
-                  href="#"
-                  className="text-emerald-700 hover:text-emerald-800 hover:underline flex items-center"
-                >
-                  <span className="mr-2">•</span> Sección principal
-                </a>
-                <a
-                  href="#"
-                  className="text-emerald-700 hover:text-emerald-800 hover:underline flex items-center"
-                >
-                  <span className="mr-2">•</span> Conclusiones
-                </a>
-              </nav>
-            </div>
-
             {/* Enlaces relacionados */}
             <div className="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 p-6">
               <h3 className="text-lg font-semibold text-emerald-800 mb-4 border-b border-slate-100 pb-2">
