@@ -15,7 +15,7 @@ import { useState } from "react";
 import { Info, Phone, HelpCircle, ArrowRight, Clock } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert";
 import SocialMediaSection from "../../modules/socials/SocialMediaSection";
-
+import HeroSubSection from "../../modules/layout/Hero";
 // Definición de la interfaz
 export interface ContactoForm {
   nombre: string;
@@ -39,16 +39,10 @@ export default function Contacto() {
   return (
     <main className="bg-gray-50 min-h-screen">
       {/* Hero section con degradado */}
-      <div className="bg-gradient-to-r from-[#2D6A27] to-[#3D8B37] text-white">
-        <div className="container mx-auto px-4 md:px-6 py-16">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl font-bold mb-4">Contacto</h1>
-            <p className="text-lg opacity-90">
-              Si tienes alguna consulta o sugerencia, no dudes en contactarnos.
-            </p>
-          </div>
-        </div>
-      </div>
+      <HeroSubSection
+        title="Contacto"
+        description="Si tienes alguna consulta o sugerencia, no dudes en contactarnos."
+      />
 
       {/* Sección de información importante */}
       <div className="bg-white border-b border-gray-100 shadow-sm">

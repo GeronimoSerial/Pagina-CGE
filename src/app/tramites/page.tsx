@@ -43,7 +43,7 @@ export default function TramitesGrid() {
       />
       {/* Sección de información importante */}
       <div className="bg-white border-b border-gray-100 shadow-sm">
-        <div className="container mx-auto px-4 md:px-6 py-4">
+        <div className="container mx-auto px-4 md:px-6 py-2">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <div className="flex items-center">
               <Info className="h-5 w-5 text-[#3D8B37] mr-2" />
