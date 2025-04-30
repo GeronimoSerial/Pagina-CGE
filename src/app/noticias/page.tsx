@@ -4,17 +4,10 @@ import { getAllContent } from "../../modules/article/data/content";
 import { Info, Phone, Clock, ArrowRight, HelpCircle } from "lucide-react";
 import HeroSubSection from "../../modules/layout/Hero";
 
-export default function TramitesGrid() {
-  const rawTramites = getAllContent("tramites");
-  const categorias = [
-    "Licencias",
-    "Certificaciones",
-    "Inscripciones",
-    "Jubilaciones",
-    "Cambios de destino",
-  ];
+export default function NoticiasGrid() {
+  const rawNoticias = getAllContent("noticias");
 
-  const tramite = rawTramites.map((item: any) => {
+  const noticias = rawNoticias.map((item: any) => {
     const date = formatearFecha(item.date || item.fecha);
     return {
       id: item.slug,
@@ -35,12 +28,13 @@ export default function TramitesGrid() {
 
   return (
     <main className="bg-gray-50 min-h-screen">
-      {/* Hero section con degradado */}
       <HeroSubSection
-        title="Trámites y Gestiones"
-        description="Portal centralizado de trámites del Consejo General de Educación.
-              Acceda a toda la información y documentación necesaria."
+        title="Noticias y Novedades"
+        description="Mantente informado con las últimas noticias y novedades del
+              Consejo General de Educación. Encuentra información actualizada
+              sobre eventos, anuncios y comunicados importantes."
       />
+
       {/* Sección de información importante */}
       <div className="bg-white border-b border-gray-100 shadow-sm">
         <div className="container mx-auto px-4 md:px-6 py-2">
@@ -48,51 +42,53 @@ export default function TramitesGrid() {
             <div className="flex items-center">
               <Info className="h-5 w-5 text-[#3D8B37] mr-2" />
               <p className="text-sm font-medium text-gray-600">
-                Horario de atención:{" "}
+                Actualizaciones:{" "}
                 <span className="text-gray-900">
-                  Lunes a Viernes de 8:00 a 16:00 hs
+                  Noticias actualizadas diariamente
                 </span>
               </p>
             </div>
             <div className="flex items-center">
               <Phone className="h-5 w-5 text-[#3D8B37] mr-2" />
               <p className="text-sm font-medium text-gray-600">
-                Consultas: <span className="text-gray-900">0800-555-1234</span>
+                Sala de Prensa:{" "}
+                <span className="text-gray-900">0800-555-1234</span>
               </p>
             </div>
           </div>
         </div>
       </div>
-      {/* Sección principal de trámites */}
+
+      {/* Sección principal de noticias */}
       <section className="py-4 md:py-6">
         <div className="container mx-auto px-4 md:px-6">
-          {/* Componente de trámites */}
-          <div className="py-8">
+          {/* Componente de noticias */}
+          <div className="py-2">
             <ArticlesGrid
-              articles={tramite}
-              categories={categorias}
-              searchPlaceholder="Buscar trámites..."
-              buttonText="Ver trámite"
-              emptyStateTitle="No se encontraron trámites"
+              articles={noticias}
+              searchPlaceholder="Buscar Noticias..."
+              buttonText="Ver noticia completa"
+              emptyStateTitle="No se encontraron noticias"
               emptyStateDescription="No hay resultados para tu búsqueda. Intenta con otros términos o selecciona otra categoría."
-              emptyStateButtonText="Mostrar todos los trámites"
+              emptyStateButtonText="Mostrar todas las noticias"
               showUrgentBadge={true}
               showSearch={true}
-              basePath="/tramites"
+              basePath="/noticias"
             />
           </div>
         </div>
       </section>
+
       {/* Sección de preguntas frecuentes */}
       <section className="bg-white py-12 border-t border-gray-100">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-10">
             <h3 className="text-2xl font-bold mb-3 text-gray-800">
-              Preguntas Frecuentes
+              Preguntas Frecuentes sobre Noticias
             </h3>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Respuestas a las consultas más comunes sobre trámites del Consejo
-              General de Educación
+              Respuestas a las consultas más comunes sobre nuestro portal de
+              noticias
             </p>
           </div>
 
@@ -101,12 +97,11 @@ export default function TramitesGrid() {
             <div className="bg-gray-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
               <h4 className="font-bold text-lg mb-3 text-gray-800 flex items-center">
                 <HelpCircle className="h-5 w-5 mr-2 text-[#3D8B37]" />
-                ¿Cómo inicio un trámite?
+                ¿Con qué frecuencia se actualizan las noticias?
               </h4>
               <p className="text-gray-600">
-                Para iniciar un trámite debe presentar la documentación
-                requerida en Mesa de Entradas del Consejo General de Educación,
-                o a través del portal digital si el trámite lo permite.
+                Nuestro portal se actualiza diariamente con las últimas noticias
+                y comunicados del Consejo General de Educación.
               </p>
             </div>
 
@@ -114,12 +109,11 @@ export default function TramitesGrid() {
             <div className="bg-gray-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
               <h4 className="font-bold text-lg mb-3 text-gray-800 flex items-center">
                 <HelpCircle className="h-5 w-5 mr-2 text-[#3D8B37]" />
-                ¿Cómo consulto el estado de mi trámite?
+                ¿Cómo puedo buscar noticias anteriores?
               </h4>
               <p className="text-gray-600">
-                Puede consultar el estado de su trámite con el número de
-                expediente a través del portal digital o llamando al
-                0800-555-1234 en horario de atención.
+                Puede utilizar el buscador en la parte superior de la página o
+                filtrar por categorías para encontrar noticias específicas.
               </p>
             </div>
 
@@ -127,12 +121,11 @@ export default function TramitesGrid() {
             <div className="bg-gray-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
               <h4 className="font-bold text-lg mb-3 text-gray-800 flex items-center">
                 <HelpCircle className="h-5 w-5 mr-2 text-[#3D8B37]" />
-                ¿Qué documentos necesito presentar?
+                ¿Cómo identifico las noticias urgentes?
               </h4>
               <p className="text-gray-600">
-                Los documentos requeridos varían según el tipo de trámite. Puede
-                encontrar la lista completa de requisitos en cada ficha de
-                trámite específica.
+                Las noticias urgentes están marcadas con una etiqueta especial y
+                aparecen destacadas en la parte superior del portal.
               </p>
             </div>
 
@@ -140,12 +133,11 @@ export default function TramitesGrid() {
             <div className="bg-gray-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
               <h4 className="font-bold text-lg mb-3 text-gray-800 flex items-center">
                 <HelpCircle className="h-5 w-5 mr-2 text-[#3D8B37]" />
-                ¿Cuánto tiempo demora un trámite?
+                ¿Puedo compartir las noticias?
               </h4>
               <p className="text-gray-600">
-                Los tiempos de resolución varían según el tipo de trámite y la
-                carga administrativa. Los plazos estimados están indicados en
-                cada ficha de trámite.
+                Sí, todas las noticias pueden ser compartidas a través de redes
+                sociales o mediante el enlace directo a la noticia.
               </p>
             </div>
           </div>
@@ -155,7 +147,7 @@ export default function TramitesGrid() {
               href="/preguntas-frecuentes"
               className="inline-flex items-center px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium transition-colors"
             >
-              Ver todas las preguntas frecuentes
+              Ver más preguntas frecuentes
               <ArrowRight className="h-4 w-4 ml-2" />
             </a>
           </div>
@@ -166,10 +158,10 @@ export default function TramitesGrid() {
                 <Clock className="h-8 w-8 text-[#3D8B37] mr-3" />
                 <div>
                   <h4 className="font-bold text-lg text-gray-800">
-                    Horarios de atención
+                    Sala de Prensa
                   </h4>
                   <p className="text-gray-600">
-                    Lunes a Viernes de 8:00 a 16:00 hs
+                    Atención a medios: Lunes a Viernes de 8:00 a 16:00 hs
                   </p>
                 </div>
               </div>
@@ -177,7 +169,7 @@ export default function TramitesGrid() {
                 href="/contacto"
                 className="inline-flex items-center px-4 py-2 rounded-lg bg-[#3D8B37] hover:bg-[#2D6A27] text-white font-medium transition-colors"
               >
-                Contactar Mesa de Ayuda
+                Contactar Sala de Prensa
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4 ml-2"

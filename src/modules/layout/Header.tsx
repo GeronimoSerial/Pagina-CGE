@@ -7,7 +7,7 @@ import Image from "next/image";
 
 const navLinks = [
   { href: "/", label: "Inicio" },
-  { href: "/#noticias", label: "Noticias" },
+  { href: "/noticias", label: "Noticias" },
   { href: "/tramites", label: "Trámites" },
   { href: "/documentacion", label: "Documentación" },
   { href: "/contacto", label: "Contacto" },
@@ -34,9 +34,7 @@ const Header = () => {
               />
             </div>
             <div className="ml-3">
-              <span className="block text-lg font-bold md:text-xl">
-                CGE
-              </span>
+              <span className="block text-lg font-bold md:text-xl">CGE</span>
               <span className="block text-xs text-gray-600 md:text-sm">
                 Corrientes
               </span>
@@ -59,12 +57,12 @@ const Header = () => {
               ))}
             </ul>
           </nav>
-            <Link
-              href=""
-              className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white bg-[#3D8B37] hover:bg-[#2b6e28] focus:outline-none focus:ring-2 focus:ring-[#3D8B37] focus:ring-offset-2 transition-colors"
-            >
-             <span>Acceder a SIRE</span> 
-            </Link>
+          <Link
+            href=""
+            className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white bg-[#3D8B37] hover:bg-[#2b6e28] focus:outline-none focus:ring-2 focus:ring-[#3D8B37] focus:ring-offset-2 transition-colors"
+          >
+            <span>Acceder a SIRE</span>
+          </Link>
 
           {/* Mobile Menu Button */}
           <button
