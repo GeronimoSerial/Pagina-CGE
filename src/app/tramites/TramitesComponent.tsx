@@ -15,6 +15,7 @@ import Link from "next/link";
 import { Search, Filter, FileText, ChevronRight } from "lucide-react";
 import { filtrarArticulos } from "../../lib/utils";
 import { Tabs, TabsList, TabsTrigger } from "../../components/ui/tabs";
+import { truncateText } from "../../lib/utils";
 
 interface TramitesGridClientProps {
   tramite: any[];
@@ -119,8 +120,11 @@ export default function TramitesGridClient({
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="flex-grow">
-                  <CardDescription className="text-gray-600 line-clamp-3 h-[4.5rem]">
-                    {item.description}
+                  <CardDescription
+                    className="text-gray-600 cursor-help"
+                    title={item.description}
+                  >
+                    {truncateText(item.description, 15)}
                   </CardDescription>
                 </CardContent>
                 <CardFooter className="pt-0 pb-4">
