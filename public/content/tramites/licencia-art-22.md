@@ -10,28 +10,28 @@ subcategoria: Licencias
 
 La **Licencia por Razones Particulares (Artículo 22)** del régimen de licencias establece una serie de requisitos y condiciones específicas para su otorgamiento. A continuación, se detallan los aspectos más relevantes de este tipo de licencia:
 
-## 📌 ¿Qué es?
+## ¿Qué es?
 
 Es una **licencia sin goce de haberes** que puede solicitar el agente **por razones particulares**, sujeta a las **necesidades del organismo**.
 
-## 📅 Duración
+## Duración
 
 - Se otorga por **un (1) año cada decenio de servicios**.
 - Puede **fraccionarse en dos (2) períodos de seis (6) meses como mínimo**.
 - El **período mínimo a utilizar** es de **diez (10) días corridos**.
 
-## ⛔ Interrupciones y restricciones
+## Interrupciones y restricciones
 
 - Puede ser **interrumpida por el interesado**, con **24 horas de anticipación**, informando a quien corresponda.
 - **Durante su transcurso, no podrá solicitarse ninguna otra licencia extraordinaria ni por otra causal**.
 - El agente **no podrá reintegrarse** antes del término mínimo de **diez (10) días**.
 
-## 🔄 Acumulación y repetición
+## Acumulación y repetición
 
 - El tiempo **no utilizado no puede acumularse** para otro período.
 - Para hacer uso nuevamente de esta licencia en otro decenio, deben haber transcurrido al menos **dos (2) años de prestación real de servicios** entre una y otra.
 
-## ✅ Requisitos
+## Requisitos
 
 Para acceder a esta licencia se debe cumplir con:
 
