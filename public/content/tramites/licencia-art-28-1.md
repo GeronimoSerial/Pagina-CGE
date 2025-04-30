@@ -1,7 +1,7 @@
 ---
-titulo: Licencia Art. 28
-titulo_corto: licenciart28
-fecha: 2025-04-30T19:19:00.000Z
+titulo: Licencia Art. 8
+titulo_corto: licenciart8
+fecha: 2025-04-30T19:22:00.000Z
 resumen: Requisitos para acceder al Art. 8 del Regimen de Licencias
 imagen: /images/header2.png
 subcategoria: Licencias
