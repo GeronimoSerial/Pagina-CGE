@@ -14,13 +14,17 @@ import { Button } from "../../../components/ui/button";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { formatearFecha } from "../../../lib/utils";
+import ShareButton from "./ShareButton";
+import PrintButton from "./PrintButton";
 
 export default function FullArticle({
   post,
   sectionTitle = "Articulo",
+  articulosRelacionados = [],
 }: {
   post: any;
   sectionTitle?: string;
+  articulosRelacionados?: any[];
 }) {
   if (!post) {
     return (
@@ -51,23 +55,6 @@ export default function FullArticle({
     );
   }
 
-  // Artículos relacionados (simulados)
-  const relacionados = [
-    {
-      id: 1,
-      titulo: "Artículo relacionado 1",
-      imagen: "/images/default.jpg",
-      fecha: "2023-05-15",
-    },
-    {
-      id: 2,
-      titulo: "Artículo relacionado 2",
-      imagen: "/images/default.jpg",
-      fecha: "2023-06-02",
-    },
-  ];
-
-  // Enlaces de interés (simulados)
   const enlaces = [
     {
       titulo: "Gestión Educativa",
@@ -77,8 +64,32 @@ export default function FullArticle({
       titulo: "Sitio oficial Ministerio de Educación",
       url: "http://mec.gob.ar",
     },
-    { titulo: "Documentos relacionados", url: "/tramites" },
+    {
+      titulo: "Articulos relacionados",
+      url: `/${sectionTitle.toLowerCase()}`,
+    },
   ];
+
+  // function handleShare() {
+  //   const url = typeof window !== "undefined" ? window.location.href : "";
+  //   if (navigator.share) {
+  //     navigator
+  //       .share({
+  //         title: post.titulo,
+  //         text: "Mira este articulo del Consejo General de Educación",
+  //         url,
+  //       })
+  //       .catch((error) => {
+  //         console.log("Error al compartir", error);
+  //       });
+  //   } else if (navigator.clipboard) {
+  //     navigator.clipboard.writeText(url).then(() => {
+  //       alert("¡Enlace copiado al portapapeles!");
+  //     });
+  //   } else {
+  //     prompt("Copia el enlace:", url);
+  //   }
+  // }
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -125,15 +136,8 @@ export default function FullArticle({
             </Link>
 
             <div className="flex items-center gap-2">
-              <button className="p-2 rounded-md hover:bg-slate-100 text-slate-600 hover:text-emerald-700 transition-colors">
-                <Share2 size={18} />
-              </button>
-              <button className="p-2 rounded-md hover:bg-slate-100 text-slate-600 hover:text-emerald-700 transition-colors">
-                <Bookmark size={18} />
-              </button>
-              <button className="p-2 rounded-md hover:bg-slate-100 text-slate-600 hover:text-emerald-700 transition-colors">
-                <Printer size={18} />
-              </button>
+              <ShareButton title={post.titulo} />
+              <PrintButton />
             </div>
           </div>
         </div>
@@ -146,7 +150,7 @@ export default function FullArticle({
           <article className="lg:col-span-8 bg-white rounded-xl overflow-hidden shadow-md border border-slate-100">
             <div className="p-6 md:p-12">
               {/* Content */}
-              <div className="prose prose-lg max-w-none prose-headings:text-emerald-800 prose-headings:font-semibold prose-a:text-emerald-700 prose-a:no-underline hover:prose-a:text-emerald-800 hover:prose-a:underline prose-img:rounded-lg prose-img:shadow-lg prose-blockquote:border-l-4 prose-blockquote:border-emerald-600/30 prose-blockquote:bg-emerald-50/50 prose-blockquote:py-1 prose-blockquote:text-slate-700 prose-code:bg-slate-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-emerald-700 prose-pre:bg-slate-800 prose-pre:text-slate-100 prose-pre:rounded-lg prose-pre:p-4">
+              <div className="prose prose-lg max-w-none prose-headings:text-emerald-800 prose-headings:font-semibold prose-a:text-emerald-700 prose-a:no-underline hover:prose-a:text-emerald-800 hover:prose-a:underline prose-img:rounded-lg prose-img:shadow-lg prose-blockquote:border-l-4 prose-blockquote:border-emerald-600/30 prose-blockquote:bg-emerald-50/50 prose-blockquote:py-1 prose-blockquote:text-slate-700 prose-code:bg-slate-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-emerald-700 prose-pre:bg-slate-800 prose-pre:text-slate-100 prose-pre:rounded-lg prose-pre:p-4 printable-article">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
@@ -282,22 +286,26 @@ export default function FullArticle({
                   puede contactar a la oficina de prensa del CGE.
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-emerald-700 text-emerald-700 hover:bg-emerald-50"
-                  >
-                    <Mail size={16} className="mr-2" />
-                    Contactar
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-emerald-700 text-emerald-700 hover:bg-emerald-50"
-                  >
-                    <FileText size={16} className="mr-2" />
-                    Descargar PDF
-                  </Button>
+                  <Link href="/contacto">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-emerald-700 text-emerald-700 hover:bg-emerald-50"
+                    >
+                      <Mail size={16} className="mr-2" />
+                      Contactar
+                    </Button>
+                  </Link>
+                  <Link href="/documentacion">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-emerald-700 text-emerald-700 hover:bg-emerald-50"
+                    >
+                      <FileText size={16} className="mr-2" />
+                      Descargar documentación
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -358,12 +366,21 @@ export default function FullArticle({
                 Artículos relacionados
               </h3>
               <div className="space-y-4">
-                {relacionados.map((articulo) => (
-                  <a key={articulo.id} href="#" className="block group">
+                {articulosRelacionados.length === 0 && (
+                  <p className="text-slate-500 text-sm">
+                    No hay artículos relacionados.
+                  </p>
+                )}
+                {articulosRelacionados.map((articulo) => (
+                  <a
+                    key={articulo.slug}
+                    href={`/${sectionTitle.toLowerCase()}/${articulo.slug}`}
+                    className="block group"
+                  >
                     <div className="flex gap-3">
                       <div className="w-20 h-16 rounded-md overflow-hidden flex-shrink-0">
                         <img
-                          src={articulo.imagen}
+                          src={articulo.imagen ?? "/images/default.jpg"}
                           alt={articulo.titulo}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
@@ -379,13 +396,14 @@ export default function FullArticle({
                     </div>
                   </a>
                 ))}
-
-                <Button
-                  variant="ghost"
-                  className="w-full justify-center text-sm text-emerald-700 hover:bg-emerald-50 mt-2"
-                >
-                  Ver más artículos
-                </Button>
+                <Link href={`/${sectionTitle.toLowerCase()}`}>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-center text-sm text-emerald-700 hover:bg-emerald-50 mt-2"
+                  >
+                    Ver más {sectionTitle.toLowerCase()}
+                  </Button>
+                </Link>
               </div>
             </div>
 
