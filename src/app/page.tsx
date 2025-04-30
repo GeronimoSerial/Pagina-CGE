@@ -5,6 +5,9 @@ import HeroSection from "../modules/home/components/HeroSection";
 import QuickAccess from "../modules/home/components/QuickAccess";
 import { Separator } from "@radix-ui/react-separator";
 import ArticlesGrid from "../modules/article/components/ArticlesGrid";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import SocialMediaSection from "../modules/socials/SocialMediaSection";
 
 export async function generateStaticParams() {
   return [
@@ -47,16 +50,52 @@ export default function PagPrincipal() {
         {/* News Section */}
         <section id="noticias" className="py-16 bg-transparent">
           <div className="container mx-auto px-4 md:px-6">
-            <div className="mb-10">
-              <h2 className="text-3xl font-bold mb-2">Noticias y Novedades</h2>
+            <div className="container relative mx-auto px-6">
+              <div className="text-center max-w-2xl mx-auto mb-16">
+                <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
+                  Ultimas noticias y novedades{" "}
+                </h2>
+                <p className="text-gray-600 text-xl leading-relaxed">
+                  Mantente informado sobre las últimas novedades, publicaciones
+                  y resoluciones del Consejo General de Educación
+                </p>
+              </div>
+            </div>
+            {/* <div className="mb-10">
+              <h2 className="text-3xl font-bold mb-2">
+                Ultimas noticias y Novedades
+              </h2>
               <p className="text-gray-700 max-w-3xl">
                 Mantente informado sobre las últimas novedades, publicaciones y
                 resoluciones del Consejo General de Educación.
               </p>
+            </div> */}
+            <ArticlesGrid
+              articles={news}
+              searchPlaceholder="Buscar noticias..."
+              buttonText="Ver noticia"
+              emptyStateTitle="No se encontraron noticias"
+              emptyStateDescription="No hay resultados para tu búsqueda. Intenta con otros términos o selecciona otra categoría."
+              emptyStateButtonText="Mostrar todas las noticias"
+              showUrgentBadge={true}
+              showSearch={false}
+              showFilters={false}
+              basePath="/noticias"
+            />
+            <div className="container mx-auto px-4 pb-12">
+              <div className="flex justify-center">
+                <Link
+                  href="/noticias"
+                  className="inline-flex items-center gap-2 bg-[#3D8B37] hover:bg-[#2D6A27] text-white font-medium px-6 py-3 rounded-lg transition-colors duration-300"
+                >
+                  Ver todas las noticias
+                  <ArrowRight className="h-5 w-5" />
+                </Link>
+              </div>
             </div>
-            <ArticlesGrid articles={news} />
           </div>
         </section>
+        <SocialMediaSection />
       </main>
     </div>
   );

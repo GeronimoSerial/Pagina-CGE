@@ -14,6 +14,7 @@ import { Button } from "../../components/ui/button";
 import { useState } from "react";
 import { Info, Phone, HelpCircle, ArrowRight, Clock } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert";
+import SocialMediaSection from "../../modules/socials/SocialMediaSection";
 
 // Definición de la interfaz
 export interface ContactoForm {
@@ -171,6 +172,10 @@ export default function Contacto() {
           </div>
         </div>
       </section>
+      <SocialMediaSection
+        title="Seguinos en redes sociales"
+        description="Contactános a través de nuestras redes"
+      />
 
       {/* Sección de preguntas frecuentes */}
       <section className="bg-white py-12 border-t border-gray-100">
