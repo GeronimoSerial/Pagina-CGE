@@ -95,7 +95,7 @@ export default function FullArticle({
               <div className="flex flex-wrap items-center gap-4 mb-3 text-white/90">
                 <span className="text-sm font-medium bg-emerald-700 px-3 py-1 rounded-full flex items-center gap-1.5">
                   <Tag size={14} />
-                  {post.categoria}
+                  {post.subcategoria}
                 </span>
                 <span className="text-sm flex items-center gap-1.5">
                   <Clock size={14} />

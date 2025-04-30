@@ -24,15 +24,7 @@ collections:
           label: "Subcategoría",
           name: "subcategoria",
           widget: "select",
-          options:
-            [
-              "General",
-              "Educación",
-              "Docentes",
-              "Estudiantes",
-              "Licencias",
-              "",
-            ],
+          options: ["General", "Educación", "Docentes", "Estudiantes"],
         }
       - { label: "Contenido", name: "body", widget: "markdown" }
 
@@ -53,6 +45,6 @@ collections:
           label: "Subcategoría",
           name: "subcategoria",
           widget: "select",
-          options: ["Inscripción", "Certificados", "Títulos"],
+          options: ["Inscripción", "Certificados", "Títulos", "Licencias"],
         }
       - { label: "Contenido", name: "body", widget: "markdown" }
