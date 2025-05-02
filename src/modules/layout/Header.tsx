@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
@@ -12,11 +12,16 @@ const navLinks = [
   { href: "/documentacion", label: "Documentación" },
   { href: "/contacto", label: "Contacto" },
   { href: "/institucional", label: "Nuestra Institución" },
+
+  // { href: "https://relevamiento.geroserial.com", label: "SIRE" },
 ];
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
@@ -57,26 +62,21 @@ const Header = () => {
               ))}
             </ul>
           </nav>
-          <Link
-            href=""
-            className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white bg-[#3D8B37] hover:bg-[#2b6e28] focus:outline-none focus:ring-2 focus:ring-[#3D8B37] focus:ring-offset-2 transition-colors"
-          >
-            <span>Acceder a SIRE</span>
-          </Link>
-
           {/* Mobile Menu Button */}
-          <button
-            onClick={toggleMenu}
-            className="rounded-full p-2 text-gray-700 hover:bg-gray-100 md:hidden"
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {mounted && (
+            <button
+              onClick={toggleMenu}
+              className="rounded-full p-2 text-gray-700 hover:bg-gray-100 md:hidden"
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          )}
         </div>
       </div>
 
       {/* Mobile Menu */}
-      {isMenuOpen && (
+      {mounted && isMenuOpen && (
         <div className="border-t border-gray-200 bg-white px-4 py-4 md:hidden">
           <nav>
             <ul className="flex flex-col space-y-6 text-lg">
@@ -85,6 +85,7 @@ const Header = () => {
                   <Link
                     href={link.href}
                     className="block px-3 py-2 font-medium text-gray-700 hover:text-[#3D8B37] transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
                   >
                     {link.label}
                   </Link>

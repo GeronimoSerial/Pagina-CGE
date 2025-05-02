@@ -228,34 +228,6 @@ export default function FullArticle({
                   {post.content ?? ""}
                 </ReactMarkdown>
               </div>
-
-              {/* Table of Contents - Displayed as links on smaller screens */}
-              {/* <div className="mt-12 lg:hidden block pt-6 border-t border-slate-100">
-                <h3 className="text-lg font-semibold text-emerald-800 mb-4">
-                  En esta página
-                </h3>
-                <nav className="flex flex-col space-y-2">
-                  <a
-                    href="#"
-                    className="text-emerald-700 hover:text-emerald-800 hover:underline flex items-center"
-                  >
-                    <span className="mr-2">•</span> Introducción
-                  </a>
-                  <a
-                    href="#"
-                    className="text-emerald-700 hover:text-emerald-800 hover:underline flex items-center"
-                  >
-                    <span className="mr-2">•</span> Sección principal
-                  </a>
-                  <a
-                    href="#"
-                    className="text-emerald-700 hover:text-emerald-800 hover:underline flex items-center"
-                  >
-                    <span className="mr-2">•</span> Conclusiones
-                  </a>
-                </nav>
-              </div> */}
-
               {/* Contact Info */}
               <div className="mt-12 pt-6 border-t border-slate-100 bg-slate-50/50 p-6 rounded-lg">
                 <h3 className="text-lg font-semibold text-emerald-800 mb-3">
@@ -324,7 +296,7 @@ export default function FullArticle({
                     No hay artículos relacionados.
                   </p>
                 )}
-                {articulosRelacionados.map((articulo) => (
+                {articulosRelacionados.slice(0, 3).map((articulo) => (
                   <a
                     key={articulo.slug}
                     href={`/${sectionTitle.toLowerCase()}/${articulo.slug}`}

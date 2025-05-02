@@ -88,6 +88,7 @@ export default function TramitesGrid() {
       contactTitle="Horarios de atención"
       contactSchedule="Lunes a Viernes de 8:00 a 16:00 hs"
       contactButtonText="Contactar Mesa de Ayuda"
+      tramite={true}
     />
   );
 }
