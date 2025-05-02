@@ -1,5 +1,5 @@
 ---
-titulo: Licencia Art 22
+titulo: Licencia Art. 22
 titulo_corto: Licencia Art 22
 fecha: 2025-04-29T21:10:00.000Z
 resumen: Requisitos para acceder al Art. 22 del Regimen de Licencias
