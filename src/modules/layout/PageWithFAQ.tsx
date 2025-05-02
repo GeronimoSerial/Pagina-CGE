@@ -1,16 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import {
-  Clock,
-  ArrowRight,
-  HelpCircle,
-  Filter,
-  Search,
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  Smartphone,
-} from "lucide-react";
+import { Clock, ChevronLeft, ChevronRight, Smartphone } from "lucide-react";
 import ArticlesGrid from "../article/components/ArticlesGrid";
 import HeroSubSection from "./Hero";
 import {
@@ -18,12 +8,6 @@ import {
   sortByDate,
   sortByAlphabetical,
 } from "../../lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../../components/ui/dropdown-menu";
 import { Button } from "../../components/ui/button";
 import SearchInput from "./SearchInput";
 import FAQSection from "./FAQSection";
@@ -242,7 +226,7 @@ export default function PageWithFAQ({
         faqs={faqs}
       />
       {/* Sección de contacto */}
-      <div className="mt-16 bg-white p-8 rounded-2xl shadow-lg max-w-4xl mx-auto border border-gray-100 hover:border-[#3D8B37]/20 transition-all duration-300">
+      <div className="mt-16 mb-3 bg-white p-8 rounded-2xl shadow-lg max-w-4xl mx-auto border border-gray-100 hover:border-[#3D8B37]/20 transition-all duration-300">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center">
             <div className="bg-[#3D8B37]/10 p-4 rounded-xl mr-5">

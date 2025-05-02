@@ -1,23 +1,71 @@
+import {
+  BookOpen,
+  BookText,
+  GraduationCap,
+  Pencil,
+  NotebookPen,
+} from "lucide-react";
+
 interface HeroSubSectionProps {
   title: string;
   description: string;
+  ctaText?: string;
 }
-
-// const title = "Noticias y Novedades";
-// const description =
-//   "Mantente informado con las últimas noticias y novedades del Consejo General de Educación. Encuentra información actualizada sobre eventos, anuncios y comunicados importantes.";
 
 export default function HeroSubSection({
   title,
   description,
+  ctaText = "Leer Más",
 }: HeroSubSectionProps) {
   return (
-    <div className="bg-gradient-to-r from-[#2D6A27] to-[#3D8B37] text-white h-[300px] flex items-center">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="max-w-3xl">
-          <h1 className="text-4xl font-bold mb-4">{title}</h1>
-          <p className="text-lg opacity-90">{description}</p>
+    <div className="bg-gradient-to-br from-green-600 to-green-700 text-white  shadow-xl hover:shadow-2xl transition-all duration-500 h-[250px] flex items-center justify-center overflow-hidden relative">
+      {/* Patrón educativo más visible */}
+      <div className="absolute inset-0 flex flex-wrap justify-center items-center pointer-events-none">
+        {[...Array(18)].map((_, i) => {
+          const iconSize = 24;
+          const left = `${10 + (i % 6) * 15}%`;
+          const top = `${10 + Math.floor(i / 6) * 15}%`;
+          const rotate = `${-15 + (i % 7) * 5}deg`;
+          const opacity = 0.2;
+
+          const Icon = [BookOpen, BookText, GraduationCap, Pencil, NotebookPen][
+            i % 5
+          ];
+
+          return (
+            <div
+              key={i}
+              className="absolute"
+              style={{
+                left,
+                top,
+                transform: `rotate(${rotate})`,
+                opacity,
+              }}
+            >
+              <Icon size={iconSize} className="text-white" strokeWidth={1.5} />
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Efecto de brillo sutil */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-white/15 to-transparent pointer-events-none" />
+
+      <div className="container mx-auto text-center px-6 relative z-10">
+        <div className="max-w-2xl mx-auto space-y-6">
+          <h1 className="text-4xl font-bold text-white drop-shadow-md">
+            {title}
+          </h1>
+          <p className="text-lg text-green-100/90 leading-relaxed">
+            {description}
+          </p>
         </div>
+      </div>
+
+      {/* Libro grande destacado */}
+      <div className="absolute bottom-6 right-6 opacity-25">
+        <BookText size={100} className="text-white" strokeWidth={1.2} />
       </div>
     </div>
   );
