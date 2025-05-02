@@ -3,15 +3,14 @@ import React, { useState } from "react";
 import {
   Search,
   FileText,
-  Filter,
   Download,
-  BookOpen,
-  FileCheck,
+  Check,
   ClipboardList,
   Scale,
   ChevronLeft,
   ChevronRight,
   File,
+  FileCheck,
 } from "lucide-react";
 import {
   Card,
@@ -21,32 +20,45 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/ui/card";
-import { Input } from "../../../components/ui/input";
 import { Button } from "../../../components/ui/button";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../../../components/ui/tabs";
 import { Badge } from "../../../components/ui/badge";
 import { documents } from "../data";
+import { useSearchParams } from "next/navigation";
+import { filterDocuments } from "../../../lib/utils";
+import SearchInput from "../../layout/SearchInput";
 
 const DocumentationSection = ({}) => {
+  const searchParams = useSearchParams();
+  const categoriaParam = searchParams.get("categoria");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const documentsPerPage = 6;
 
+  // Categorías disponibles para el filtro
+  const categories = [
+    "licencias",
+    "expedientes",
+    "formularios",
+    "normativas",
+    "guias",
+  ];
+
+  // Set initial filter from URL param only on mount
+  React.useEffect(() => {
+    if (categoriaParam && categories.includes(categoriaParam)) {
+      setActiveFilter(categoriaParam);
+    } else {
+      setActiveFilter("all");
+    }
+  }, [categoriaParam]);
+
   // Filter documents based on search query and active filter
-  const filteredDocuments = documents.filter((doc) => {
-    const matchesSearch =
-      doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doc.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter =
-      activeFilter === "all" || doc.category === activeFilter;
-    return matchesSearch && matchesFilter;
-  });
+  const filteredDocuments = filterDocuments(
+    documents,
+    searchQuery,
+    activeFilter
+  );
 
   // Pagination logic
   const totalPages = Math.ceil(filteredDocuments.length / documentsPerPage);
@@ -93,293 +105,125 @@ const DocumentationSection = ({}) => {
       <div className="container mx-auto px-4">
         <div className="flex flex-col min-h-[800px]">
           <div className="flex flex-col md:flex-row gap-6 mb-8">
-            <div className="relative flex-grow">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <Input
-                type="text"
-                placeholder="Buscar documentos, formularios, normativas..."
-                className="pl-10 w-full"
+            <div className="w-full max-w-3xl mx-auto rounded-2xl shadow-lg bg-white/80 backdrop-blur-sm p-6 border border-gray-100">
+              <SearchInput
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar"
+                categories={categories}
+                selectedCategory={activeFilter === "all" ? "" : activeFilter}
+                onCategoryChange={(cat) =>
+                  setActiveFilter(cat === "" ? "all" : cat)
+                }
+                allLabel="Todas las categorías"
               />
-            </div>
-            <div className="flex items-center gap-2">
-              <Filter className="text-gray-500" />
-              <span className="text-sm font-medium">Filtrar por:</span>
             </div>
           </div>
 
-          <Tabs defaultValue="all" className="mb-8">
-            <TabsList className="w-full md:w-auto flex flex-wrap justify-start">
-              <TabsTrigger
-                value="all"
-                onClick={() => setActiveFilter("all")}
-                className="data-[state=active]:bg-green-50 data-[state=active]:text-green-800"
-              >
-                Todos
-              </TabsTrigger>
-              <TabsTrigger
-                value="licencias"
-                onClick={() => setActiveFilter("licencias")}
-                className="data-[state=active]:bg-green-50 data-[state=active]:text-green-800"
-              >
-                Licencias
-              </TabsTrigger>
-              <TabsTrigger
-                value="expedientes"
-                onClick={() => setActiveFilter("expedientes")}
-                className="data-[state=active]:bg-green-50 data-[state=active]:text-green-800"
-              >
-                Expedientes
-              </TabsTrigger>
-              <TabsTrigger
-                value="formularios"
-                onClick={() => setActiveFilter("formularios")}
-                className="data-[state=active]:bg-green-50 data-[state=active]:text-green-800"
-              >
-                Formularios
-              </TabsTrigger>
-              <TabsTrigger
-                value="normativas"
-                onClick={() => setActiveFilter("normativas")}
-                className="data-[state=active]:bg-green-50 data-[state=active]:text-green-800"
-              >
-                Normativas
-              </TabsTrigger>
-              <TabsTrigger
-                value="guias"
-                onClick={() => setActiveFilter("guias")}
-                className="data-[state=active]:bg-green-50 data-[state=active]:text-green-800"
-              >
-                Guías Prácticas
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="all" className="mt-6">
-              {/* Contenedor con altura fija para las tarjetas */}
-              <div className="relative h-[750px] overflow-y-auto rounded-lg border border-gray-100  shadow-sm">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-                  {currentDocuments.length > 0 ? (
-                    currentDocuments.map((doc) => (
-                      <Card
-                        key={doc.id}
-                        className="flex flex-col h-full border-gray-200 hover:border-green-300 hover:shadow-md transition-all"
-                      >
-                        <CardHeader className="pb-3">
-                          <div className="flex justify-between items-start">
-                            <div className="flex items-center gap-2">
-                              {getCategoryIcon(doc.category)}
-                              <Badge
-                                variant="outline"
-                                className="text-xs capitalize"
-                              >
-                                {doc.type}
-                              </Badge>
-                            </div>
-                            <span className="text-xs text-gray-500">
-                              {doc.date}
-                            </span>
-                          </div>
-                          <CardTitle className="text-lg mt-2">
-                            {doc.title}
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex-grow">
-                          <CardDescription className="text-gray-600">
-                            {doc.description}
-                          </CardDescription>
-                        </CardContent>
-                        <CardFooter>
-                          <Button
+          <div className="relative rounded-lg border border-gray-200 shadow-md bg-white">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
+              {currentDocuments.length > 0 ? (
+                currentDocuments.map((doc) => (
+                  <Card
+                    key={doc.id}
+                    className="flex flex-col h-72 border border-gray-200 hover:border-green-300 hover:shadow-lg transition-all duration-300"
+                  >
+                    <CardHeader className="pb-2 pt-4">
+                      <div className="flex justify-between items-start">
+                        <div className="flex items-center gap-2">
+                          {getCategoryIcon(doc.category)}
+                          <Badge
                             variant="outline"
-                            className="w-full flex items-center gap-2"
-                            asChild
+                            className="text-xs font-medium capitalize px-2 py-0.5"
                           >
-                            <a href={doc.downloadUrl}>
-                              <Download className="h-4 w-4" />
-                              Descargar
-                            </a>
-                          </Button>
-                        </CardFooter>
-                      </Card>
-                    ))
-                  ) : (
-                    <div className="col-span-full flex items-center justify-center h-[500px]">
-                      <div className="text-center">
-                        <FileText className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-                        <h3 className="text-lg font-medium text-gray-700">
-                          No se encontraron documentos
-                        </h3>
-                        <p className="text-gray-500 mt-1">
-                          Intenta con otra búsqueda o selecciona otra categoría
-                        </p>
+                            {doc.type}
+                          </Badge>
+                        </div>
+                        <span className="text-xs text-gray-500">
+                          {doc.date}
+                        </span>
                       </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Pagination Controls */}
-              {filteredDocuments.length > documentsPerPage && (
-                <div className="mt-6 flex justify-center items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="w-9 h-9 p-0"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                    (page) => (
+                    </CardHeader>
+                    <CardContent className="flex-grow overflow-hidden">
+                      <CardTitle className="text-lg font-semibold mb-2 line-clamp-2">
+                        {doc.title}
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 text-sm line-clamp-4">
+                        {doc.description}
+                      </CardDescription>
+                    </CardContent>
+                    <CardFooter className="pt-2 pb-4">
                       <Button
-                        key={page}
-                        variant={currentPage === page ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handlePageChange(page)}
-                        className={`w-9 h-9 p-0 ${
-                          currentPage === page
-                            ? "bg-[#3D8B37] hover:bg-[#2D6A27]"
-                            : ""
-                        }`}
+                        variant="outline"
+                        className="w-full flex items-center gap-2 hover:bg-green-50 transition-colors"
+                        asChild
                       >
-                        {page}
+                        <a href={doc.downloadUrl}>
+                          <Download className="h-4 w-4" />
+                          Descargar
+                        </a>
                       </Button>
-                    )
-                  )}
-
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className="w-9 h-9 p-0"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
+                    </CardFooter>
+                  </Card>
+                ))
+              ) : (
+                <div className="col-span-full flex items-center justify-center h-96">
+                  <div className="text-center p-8 rounded-lg bg-gray-50">
+                    <FileText className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-700">
+                      No se encontraron documentos
+                    </h3>
+                    <p className="text-gray-500 mt-2 max-w-md">
+                      Intenta con otra búsqueda o selecciona otra categoría
+                    </p>
+                  </div>
                 </div>
               )}
-            </TabsContent>
+            </div>
+          </div>
 
-            {/* Other tabs content */}
-            {[
-              "licencias",
-              "expedientes",
-              "formularios",
-              "normativas",
-              "guias",
-            ].map((category) => (
-              <TabsContent key={category} value={category} className="mt-6">
-                <div className="relative h-[800px] overflow-y-auto rounded-lg border border-gray-100 shadow-sm">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-                    {currentDocuments.length > 0 ? (
-                      currentDocuments.map((doc) => (
-                        <Card
-                          key={doc.id}
-                          className="flex flex-col h-full border-gray-200 hover:border-green-300 hover:shadow-md transition-all"
-                        >
-                          <CardHeader className="pb-3">
-                            <div className="flex justify-between items-start">
-                              <div className="flex items-center gap-2">
-                                {getCategoryIcon(doc.category)}
-                                <Badge
-                                  variant="outline"
-                                  className="text-xs capitalize"
-                                >
-                                  {doc.type}
-                                </Badge>
-                              </div>
-                              <span className="text-xs text-gray-500">
-                                {doc.date}
-                              </span>
-                            </div>
-                            <CardTitle className="text-lg mt-2">
-                              {doc.title}
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent className="flex-grow">
-                            <CardDescription className="text-gray-600">
-                              {doc.description}
-                            </CardDescription>
-                          </CardContent>
-                          <CardFooter>
-                            <Button
-                              variant="outline"
-                              className="w-full flex items-center gap-2"
-                              asChild
-                            >
-                              <a href={doc.downloadUrl}>
-                                <Download className="h-4 w-4" />
-                                Descargar
-                              </a>
-                            </Button>
-                          </CardFooter>
-                        </Card>
-                      ))
-                    ) : (
-                      <div className="col-span-full flex items-center justify-center h-[500px]">
-                        <div className="text-center">
-                          <FileText className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-                          <h3 className="text-lg font-medium text-gray-700">
-                            No se encontraron documentos
-                          </h3>
-                          <p className="text-gray-500 mt-1">
-                            Intenta con otra búsqueda o selecciona otra
-                            categoría
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
+          {/* Pagination Controls */}
+          {filteredDocuments.length > documentsPerPage && (
+            <div className="mt-6 flex justify-center items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="w-9 h-9 p-0"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
 
-                {/* Pagination Controls */}
-                {filteredDocuments.length > documentsPerPage && (
-                  <div className="mt-6 flex justify-center items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      disabled={currentPage === 1}
-                      className="w-9 h-9 p-0"
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <Button
+                    key={page}
+                    variant={currentPage === page ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handlePageChange(page)}
+                    className={`w-9 h-9 p-0 ${
+                      currentPage === page
+                        ? "bg-[#3D8B37] hover:bg-[#2D6A27]"
+                        : ""
+                    }`}
+                  >
+                    {page}
+                  </Button>
+                )
+              )}
 
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                      (page) => (
-                        <Button
-                          key={page}
-                          variant={currentPage === page ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => handlePageChange(page)}
-                          className={`w-9 h-9 p-0 ${
-                            currentPage === page
-                              ? "bg-[#3D8B37] hover:bg-[#2D6A27]"
-                              : ""
-                          }`}
-                        >
-                          {page}
-                        </Button>
-                      )
-                    )}
-
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      disabled={currentPage === totalPages}
-                      className="w-9 h-9 p-0"
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
-              </TabsContent>
-            ))}
-          </Tabs>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="w-9 h-9 p-0"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
 
           <div className="text-center mt-10">
             <p className="text-gray-500 mb-4">
