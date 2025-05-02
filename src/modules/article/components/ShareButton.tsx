@@ -32,11 +32,12 @@ export default function ShareButton({
 
   return (
     <button
-      className="p-2 rounded-md hover:bg-slate-100 text-slate-600 hover:text-emerald-700 transition-colors"
+      className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-slate-700 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 transition-all rounded-full shadow-sm"
       onClick={handleShare}
       title="Compartir"
     >
-      <Share2 size={18} />
+      <Share2 className="w-4 h-4 text-emerald-800" size={18} />
+      <span className="hidden sm:inline">Compartir</span>
     </button>
   );
 }
