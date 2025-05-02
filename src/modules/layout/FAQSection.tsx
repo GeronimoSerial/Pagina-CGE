@@ -20,7 +20,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
   <section className="bg-gradient-to-b from-white to-gray-50 py-16 border-t border-gray-100">
     <div className="container mx-auto px-4 md:px-6">
       <div className="text-center mb-12">
-        <h3 className="text-3xl font-bold mb-4 text-gray-800 bg-clip-text text-transparent bg-gradient-to-r from-[#2D6A27] to-[#3D8B37]">
+        <h3 className="text-5xl font-bold mb-6 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
           {faqTitle}
         </h3>
         <p className="text-gray-600 max-w-2xl mx-auto text-lg">

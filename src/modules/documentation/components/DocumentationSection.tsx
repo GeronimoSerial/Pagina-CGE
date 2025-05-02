@@ -229,12 +229,14 @@ const DocumentationSection = ({}) => {
             <p className="text-gray-500 mb-4">
               Próximamente más documentos y recursos estarán disponibles
             </p>
-            <Button
-              variant="outline"
-              className="border-green-600 text-green-700 hover:bg-green-50"
-            >
-              Solicitar documentación específica
-            </Button>
+            <a href="/contacto">
+              <Button
+                variant="outline"
+                className="border-green-600 text-green-700 hover:bg-green-50"
+              >
+                Solicitar documentación específica
+              </Button>
+            </a>
           </div>
         </div>
       </div>

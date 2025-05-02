@@ -3,30 +3,9 @@ import DocumentationSection from "../../modules/documentation/components/Documen
 import HeroSubSection from "../../modules/layout/Hero";
 import FAQSection from "../../modules/layout/FAQSection";
 import { Suspense } from "react";
+import { faqsDocs } from "../../modules/faqs/faqs";
 
 export default function Documentacion() {
-  const faqs = [
-    {
-      question: "¿Qué es la documentación requerida?",
-      answer:
-        "La documentación requerida es el conjunto de papeles y formularios necesarios para completar un trámite específico.",
-    },
-    {
-      question: "¿Dónde puedo encontrar los formularios necesarios?",
-      answer:
-        "Los formularios necesarios están disponibles en el portal digital del Consejo General de Educación, en la sección de trámites.",
-    },
-    {
-      question: "¿Cómo puedo enviar mi documentación?",
-      answer:
-        "Puede enviar su documentación a través del portal digital o presentarla en Mesa de Entradas del Consejo General de Educación.",
-    },
-    {
-      question: "¿Qué hago si me falta algún documento?",
-      answer:
-        "Si le falta algún documento, consulte la lista de requisitos en la ficha de trámite específica y asegúrese de completar todos los documentos necesarios.",
-    },
-  ];
   return (
     <main className="bg-gray-50 min-h-screen">
       {/* Hero section con degradado */}
@@ -68,8 +47,8 @@ export default function Documentacion() {
       {/* Sección de preguntas frecuentes */}
       <FAQSection
         faqTitle="Preguntas Frecuentes"
-        faqDescription="Encuentra respuestas a las preguntas más comunes sobre trámites y gestiones."
-        faqs={faqs}
+        faqDescription="Encuentra respuestas a las preguntas más comunes sobre la documentación."
+        faqs={faqsDocs}
       />
     </main>
   );
