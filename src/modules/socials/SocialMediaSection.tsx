@@ -14,34 +14,7 @@ const SocialMediaSection = ({
   description = "Mantenete conectado y recibí las últimas actualizaciones a través de nuestras redes sociales",
 }: SocialMediaProps) => {
   return (
-    <section className="relative py-24 overflow-hidden bg-gradient-to-b from-gray-50 to-white">
-      {/* Elementos decorativos animados */}
-      {/* <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[
-          {
-            className: "top-0 left-1/4 w-64 h-64 bg-emerald-100",
-            delay: "0s",
-            opacity: "opacity-40",
-          },
-          {
-            className: "bottom-0 right-1/4 w-96 h-96 bg-emerald-200",
-            delay: "1s",
-            opacity: "opacity-40",
-          },
-          {
-            className: "top-1/2 left-1/2 w-72 h-72 bg-emerald-300",
-            delay: "2s",
-            opacity: "opacity-30",
-          },
-        ].map(({ className, delay, opacity }, index) => (
-          <div
-            key={index}
-            className={`absolute ${className} rounded-full mix-blend-multiply blur-3xl ${opacity} animate-[pulse_3s_ease-in-out_infinite]`}
-            style={{ animationDelay: delay }}
-          />
-        ))}
-      </div> */}
-
+    <section className="relative py-16 overflow-hidden bg-gradient-to-b from-gray-50 to-white">
       <div className="container relative mx-auto px-6">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">

@@ -9,6 +9,7 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  Smartphone,
 } from "lucide-react";
 import ArticlesGrid from "../article/components/ArticlesGrid";
 import HeroSubSection from "./Hero";
@@ -24,6 +25,8 @@ import {
   DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu";
 import { Button } from "../../components/ui/button";
+import SearchInput from "./SearchInput";
+import FAQSection from "./FAQSection";
 
 interface FAQ {
   question: string;
@@ -63,6 +66,7 @@ interface PageWithFAQProps {
   contactTitle: string;
   contactSchedule: string;
   contactButtonText: string;
+  contactUrl?: string;
 
   //prop para el sorted
   tramite?: boolean;
@@ -86,6 +90,7 @@ export default function PageWithFAQ({
   contactTitle,
   contactSchedule,
   contactButtonText,
+  contactUrl,
   tramite,
 }: PageWithFAQProps) {
   // Estado de paginación
@@ -154,68 +159,21 @@ export default function PageWithFAQ({
         <section className="w-full py-8">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto rounded-2xl shadow-lg bg-white/80 backdrop-blur-sm p-6 border border-gray-100">
-              <div className="space-y-4">
-                <div className="relative group">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 group-hover:text-[#3D8B37] transition-colors" />
-                  <input
-                    type="search"
-                    placeholder={searchPlaceholder}
-                    className="pl-12 w-full border border-gray-200 rounded-xl py-3 px-6 focus:outline-none focus:ring-2 focus:ring-[#3D8B37] focus:border-transparent transition-all text-base placeholder:text-gray-400 hover:border-[#3D8B37]/30"
-                    value={searchTerm}
-                    onChange={(e) => {
-                      setSearchTerm(e.target.value);
-                      setPagina(1);
-                    }}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Filter className="text-[#3D8B37] h-5 w-5" />
-                    <span className="text-base font-medium text-gray-700">
-                      Filtrar por categoría:
-                    </span>
-                  </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="border-gray-200 hover:border-[#3D8B37]/30 hover:bg-white/50"
-                      >
-                        {categoriaSeleccionada || "Todas las categorías"}
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48">
-                      <DropdownMenuItem
-                        className="flex items-center justify-between"
-                        onClick={() => {
-                          setCategoriaSeleccionada("");
-                          setPagina(1);
-                        }}
-                      >
-                        <span>Todas</span>
-                        {!categoriaSeleccionada && (
-                          <Check className="h-4 w-4 text-[#3D8B37]" />
-                        )}
-                      </DropdownMenuItem>
-                      {categorias.map((cat) => (
-                        <DropdownMenuItem
-                          key={cat}
-                          className="flex items-center justify-between"
-                          onClick={() => {
-                            setCategoriaSeleccionada(cat);
-                            setPagina(1);
-                          }}
-                        >
-                          <span>{cat}</span>
-                          {categoriaSeleccionada === cat && (
-                            <Check className="h-4 w-4 text-[#3D8B37]" />
-                          )}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </div>
+              <SearchInput
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setPagina(1);
+                }}
+                placeholder={searchPlaceholder}
+                categories={categorias}
+                selectedCategory={categoriaSeleccionada}
+                onCategoryChange={(cat) => {
+                  setCategoriaSeleccionada(cat);
+                  setPagina(1);
+                }}
+                allLabel="Todas las categorías"
+              />
             </div>
           </div>
         </section>
@@ -278,66 +236,37 @@ export default function PageWithFAQ({
       </section>
 
       {/* Sección de preguntas frecuentes */}
-      <section className="bg-gradient-to-b from-white to-gray-50 py-16 border-t border-gray-100">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold mb-4 text-gray-800 bg-clip-text text-transparent bg-gradient-to-r from-[#2D6A27] to-[#3D8B37]">
-              {faqTitle}
-            </h3>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              {faqDescription}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {faqs.map((faq, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-[#3D8B37]/20 group"
-              >
-                <h4 className="font-bold text-lg mb-4 text-gray-800 flex items-start group-hover:text-[#3D8B37] transition-colors">
-                  <HelpCircle className="h-6 w-6 mr-3 text-[#3D8B37] flex-shrink-0 mt-0.5" />
-                  {faq.question}
-                </h4>
-                <p className="text-gray-600 ml-9">{faq.answer}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-12 text-center">
-            <a
-              href="/preguntas-frecuentes"
-              className="inline-flex items-center px-6 py-3 rounded-xl bg-white hover:bg-gray-50 text-gray-800 font-medium transition-all duration-200 shadow-md hover:shadow-lg border border-gray-200 hover:border-[#3D8B37]/20"
-            >
-              Ver más preguntas frecuentes
-              <ArrowRight className="h-5 w-5 ml-2 text-[#3D8B37]" />
-            </a>
-          </div>
-
-          <div className="mt-16 bg-white p-8 rounded-2xl shadow-lg max-w-4xl mx-auto border border-gray-100 hover:border-[#3D8B37]/20 transition-all duration-300">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="flex items-center">
-                <div className="bg-[#3D8B37]/10 p-4 rounded-xl mr-5">
-                  <Clock className="h-8 w-8 text-[#3D8B37]" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-xl text-gray-800">
-                    {contactTitle}
-                  </h4>
-                  <p className="text-gray-600 text-lg">{contactSchedule}</p>
-                </div>
-              </div>
-              <a
-                href="/contacto"
-                className="inline-flex items-center px-6 py-3 rounded-xl bg-[#3D8B37] hover:bg-[#2D6A27] text-white font-medium transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105"
-              >
-                {contactButtonText}
-                <ArrowRight className="h-5 w-5 ml-2" />
-              </a>
+      <FAQSection
+        faqTitle={faqTitle}
+        faqDescription={faqDescription}
+        faqs={faqs}
+      />
+      {/* Sección de contacto */}
+      <div className="mt-16 bg-white p-8 rounded-2xl shadow-lg max-w-4xl mx-auto border border-gray-100 hover:border-[#3D8B37]/20 transition-all duration-300">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center">
+            <div className="bg-[#3D8B37]/10 p-4 rounded-xl mr-5">
+              <Clock className="h-8 w-8 text-[#3D8B37]" />
+            </div>
+            <div>
+              <h4 className="font-bold text-xl text-gray-800">
+                {contactTitle}
+              </h4>
+              <p className="text-gray-600 text-lg">{contactSchedule}</p>
             </div>
           </div>
+          <a
+            href={contactUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center px-6 py-3 rounded-xl bg-[#3D8B37] hover:bg-[#2D6A27] text-white font-medium transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105"
+          >
+            {contactButtonText}
+            <Smartphone className="h-5 w-5 ml-2" />
+            {/* <ArrowRight className="h-5 w-5 ml-2" /> */}
+          </a>
         </div>
-      </section>
+      </div>
     </main>
   );
 }
