@@ -23,7 +23,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-.cursor
+.cursor/rules
 !node_modules/.vite
 
 **/tempobook/dynamic/
@@ -33,3 +33,7 @@ core
 
 .github/
 
+/.cursor
+/.cursor
+.cursor/rules/nextjs-rule.mdc
+/.cursor
