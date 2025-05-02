@@ -1,11 +1,17 @@
 import "./index.css";
 import Footer from "../modules/layout/Footer";
 import Header from "../modules/layout/Header";
-import { montserrat } from "../styles/fonts";
+import { Montserrat, Inter } from "next/font/google";
+
 import metadata from "./metadata";
 import Head from "next/head";
 
 export { metadata };
+
+//fonts
+
+// const montserrat = Montserrat({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
@@ -34,7 +40,7 @@ export default function RootLayout({
         />
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
-      <body className={`${montserrat.className} antialiased`}>
+      <body className={`${inter.className} antialiased`}>
         <Header />
         <div id="root">{children}</div>
         <Footer />
