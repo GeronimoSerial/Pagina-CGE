@@ -29,7 +29,7 @@ export default function Documentacion() {
             <div className="flex items-center">
               <Phone className="h-5 w-5 text-[#3D8B37] mr-2" />
               <p className="text-sm font-medium text-gray-600">
-                Consultas: <span className="text-gray-900">0800-555-1234</span>
+                Consultas: <span className="text-gray-900">3794-852954</span>
               </p>
             </div>
           </div>
