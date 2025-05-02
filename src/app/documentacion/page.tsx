@@ -2,6 +2,7 @@ import { Info, Phone, HelpCircle, ArrowRight, Clock } from "lucide-react";
 import DocumentationSection from "../../modules/documentation/components/DocumentationSection";
 import HeroSubSection from "../../modules/layout/Hero";
 import FAQSection from "../../modules/layout/FAQSection";
+import { Suspense } from "react";
 
 export default function Documentacion() {
   const faqs = [
@@ -59,7 +60,9 @@ export default function Documentacion() {
       <section>
         <div className="container mx-auto px-4 md:px-6">
           {/* Componente de trámites */}
-          <DocumentationSection />
+          <Suspense fallback={<div>Cargando documentación...</div>}>
+            <DocumentationSection />
+          </Suspense>
         </div>
       </section>
       {/* Sección de preguntas frecuentes */}
