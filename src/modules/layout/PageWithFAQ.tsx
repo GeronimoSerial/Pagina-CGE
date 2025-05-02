@@ -180,7 +180,7 @@ export default function PageWithFAQ({
       )}
       {/* Sección principal de contenido */}
       <section>
-        <div className="container h-[500px] mx-auto px-4 md:px-6">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="py-8">
             <ArticlesGrid
               articles={articlesPagina}
