@@ -2,6 +2,7 @@ import { formatearFecha } from "../../lib/utils";
 import { getAllContent } from "../../modules/article/data/content";
 import { Info, Phone } from "lucide-react";
 import PageWithFAQ from "../../modules/layout/PageWithFAQ";
+import { faqsContact } from "../../modules/faqs/faqs";
 
 export default function NoticiasGrid() {
   const rawNoticias = getAllContent("noticias");
@@ -38,29 +39,6 @@ export default function NoticiasGrid() {
     },
   ];
 
-  const faqs = [
-    {
-      question: "¿Con qué frecuencia se actualizan las noticias?",
-      answer:
-        "Nuestro portal se actualiza diariamente con las últimas noticias y comunicados del Consejo General de Educación.",
-    },
-    {
-      question: "¿Cómo puedo buscar noticias anteriores?",
-      answer:
-        "Puede utilizar el buscador en la parte superior de la página o filtrar por categorías para encontrar noticias específicas.",
-    },
-    {
-      question: "¿Cómo identifico las noticias urgentes?",
-      answer:
-        "Las noticias urgentes están marcadas con una etiqueta especial y aparecen destacadas en la parte superior del portal.",
-    },
-    {
-      question: "¿Puedo compartir las noticias?",
-      answer:
-        "Sí, todas las noticias pueden ser compartidas a través de redes sociales o mediante el enlace directo a la noticia.",
-    },
-  ];
-
   return (
     <PageWithFAQ
       heroTitle="Noticias y Novedades"
@@ -77,7 +55,7 @@ export default function NoticiasGrid() {
       basePath="/noticias"
       faqTitle="Preguntas Frecuentes"
       faqDescription="Respuestas a las consultas más comunes sobre nuestro portal de noticias"
-      faqs={faqs}
+      faqs={faqsContact}
       contactTitle="Sala de Prensa"
       contactSchedule="Atención a medios: Lunes a Viernes de 8:00 a 12:00 hs"
       contactButtonText="Contactar Prensa"
