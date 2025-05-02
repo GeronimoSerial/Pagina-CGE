@@ -75,7 +75,7 @@ export default function NoticiasGrid() {
       emptyStateDescription="No hay resultados para tu búsqueda. Intenta con otros términos o selecciona otra categoría."
       emptyStateButtonText="Mostrar todas las noticias"
       basePath="/noticias"
-      faqTitle="Preguntas Frecuentes sobre Noticias"
+      faqTitle="Preguntas Frecuentes"
       faqDescription="Respuestas a las consultas más comunes sobre nuestro portal de noticias"
       faqs={faqs}
       contactTitle="Sala de Prensa"
