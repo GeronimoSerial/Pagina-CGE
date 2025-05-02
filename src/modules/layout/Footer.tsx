@@ -119,16 +119,35 @@ const Footer = () => {
             </h4>
             <address className="not-italic space-y-3">
               <p className="text-sm text-white/80 flex items-center">
-                <MapPin size={16} className="mr-2 text-white/70" />
-                Calle Catamarca 640, Corrientes Capital
+                <a
+                  href="https://www.google.com/maps?q=Consejo+General+de+Educación+Corrientes"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center"
+                >
+                  <MapPin size={16} className="mr-2 text-white/70" />
+                  Calle Catamarca 640, Corrientes Capital
+                </a>
               </p>
               <p className="text-sm text-white/80 flex items-center">
-                <Mail size={16} className="mr-2 text-white/70" />
-                cge@mec.gob.ar
+                <a
+                  href="mailto:cge@mec.gob.ar?subject=Consulta&body=Hola, me gustaría realizar una consulta..."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center"
+                >
+                  <Mail size={16} className="mr-2 text-white/70" />
+                  cge@mec.gob.ar
+                </a>
               </p>
               <p className="text-sm text-white/80 flex items-center">
                 <Phone size={16} className="mr-2 text-white/70" />
-                +54 (379) 123-4567
+                <a
+                  href="https://wa.me/5403794424264?text=Hola%2C%20me%20comunico%20con%20el%20Consejo%20para%20realizar%20una%20consulta.%20Agradecer%C3%ADa%20su%20orientaci%C3%B3n.%20Muchas%20gracias.
+"
+                >
+                  +54 (379) 442-4264
+                </a>
               </p>
             </address>
           </div>
@@ -139,13 +158,16 @@ const Footer = () => {
             © 2023 Consejo General de Educación.{" "}
             <Link
               href="https://www.mec.gob.ar/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-white no-underline hover:underline"
             >
               {" "}
               Ministero de Educación.
-            </Link> 
-            {" "}
+            </Link>{" "}
             <Link
+              target="_blank"
+              rel="noopener noreferrer"
               href="https://www.corrientes.gob.ar/"
               className="text-white no-underline hover:underline"
             >
@@ -154,13 +176,15 @@ const Footer = () => {
           </p>
           <div className="flex space-x-4 mt-6 md:mt-0">
             <a
-              href="#"
+              href="https://facebook.com/ConsejoGeneralEducacion"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-white/70 hover:text-white transition-colors bg-white/10 p-2 rounded-full hover:bg-white/20"
             >
               <Facebook size={18} />
             </a>
             <a
-              href="#"
+              href="https://instagram.com/consejogeneral"
               className="text-white/70 hover:text-white transition-colors bg-white/10 p-2 rounded-full hover:bg-white/20"
             >
               <Instagram size={18} />

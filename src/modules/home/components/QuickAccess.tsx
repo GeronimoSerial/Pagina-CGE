@@ -39,7 +39,8 @@ const QuickAccess = ({ items = [] }: QuickAccessProps) => {
     {
       icon: <FileText size={24} />,
       title: "Trámites",
-      description: "Gestione sus trámites administrativos",
+      description:
+        "Acceda a información útil para gestionar trámites administrativos",
       href: "/tramites",
     },
     {

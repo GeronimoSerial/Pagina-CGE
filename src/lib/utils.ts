@@ -27,15 +27,34 @@ export interface ArticlesGridProp
 
 // Filtra articulos por término de búsqueda y categoría
 export function filtrarArticulos(article: any[], searchTerm: string, categoriaSeleccionada: string) {
+  const normalizeText = (text: string = '') => {
+    return text
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+      .replace(/[^\w\s]/g, " ") // Replace special characters with spaces
+      .trim();
+  };
+
   return article.filter((item) => {
     const coincideCategoria =
       !categoriaSeleccionada || item.categoria === categoriaSeleccionada;
-    const coincideBusqueda =
-      !searchTerm ||
-      item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.titulo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.resumen?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    if (!searchTerm) {
+      return coincideCategoria;
+    }
+
+    const searchTermNormalized = normalizeText(searchTerm);
+    const titleNormalized = normalizeText(item.title || item.titulo);
+    const descriptionNormalized = normalizeText(item.description || item.resumen);
+    const contentToSearch = titleNormalized + " " + descriptionNormalized;
+
+    // Dividir el término de búsqueda en palabras y filtrar palabras vacías
+    const searchWords = searchTermNormalized.split(/\s+/).filter(word => word.length > 0);
+    
+    // Todas las palabras deben coincidir para que sea un resultado válido
+    const coincideBusqueda = searchWords.every(word => contentToSearch.includes(word));
+
     return coincideCategoria && coincideBusqueda;
   });
 }
@@ -99,3 +118,36 @@ export const truncateText = (text: string, wordLimit: number) => {
   }
   return text;
 };
+
+
+export const filterDocuments = (documents: any[], searchTerm: string, filter: string = "all") => {
+  const normalizeText = (text: string = '') => {
+    return text
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+      .replace(/[^\w\s]/g, " ") // Replace special characters with spaces
+      .trim();
+  };
+
+  return documents.filter((doc) => {
+    const matchesFilter = filter === "all" || doc.category === filter;
+
+    if (!searchTerm) {
+      return matchesFilter;
+    }
+
+    const searchTermNormalized = normalizeText(searchTerm);
+    const titleNormalized = normalizeText(doc.title);
+    const descriptionNormalized = normalizeText(doc.description);
+    const contentToSearch = titleNormalized + " " + descriptionNormalized;
+
+    // Dividir el término de búsqueda en palabras y filtrar palabras vacías
+    const searchWords = searchTermNormalized.split(/\s+/).filter(word => word.length > 0);
+    
+    // Todas las palabras deben coincidir para que sea un resultado válido
+    const matchesSearch = searchWords.every(word => contentToSearch.includes(word));
+
+    return matchesSearch && matchesFilter;
+  });
+}

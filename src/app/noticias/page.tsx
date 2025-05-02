@@ -32,9 +32,9 @@ export default function NoticiasGrid() {
       value: "Noticias actualizadas diariamente",
     },
     {
-      icon: <Phone className="h-5 w-5 text-[#3D8B37] mr-2" />,
-      label: "Sala de Prensa:",
-      value: "0800-555-1234",
+      icon: "",
+      label: "",
+      value: "",
     },
   ];
 
@@ -79,8 +79,9 @@ export default function NoticiasGrid() {
       faqDescription="Respuestas a las consultas más comunes sobre nuestro portal de noticias"
       faqs={faqs}
       contactTitle="Sala de Prensa"
-      contactSchedule="Atención a medios: Lunes a Viernes de 8:00 a 16:00 hs"
-      contactButtonText="Contactar Sala de Prensa"
+      contactSchedule="Atención a medios: Lunes a Viernes de 8:00 a 12:00 hs"
+      contactButtonText="Contactar Prensa"
+      contactUrl="https://wa.me/5493794376025?text=Hola,%20necesito%20contactar%20a%20la%20sala%20de%20prensa.%20"
     />
   );
 }

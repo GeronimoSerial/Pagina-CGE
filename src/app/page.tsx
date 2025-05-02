@@ -1,6 +1,6 @@
 // src/app/noticia/[id]/page.tsx
 import { getAllContent } from "../modules/article/data/content";
-import { formatearFecha } from "../lib/utils";
+import { formatearFecha, sortByDate } from "../lib/utils";
 import HeroSection from "../modules/home/components/HeroSection";
 import QuickAccess from "../modules/home/components/QuickAccess";
 import { Separator } from "@radix-ui/react-separator";
@@ -17,8 +17,15 @@ export async function generateStaticParams() {
 
 export default function PagPrincipal() {
   const rawNews = getAllContent("noticias");
-  const news = rawNews.map((item: any) => {
-    const date = formatearFecha(item.date || item.fecha);
+  // Normaliza la propiedad 'date' para cada noticia
+  const normalizedNews = rawNews.map((item: any) => ({
+    ...item,
+    date: item.date || item.fecha || "",
+  }));
+
+  const sortedNews = sortByDate(normalizedNews);
+  const news = sortedNews.slice(0, 4).map((item: any) => {
+    const date = formatearFecha(item.date);
     return {
       id: item.slug,
       slug: item.slug,
@@ -48,7 +55,7 @@ export default function PagPrincipal() {
         </section>
         <Separator className="my-8 bg-[#217A4B]/20" />
         {/* News Section */}
-        <section id="noticias" className="py-16 bg-transparent">
+        <section id="noticias" className="bg-transparent">
           <div className="container mx-auto px-4 md:px-6">
             <div className="container relative mx-auto px-6">
               <div className="text-center max-w-2xl mx-auto mb-16">
@@ -63,14 +70,14 @@ export default function PagPrincipal() {
             </div>
             <ArticlesGrid
               articles={news}
-              buttonText="Ver noticia"
+              buttonText="Ver noticia completa"
               emptyStateTitle="No se encontraron noticias"
               emptyStateDescription="No hay resultados para tu búsqueda. Intenta con otros términos o selecciona otra categoría."
               emptyStateButtonText="Mostrar todas las noticias"
               showUrgentBadge={true}
               basePath="/noticias"
             />
-            <div className="container mx-auto px-4 pb-12">
+            <div className="container mx-auto py-6 px-4 pb-12">
               <div className="flex justify-center">
                 <Link
                   href="/noticias"
@@ -83,6 +90,7 @@ export default function PagPrincipal() {
             </div>
           </div>
         </section>
+        <Separator className="my-8 bg-[#217A4B]/20" />
         <SocialMediaSection />
       </main>
     </div>

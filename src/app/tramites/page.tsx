@@ -41,7 +41,7 @@ export default function TramitesGrid() {
     {
       icon: <Phone className="h-5 w-5 text-[#3D8B37] mr-2" />,
       label: "Consultas:",
-      value: "0800-555-1234",
+      value: "3794-852954",
     },
   ];
 
@@ -87,8 +87,9 @@ export default function TramitesGrid() {
       faqs={faqs}
       contactTitle="Horarios de atención"
       contactSchedule="Lunes a Viernes de 8:00 a 16:00 hs"
-      contactButtonText="Contactar Mesa de Ayuda"
+      contactButtonText="Contactar mesa de entrada"
       tramite={true}
+      contactUrl="https://wa.me/5493794852954?text=Hola,%20necesito%20ayuda%20con%20mi%20trámite.%20Gracias!"
     />
   );
 }
