@@ -61,32 +61,20 @@ export default function PagPrincipal() {
                 </p>
               </div>
             </div>
-            {/* <div className="mb-10">
-              <h2 className="text-3xl font-bold mb-2">
-                Ultimas noticias y Novedades
-              </h2>
-              <p className="text-gray-700 max-w-3xl">
-                Mantente informado sobre las últimas novedades, publicaciones y
-                resoluciones del Consejo General de Educación.
-              </p>
-            </div> */}
             <ArticlesGrid
               articles={news}
-              searchPlaceholder="Buscar noticias..."
               buttonText="Ver noticia"
               emptyStateTitle="No se encontraron noticias"
               emptyStateDescription="No hay resultados para tu búsqueda. Intenta con otros términos o selecciona otra categoría."
               emptyStateButtonText="Mostrar todas las noticias"
               showUrgentBadge={true}
-              showSearch={false}
-              showFilters={false}
               basePath="/noticias"
             />
             <div className="container mx-auto px-4 pb-12">
               <div className="flex justify-center">
                 <Link
                   href="/noticias"
-                  className="inline-flex items-center gap-2 bg-[#3D8B37] hover:bg-[#2D6A27] text-white font-medium px-6 py-3 rounded-lg transition-colors duration-300"
+                  className="inline-flex items-center gap-2 bg-[#3D8B37] hover:bg-[#2D6A27] text-white font-medium px-6 py-3 mt-5 rounded-lg transition-colors duration-300"
                 >
                   Ver todas las noticias
                   <ArrowRight className="h-5 w-5" />
