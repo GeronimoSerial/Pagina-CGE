@@ -80,21 +80,49 @@
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
   }
-
-  @media print {
-    body * {
-      visibility : hidden !important;
-    }
-
-    .printable-article, .printable-article * {
-      visibility: visible !important;
-    }
-    .printable-article {
-      position: absolute !important;
-      left:0; top: 0; width: 100%;
-      background: white;
-      box-shadow: none;
-      padding: 0;
+  /* @media print {
+    @page {
       margin: 0;
+      size: auto;
     }
-  }
+/*   
+    /* Oculta todo */
+    /* body * {
+      display: none;
+    }
+  
+    /* Muestra solo el contenedor printable */
+    /* .printable-article, .printable-article * {
+      display: block !important;
+    }
+  
+    Asegura que se imprima correctamente
+    .printable-article {
+      all: unset;
+      display: block !important;
+      width: 100% !important;
+      background: white !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      page-break-inside: avoid;
+    }
+  
+    También hay que mostrar sus padres hasta body
+    .printable-article {
+      visibility: visible !important;
+      position: static !important;
+    }
+  
+    .printable-article::before,
+    .printable-article::after {
+      display: none !important;
+    }
+  
+    /* Importante: mostrar también los padres directos si son necesarios
+    .printable-article,
+    .printable-article-parent,
+    .printable-article-parent * {
+      display: block !important;
+      visibility: visible !important;
+    } */
+
