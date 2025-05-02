@@ -272,7 +272,6 @@ const DocumentationSection = ({}) => {
               "guias",
             ].map((category) => (
               <TabsContent key={category} value={category} className="mt-6">
-                {/* Contenedor con altura fija para las tarjetas */}
                 <div className="relative h-[800px] overflow-y-auto rounded-lg border border-gray-100 shadow-sm">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
                     {currentDocuments.length > 0 ? (

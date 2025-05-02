@@ -12,7 +12,7 @@ collections:
     folder: "public/content/noticias"
     create: true
     identifier_field: "titulo"
-    slug: "{{slug}}"
+    slug: "{{year}}-{{month}}-{{day}}_{{slug}}"
     public_folder: "/images"
     fields:
       - { label: "Título", name: "titulo", widget: "string" }
@@ -24,7 +24,15 @@ collections:
           label: "Subcategoría",
           name: "subcategoria",
           widget: "select",
-          options: ["General", "Educación", "Docentes", "Estudiantes"],
+          options:
+            [
+              "General",
+              "Educación",
+              "Docentes",
+              "Estudiantes",
+              "Inscripciones",
+              "Resoluciones",
+            ],
         }
       - { label: "Contenido", name: "body", widget: "markdown" }
 
