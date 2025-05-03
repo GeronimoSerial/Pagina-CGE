@@ -168,7 +168,7 @@ export default function PageWithFAQ({
               emptyStateTitle={emptyStateTitle}
               emptyStateDescription={emptyStateDescription}
               emptyStateButtonText={emptyStateButtonText}
-              showUrgentBadge={true}
+              showImportantBadge={true}
               basePath={basePath}
             />
             {/* Controles de paginación */}

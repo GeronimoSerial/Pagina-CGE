@@ -32,6 +32,18 @@ export const faqsContact: FAQ[] = [
       text: "Nuestras oficinas están ubicadas en la calle Catamarca 640, Corrientes, Capital.",
     },
   },
+  {
+    question: "¿Cómo puedo seguir mis trámites?",
+    answer: {
+      text: "Puedes seguir el estado de tus trámites a través de nuestro portal digital o contactando a nuestras oficinas.",
+      links: [
+        {
+          text: "Consultar estado de trámite",
+          url: "https://expgob.mec.gob.ar/lup_mod/ubicar_expedWeb.asp",
+        },
+      ],
+    },
+  },
 ];
 
 export const faqsDocs: FAQ[] = [
@@ -53,22 +65,22 @@ export const faqsDocs: FAQ[] = [
       ],
     },
   },
-  // {
-  //   question: "¿Cómo puedo enviar mi documentación?",
-  //   answer: {
-  //     text: "Puede enviar su documentación a través del portal digital o presentarla en Mesa de Entradas del Consejo General de Educación.",
-  //     links: [
-  //       {
-  //         text: "Enviar documentación online",
-  //         url: "/tramites/enviar-documentacion",
-  //       },
-  //     ],
-  //   },
-  // },
   {
     question: "¿Qué hago si me falta algún documento?",
     answer: {
       text: "Si le falta algún documento, consulte la lista de requisitos en la ficha de trámite específica y asegúrese de completar todos los documentos necesarios.",
+    },
+  },
+  {
+    question: "¿No encuentro el documento que necesito?",
+    answer: {
+      text: "Si no encuentra el documento que necesita, puede seleccionar el boton de solicitud de documentación o contactarse con nosotros.",
+      links: [
+        {
+          text: "Contactar",
+          url: "/contacto",
+        },
+      ],
     },
   },
 ];
@@ -78,12 +90,6 @@ export const faqsTramites: FAQ[] = [
     question: "¿Cómo inicio un trámite?",
     answer: {
       text: "Para iniciar un trámite debe presentar la documentación requerida en Mesa de Entradas del Consejo General de Educación",
-      // links: [
-      //   {
-      //     text: "Acceder al portal digital",
-      //     url: "/tramites",
-      //   },
-      // ],
     },
   },
   {
@@ -132,9 +138,9 @@ export const faqsNews: FAQ[] = [
     },
   },
   {
-    question: "¿Cómo identifico las noticias urgentes?",
+    question: "¿Cómo identifico las noticias importantes?",
     answer: {
-      text: "Las noticias urgentes están marcadas con una etiqueta especial y aparecen destacadas en la parte superior del portal.",
+      text: "Las noticias importantes están marcadas con una etiqueta especial y aparecen destacadas en la parte superior del portal.",
     },
   },
   {

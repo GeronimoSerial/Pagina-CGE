@@ -214,15 +214,14 @@ export default function Contacto() {
         </div>
       </section>
 
-      <SocialMediaSection
-        title="Seguinos en redes sociales"
-        description="Contactános a través de nuestras redes"
-      />
-
       <FAQSection
         faqTitle="Preguntas Frecuentes"
         faqDescription="Encuentra respuestas comunes"
         faqs={faqsContact}
+      />
+      <SocialMediaSection
+        title="Seguinos en redes sociales"
+        description="Contactános a través de nuestras redes"
       />
     </main>
   );

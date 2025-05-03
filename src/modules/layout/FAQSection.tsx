@@ -13,12 +13,12 @@ const FAQSection: React.FC<FAQSectionProps> = ({
   faqDescription,
   faqs,
 }) => (
-  <section className="bg-gradient-to-b from-white to-gray-50 py-16 border-t border-gray-100">
+  <section className="bg-gray-50 border-t border-gray-100 z-10 relative py-16">
     <div className="container mx-auto px-4 md:px-6">
       <div className="text-center mb-12">
-        <h3 className="text-5xl font-bold mb-6 z-100 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
+        <h2 className="text-5xl font-bold mb-6 z-100 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent leading-tight">
           {faqTitle}
-        </h3>
+        </h2>
         <p className="text-gray-600 max-w-2xl mx-auto text-lg">
           {faqDescription}
         </p>
@@ -42,7 +42,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                 <p className="text-gray-600">{faq.answer.text}</p>
               </div>
               {faq.answer.links && faq.answer.links.length > 0 && (
-                <div className="mt-4 space-y-2 ml-12">
+                <div className="mt-4 space-y-2 ml-12 ">
                   {faq.answer.links.map((link: FAQLink, linkIndex: number) => (
                     <a
                       key={linkIndex}
