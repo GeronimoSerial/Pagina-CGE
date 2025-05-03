@@ -11,11 +11,7 @@ import {
 import { Button } from "../../components/ui/button";
 import SearchInput from "./SearchInput";
 import FAQSection from "./FAQSection";
-
-interface FAQ {
-  question: string;
-  answer: string;
-}
+import { FAQ } from "../faqs/faqs";
 
 interface InfoBarItem {
   icon: React.ReactNode;
