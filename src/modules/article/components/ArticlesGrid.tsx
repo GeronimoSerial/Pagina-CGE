@@ -20,7 +20,7 @@ interface ArticlesGridProps {
   emptyStateTitle?: string;
   emptyStateDescription?: string;
   emptyStateButtonText?: string;
-  showUrgentBadge?: boolean;
+  showImportantBadge?: boolean;
   basePath?: string;
 }
 
@@ -30,7 +30,7 @@ const ArticlesGrid = ({
   emptyStateTitle = "No se encontraron artículos",
   emptyStateDescription = "No hay resultados para tu búsqueda. Intenta con otros términos o selecciona otra categoría.",
   emptyStateButtonText = "Mostrar todos los artículos",
-  showUrgentBadge = false,
+  showImportantBadge = false,
   basePath,
 }: ArticlesGridProps) => {
   const pathname = usePathname();
@@ -60,9 +60,9 @@ const ArticlesGrid = ({
                     alt={item.title}
                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                   />
-                  {showUrgentBadge && item.esUrgente && (
-                    <Badge className="absolute top-3 right-3 bg-red-500 text-white border-0">
-                      Urgente
+                  {showImportantBadge && item.esImportante && (
+                    <Badge className="underline absolute top-3 right-3 bg-gray-600 text-white border-0">
+                      Importante
                     </Badge>
                   )}
                 </div>

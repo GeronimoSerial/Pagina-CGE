@@ -3,6 +3,7 @@ import { getAllContent } from "../../modules/article/data/content";
 import { Info, Phone } from "lucide-react";
 import PageWithFAQ from "../../modules/layout/PageWithFAQ";
 import { faqsTramites } from "../../modules/faqs/faqs";
+import { info } from "console";
 
 export default function TramitesGrid() {
   const rawTramites = getAllContent("tramites");
@@ -23,7 +24,7 @@ export default function TramitesGrid() {
       imagen: item.imagen,
       categoria: item.subcategoria,
       content: item.content,
-      esUrgente: item.esUrgente || false,
+      esImportante: item.esImportante || false,
     };
   });
 
@@ -31,7 +32,7 @@ export default function TramitesGrid() {
     {
       icon: <Info className="h-5 w-5 text-[#3D8B37] mr-2" />,
       label: "Horario de atención:",
-      value: "Lunes a Viernes de 8:00 a 16:00 hs",
+      value: "Lunes a Viernes de 7:00 a 16:00 hs",
     },
     {
       icon: <Phone className="h-5 w-5 text-[#3D8B37] mr-2" />,
@@ -57,8 +58,8 @@ export default function TramitesGrid() {
       faqTitle="Preguntas Frecuentes"
       faqDescription="Respuestas a las consultas más comunes sobre trámites del Consejo General de Educación"
       faqs={faqsTramites}
-      contactTitle="Horarios de atención"
-      contactSchedule="Lunes a Viernes de 8:00 a 16:00 hs"
+      contactTitle={infoBarItems[0].label}
+      contactSchedule={infoBarItems[0].value}
       contactButtonText="Contactar mesa de entrada"
       tramite={true}
       contactUrl="https://wa.me/5493794852954?text=Hola,%20necesito%20ayuda%20con%20mi%20trámite.%20Gracias!"
