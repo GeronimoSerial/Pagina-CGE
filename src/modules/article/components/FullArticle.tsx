@@ -3,12 +3,10 @@ import {
   Tag,
   Clock,
   ExternalLink,
-  Mail,
-  FileText,
   ChevronRight,
   Bookmark,
-  Share2,
-  Printer,
+  Newspaper,
+  BadgeInfo,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../../../components/ui/button";
@@ -27,35 +25,6 @@ export default function FullArticle({
   sectionTitle?: string;
   articulosRelacionados?: any[];
 }) {
-  if (!post) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-lg mx-auto bg-white rounded-2xl shadow-lg overflow-hidden border border-slate-100">
-            <div className="flex flex-col items-center py-16 px-8">
-              <div className="w-28 h-28 rounded-full bg-red-50 flex items-center justify-center mb-8 shadow-inner">
-                <span className="text-red-500 text-5xl font-light">!</span>
-              </div>
-              <h1 className="text-3xl font-bold text-slate-800 mb-4">
-                {sectionTitle} no encontrado
-              </h1>
-              <p className="text-slate-500 text-center mb-10">
-                Lo sentimos, el {sectionTitle.toLowerCase()} que estás buscando
-                no existe o ha sido removido.
-              </p>
-              <Link href="/">
-                <Button className="bg-emerald-700 hover:bg-emerald-800 transition-all duration-300 shadow-md hover:shadow-lg px-6 py-2.5 rounded-full">
-                  <ArrowLeftIcon className="mr-2" size={16} />
-                  Volver a la página principal
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   const enlaces = [
     {
       titulo: "Gestión Educativa",
@@ -84,6 +53,7 @@ export default function FullArticle({
           alt={post.titulo ?? "Artículo"}
           className="w-full h-full object-cover opacity-90"
         />
+
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex flex-col justify-end">
           <div className="container mx-auto px-6 pb-8">
             <div className="max-w-4xl ">
@@ -96,6 +66,12 @@ export default function FullArticle({
                   <Clock size={14} />
                   {formatearFecha(post.fecha)}
                 </span>
+                {post.esImportante && (
+                  <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-100 text-green-800 text-sm font-medium rounded-full border border-green-300">
+                    <Newspaper size={16} className="text-green-700" />
+                    Importante
+                  </span>
+                )}
               </div>
               <h1 className="text-3xl md:text-5xl font-bold text-white tracking-tight leading-tight ">
                 {post.titulo ?? ""}

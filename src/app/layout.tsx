@@ -10,7 +10,7 @@ export { metadata };
 
 //fonts
 
-// const montserrat = Montserrat({ subsets: ["latin"] });
+const montserrat = Montserrat({ subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({

@@ -14,12 +14,12 @@ const SocialMediaSection = ({
   description = "Mantenete conectado y recibí las últimas actualizaciones a través de nuestras redes sociales",
 }: SocialMediaProps) => {
   return (
-    <section className="relative py-16 overflow-hidden bg-gradient-to-b from-gray-50 to-white">
+    <section className="relative py-16 overflow-hidden bg-gray-50 to-white">
       <div className="container relative mx-auto px-6">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
+          <h3 className="text-5xl leading-tight font-bold mb-6 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
             {title}
-          </h2>
+          </h3>
           <p className="text-gray-600 text-xl leading-relaxed">{description}</p>
         </div>
 

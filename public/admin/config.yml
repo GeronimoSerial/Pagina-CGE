@@ -12,7 +12,7 @@ collections:
     folder: "public/content/noticias"
     create: true
     identifier_field: "titulo"
-    slug: "{{year}}-{{month}}-{{day}}_{{slug}}"
+    slug: "{{year}}-{{month}}-{{day}}_{{titulo_corto}}"
     public_folder: "/images"
     fields:
       - { label: "Título", name: "titulo", widget: "string" }
@@ -20,6 +20,11 @@ collections:
       - { label: "Fecha", name: "fecha", widget: "datetime" }
       - { label: "Resumen", name: "resumen", widget: "string" }
       - { label: "Imagen", name: "imagen", widget: "image" }
+      - {
+          label: "Mostrar con prioridad?",
+          name: "esImportante",
+          widget: "boolean",
+        }
       - {
           label: "Subcategoría",
           name: "subcategoria",
@@ -41,7 +46,7 @@ collections:
     folder: "public/content/tramites"
     create: true
     identifier_field: "titulo"
-    slug: "{{slug}}"
+    slug: "{{titulo_corto}}"
     public_folder: "/images"
     fields:
       - { label: "Título", name: "titulo", widget: "string" }

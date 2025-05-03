@@ -39,6 +39,7 @@ export default function PagPrincipal() {
       imagen: item.imagen,
       categoria: item.subcategoria,
       content: item.content,
+      esImportante: item.esImportante || false,
     };
   });
   return (
@@ -59,9 +60,9 @@ export default function PagPrincipal() {
           <div className="container mx-auto px-4 md:px-6">
             <div className="container relative mx-auto px-6">
               <div className="text-center max-w-2xl mx-auto mb-16">
-                <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
+                <h3 className="text-5xl font-bold mb-6 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
                   Ultimas noticias y novedades{" "}
-                </h2>
+                </h3>
                 <p className="text-gray-600 text-xl leading-relaxed">
                   Mantente informado sobre las últimas novedades, publicaciones
                   y resoluciones del Consejo General de Educación
@@ -74,8 +75,8 @@ export default function PagPrincipal() {
               emptyStateTitle="No se encontraron noticias"
               emptyStateDescription="No hay resultados para tu búsqueda. Intenta con otros términos o selecciona otra categoría."
               emptyStateButtonText="Mostrar todas las noticias"
-              showUrgentBadge={true}
               basePath="/noticias"
+              showImportantBadge={true}
             />
             <div className="container mx-auto py-6 px-4 pb-12">
               <div className="flex justify-center">

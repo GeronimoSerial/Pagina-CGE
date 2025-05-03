@@ -2,7 +2,7 @@ import { formatearFecha } from "../../lib/utils";
 import { getAllContent } from "../../modules/article/data/content";
 import { Info, Phone } from "lucide-react";
 import PageWithFAQ from "../../modules/layout/PageWithFAQ";
-import { faqsContact } from "../../modules/faqs/faqs";
+import { faqsNews } from "../../modules/faqs/faqs";
 
 export default function NoticiasGrid() {
   const rawNoticias = getAllContent("noticias");
@@ -22,7 +22,7 @@ export default function NoticiasGrid() {
       imagen: item.imagen,
       categoria: item.subcategoria,
       content: item.content,
-      esUrgente: item.esUrgente || false,
+      esImportante: item.esImportante || false,
     };
   });
 
@@ -31,11 +31,6 @@ export default function NoticiasGrid() {
       icon: <Info className="h-5 w-5 text-[#3D8B37] mr-2" />,
       label: "Actualizaciones:",
       value: "Noticias actualizadas diariamente",
-    },
-    {
-      icon: "",
-      label: "",
-      value: "",
     },
   ];
 
@@ -55,7 +50,7 @@ export default function NoticiasGrid() {
       basePath="/noticias"
       faqTitle="Preguntas Frecuentes"
       faqDescription="Respuestas a las consultas más comunes sobre nuestro portal de noticias"
-      faqs={faqsContact}
+      faqs={faqsNews}
       contactTitle="Sala de Prensa"
       contactSchedule="Atención a medios: Lunes a Viernes de 8:00 a 12:00 hs"
       contactButtonText="Contactar Prensa"
