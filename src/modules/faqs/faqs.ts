@@ -87,15 +87,9 @@ export const faqsTramites: FAQ[] = [
     },
   },
   {
-    question: "¿Cómo consulto el estado de mi trámite?",
+    question: "¿Cuánto tiempo demora un trámite?",
     answer: {
-      text: "Puede consultar el estado de su trámite ingresando su número de expediente o tipo de trámite en el portal digital, donde podrá ubicar su expediente o trámite en cualquier repartición.",
-      links: [
-        {
-          text: "Consultar estado de trámite",
-          url: "https://expgob.mec.gob.ar/lup_mod/ubicar_expedWeb.asp",
-        },
-      ],
+      text: "Los tiempos de resolución varían según el tipo de trámite y la carga administrativa. En general, los trámites pueden demorar entre 5 y 30 días hábiles.",
     },
   },
   {
@@ -111,9 +105,15 @@ export const faqsTramites: FAQ[] = [
     },
   },
   {
-    question: "¿Cuánto tiempo demora un trámite?",
+    question: "¿Cómo consulto el estado de mi trámite?",
     answer: {
-      text: "Los tiempos de resolución varían según el tipo de trámite y la carga administrativa. En general, los trámites pueden demorar entre 5 y 30 días hábiles.",
+      text: "Puede consultar el estado de su trámite ingresando su número de expediente o tipo de trámite en el portal digital, donde podrá ubicar su expediente o trámite en cualquier repartición.",
+      links: [
+        {
+          text: "Consultar estado de trámite",
+          url: "https://expgob.mec.gob.ar/lup_mod/ubicar_expedWeb.asp",
+        },
+      ],
     },
   },
 ];

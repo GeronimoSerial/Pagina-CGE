@@ -16,7 +16,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
   <section className="bg-gradient-to-b from-white to-gray-50 py-16 border-t border-gray-100">
     <div className="container mx-auto px-4 md:px-6">
       <div className="text-center mb-12">
-        <h3 className="text-5xl font-bold mb-6 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
+        <h3 className="text-5xl font-bold mb-6 z-100 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
           {faqTitle}
         </h3>
         <p className="text-gray-600 max-w-2xl mx-auto text-lg">
@@ -27,7 +27,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
         {faqs.map((faq, index) => (
           <div
             key={index}
-            className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:border-[#3D8B37]/20 transition-all duration-300"
+            className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:border-[#3D8B37]/20 transition-all duration-300 flex flex-col h-full"
           >
             <div className="flex items-start mb-4">
               <div className="bg-[#3D8B37]/10 p-2 rounded-lg mr-4">
@@ -37,10 +37,12 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                 {faq.question}
               </h4>
             </div>
-            <div className="ml-12">
-              <p className="text-gray-600">{faq.answer.text}</p>
+            <div className="flex flex-col h-full justify-between">
+              <div className="ml-12">
+                <p className="text-gray-600">{faq.answer.text}</p>
+              </div>
               {faq.answer.links && faq.answer.links.length > 0 && (
-                <div className="mt-3 space-y-2">
+                <div className="mt-4 space-y-2 ml-12">
                   {faq.answer.links.map((link: FAQLink, linkIndex: number) => (
                     <a
                       key={linkIndex}

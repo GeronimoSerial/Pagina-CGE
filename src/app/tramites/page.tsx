@@ -6,13 +6,7 @@ import { faqsTramites } from "../../modules/faqs/faqs";
 
 export default function TramitesGrid() {
   const rawTramites = getAllContent("tramites");
-  const categorias = [
-    "Licencias",
-    "Certificaciones",
-    "Inscripciones",
-    "Jubilaciones",
-    "Cambios de destino",
-  ];
+  const categorias = ["Licencias", "Títulos", "Inscripción", "Otros"];
 
   const tramites = rawTramites.map((item: any) => {
     const date = formatearFecha(item.date || item.fecha);
@@ -45,8 +39,6 @@ export default function TramitesGrid() {
       value: "3794-852954",
     },
   ];
-
- 
 
   return (
     <PageWithFAQ
