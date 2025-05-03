@@ -18,16 +18,17 @@ export default function Institucional() {
         </div>
 
         {/* Imagen destacada con superposición */}
-        <div className="relative h-80 rounded-2xl overflow-hidden shadow-xl mb-16">
+        <div className="relative h-96 rounded-2xl overflow-hidden shadow-xl mb-16 group">
+          <div className="absolute inset-0 bg-gray-200 animate-pulse skeleton pointer-events-none" />
           <Image
             src="/images/header-noticias.webp"
             alt="Consejo General de Educación"
-            className="object-cover w-full h-full"
+            className="object-cover w-full h-full z-10"
             width={1080}
             height={720}
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-20" />
         </div>
 
         {/* Historia */}

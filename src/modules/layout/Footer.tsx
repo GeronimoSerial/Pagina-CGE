@@ -10,8 +10,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div>
             <div className="flex items-center mb-4">
-              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center mr-3">
-                <span className="text-[#3D8B37] font-bold text-lg">CGE</span>
+              <div className="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center mr-3">
+                <img
+                  src="/images/logo.png"
+                  alt="Logo CGE"
+                  className="w-8 h-8 object-contain"
+                />
               </div>
               <h3 className="text-xl font-bold">
                 Consejo General
@@ -155,7 +159,7 @@ const Footer = () => {
         <Separator className="my-10 bg-white/20" />
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-white/70">
-            © 2023 Consejo General de Educación.{" "}
+            © 2025 Consejo General de Educación.{" "}
             <Link
               href="https://www.mec.gob.ar/"
               target="_blank"
@@ -163,7 +167,7 @@ const Footer = () => {
               className="text-white no-underline hover:underline"
             >
               {" "}
-              Ministero de Educación.
+              Ministerio de Educación.
             </Link>{" "}
             <Link
               target="_blank"
