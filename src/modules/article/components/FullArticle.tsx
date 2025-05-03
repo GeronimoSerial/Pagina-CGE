@@ -108,7 +108,7 @@ export default function FullArticle({
       <div className="sticky top-[15px] z-[1000] backdrop-blur-md bg-white/90 border-b border-slate-200/60 shadow-md">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-16 md:h-18">
-            <Link href="/">
+            <Link href={`/${sectionTitle.toLowerCase()}`}>
               <Button
                 variant="ghost"
                 className="text-emerald-700 hover:text-emerald-800 hover:bg-emerald-100/40 transition-all duration-300 font-medium rounded-full px-4 py-2"
