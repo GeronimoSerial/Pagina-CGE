@@ -78,7 +78,10 @@ const ArticlesGrid = ({
                       {item.date}
                     </span>
                   </div>
-                  <CardTitle className="text-lg font-bold line-clamp-2 text-gray-800">
+                  <CardTitle
+                    title={item.title}
+                    className="text-lg font-bold line-clamp-2 text-gray-800"
+                  >
                     {item.title}
                   </CardTitle>
                 </CardHeader>
