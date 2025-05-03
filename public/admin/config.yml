@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: geronimoserial/Pagina-CGE
+  repo: geronimoserial/documentos-web-cge
   branch: main
 
 media_folder: "public/images"
@@ -53,6 +53,7 @@ collections:
           label: "Subcategoría",
           name: "subcategoria",
           widget: "select",
-          options: ["Inscripción", "Certificados", "Títulos", "Licencias"],
+          options:
+            ["Inscripción", "Certificados", "Títulos", "Licencias", "Otros"],
         }
       - { label: "Contenido", name: "body", widget: "markdown" }
