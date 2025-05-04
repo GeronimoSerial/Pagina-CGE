@@ -46,6 +46,18 @@ function useCarousel() {
   return context;
 }
 
+const MOBILE_BREAKPOINT = "(max-width: 768px)" as const;
+
+type CarouselState = {
+  canScrollPrev: boolean;
+  canScrollNext: boolean;
+  current: number;
+  slideCount: number;
+  isPaused: boolean;
+  isTabVisible: boolean;
+  isMobile: boolean;
+};
+
 const Carousel = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & CarouselProps
@@ -74,68 +86,53 @@ const Carousel = React.forwardRef<
       plugins as any
     );
 
-    const [state, setState] = React.useState({
+    const [state, setState] = React.useState<CarouselState>({
       canScrollPrev: false,
       canScrollNext: false,
       current: 0,
       slideCount: 0,
       isPaused: false,
       isTabVisible: true,
+      isMobile: false,
     });
 
     const handleSelect = React.useCallback(() => {
       if (!api) return;
+
       setState((prev) => ({
         ...prev,
         canScrollPrev: api.canScrollPrev(),
         canScrollNext: api.canScrollNext(),
         current: api.selectedScrollSnap(),
       }));
-      if (onCurrentIndexChange) {
-        onCurrentIndexChange(api.selectedScrollSnap());
-      }
+
+      onCurrentIndexChange?.(api.selectedScrollSnap());
     }, [api, onCurrentIndexChange]);
 
-    React.useEffect(() => {
-      if (!api) return;
-      setState((prev) => ({ ...prev, slideCount: api.slideNodes().length }));
-      api.on("select", handleSelect);
-      handleSelect();
-      return () => {
-        api.off("select", handleSelect);
-      };
-    }, [api, handleSelect]);
-
-    React.useEffect(() => {
-      const handleVisibilityChange = () => {
+    const handleMobileChange = React.useCallback(
+      (e: MediaQueryListEvent | MediaQueryList) => {
         setState((prev) => ({
           ...prev,
-          isTabVisible: !document.hidden,
+          isMobile: e.matches,
         }));
-      };
+      },
+      []
+    );
 
-      document.addEventListener("visibilitychange", handleVisibilityChange);
-      return () => {
-        document.removeEventListener(
-          "visibilitychange",
-          handleVisibilityChange
-        );
-      };
+    const handleVisibilityChange = React.useCallback(() => {
+      setState((prev) => ({
+        ...prev,
+        isTabVisible: !document.hidden,
+      }));
     }, []);
 
-    React.useEffect(() => {
-      if (!api || !autoplay || state.isPaused || !state.isTabVisible) return;
+    const handleMouseEnter = React.useCallback(() => {
+      setState((prev) => ({ ...prev, isPaused: true }));
+    }, []);
 
-      const interval = setInterval(() => {
-        if (api.canScrollNext()) {
-          api.scrollNext();
-        } else {
-          api.scrollTo(0);
-        }
-      }, autoplayInterval);
-
-      return () => clearInterval(interval);
-    }, [api, autoplay, autoplayInterval, state.isPaused, state.isTabVisible]);
+    const handleMouseLeave = React.useCallback(() => {
+      setState((prev) => ({ ...prev, isPaused: false }));
+    }, []);
 
     const scrollPrev = React.useCallback(() => {
       api?.scrollPrev();
@@ -158,33 +155,102 @@ const Carousel = React.forwardRef<
       [scrollPrev, scrollNext]
     );
 
+    // Inicialización y limpieza de MediaQuery
+    React.useEffect(() => {
+      const mediaQuery = window.matchMedia(MOBILE_BREAKPOINT);
+      handleMobileChange(mediaQuery);
+      mediaQuery.addEventListener("change", handleMobileChange);
+      return () => mediaQuery.removeEventListener("change", handleMobileChange);
+    }, [handleMobileChange]);
+
+    // Inicialización y limpieza de visibilidad
+    React.useEffect(() => {
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      return () =>
+        document.removeEventListener(
+          "visibilitychange",
+          handleVisibilityChange
+        );
+    }, [handleVisibilityChange]);
+
+    // Inicialización del carrusel
+    React.useEffect(() => {
+      if (!api) return;
+
+      const updateSlideCount = () => {
+        setState((prev) => ({ ...prev, slideCount: api.slideNodes().length }));
+      };
+
+      updateSlideCount();
+      api.on("select", handleSelect);
+      handleSelect();
+
+      return () => {
+        api.off("select", handleSelect);
+      };
+    }, [api, handleSelect]);
+
+    // Manejo del autoplay
+    React.useEffect(() => {
+      if (
+        !api ||
+        !autoplay ||
+        state.isPaused ||
+        !state.isTabVisible ||
+        state.isMobile
+      )
+        return;
+
+      const interval = setInterval(() => {
+        if (api.canScrollNext()) {
+          api.scrollNext();
+        } else {
+          api.scrollTo(0);
+        }
+      }, autoplayInterval);
+
+      return () => clearInterval(interval);
+    }, [
+      api,
+      autoplay,
+      autoplayInterval,
+      state.isPaused,
+      state.isTabVisible,
+      state.isMobile,
+    ]);
+
+    // Sincronización del API
     React.useEffect(() => {
       if (!api || !setApi) return;
       setApi(api);
     }, [api, setApi]);
 
-    const handleMouseEnter = React.useCallback(() => {
-      setState((prev) => ({ ...prev, isPaused: true }));
-    }, []);
-
-    const handleMouseLeave = React.useCallback(() => {
-      setState((prev) => ({ ...prev, isPaused: false }));
-    }, []);
+    const contextValue = React.useMemo(
+      () => ({
+        carouselRef,
+        api,
+        opts,
+        orientation:
+          orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
+        scrollPrev,
+        scrollNext,
+        canScrollPrev: state.canScrollPrev,
+        canScrollNext: state.canScrollNext,
+      }),
+      [
+        carouselRef,
+        api,
+        opts,
+        orientation,
+        scrollPrev,
+        scrollNext,
+        state.canScrollPrev,
+        state.canScrollNext,
+      ]
+    );
 
     return (
-      <CarouselContext.Provider
-        value={{
-          carouselRef,
-          api,
-          opts,
-          orientation:
-            orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
-          scrollPrev,
-          scrollNext,
-          canScrollPrev: state.canScrollPrev,
-          canScrollNext: state.canScrollNext,
-        }}
-      >
+      <CarouselContext.Provider value={contextValue}>
         <div
           ref={ref}
           onKeyDownCapture={handleKeyDown}
