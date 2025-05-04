@@ -5,9 +5,10 @@ fecha: 2025-05-02T21:19:00.000Z
 resumen: Requisitos para acceder al Art. 32 del Regimen de Licencias (Permiso
   especial para madres lactantes, con una hora diaria para amamantar a su hijo
   durante los primeros 180 días, con opciones de ajuste en la jornada laboral)
-imagen: /images/header2.png
+imagen: /images/tramites.png
 subcategoria: Licencias
 ---
+
 # Instructivo para la Solicitud de Licencia – Artículo 32
 
 ## ¿Qué es la Licencia por Lactancia?

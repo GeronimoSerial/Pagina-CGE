@@ -4,9 +4,10 @@ titulo_corto: licenciaart19
 fecha: 2025-05-01T22:27:00.000Z
 resumen: Requisitos para acceder al Art. 19 del Regimen de Licencias (Licencia
   con goce de haberes para rendir exámenes según el nivel de estudios)
-imagen: /images/header2.png
+imagen: /images/tramites.png
 subcategoria: Licencias
 ---
+
 # Instructivo para la Solicitud de Licencia – Artículo 19
 
 ## ¿Qué es la Licencia por Estudio?

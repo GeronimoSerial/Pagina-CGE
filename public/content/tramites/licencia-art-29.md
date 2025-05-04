@@ -5,9 +5,10 @@ fecha: 2025-05-02T20:54:00.000Z
 resumen: Requisitos para acceder al Art. 29 del Regimen de Licencias (Licencia
   para participar en competencias deportivas oficiales no rentadas representando
   a la Provincia o Nación, con goce de haberes)
-imagen: /images/header2.png
+imagen: /images/tramites.png
 subcategoria: Licencias
 ---
+
 # Instructivo para la Solicitud de Licencia – Artículo 29
 
 ## ¿Qué es la Licencia Deportiva?

@@ -4,9 +4,10 @@ titulo_corto: licenciaart12
 fecha: 2025-04-30T21:15:00.000Z
 resumen: Requisitos para acceder al Art. 12 del Regimen de Licencias (Licencia
   para cuidar a un familiar enfermo o accidentado.)
-imagen: /images/header2.png
+imagen: /images/tramites.png
 subcategoria: Licencias
 ---
+
 # Instructivo para la Solicitud de Licencia – Artículo 12
 
 ## ¿Qué es la Licencia por Atención a un Familiar?

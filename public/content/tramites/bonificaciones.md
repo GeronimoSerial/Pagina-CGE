@@ -3,9 +3,10 @@ titulo: "Bonificaciones "
 titulo_corto: bonificaciones
 fecha: 2025-05-02T21:46:00.000Z
 resumen: Bonificaciones para el Personal Docente
-imagen: /images/header2.png
+imagen: /images/tramites.png
 subcategoria: Otros
 ---
+
 # Bonificaciones para el Personal Docente
 
 ## Bonificación por Ayuda Escolar
@@ -42,6 +43,7 @@ Este plus se abona mensualmente como parte del concepto **"salario familiar"**, 
 Esta asignación se concede al presentar la documentación correspondiente al nacimiento del hijo. En caso de que el menor lleve el apellido del padre, se requieren documentos adicionales si la madre es quien solicita el beneficio.
 
 - **Documentación requerida**:
+
   - Si el niño lleva el apellido paterno y es la madre quien realiza el trámite:
     - Información sumaria o CUIL con historial de ANSES.
     - Declaración jurada policial que acredite que el padre no tiene empleo formal.
@@ -65,6 +67,7 @@ Esta asignación se concede al presentar la documentación correspondiente al na
 Este beneficio consiste en el pago mensual equivalente a la asignación por hijo, desde la **declaración del embarazo** (a partir del tercer mes) hasta el **nacimiento**, cubriendo un total de nueve meses.
 
 - **Requisitos**:
+
   - Nota firmada por el/la titular solicitando el beneficio.
   - Certificado médico que acredite el embarazo.
 
@@ -78,4 +81,3 @@ Este beneficio consiste en el pago mensual equivalente a la asignación por hijo
   - **Domicilio**: Catamarca 640, Corrientes Capital
   - **Teléfonos**: 379-4474075 (Int. 102 – Secundaria, Int. 106 – Primaria)
   - **Horario de atención**: Lunes a Viernes, de 08:00 a 18:00 hs.
-

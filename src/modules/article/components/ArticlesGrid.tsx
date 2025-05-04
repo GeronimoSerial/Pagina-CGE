@@ -58,9 +58,9 @@ const ArticlesGrid = ({
                   <Image
                     src={item.imageUrl}
                     alt={item.title}
-                    fill
+                    width={500}
+                    height={500}
                     className="object-cover transition-transform duration-300 hover:scale-105"
-                    priority
                   />
                   {showImportantBadge && item.esImportante && (
                     <Badge className="underline absolute top-3 right-3 bg-gray-600 text-white border-0">

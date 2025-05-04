@@ -52,8 +52,10 @@ export default function FullArticle({
         <Image
           src={post.imagen}
           alt={post.titulo}
-          fill
+          width={1920}
+          height={1080}
           className="w-full h-full object-cover opacity-90"
+          priority
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex flex-col justify-end">
           <div className="container mx-auto px-6 pb-8">

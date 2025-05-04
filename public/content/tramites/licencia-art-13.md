@@ -4,9 +4,10 @@ titulo_corto: licenciaart13
 fecha: 2025-05-01T21:26:00.000Z
 resumen: Requisitos para acceder al Art. 13 del Regimen de Licencias (Licencia
   por maternidad con goce de haberes antes y después del parto.)
-imagen: /images/header2.png
+imagen: /images/tramites.png
 subcategoria: Licencias
 ---
+
 # Instructivo para la Solicitud de Licencia – Artículo 13
 
 ## ¿Qué es la Licencia por Maternidad?
