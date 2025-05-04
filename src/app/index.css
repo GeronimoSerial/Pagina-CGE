@@ -127,3 +127,28 @@
       visibility: visible !important;
     } */
 
+    /* Desactivar solo las animaciones decorativas en dispositivos móviles */
+@media (max-width: 768px) {
+  /* Desactivar efectos hover y animaciones decorativas */
+  .group:hover img.transition-transform,
+  .group:hover img.scale-105,
+  .group:active img.scale-105 {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* Desactivar otras animaciones decorativas */
+  .group img {
+    transition: none !important;
+  }
+}
+
+/* Habilitar animaciones decorativas solo si el dispositivo lo soporta y prefiere animaciones */
+@media (prefers-reduced-motion: no-preference) and (min-width: 769px) {
+  .group:hover img {
+    transform: scale(1.05);
+    transition: transform 700ms;
+  }
+}
+
+

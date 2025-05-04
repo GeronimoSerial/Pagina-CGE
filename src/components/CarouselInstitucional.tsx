@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Carousel, CarouselContent, CarouselItem } from "./ui/carousel";
-import { memo } from "react";
 
 const slides = [
   {
@@ -37,7 +36,14 @@ const slides = [
   },
 ] as const;
 
-const CarouselSlide = memo(function CarouselSlide({
+const carouselOptions = {
+  align: "start",
+  loop: true,
+  skipSnaps: false,
+  startIndex: 0,
+} as const;
+
+function CarouselSlide({
   slide,
   idx,
 }: {
@@ -56,7 +62,7 @@ const CarouselSlide = memo(function CarouselSlide({
           loading={idx === 0 ? undefined : "lazy"}
           placeholder="blur"
           blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2P4z8DwHwAFgwJ/lw2uWQAAAABJRU5ErkJggg=="
-          sizes="(max-width: 768px) 100vw, 800px"
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 800px"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-20" />
         <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8 z-30">
@@ -70,14 +76,7 @@ const CarouselSlide = memo(function CarouselSlide({
       </div>
     </CarouselItem>
   );
-});
-
-const carouselOptions = {
-  align: "start",
-  loop: true,
-  skipSnaps: false,
-  startIndex: 0,
-} as const;
+}
 
 function CarouselInstitucional() {
   return (
@@ -98,4 +97,4 @@ function CarouselInstitucional() {
   );
 }
 
-export default memo(CarouselInstitucional);
+export default CarouselInstitucional;
