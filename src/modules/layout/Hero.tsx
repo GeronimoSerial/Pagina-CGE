@@ -15,7 +15,6 @@ interface HeroSubSectionProps {
 export default function HeroSubSection({
   title,
   description,
-  ctaText = "Leer Más",
 }: HeroSubSectionProps) {
   return (
     <div className="bg-gradient-to-br from-green-600 to-green-700 text-white  shadow-xl hover:shadow-2xl transition-all duration-500 h-[250px] flex items-center justify-center overflow-hidden relative">
@@ -52,8 +51,8 @@ export default function HeroSubSection({
       {/* Efecto de brillo sutil */}
       <div className="absolute inset-0 bg-gradient-to-tr from-white/15 to-transparent pointer-events-none" />
 
-      <div className="container mx-auto text-center px-6 relative z-10">
-        <div className="max-w-2xl mx-auto space-y-6">
+      <div className="container mx-auto text-center px-5 relative z-10">
+        <div className="max-w-2xl mx-auto space-y-4">
           <h1 className="text-4xl mt-3 font-bold text-white drop-shadow-md">
             {title}
           </h1>

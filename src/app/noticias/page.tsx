@@ -38,7 +38,7 @@ export default function NoticiasGrid() {
     <PageWithFAQ
       heroTitle="Noticias y Novedades"
       heroDescription="Mantente informado con las últimas noticias y novedades del
-              Consejo General de Educación. Encuentra información actualizada
+              Consejo General de Educación. Información actualizada
               sobre eventos, anuncios y comunicados importantes."
       infoBarItems={infoBarItems}
       articles={noticias}
