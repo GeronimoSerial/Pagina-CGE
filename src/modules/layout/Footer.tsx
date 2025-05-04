@@ -54,11 +54,11 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="/documentacion"
+                  href="/tramites"
                   className="text-sm text-white/80 hover:text-white transition-colors flex items-center"
                 >
                   <span className="w-1.5 h-1.5 bg-white/60 rounded-full mr-2"></span>
-                  Documentacion Institucional
+                  Trámites
                 </Link>
               </li>
               <li>
