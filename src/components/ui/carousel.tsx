@@ -4,7 +4,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
-
+import { type AutoplayType } from "embla-carousel-autoplay";
 import { cn } from "../../lib/utils";
 
 import { Button } from "./button";
@@ -12,7 +12,7 @@ import { Button } from "./button";
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
 type CarouselOptions = UseCarouselParameters[0];
-type CarouselPlugin = UseCarouselParameters[1];
+type CarouselPlugin = AutoplayType;
 
 type CarouselProps = {
   opts?: CarouselOptions;
@@ -21,6 +21,8 @@ type CarouselProps = {
   setApi?: (api: CarouselApi) => void;
   currentIndex?: number;
   onCurrentIndexChange?: (index: number) => void;
+  autoplay?: boolean;
+  autoplayInterval?: number;
 };
 
 type CarouselContextProps = {
@@ -58,6 +60,8 @@ const Carousel = React.forwardRef<
       children,
       currentIndex,
       onCurrentIndexChange,
+      autoplay = true,
+      autoplayInterval = 5000,
       ...props
     },
     ref
@@ -67,36 +71,71 @@ const Carousel = React.forwardRef<
         ...opts,
         axis: orientation === "horizontal" ? "x" : "y",
       },
-      plugins
+      plugins as any
     );
-    const [canScrollPrev, setCanScrollPrev] = React.useState(false);
-    const [canScrollNext, setCanScrollNext] = React.useState(false);
-    const [current, setCurrent] = React.useState(0);
-    const [slideCount, setSlideCount] = React.useState(0);
 
-    React.useEffect(() => {
-      if (api && typeof currentIndex === "number") {
-        api.scrollTo(currentIndex);
+    const [state, setState] = React.useState({
+      canScrollPrev: false,
+      canScrollNext: false,
+      current: 0,
+      slideCount: 0,
+      isPaused: false,
+      isTabVisible: true,
+    });
+
+    const handleSelect = React.useCallback(() => {
+      if (!api) return;
+      setState((prev) => ({
+        ...prev,
+        canScrollPrev: api.canScrollPrev(),
+        canScrollNext: api.canScrollNext(),
+        current: api.selectedScrollSnap(),
+      }));
+      if (onCurrentIndexChange) {
+        onCurrentIndexChange(api.selectedScrollSnap());
       }
-    }, [api, currentIndex]);
+    }, [api, onCurrentIndexChange]);
 
     React.useEffect(() => {
       if (!api) return;
-      setSlideCount(api.slideNodes().length);
-      const onSelect = () => {
-        setCanScrollPrev(api.canScrollPrev());
-        setCanScrollNext(api.canScrollNext());
-        setCurrent(api.selectedScrollSnap());
-        if (onCurrentIndexChange) {
-          onCurrentIndexChange(api.selectedScrollSnap());
-        }
-      };
-      api.on("select", onSelect);
-      onSelect();
+      setState((prev) => ({ ...prev, slideCount: api.slideNodes().length }));
+      api.on("select", handleSelect);
+      handleSelect();
       return () => {
-        api.off("select", onSelect);
+        api.off("select", handleSelect);
       };
-    }, [api, onCurrentIndexChange]);
+    }, [api, handleSelect]);
+
+    React.useEffect(() => {
+      const handleVisibilityChange = () => {
+        setState((prev) => ({
+          ...prev,
+          isTabVisible: !document.hidden,
+        }));
+      };
+
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      return () => {
+        document.removeEventListener(
+          "visibilitychange",
+          handleVisibilityChange
+        );
+      };
+    }, []);
+
+    React.useEffect(() => {
+      if (!api || !autoplay || state.isPaused || !state.isTabVisible) return;
+
+      const interval = setInterval(() => {
+        if (api.canScrollNext()) {
+          api.scrollNext();
+        } else {
+          api.scrollTo(0);
+        }
+      }, autoplayInterval);
+
+      return () => clearInterval(interval);
+    }, [api, autoplay, autoplayInterval, state.isPaused, state.isTabVisible]);
 
     const scrollPrev = React.useCallback(() => {
       api?.scrollPrev();
@@ -120,25 +159,30 @@ const Carousel = React.forwardRef<
     );
 
     React.useEffect(() => {
-      if (!api || !setApi) {
-        return;
-      }
-
+      if (!api || !setApi) return;
       setApi(api);
     }, [api, setApi]);
+
+    const handleMouseEnter = React.useCallback(() => {
+      setState((prev) => ({ ...prev, isPaused: true }));
+    }, []);
+
+    const handleMouseLeave = React.useCallback(() => {
+      setState((prev) => ({ ...prev, isPaused: false }));
+    }, []);
 
     return (
       <CarouselContext.Provider
         value={{
           carouselRef,
-          api: api,
+          api,
           opts,
           orientation:
             orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
           scrollPrev,
           scrollNext,
-          canScrollPrev,
-          canScrollNext,
+          canScrollPrev: state.canScrollPrev,
+          canScrollNext: state.canScrollNext,
         }}
       >
         <div
@@ -147,6 +191,8 @@ const Carousel = React.forwardRef<
           className={cn("relative", className)}
           role="region"
           aria-roledescription="carousel"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
           {...props}
         >
           <div className="relative">
@@ -156,11 +202,11 @@ const Carousel = React.forwardRef<
           </div>
           {/* Dots */}
           <div className="flex justify-center gap-2 mt-4 pb-2">
-            {Array.from({ length: slideCount }).map((_, idx) => (
+            {Array.from({ length: state.slideCount }).map((_, idx) => (
               <button
                 key={idx}
                 className={`w-2.5 h-2.5 rounded-full transition-all ${
-                  current === idx
+                  state.current === idx
                     ? "bg-green-500 scale-110"
                     : "bg-gray-300 hover:bg-gray-400"
                 }`}

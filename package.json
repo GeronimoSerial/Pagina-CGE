@@ -49,6 +49,7 @@
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "emailjs-com": "^3.2.0",
+    "embla-carousel-autoplay": "^8.0.0-rc22",
     "embla-carousel-react": "^8.1.5",
     "framer-motion": "^11.18.2",
     "gray-matter": "^4.0.3",
