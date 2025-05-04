@@ -97,7 +97,7 @@ export default function Institucional() {
                     className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-[#217A4B]/30 group"
                   >
                     <div className="flex items-start mb-3">
-                      <div className="bg-[#217A4B]/10 p-2 rounded-lg mr-3 group-hover:bg-[#217A4B]/20 transition-colors">
+                      <div className="bg-[#217A4B]/10 p-1 rounded-lg mr-4 group-hover:bg-[#217A4B]/20 transition-colors">
                         {card.icon}
                       </div>
                       <h4 className="font-semibold text-lg text-[#217A4B]">
