@@ -10,7 +10,7 @@ const HeroSection = () => {
       {/* Imagen de fondo con overlay */}
       <div className="absolute inset-0 w-full h-full">
         <Image
-          src="/images/header2.png"
+          src="/images/hero2.png"
           alt="Imagen de fondo principal"
           fill
           quality={100}
@@ -18,9 +18,9 @@ const HeroSection = () => {
           className="object-cover"
         />
       </div>
-      <div className="hidden md:block absolute inset-0 w-full h-full">
+      <div className="block md:hidden absolute inset-0 w-full h-full">
         <Image
-          src="/images/hero2.png"
+          src="/images/header2.png"
           alt="Imagen de fondo principal"
           fill
           quality={100}
