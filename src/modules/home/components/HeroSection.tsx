@@ -2,24 +2,33 @@
 import { Button } from "../../../components/ui/button";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 const HeroSection = () => {
   return (
     <div className="relative w-full h-[520px] md:h-[600px] bg-[#F7FAF9] overflow-hidden flex items-center">
       {/* Imagen de fondo con overlay */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(/images/header2.png)` }}
-      />
-      {/* <div className="absolute inset-0 bg-black/40" /> */}
-      <div
-        className="hidden md:block absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(/images/hero2.png)` }}
-      />
+      <div className="absolute inset-0 w-full h-full">
+        <Image
+          src="/images/header2.png"
+          alt="Imagen de fondo principal"
+          fill
+          quality={100}
+          priority
+          className="object-cover"
+        />
+      </div>
+      <div className="hidden md:block absolute inset-0 w-full h-full">
+        <Image
+          src="/images/hero2.png"
+          alt="Imagen de fondo principal"
+          fill
+          quality={100}
+          priority
+          className="object-cover"
+        />
+      </div>
       <div className="absolute inset-0 bg-black/40" />
-
-      {/* <div className="absolute inset-0 bg-gradient-to-br from-[#205C3B]/95 via-[#205C3B]/80 to-[#F7FAF9]/80" />
-      </div> */}
 
       {/* Contenido */}
       <div className="relative z-10 h-full w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-1 flex flex-col justify-center items-start">
