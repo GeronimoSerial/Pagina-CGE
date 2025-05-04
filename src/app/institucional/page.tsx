@@ -1,19 +1,14 @@
-import Image from "next/image";
 import {
   MapPin,
   Phone,
   Mail,
-  ArrowDown,
   Building2,
   Info,
   Search,
   Users,
   BookOpen,
-  ArrowLeft,
 } from "lucide-react";
 import HeroSubSection from "../../modules/layout/Hero";
-import Link from "next/link";
-import { Button } from "../../components/ui/button";
 import CarouselInstitucional from "../../components/CarouselInstitucional";
 
 export default function Institucional() {
@@ -124,7 +119,6 @@ export default function Institucional() {
                 </div>
               </div>
             </section>
-            {/* Carrusel institucional */}
             <CarouselInstitucional />
           </div>
 
@@ -171,7 +165,7 @@ export default function Institucional() {
           <div className="space-y-4 text-gray-700">
             <div>
               <p className="font-semibold text-lg text-gray-900">Presidente</p>
-              <p className="text-gray-600">María Silvina Rollet</p>
+              <p className="text-gray-600">Prof. María Silvina Rollet</p>
             </div>
 
             <div className="space-y-3">

@@ -15,6 +15,7 @@ import remarkGfm from "remark-gfm";
 import { formatearFecha } from "../../../lib/utils";
 import ShareButton from "./ShareButton";
 import PrintButton from "./PrintButton";
+import Image from "next/image";
 
 export default function FullArticle({
   post,
@@ -48,12 +49,12 @@ export default function FullArticle({
     <div className="min-h-screen bg-slate-50">
       {/* Hero Header - Mejorado con overlay más suave y mejor espaciado */}
       <div className="relative h-[350px] md:h-[550px] overflow-hidden bg-slate-900">
-        <img
-          src={post.imagen ?? "/images/default.jpg"}
-          alt={post.titulo ?? "Artículo"}
+        <Image
+          src={post.imagen}
+          alt={post.titulo}
+          fill
           className="w-full h-full object-cover opacity-90"
         />
-
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex flex-col justify-end">
           <div className="container mx-auto px-6 pb-8">
             <div className="max-w-4xl ">
