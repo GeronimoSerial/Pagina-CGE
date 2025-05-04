@@ -1,11 +1,5 @@
 import Image from "next/image";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
-} from "./ui/carousel";
+import { Carousel, CarouselContent, CarouselItem } from "./ui/carousel";
 
 const slides = [
   {
@@ -40,41 +34,67 @@ const slides = [
     title: "Educación de calidad",
     description: "Comprometidos con el futuro de Corrientes",
   },
-];
+] as const;
 
-export default function CarouselInstitucional() {
+const carouselOptions = {
+  align: "start",
+  loop: true,
+  skipSnaps: false,
+  startIndex: 0,
+} as const;
+
+function CarouselSlide({
+  slide,
+  idx,
+}: {
+  slide: (typeof slides)[number];
+  idx: number;
+}) {
   return (
-    <div className="w-full max-w-5xl  my-16">
-      <Carousel opts={{ loop: true }}>
+    <CarouselItem>
+      <div className="relative h-64 md:h-[32rem] rounded-2xl overflow-hidden shadow-xl group">
+        <Image
+          src={slide.src}
+          alt={slide.alt}
+          className="object-cover object-[center_75%] w-full h-full z-10 transition-transform duration-700 group-hover:scale-105"
+          fill
+          priority={idx === 0}
+          loading={idx === 0 ? undefined : "lazy"}
+          placeholder="blur"
+          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2P4z8DwHwAFgwJ/lw2uWQAAAABJRU5ErkJggg=="
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 800px"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-20" />
+        <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8 z-30">
+          <h4 className="text-white text-xs md:text-3xl font-bold mb-1.5 md:mb-3 drop-shadow-lg">
+            {slide.title}
+          </h4>
+          <p className="text-white/90 drop-shadow text-xs md:text-lg max-w-3xl line-clamp-2 md:line-clamp-none">
+            {slide.description}
+          </p>
+        </div>
+      </div>
+    </CarouselItem>
+  );
+}
+
+function CarouselInstitucional() {
+  return (
+    <div className="w-full max-w-5xl mx-auto my-11">
+      <Carousel
+        className="w-full"
+        opts={carouselOptions}
+        autoplay={true}
+        autoplayInterval={5000}
+      >
         <CarouselContent>
           {slides.map((slide, idx) => (
-            <CarouselItem key={idx}>
-              <div className="relative h-64 md:h-96 rounded-2xl overflow-hidden shadow-xl group flex items-end">
-                <Image
-                  src={slide.src}
-                  alt={slide.alt}
-                  className="object-cover object-[center_75%] w-full h-full z-10 transition-transform duration-700 group-hover:scale-105"
-                  fill
-                  priority={idx === 0}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-20" />
-                <div className="absolute bottom-0 left-0 right-0 p-8 z-30">
-                  <h4 className="text-white hidden md:block text-2xl font-bold mb-2 drop-shadow-lg">
-                    {slide.title}
-                  </h4>
-                  <p className="text-white/80 drop-shadow">
-                    {slide.description}
-                  </p>
-                </div>
-              </div>
-            </CarouselItem>
+            <CarouselSlide key={slide.src} slide={slide} idx={idx} />
           ))}
         </CarouselContent>
-        <div className="flex justify-center gap-16 mt-8 ">
-          <CarouselPrevious className="static w-10 h-10 rounded-full bg-gray-100 text-gray-700 shadow-md hover:bg-green-300 transition-colors" />
-          <CarouselNext className="static w-10 h-10 rounded-full  bg-gray-100 text-gray-700 shadow-md hover:bg-green-300 transition-colors " />
-        </div>
       </Carousel>
     </div>
   );
 }
+
+export default CarouselInstitucional;

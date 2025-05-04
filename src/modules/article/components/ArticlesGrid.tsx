@@ -13,7 +13,7 @@ import { Badge } from "../../../components/ui/badge";
 import { FileText, ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
+import Image from "next/image";
 interface ArticlesGridProps {
   articles?: any;
   buttonText?: string;
@@ -55,10 +55,12 @@ const ArticlesGrid = ({
                 className="h-full flex flex-col overflow-hidden border-0 shadow-sm hover:shadow-md transition-all duration-300"
               >
                 <div className="h-48 overflow-hidden relative">
-                  <img
+                  <Image
                     src={item.imageUrl}
                     alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    fill
+                    className="object-cover transition-transform duration-300 hover:scale-105"
+                    priority
                   />
                   {showImportantBadge && item.esImportante && (
                     <Badge className="underline absolute top-3 right-3 bg-gray-600 text-white border-0">
