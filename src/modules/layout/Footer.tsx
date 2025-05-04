@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { Separator } from "../../components/ui/separator";
 import { Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
 
 const Footer = () => {
   return (
@@ -11,9 +12,11 @@ const Footer = () => {
           <div>
             <div className="flex items-center mb-4">
               <div className="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center mr-3">
-                <img
+                <Image
                   src="/images/logo.png"
                   alt="Logo CGE"
+                  width={32}
+                  height={32}
                   className="w-8 h-8 object-contain"
                 />
               </div>
