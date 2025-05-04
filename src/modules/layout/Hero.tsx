@@ -54,7 +54,7 @@ export default function HeroSubSection({
 
       <div className="container mx-auto text-center px-6 relative z-10">
         <div className="max-w-2xl mx-auto space-y-6">
-          <h1 className="text-4xl font-bold text-white drop-shadow-md">
+          <h1 className="text-4xl mt-3 font-bold text-white drop-shadow-md">
             {title}
           </h1>
           <p className="text-lg text-green-100/90 leading-relaxed">
