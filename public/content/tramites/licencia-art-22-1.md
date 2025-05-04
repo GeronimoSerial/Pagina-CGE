@@ -5,9 +5,10 @@ fecha: 2025-05-01T22:28:00.000Z
 resumen: Requisitos para acceder al Art. 22 del Regimen de Licencias (Licencia
   sin goce de haberes por razones particulares, hasta un año por cada decenio de
   servicios)
-imagen: /images/header2.png
+imagen: /images/tramites.png
 subcategoria: Licencias
 ---
+
 # Instructivo para la Solicitud de Licencia – Artículo 22
 
 ## ¿Qué es la Licencia sin Goce de Haberes?

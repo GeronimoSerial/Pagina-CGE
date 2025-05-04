@@ -5,9 +5,10 @@ fecha: 2025-04-26T02:20:00.000Z
 resumen: Requisitos para acceder al Art. 28 del Regimen de Licencias (Licencia
   para desempeñar un cargo de mayor jerarquía, interino o suplente, con o sin
   goce de haberes según corresponda)
-imagen: /images/header2.png
+imagen: /images/tramites.png
 subcategoria: Licencias
 ---
+
 # Instructivo para la Solicitud de Licencia – Artículo 28
 
 ## ¿Qué es la Licencia por Cargo de Mayor Jerarquía?
@@ -25,7 +26,8 @@ La **Licencia por Cargo de Mayor Jerarquía** (Artículo Nº 28) permite al pers
 
 ---
 
-## Requisitos para Solicitar la Licencia 28°  
+## Requisitos para Solicitar la Licencia 28°
+
 ### Con Goce de Haberes
 
 - **Nota de solicitud de licencia**.

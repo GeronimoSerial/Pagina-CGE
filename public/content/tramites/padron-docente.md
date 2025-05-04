@@ -6,9 +6,10 @@ resumen: Información sobre la exhibición del padrón docente, plazos para
   presentar reclamos, normativa vigente para designaciones precarias, fechas
   clave para traslados definitivos, y documentación requerida al momento de la
   toma de posesión.
-imagen: /images/header2.png
+imagen: /images/tramites.png
 subcategoria: Otros
 ---
+
 ## Exhibición y Reclamos del Padrón
 
 El **Padrón de Títulos y Antecedentes del Personal Titular** debe ser exhibido para su notificación en un plazo de **24 horas** y mantenerse expuesto durante **10 días hábiles**, período en el cual el docente puede **presentar un reclamo**.

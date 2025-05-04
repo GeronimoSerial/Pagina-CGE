@@ -3,9 +3,10 @@ titulo: Licencia Art. 8
 titulo_corto: licenciart8
 fecha: 2025-04-30T19:22:00.000Z
 resumen: Requisitos para acceder al Art. 8 del Regimen de Licencias
-imagen: /images/header2.png
+imagen: /images/tramites.png
 subcategoria: Licencias
 ---
+
 # Instructivo para la Solicitud de Licencia – Artículo 8
 
 ## ¿Qué es la Licencia por Enfermedad?
@@ -55,4 +56,5 @@ La **Licencia por Enfermedad** contemplada en el **Artículo 8** del Régimen de
 - Régimen de Licencias, Artículo 8.
 
 ---
+
 > ⚠️ **Importante:** La documentación incompleta o no presentada dentro de los plazos establecidos puede demorar la aprobación de la licencia.

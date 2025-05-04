@@ -3,9 +3,10 @@ titulo: Licencia Art. 11
 titulo_corto: licenciart11
 fecha: 2025-04-30T21:09:00.000Z
 resumen: Requisitos para acceder al Art. 11 del Regimen de Licencias
-imagen: /images/header2.png
+imagen: /images/tramites.png
 subcategoria: Licencias
 ---
+
 # Instructivo para la Solicitud de Licencia – Artículo 11
 
 ## ¿Qué es la Licencia por Cambio de Tareas?
@@ -43,4 +44,3 @@ El **pase a disponibilidad** será tramitado con carácter prioritario una vez e
 ---
 
 > ⚠️ **Importante:** Esta licencia se concede únicamente cuando se justifica la incapacidad psicofísica mediante Junta Médica y debe gestionarse en tiempo y forma, especialmente para iniciar el trámite previsional si corresponde.
-
