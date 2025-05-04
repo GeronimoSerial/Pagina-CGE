@@ -59,7 +59,7 @@ export default function PrintButton() {
 
   return (
     <button
-      className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-slate-700 border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition-all rounded-full shadow-sm"
+      className="hidden md:flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-slate-700 border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition-all rounded-full shadow-sm"
       onClick={handlePrint}
       title="Imprimir"
     >
