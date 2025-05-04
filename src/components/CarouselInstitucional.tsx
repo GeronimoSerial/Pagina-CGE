@@ -28,7 +28,7 @@ const slides = [
     description: "Cerca de las escuelas, junto a los docentes",
   },
   {
-    src: "/carrousel/6.jpg",
+    src: "/carrousel/gob.png",
     alt: "La presidente, gobernador y ministra en escuela",
     title: "Juntos por una educación de calidad",
     description:
