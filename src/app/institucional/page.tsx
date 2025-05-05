@@ -29,10 +29,10 @@ export default function Institucional() {
           <div className="flex-1">
             {/* HISTORIA */}
             <section className="mb-16">
-              <h3 className="text-2xl md:text-3xl font-semibold text-[#205C3B] mb-6 flex items-center">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[#205C3B] mb-6 flex items-center">
                 <span className="inline-block w-2 h-10 bg-[#217A4B] mr-4 rounded-full" />
                 Historia del CGE
-              </h3>
+              </h2>
               <div className="space-y-6 text-gray-700 text-base md:text-lg leading-relaxed">
                 <p>
                   La provincia de Corrientes fue pionera en organizar la
@@ -59,10 +59,10 @@ export default function Institucional() {
 
             {/* FUNCIONES */}
             <section>
-              <h3 className="text-2xl md:text-3xl font-semibold text-[#205C3B] mb-8 flex items-center">
+              <h2 className="text-2xl md:text-3xl font-semibold text-[#205C3B] mb-8 flex items-center">
                 <span className="inline-block w-2 h-10 bg-[#217A4B] mr-4 rounded-full" />
                 Funciones
-              </h3>
+              </h2>
 
               <div className="grid md:grid-cols-2 gap-6">
                 {[
@@ -95,9 +95,9 @@ export default function Institucional() {
                       <div className="bg-[#217A4B]/10 p-1 rounded-lg mr-4 group-hover:bg-[#217A4B]/20 transition-colors">
                         {card.icon}
                       </div>
-                      <h4 className="font-semibold text-lg text-[#217A4B]">
+                      <h3 className="font-semibold text-lg text-[#217A4B]">
                         {card.title}
-                      </h4>
+                      </h3>
                     </div>
                     <p className="text-gray-700 text-base pl-11">{card.text}</p>
                   </div>
@@ -123,7 +123,7 @@ export default function Institucional() {
           </div>
 
           {/* CONTACTO STICKY (ESCRITORIO) */}
-          <aside className="hidden md:block w-72 mt-4 relative">
+          <aside className="hidden md:block w-72 mt-4 mb-16 relative">
             <div className="sticky top-24">
               <div className="w-72 bg-white rounded-xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl hover:border-[#217A4B]/20">
                 <div className="p-5">
