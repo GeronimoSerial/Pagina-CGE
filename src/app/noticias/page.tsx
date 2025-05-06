@@ -3,6 +3,13 @@ import { getAllContent } from "../../modules/article/data/content";
 import { Info, Phone } from "lucide-react";
 import PageWithFAQ from "../../modules/layout/PageWithFAQ";
 import { faqsNews } from "../../modules/faqs/faqs";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Noticias",
+  description:
+    "Noticias y novedades del Consejo General de Educación (CGE) en Corrientes",
+};
 
 export default function NoticiasGrid() {
   const rawNoticias = getAllContent("noticias");

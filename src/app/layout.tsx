@@ -2,6 +2,7 @@ import "./index.css";
 import Footer from "../modules/layout/Footer";
 import Header from "../modules/layout/Header";
 import { Lora, Inter } from "next/font/google";
+import ModalAvisoDesarrollo from "../components/ModalAvisoDesarrollo";
 
 import metadata from "./metadata";
 import Head from "next/head";
@@ -45,6 +46,7 @@ export default function RootLayout({
       </Head>
       <body className={`${inter.className} antialiased`}>
         <Header />
+        <ModalAvisoDesarrollo />
         <div id="root">{children}</div>
         <Footer />
       </body>

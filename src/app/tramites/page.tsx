@@ -3,7 +3,13 @@ import { getAllContent } from "../../modules/article/data/content";
 import { Info, Phone } from "lucide-react";
 import PageWithFAQ from "../../modules/layout/PageWithFAQ";
 import { faqsTramites } from "../../modules/faqs/faqs";
-import { info } from "console";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Trámites y Gestiones",
+  description:
+    "Portal centralizado de trámites del Consejo General de Educación (CGE) en Corrientes",
+};
 
 export default function TramitesGrid() {
   const rawTramites = getAllContent("tramites");
