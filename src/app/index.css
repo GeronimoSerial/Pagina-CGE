@@ -1,4 +1,4 @@
-@tailwind base;
+  @tailwind base;
   @tailwind components;
   @tailwind utilities;
 
@@ -64,6 +64,17 @@
       --input: 217.2 32.6% 17.5%;
       --ring: 212.7 26.8% 83.9%;
     }
+
+    * {
+      @apply border-border;
+    }
+    body {
+      @apply bg-background text-foreground;
+      background-color: #F7FAF9;
+    }
+    h1, h2, h3, h4 {
+      font-family: var(--font-lora);
+    }
   }
 
   @layer base {
@@ -72,7 +83,7 @@
     }
     body {
       @apply bg-background text-foreground;
-      background-color: #F7FAF9 ;
+      background-color: #F7FAF9;
     }
   }
 
@@ -81,51 +92,7 @@
     scroll-padding-top: 5rem;
   }
   .group:has(img[src]):not(:has(img[src=""])) .skeleton { display: none; }
-  /* @media print {
-    @page {
-      margin: 0;
-      size: auto;
-    }
-/*   
-    /* Oculta todo */
-    /* body * {
-      display: none;
-    }
-  
-    /* Muestra solo el contenedor printable */
-    /* .printable-article, .printable-article * {
-      display: block !important;
-    }
-  
-    Asegura que se imprima correctamente
-    .printable-article {
-      all: unset;
-      display: block !important;
-      width: 100% !important;
-      background: white !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      page-break-inside: avoid;
-    }
-  
-    También hay que mostrar sus padres hasta body
-    .printable-article {
-      visibility: visible !important;
-      position: static !important;
-    }
-  
-    .printable-article::before,
-    .printable-article::after {
-      display: none !important;
-    }
-  
-    /* Importante: mostrar también los padres directos si son necesarios
-    .printable-article,
-    .printable-article-parent,
-    .printable-article-parent * {
-      display: block !important;
-      visibility: visible !important;
-    } */
+
 
     /* Desactivar solo las animaciones decorativas en dispositivos móviles */
 @media (max-width: 768px) {

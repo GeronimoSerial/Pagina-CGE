@@ -34,8 +34,8 @@ const Header = () => {
                 src="/images/logo.png"
                 alt="CGE Logo"
                 className="h-full w-full object-cover"
-                width={500}
-                height={500}
+                width={50}
+                height={50}
               />
             </div>
             <div className="ml-3">

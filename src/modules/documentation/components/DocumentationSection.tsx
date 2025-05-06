@@ -1,10 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import {
-  Search,
   FileText,
   Download,
-  Check,
   ClipboardList,
   Scale,
   ChevronLeft,
@@ -26,6 +24,7 @@ import { documents } from "../data";
 import { useSearchParams } from "next/navigation";
 import { filterDocuments } from "../../../lib/utils";
 import SearchInput from "../../layout/SearchInput";
+import { Pagination } from "../../../components/ui/pagination";
 
 const DocumentationSection = ({}) => {
   const searchParams = useSearchParams();
@@ -36,13 +35,7 @@ const DocumentationSection = ({}) => {
   const documentsPerPage = 6;
 
   // Categorías disponibles para el filtro
-  const categories = [
-    "licencias",
-    "expedientes",
-    "formularios",
-    "normativas",
-    "guias",
-  ];
+  const categories = ["licencias", "formularios", "normativas", "guias"];
 
   // Set initial filter from URL param only on mount
   React.useEffect(() => {
@@ -61,7 +54,7 @@ const DocumentationSection = ({}) => {
   );
 
   // Pagination logic
-  const totalPages = Math.ceil(filteredDocuments.length / documentsPerPage);
+  const totalItems = filteredDocuments.length;
   const indexOfLastDocument = currentPage * documentsPerPage;
   const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
   const currentDocuments = filteredDocuments.slice(
@@ -69,16 +62,14 @@ const DocumentationSection = ({}) => {
     indexOfLastDocument
   );
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   // Reset to first page when filter or search changes
   React.useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, activeFilter]);
-
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-    // Scroll to top of the section smoothly
-    // document.getElementById("documentacion")?.scrollIntoView({ behavior: "smooth" });
-  };
 
   // Get icon based on document category
   const getCategoryIcon = (category: string) => {
@@ -184,44 +175,13 @@ const DocumentationSection = ({}) => {
 
           {/* Pagination Controls */}
           {filteredDocuments.length > documentsPerPage && (
-            <div className="mt-6 flex justify-center items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="w-9 h-9 p-0"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
-                  <Button
-                    key={page}
-                    variant={currentPage === page ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handlePageChange(page)}
-                    className={`w-9 h-9 p-0 ${
-                      currentPage === page
-                        ? "bg-[#3D8B37] hover:bg-[#2D6A27]"
-                        : ""
-                    }`}
-                  >
-                    {page}
-                  </Button>
-                )
-              )}
-
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="w-9 h-9 p-0"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+            <div className="mt-6 flex justify-center">
+              <Pagination
+                currentPage={currentPage}
+                totalItems={totalItems}
+                pageSize={documentsPerPage}
+                onChange={handlePageChange}
+              />
             </div>
           )}
 
