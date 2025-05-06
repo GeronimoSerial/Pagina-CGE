@@ -23,9 +23,7 @@ export default function ModalAvisoDesarrollo() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="justify-content-center">
-            ¡Sitio en desarrollo!
-          </DialogTitle>
+          <DialogTitle>¡Sitio en desarrollo!</DialogTitle>
           <DialogDescription>
             Esta página se encuentra en desarrollo. Los contenidos pueden
             variar, estar incompletos o cambiar sin previo aviso. Gracias por tu
