@@ -32,7 +32,7 @@ export default function TramitesGrid() {
     {
       icon: <Info className="h-5 w-5 text-[#3D8B37] mr-2" />,
       label: "Horario de atención:",
-      value: "Lunes a Viernes de 7:00 a 16:00 hs",
+      value: "Lunes a Viernes de 7:00 a 18:00 hs",
     },
     {
       icon: <Phone className="h-5 w-5 text-[#3D8B37] mr-2" />,

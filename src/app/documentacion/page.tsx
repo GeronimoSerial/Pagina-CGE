@@ -22,7 +22,7 @@ export default function Documentacion() {
               <p className="text-sm font-medium text-gray-600">
                 Horario de atención:{" "}
                 <span className="text-gray-900">
-                  Lunes a Viernes de 7:30 a 18:00 hs
+                  Lunes a Viernes de 7:00 a 18:00 hs
                 </span>
               </p>
             </div>
