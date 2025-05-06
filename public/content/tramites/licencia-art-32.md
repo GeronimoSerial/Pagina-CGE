@@ -1,5 +1,5 @@
 ---
-titulo: Licencia Art 32
+titulo: Licencia Art. 32
 titulo_corto: licenciaart32
 fecha: 2025-05-02T21:19:00.000Z
 resumen: Requisitos para acceder al Art. 32 del Regimen de Licencias (Permiso

@@ -59,10 +59,10 @@ export default function Institucional() {
 
             {/* FUNCIONES */}
             <section>
-              <h2 className="text-2xl md:text-3xl font-semibold text-[#205C3B] mb-8 flex items-center">
+              <h3 className="text-2xl md:text-3xl font-semibold text-[#205C3B] mb-8 flex items-center">
                 <span className="inline-block w-2 h-10 bg-[#217A4B] mr-4 rounded-full" />
                 Funciones
-              </h2>
+              </h3>
 
               <div className="grid md:grid-cols-2 gap-6">
                 {[
@@ -129,9 +129,9 @@ export default function Institucional() {
                 <div className="p-5">
                   <div className="space-y-4 text-gray-700">
                     <div>
-                      <p className="font-semibold text-lg text-black">
+                      <h4 className="font-semibold text-lg text-black">
                         Presidente
-                      </p>
+                      </h4>
                       <p className="text-gray-900">
                         Prof. María Silvina Rollet
                       </p>

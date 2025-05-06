@@ -1,7 +1,7 @@
 import "./index.css";
 import Footer from "../modules/layout/Footer";
 import Header from "../modules/layout/Header";
-import { Montserrat, Inter } from "next/font/google";
+import { Lora, Inter } from "next/font/google";
 
 import metadata from "./metadata";
 import Head from "next/head";
@@ -10,8 +10,11 @@ export { metadata };
 
 //fonts
 
-const montserrat = Montserrat({ subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
+const lora = Lora({
+  subsets: ["latin"],
+  variable: "--font-lora",
+});
 
 export default function RootLayout({
   children,
@@ -19,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
+    <html lang="es" className={`${lora.variable}`}>
       <Head>
         <link
           rel="apple-touch-icon"
