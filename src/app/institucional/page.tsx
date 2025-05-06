@@ -68,7 +68,7 @@ export default function Institucional() {
                 {[
                   {
                     title: "Planificación y supervisión educativa",
-                    text: "Planifica y dirige la implementación de políticas y programas para el nivel inicial y primario. Organiza y supervisa la gestión escolar.",
+                    text: "Planifica y dirige la implementación de políticas y programas para el nivel inicial, primario y adultos. Organiza y supervisa la gestión escolar.",
                     icon: <Building2 className="h-5 w-5 text-[#217A4B]" />,
                   },
                   {
