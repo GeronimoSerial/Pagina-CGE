@@ -16,7 +16,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
   <section className="bg-gray-50 border-t border-gray-100 z-10 relative py-16">
     <div className="container mx-auto px-4 md:px-6">
       <div className="text-center mb-12">
-        <h2 className="text-5xl font-bold mb-6 z-100 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent leading-tight">
+        <h2 className="text-5xl font-bold mb-6 z-100 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent leading-relaxed">
           {faqTitle}
         </h2>
         <p className="text-gray-600 max-w-2xl mx-auto text-lg">
@@ -29,8 +29,8 @@ const FAQSection: React.FC<FAQSectionProps> = ({
             key={index}
             className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:border-[#3D8B37]/20 transition-all duration-300 flex flex-col h-full"
           >
-            <div className="flex items-start mb-4">
-              <div className="bg-[#3D8B37]/10 p-2 rounded-lg mr-4">
+            <div className="flex items-start mb-2">
+              <div className="bg-[#3D8B37]/10 p-1 rounded-lg mr-4">
                 <HelpCircle className="h-6 w-6 text-[#3D8B37]" />
               </div>
               <h4 className="font-semibold text-lg text-gray-800">

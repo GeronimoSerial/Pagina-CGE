@@ -1,4 +1,4 @@
-@tailwind base;
+  @tailwind base;
   @tailwind components;
   @tailwind utilities;
 
@@ -92,51 +92,7 @@
     scroll-padding-top: 5rem;
   }
   .group:has(img[src]):not(:has(img[src=""])) .skeleton { display: none; }
-  /* @media print {
-    @page {
-      margin: 0;
-      size: auto;
-    }
-/*   
-    /* Oculta todo */
-    /* body * {
-      display: none;
-    }
-  
-    /* Muestra solo el contenedor printable */
-    /* .printable-article, .printable-article * {
-      display: block !important;
-    }
-  
-    Asegura que se imprima correctamente
-    .printable-article {
-      all: unset;
-      display: block !important;
-      width: 100% !important;
-      background: white !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      page-break-inside: avoid;
-    }
-  
-    También hay que mostrar sus padres hasta body
-    .printable-article {
-      visibility: visible !important;
-      position: static !important;
-    }
-  
-    .printable-article::before,
-    .printable-article::after {
-      display: none !important;
-    }
-  
-    /* Importante: mostrar también los padres directos si son necesarios
-    .printable-article,
-    .printable-article-parent,
-    .printable-article-parent * {
-      display: block !important;
-      visibility: visible !important;
-    } */
+
 
     /* Desactivar solo las animaciones decorativas en dispositivos móviles */
 @media (max-width: 768px) {

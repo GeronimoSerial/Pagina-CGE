@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={`${lora.variable}`}>
+    <html lang="es" className={`${lora.variable} antialiased`}>
       <Head>
         <link
           rel="apple-touch-icon"

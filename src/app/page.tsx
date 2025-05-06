@@ -60,8 +60,8 @@ export default function PagPrincipal() {
           <div className="container mx-auto px-4 md:px-6">
             <div className="container relative mx-auto px-6">
               <div className="text-center max-w-2xl mx-auto mb-16">
-                <h3 className="text-5xl font-bold mb-6 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
-                  Ultimas noticias y novedades{" "}
+                <h3 className="text-5xl font-bold mb-6 leading-relaxed bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
+                  Últimas noticias y novedades{" "}
                 </h3>
                 <p className="text-gray-600 text-xl leading-relaxed">
                   Mantente informado sobre las últimas novedades, publicaciones
