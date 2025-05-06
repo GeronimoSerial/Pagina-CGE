@@ -10,6 +10,13 @@ import {
 } from "lucide-react";
 import HeroSubSection from "../../modules/layout/Hero";
 import CarouselInstitucional from "../../components/CarouselInstitucional";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Institucional",
+  description:
+    "Conoce la historia, funciones y contacto del Consejo General de Educación (CGE) en Corrientes",
+};
 
 export default function Institucional() {
   return (

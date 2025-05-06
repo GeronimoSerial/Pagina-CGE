@@ -25,6 +25,13 @@ import HeroSubSection from "../../modules/layout/Hero";
 import FAQSection from "../../modules/layout/FAQSection";
 import { useContactForm } from "../../modules/contact/hooks/useContactForm";
 import { faqsContact } from "../../modules/faqs/faqs";
+// import { Metadata } from "next";
+
+// export const metadata: Metadata = {
+//   title: "Contacto",
+//   description:
+//     "Si tienes alguna consulta o sugerencia, no dudes en contactarnos. Estamos aquí para ayudarte.",
+// };
 export default function Contacto() {
   const { form, enviado, error, buttonState, onSubmit } = useContactForm();
 

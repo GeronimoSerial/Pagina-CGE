@@ -198,6 +198,21 @@ const Footer = () => {
             </a>
           </div>
         </div>
+        <div className="flex flex-col md:flex-row justify-center items-center mt-6 gap-2">
+          <Link
+            href="/accesibilidad"
+            className="text-xs text-white/70 hover:text-white underline transition-colors mx-2"
+          >
+            Accesibilidad
+          </Link>
+          <span className="hidden md:inline text-white/40">|</span>
+          <Link
+            href="/terminos"
+            className="text-xs text-white/70 hover:text-white underline transition-colors mx-2"
+          >
+            Términos de uso
+          </Link>
+        </div>
       </div>
     </footer>
   );
