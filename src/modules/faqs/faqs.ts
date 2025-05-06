@@ -30,6 +30,12 @@ export const faqsContact: FAQ[] = [
     question: "¿Dónde se encuentran las oficinas del CGE?",
     answer: {
       text: "Nuestras oficinas están ubicadas en la calle Catamarca 640, Corrientes, Capital.",
+      links: [
+        {
+          text: "Ver ubicación",
+          url: "https://www.google.com/maps?q=Consejo+General+de+Educación+Corrientes"
+        }
+      ]
     },
   },
   {
