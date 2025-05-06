@@ -17,7 +17,7 @@ export default function HeroSubSection({
   description,
 }: HeroSubSectionProps) {
   return (
-    <div className="bg-gradient-to-br from-green-600 to-green-700 text-white  shadow-xl hover:shadow-2xl transition-all duration-500 h-[250px] flex items-center justify-center overflow-hidden relative">
+    <div className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] text-white  shadow-xl hover:shadow-2xl transition-all duration-500 h-[250px] flex items-center justify-center overflow-hidden relative">
       {/* Patrón educativo más visible */}
       <div className="absolute inset-0 flex flex-wrap justify-center items-center pointer-events-none">
         {[...Array(18)].map((_, i) => {
