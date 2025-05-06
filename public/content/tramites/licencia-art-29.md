@@ -1,5 +1,5 @@
 ---
-titulo: Licencia Art 29
+titulo: Licencia Art. 29
 titulo_corto: licenciaart29
 fecha: 2025-05-02T20:54:00.000Z
 resumen: Requisitos para acceder al Art. 29 del Regimen de Licencias (Licencia

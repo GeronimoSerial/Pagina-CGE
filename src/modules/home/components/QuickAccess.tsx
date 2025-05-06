@@ -69,7 +69,7 @@ const QuickAccess = ({ items = [] }: QuickAccessProps) => {
     <section className="w-full py-12">
       <div className="container mx-auto max-w-7xl">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
+          <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r leading-relaxed from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
             Accesos Rapidos
           </h2>
         </div>
