@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Search } from "lucide-react";
 
 interface SearchInputProps {
@@ -22,11 +22,27 @@ const SearchInput: React.FC<SearchInputProps> = ({
   onCategoryChange,
   allLabel = "Todas",
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.altKey && (e.key === "s" || e.key === "S")) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
     <div className="w-full space-y-3">
       <div className="relative group">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5 pointer-events-none" />
         <input
+          ref={inputRef}
           type="search"
           placeholder={placeholder || "Buscar..."}
           className={`w-full pl-10 bg-white border-2 border-gray-300 rounded-xl py-2.5 px-4 
