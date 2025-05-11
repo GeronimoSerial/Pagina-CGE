@@ -9,7 +9,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import HeroSubSection from "../../modules/layout/Hero";
-import CarouselInstitucional from "../../components/CarouselInstitucional";
+import CarouselDeImagenes from "../../components/CarouselDeImagenes";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -19,6 +19,41 @@ export const metadata: Metadata = {
 };
 
 export default function Institucional() {
+  const imagenesInstitucionales = [
+    {
+      src: "/carrousel/2.jpg",
+      alt: "Docentes ascendidos – Consejo General de Educación",
+      titulo: "Impulsamos el desarrollo profesional",
+      descripcion: "Acompañamos el crecimiento de nuestros docentes",
+    },
+    {
+      src: "/carrousel/4.jpg",
+      alt: "Supervisores del Consejo General de Educación",
+      titulo: "Transformando la educación con dedicación",
+      descripcion:
+        "El trabajo constante es esencial para un sistema educativo más fuerte",
+    },
+    {
+      src: "/carrousel/3.jpg",
+      alt: "Funcionarios",
+      titulo: "Gestión educativa al servicio de la comunidad",
+      descripcion: "Cerca de las escuelas, junto a los docentes",
+    },
+    {
+      src: "/carrousel/gob.png",
+      alt: "La presidente, gobernador y ministra en escuela",
+      titulo: "Juntos por una educación de calidad",
+      descripcion:
+        "El trabajo conjunto entre autoridades impulsa el desarrollo educativo en Corrientes",
+    },
+    {
+      src: "/images/header-noticias.webp",
+      alt: "Consejo General de Educación",
+      titulo: "Educación de calidad",
+      descripcion: "Comprometidos con el futuro de Corrientes",
+    },
+  ];
+
   return (
     <section
       id="institucional"
@@ -126,7 +161,7 @@ export default function Institucional() {
                 </div>
               </div>
             </section>
-            <CarouselInstitucional />
+            <CarouselDeImagenes imagenes={imagenesInstitucionales} />
           </div>
 
           {/* CONTACTO STICKY (ESCRITORIO) */}
