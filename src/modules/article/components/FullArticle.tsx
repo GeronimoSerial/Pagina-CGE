@@ -16,6 +16,7 @@ import { formatearFecha } from "../../../lib/utils";
 import ShareButton from "./ShareButton";
 import PrintButton from "./PrintButton";
 import Image from "next/image";
+import CarouselDeImagenes from "../../../components/CarouselDeImagenes";
 
 export default function FullArticle({
   post,
@@ -211,6 +212,12 @@ export default function FullArticle({
                 </ReactMarkdown>
               </div>
             </div>
+            {/* Carrusel de imágenes al final del artículo */}
+            {post.imagenes_carrusel && post.imagenes_carrusel.length > 0 && (
+              <div className="mt-12">
+                <CarouselDeImagenes imagenes={post.imagenes_carrusel} />
+              </div>
+            )}
           </article>
 
           {/* Sidebar - Complementary Column */}
