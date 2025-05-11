@@ -11,6 +11,7 @@ import {
 import HeroSubSection from "../../modules/layout/Hero";
 import CarouselDeImagenes from "../../components/CarouselDeImagenes";
 import { Metadata } from "next";
+import { OrganigramaModal } from "../../modules/institucional/modal/organigrama-modal";
 
 export const metadata: Metadata = {
   title: "Institucional",
@@ -98,6 +99,19 @@ export default function Institucional() {
                 </p>
               </div>
             </section>
+            {/* ORGANIGRAMA/CONFORMACIÓN */}
+            <h2 className="text-2xl md:text-3xl font-semibold text-[#205C3B] mb-6 flex items-center">
+              <span className="inline-block w-2 h-10 bg-[#217A4B] mr-4 rounded-full" />
+              Estructura organizacional
+            </h2>
+            <p className="text-gray-600 mb-8">
+              Conozca nuestra estructura organizacional y los miembros que
+              conforman nuestra institución. Haga clic en el botón para
+              visualizar el organigrama completo.
+            </p>
+            {/* <ModalWrapper /> */}
+            <OrganigramaModal />
+            <div className="mb-8" />
 
             {/* FUNCIONES */}
             <section>
