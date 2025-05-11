@@ -40,6 +40,29 @@ collections:
             ],
         }
       - { label: "Contenido", name: "body", widget: "markdown" }
+      - label: "Mostrar carrusel de imágenes"
+        name: "mostrar_carrusel"
+        widget: "boolean"
+        required: false
+        default: false
+      - label: "Carrusel de imágenes (opcional)"
+        name: "imagenes_carrusel"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "Imagen", name: "imagen", widget: "image" }
+          - {
+              label: "Título (opcional)",
+              name: "titulo",
+              widget: "string",
+              required: false,
+            }
+          - {
+              label: "Descripción (opcional)",
+              name: "descripcion",
+              widget: "string",
+              required: false,
+            }
 
   - name: "tramites"
     label: "Trámites"
