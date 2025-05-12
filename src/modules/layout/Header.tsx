@@ -11,6 +11,7 @@ const navLinks = [
   { href: "/tramites", label: "Trámites" },
   { href: "/documentacion", label: "Documentación" },
   { href: "/institucional", label: "Nuestra Institución" },
+  { href: "/supervisores", label: "Supervisores" },
   { href: "/contacto", label: "Contacto" },
 
   // { href: "https://relevamiento.geroserial.com", label: "SIRE" },

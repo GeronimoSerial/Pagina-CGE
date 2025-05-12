@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 
-const HeroSection = () => {
+const HeroMain = () => {
   return (
     <div className="relative w-full h-[520px] md:h-[600px] bg-[#F7FAF9] overflow-hidden flex items-center">
       {/* Imagen de fondo con overlay */}
@@ -65,4 +65,4 @@ const HeroSection = () => {
   );
 };
 
-export default HeroSection;
+export default HeroMain;
