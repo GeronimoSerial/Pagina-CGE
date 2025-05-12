@@ -33,6 +33,9 @@
       --ring: 222.2 84% 4.9%;
 
       --radius: 0.5rem;
+
+      --institutional-green: 115 44% 38%; /* Verde institucional */
+      --institutional-green-foreground:  115 44% 38%;
     }
 
     .dark {

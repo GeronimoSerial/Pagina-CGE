@@ -11,8 +11,8 @@ import {
 import HeroSubSection from "../../modules/layout/Hero";
 import CarouselDeImagenes from "../../components/CarouselDeImagenes";
 import { Metadata } from "next";
+import Organigrama from "../../modules/institucional/components/Organigrama";
 import { OrganigramaModal } from "../../modules/institucional/modal/organigrama-modal";
-
 export const metadata: Metadata = {
   title: "Institucional",
   description:
@@ -110,6 +110,7 @@ export default function Institucional() {
               visualizar el organigrama completo.
             </p>
             {/* <ModalWrapper /> */}
+
             <OrganigramaModal />
             <div className="mb-8" />
 
