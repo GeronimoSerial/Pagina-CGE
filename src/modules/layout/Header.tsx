@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const navLinks = [
   { href: "/", label: "Inicio" },
@@ -20,6 +21,7 @@ const navLinks = [
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -54,10 +56,16 @@ const Header = () => {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="group relative inline-block px-3 py-2 text-sm font-medium text-gray-700 hover:text-[#3D8B37] transition-colors"
+                    className={`group relative inline-block px-3 py-2 text-sm font-medium text-gray-700 hover:text-[#3D8B37] transition-colors ${
+                      pathname === link.href ? "text-[#3D8B37]" : ""
+                    }`}
                   >
                     {link.label}
-                    <span className="absolute left-0 bottom-0 h-[2px] w-full scale-x-0 origin-left bg-[#3D8B37] transition-transform duration-300 group-hover:scale-x-100"></span>
+                    <span
+                      className={`absolute left-0 bottom-0 h-[2px] w-full origin-left bg-[#3D8B37] transition-transform duration-300 group-hover:scale-x-100 ${
+                        pathname === link.href ? "scale-x-100" : "scale-x-0"
+                      }`}
+                    ></span>
                   </Link>
                 </li>
               ))}
@@ -85,7 +93,9 @@ const Header = () => {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="block px-3 py-2 font-medium text-gray-700 hover:text-[#3D8B37] transition-colors"
+                    className={`block px-3 py-2 font-medium text-gray-700 hover:text-[#3D8B37] transition-colors ${
+                      pathname === link.href ? "text-[#3D8B37]" : ""
+                    }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {link.label}
