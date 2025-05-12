@@ -58,7 +58,7 @@ export const NodeContent = ({
                     : "text-xs text-green-600" // "Presidente" en negro y más grande, otros en verde y tamaño original
                 )}
               >
-                {isPresident ? "Presidente" : ""}
+                {isPresident ? "PRESIDENTE" : ""}
                 {member.department && (
                   <span className={cn("block", !isPresident && "font-medium")}>
                     {member.gremio || ""}

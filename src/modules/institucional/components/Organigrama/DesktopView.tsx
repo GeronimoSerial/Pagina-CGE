@@ -79,7 +79,7 @@ export const OrganizationChart = ({
                   <TreeNode
                     label={
                       <GroupHeader
-                        title="Vocales Estatales"
+                        title="Vocalía Estatal"
                         icon={<Building2 size={16} color="white" />}
                       />
                     }
@@ -100,7 +100,7 @@ export const OrganizationChart = ({
                   <TreeNode
                     label={
                       <GroupHeader
-                        title="Vocales Gremiales"
+                        title="Vocalía Gremial"
                         icon={<Briefcase size={16} color="white" />}
                       />
                     }
