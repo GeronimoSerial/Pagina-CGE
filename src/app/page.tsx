@@ -1,7 +1,7 @@
 // src/app/noticia/[id]/page.tsx
 import { getAllContent } from "../modules/article/data/content";
 import { formatearFecha, sortByDate } from "../lib/utils";
-import HeroSection from "../modules/home/components/HeroSection";
+import HeroMain from "../modules/home/components/HeroSection";
 import QuickAccess from "../modules/home/components/QuickAccess";
 import { Separator } from "@radix-ui/react-separator";
 import ArticlesGrid from "../modules/article/components/ArticlesGrid";
@@ -46,7 +46,7 @@ export default function PagPrincipal() {
     <div className="min-h-screen">
       <main>
         {/* Hero Section */}
-        <HeroSection />
+        <HeroMain />
         <Separator className="my-8 bg-[#217A4B]/20" />
         {/* Quick Access Section */}
         <section className="py-12 bg-transparent">

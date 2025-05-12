@@ -8,7 +8,7 @@ import {
   FileSearch,
 } from "lucide-react";
 import ArticlesGrid from "../article/components/ArticlesGrid";
-import HeroSubSection from "./Hero";
+import HeroSection from "./Hero";
 import {
   filtrarArticulos,
   sortByDate,
@@ -123,7 +123,7 @@ export default function PageWithFAQ({
 
   return (
     <main className="bg-gray-50 min-h-screen">
-      <HeroSubSection title={heroTitle} description={heroDescription} />
+      <HeroSection title={heroTitle} description={heroDescription} />
       {/* Sección de información importante */}
       <div className="bg-white border-b border-gray-100 shadow-sm">
         <div className="container mx-auto px-4 md:px-6 py-2">

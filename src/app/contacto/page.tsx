@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert";
 import SocialMediaSection from "../../modules/socials/SocialMediaSection";
-import HeroSubSection from "../../modules/layout/Hero";
+import HeroSection from "../../modules/layout/Hero";
 import FAQSection from "../../modules/layout/FAQSection";
 import { useContactForm } from "../../modules/contact/hooks/useContactForm";
 import { faqsContact } from "../../modules/faqs/faqs";
@@ -37,7 +37,7 @@ export default function Contacto() {
 
   return (
     <main className="bg-gray-50 min-h-screen">
-      <HeroSubSection
+      <HeroSection
         title="Contacto"
         description="Si tienes alguna consulta o sugerencia, no dudes en contactarnos. Estamos aquí para ayudarte."
       />

@@ -8,10 +8,9 @@ import {
   Users,
   BookOpen,
 } from "lucide-react";
-import HeroSubSection from "../../modules/layout/Hero";
+import HeroSection from "../../modules/layout/Hero";
 import CarouselDeImagenes from "../../components/CarouselDeImagenes";
 import { Metadata } from "next";
-import Organigrama from "../../modules/institucional/components/Organigrama";
 import { OrganigramaModal } from "../../modules/institucional/modal/organigrama-modal";
 export const metadata: Metadata = {
   title: "Institucional",
@@ -61,7 +60,7 @@ export default function Institucional() {
       className="bg-gradient-to-b from-white via-gray-50 to-white relative"
     >
       {/* Hero Section - 600px height */}
-      <HeroSubSection
+      <HeroSection
         title="Consejo General de Educación"
         description="Trabajando desde 1875 para garantizar una educación de calidad en toda la provincia."
       />

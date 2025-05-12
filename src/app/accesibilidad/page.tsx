@@ -1,4 +1,4 @@
-import HeroSubSection from "../../modules/layout/Hero";
+import HeroSection from "../../modules/layout/Hero";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function AccesibilidadPage() {
   return (
     <main className="min-h-screen">
-      <HeroSubSection
+      <HeroSection
         title="Políticas de Accesibilidad"
         description="Nuestro compromiso con la accesibilidad web"
       />
