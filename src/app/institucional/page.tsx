@@ -105,8 +105,10 @@ export default function Institucional() {
             </h2>
             <p className="text-gray-600 mb-8">
               Conozca nuestra estructura organizacional y los miembros que
-              conforman nuestra institución. Haga clic en el botón para
-              visualizar el organigrama completo.
+              conforman nuestra institución.{" "}
+              <strong>
+                Haga clic en el botón para visualizar el organigrama completo.
+              </strong>
             </p>
             {/* <ModalWrapper /> */}
 
