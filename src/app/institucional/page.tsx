@@ -11,7 +11,7 @@ import {
 import HeroSection from "../../modules/layout/Hero";
 import { Metadata } from "next";
 import { OrganigramaModal } from "../../modules/institucional/modal/organigrama-modal";
-import { ClientCarousel } from "../../components/dynamic-client";
+import { ClientCarousel } from "../../components/data/dynamic-client";
 
 export const metadata: Metadata = {
   title: "Institucional",
@@ -67,9 +67,9 @@ export default function Institucional() {
       />
 
       <div className="container mx-auto px-4 md:px-6 max-w-9xl py-16">
-        <div className="flex flex-col md:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-8">
           {/* CONTENIDO PRINCIPAL */}
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             {/* HISTORIA */}
             <section className="mb-16">
               <h2 className="text-2xl md:text-3xl font-semibold text-[#205C3B] mb-6 flex items-center">
@@ -182,9 +182,9 @@ export default function Institucional() {
           </div>
 
           {/* CONTACTO STICKY (ESCRITORIO) */}
-          <aside className="hidden md:block w-72 mt-4 mb-16 relative">
-            <div className="sticky top-24">
-              <div className="w-72 bg-white rounded-xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl hover:border-[#217A4B]/20">
+          <aside className="hidden md:block lg:w-1/4 w-full mt-4 mb-16">
+            <div className="lg:sticky lg:top-24">
+              <div className="bg-white rounded-xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl hover:border-[#217A4B]/20">
                 <div className="p-5">
                   <div className="space-y-4 text-gray-700">
                     <div>

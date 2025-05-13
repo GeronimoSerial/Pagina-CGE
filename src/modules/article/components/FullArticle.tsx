@@ -16,7 +16,7 @@ import { formatearFecha } from "../../../lib/utils";
 import ShareButton from "./ShareButton";
 import PrintButton from "./PrintButton";
 import Image from "next/image";
-import { ClientCarousel } from "../../../components/dynamic-client";
+import { ClientCarousel } from "../../../components/data/dynamic-client";
 export default function FullArticle({
   post,
   sectionTitle = "Artículo",

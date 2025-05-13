@@ -9,7 +9,7 @@ import {
 } from "../../../components/ui/dialog";
 import { GroupIcon as Organization } from "lucide-react";
 import { Button } from "../../../components/ui/button";
-import { ClientOrganigrama } from "../../../components/dynamic-client";
+import { ClientOrganigrama } from "../../../components/data/dynamic-client";
 
 export function OrganigramaModal() {
   const [isOpen, setIsOpen] = useState(false);

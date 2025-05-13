@@ -1,5 +1,5 @@
 import { formatearFecha } from "../../lib/utils";
-import { getAllContent } from "../../modules/article/data/content";
+import { getAllContentMetadata } from "../../modules/article/data/content";
 import { Info, Phone } from "lucide-react";
 import PageWithFAQ from "../../modules/layout/PageWithFAQ";
 import { faqsTramites } from "../../modules/faqs/faqs";
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default function TramitesGrid() {
-  const rawTramites = getAllContent("tramites");
+  const rawTramites = getAllContentMetadata("tramites");
   const categorias = ["Licencias", "Títulos", "Inscripción", "Otros"];
 
   const tramites = rawTramites.map((item: any) => {

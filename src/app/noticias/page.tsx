@@ -1,5 +1,5 @@
 import { formatearFecha } from "../../lib/utils";
-import { getAllContent } from "../../modules/article/data/content";
+import { getAllContentMetadata } from "../../modules/article/data/content";
 import { Info, Phone } from "lucide-react";
 import PageWithFAQ from "../../modules/layout/PageWithFAQ";
 import { faqsNews } from "../../modules/faqs/faqs";
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default function NoticiasGrid() {
-  const rawNoticias = getAllContent("noticias");
+  const rawNoticias = getAllContentMetadata("noticias");
 
   const noticias = rawNoticias.map((item: any) => {
     const date = formatearFecha(item.date || item.fecha);
