@@ -1,4 +1,4 @@
-import HeroSubSection from "../../modules/layout/Hero";
+import HeroSection from "../../modules/layout/Hero";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function Terminos() {
   return (
     <main className="min-h-screen">
-      <HeroSubSection
+      <HeroSection
         title="Términos y Condiciones"
         description="Información legal y condiciones de uso del sitio web del CGE Corrientes"
       />

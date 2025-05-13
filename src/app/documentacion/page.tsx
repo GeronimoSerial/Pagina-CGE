@@ -1,6 +1,6 @@
 import { Info, Phone, HelpCircle, ArrowRight, Clock } from "lucide-react";
 import DocumentationSection from "../../modules/documentation/components/DocumentationSection";
-import HeroSubSection from "../../modules/layout/Hero";
+import HeroSection from "../../modules/layout/Hero";
 import FAQSection from "../../modules/layout/FAQSection";
 import { Suspense } from "react";
 import { faqsDocs } from "../../modules/faqs/faqs";
@@ -16,7 +16,7 @@ export default function Documentacion() {
   return (
     <main className="bg-gray-50 min-h-screen">
       {/* Hero section con degradado */}
-      <HeroSubSection
+      <HeroSection
         title="Documentación"
         description="Portal de documentación del Consejo General de Educación"
       />

@@ -34,6 +34,24 @@ export function getAllContentSlugs(type: 'noticias' | 'tramites') {
     }))
 }
 
+export function getAllContentMetadata(type: 'noticias' | 'tramites') {
+  const directory = getDirectory(type)
+  const filenames = fs.readdirSync(directory);
+
+  return filenames
+    .filter((filename) => filename.endsWith('.md'))
+    .map((filename) => {
+      const slug = filename.replace(/\.md$/, '')
+      const fullPath = path.join(directory, filename)
+      const fileContents = fs.readFileSync(fullPath, 'utf8')
+      const { data } = matter(fileContents)
+
+      return {
+        slug,
+        ...data
+      }
+    })
+}
 export function getAllContent(type: 'noticias' | 'tramites') {
   const directory = getDirectory(type)
   const filenames = fs.readdirSync(directory);

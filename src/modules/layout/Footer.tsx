@@ -39,6 +39,7 @@ const Footer = () => {
             <ul className="space-y-3">
               <li>
                 <Link
+                  title="Inicio"
                   href="/"
                   className="text-sm text-white/80 hover:text-white transition-colors flex items-center"
                 >
@@ -48,6 +49,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
+                  title="Institucional"
                   href="/institucional"
                   className="text-sm text-white/80 hover:text-white transition-colors flex items-center"
                 >
@@ -57,6 +59,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
+                  title="Trámites"
                   href="/tramites"
                   className="text-sm text-white/80 hover:text-white transition-colors flex items-center"
                 >
@@ -67,6 +70,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/noticias"
+                  title="Noticias"
                   className="text-sm text-white/80 hover:text-white transition-colors flex items-center"
                 >
                   <span className="w-1.5 h-1.5 bg-white/60 rounded-full mr-2"></span>
@@ -83,6 +87,7 @@ const Footer = () => {
             <ul className="space-y-3">
               <li>
                 <Link
+                  title="Licencias"
                   href="/documentacion?categoria=licencias"
                   className="text-sm text-white/80 hover:text-white transition-colors flex items-center"
                 >
@@ -92,6 +97,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
+                  title="Expedientes"
                   href="/documentacion?categoria=expedientes"
                   className="text-sm text-white/80 hover:text-white transition-colors flex items-center"
                 >
@@ -102,6 +108,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/documentacion?categoria=formularios"
+                  title="Formularios"
                   className="text-sm text-white/80 hover:text-white transition-colors flex items-center"
                 >
                   <span className="w-1.5 h-1.5 bg-white/60 rounded-full mr-2"></span>
@@ -111,6 +118,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/documentacion?categoria=normativas"
+                  title="Normativas"
                   className="text-sm text-white/80 hover:text-white transition-colors flex items-center"
                 >
                   <span className="w-1.5 h-1.5 bg-white/60 rounded-full mr-2"></span>
@@ -131,6 +139,7 @@ const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center"
+                  title="Ver en Google Maps"
                 >
                   <MapPin size={16} className="mr-2 text-white/70" />
                   Calle Catamarca 640, Corrientes Capital
@@ -142,6 +151,7 @@ const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center"
+                  title="Enviar un correo electrónico"
                 >
                   <Mail size={16} className="mr-2 text-white/70" />
                   cge@mec.gob.ar
@@ -150,6 +160,7 @@ const Footer = () => {
               <p className="text-sm text-white/80 flex items-center">
                 <Phone size={16} className="mr-2 text-white/70" />
                 <a
+                  title="Enviar un mensaje por WhatsApp"
                   href="https://wa.me/5403794424264?text=Hola%2C%20me%20comunico%20con%20el%20Consejo%20para%20realizar%20una%20consulta.%20Agradecer%C3%ADa%20su%20orientaci%C3%B3n.%20Muchas%20gracias.
 "
                 >
@@ -165,6 +176,7 @@ const Footer = () => {
             © 2025 Consejo General de Educación.{" "}
             <Link
               href="https://www.mec.gob.ar/"
+              title="Ministerio de Educación"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white no-underline hover:underline"
@@ -175,6 +187,7 @@ const Footer = () => {
             <Link
               target="_blank"
               rel="noopener noreferrer"
+              title="Gobierno de la Provincia de Corrientes"
               href="https://www.corrientes.gob.ar/"
               className="text-white no-underline hover:underline"
             >
@@ -184,6 +197,7 @@ const Footer = () => {
           <div className="flex space-x-4 mt-6 md:mt-0">
             <a
               href="https://facebook.com/ConsejoGeneralEducacion"
+              title="Facebook"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white/70 hover:text-white transition-colors bg-white/10 p-2 rounded-full hover:bg-white/20"
@@ -192,6 +206,7 @@ const Footer = () => {
             </a>
             <a
               href="https://instagram.com/consejogeneral"
+              title="Instagram"
               className="text-white/70 hover:text-white transition-colors bg-white/10 p-2 rounded-full hover:bg-white/20"
             >
               <Instagram size={18} />
@@ -202,12 +217,14 @@ const Footer = () => {
           <Link
             href="/accesibilidad"
             className="text-xs text-white/70 hover:text-white underline transition-colors mx-2"
+            title="Accesibilidad"
           >
             Accesibilidad
           </Link>
           <span className="hidden md:inline text-white/40">|</span>
           <Link
             href="/terminos"
+            title="Términos de uso"
             className="text-xs text-white/70 hover:text-white underline transition-colors mx-2"
           >
             Términos de uso

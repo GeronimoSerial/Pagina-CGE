@@ -52,60 +52,66 @@ const ArticlesGrid = ({
             {noticiasPagina.map((item: any) => (
               <Card
                 key={item.id}
-                className="h-full flex flex-col overflow-hidden border-0 shadow-sm hover:shadow-md transition-all duration-300"
+                className="h-[28rem] flex flex-col overflow-hidden border-0 shadow-[0_2px_8px_rgba(0,0,0,0.08)] md:hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] md:transition-all md:duration-300"
               >
-                <div className="h-48 overflow-hidden relative">
-                  <Image
-                    src={item.imageUrl}
-                    alt={item.title}
-                    width={500}
-                    height={500}
-                    className="object-cover transition-transform duration-300 hover:scale-105"
-                  />
-                  {showImportantBadge && item.esImportante && (
-                    <Badge className="underline absolute top-3 right-3 bg-gray-600 text-white border-0">
-                      Importante
-                    </Badge>
-                  )}
-                </div>
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-center mb-2">
-                    <Badge
-                      variant="outline"
-                      className="bg-[#3D8B37]/10 text-[#3D8B37] border-0 font-medium"
-                    >
-                      {item.categoria}
-                    </Badge>
-                    <span className="text-xs text-gray-500 font-medium">
-                      {item.date}
-                    </span>
+                <Link
+                  href={getItemLink(item.id)}
+                  title="Ver artículo completo"
+                  className="flex flex-col h-full"
+                >
+                  <div className="h-48 overflow-hidden relative">
+                    <Image
+                      src={item.imageUrl}
+                      alt={item.title}
+                      width={500}
+                      height={500}
+                      className="object-cover w-full h-full md:transition-transform md:duration-300 md:hover:scale-105"
+                    />
+                    {showImportantBadge && item.esImportante && (
+                      <Badge className="underline absolute top-3 right-3 bg-gray-600 text-white border-0">
+                        Importante
+                      </Badge>
+                    )}
                   </div>
-                  <CardTitle
-                    title={item.title}
-                    className="text-lg font-bold line-clamp-2 text-gray-800"
-                  >
-                    {item.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  <CardDescription
-                    className="text-gray-600 line-clamp-3"
-                    title={`${item.description}`}
-                  >
-                    {item.description}
-                  </CardDescription>
-                </CardContent>
-                <CardFooter className="pt-0 pb-4">
-                  <Button
-                    variant="link"
-                    className="p-0 h-auto text-[#3D8B37] font-medium hover:text-[#2D6A27] flex items-center gap-1 hover:underline"
-                    asChild
-                  >
-                    <Link href={getItemLink(item.id)}>
-                      {buttonText} <ArrowRightIcon size={16} />
-                    </Link>
-                  </Button>
-                </CardFooter>
+                  <CardHeader className="pb-2 flex-none">
+                    <div className="flex justify-between items-center mb-2">
+                      <Badge
+                        variant="outline"
+                        className="bg-[#3D8B37]/10 text-[#3D8B37] border-0 font-medium"
+                      >
+                        {item.categoria}
+                      </Badge>
+                      <span className="text-xs text-gray-500 font-medium">
+                        {item.date}
+                      </span>
+                    </div>
+                    <CardTitle
+                      title={item.title}
+                      className="text-lg font-bold line-clamp-2 text-gray-800"
+                    >
+                      {item.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-grow">
+                    <CardDescription
+                      className="text-gray-600 line-clamp-3"
+                      title={`${item.description}`}
+                    >
+                      {item.description}
+                    </CardDescription>
+                  </CardContent>
+                  <CardFooter className="pt-0 pb-4 flex-none">
+                    <Button
+                      variant="link"
+                      className="p-0 h-auto text-[#3D8B37] font-medium hover:text-[#2D6A27] flex items-center gap-1 hover:underline"
+                      asChild
+                    >
+                      <p className="flex items-center gap-3">
+                        {buttonText} <ArrowRightIcon size={16} />
+                      </p>
+                    </Button>
+                  </CardFooter>
+                </Link>
               </Card>
             ))}
           </div>

@@ -1,8 +1,13 @@
+"use client";
 import Link from "next/link";
 import { Button } from "../../components/ui/button";
 import { ArrowLeftIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function NotFound() {
+    const pathname = usePathname();
+    const section = pathname.split("/")[1];
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-slate-100 to-emerald-50">
       <div className="container px-4 animate-fadeIn">
@@ -23,7 +28,7 @@ export default function NotFound() {
               Recurso no encontrado
             </h1>
             <p className="text-lg text-slate-600 text-center mb-12 max-w-md">
-              Lo sentimos, el tramite que estás buscando no existe o ha sido
+              Lo sentimos, el recurso que estás buscando no existe o ha sido
               removido.
             </p>
 
@@ -31,7 +36,7 @@ export default function NotFound() {
             <Link href="/tramites">
               <Button className="bg-emerald-600 hover:bg-emerald-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-emerald-500/20 px-8 py-3 rounded-full text-lg">
                 <ArrowLeftIcon className="mr-3" size={20} />
-                Volver a trámites
+                Volver a {section}
               </Button>
             </Link>
           </div>
