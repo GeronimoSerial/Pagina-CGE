@@ -27,18 +27,19 @@ export const OrganizationChart = ({
     <div className="w-full h-full overflow-hidden bg-gradient-to-br from-green-50 via-slate-50 to-white rounded-xl shadow-lg border border-gray-200 p-1">
       <TransformWrapper
         initialScale={1}
-        minScale={0.5}
+        minScale={0.3}
         maxScale={2}
-        wheel={{ disabled: false }}
-        pinch={{ disabled: false }}
-        doubleClick={{ mode: "reset" }}
+        initialPositionX={0}
+        initialPositionY={0}
+        centerOnInit={false}
+        limitToBounds={false}
         smooth={true}
       >
         <TransformComponent
           wrapperClass="!w-full !h-full"
-          contentClass="!w-full !h-full"
+          contentClass="!w-full !h-full !flex !items-start !justify-start"
         >
-          <div className="flex items-center justify-center w-full h-full p-6 sm:p-8 min-w-[800px]">
+          <div className="w-full h-full p-2 min-w-[600px]">
             {presidente && (
               <Tree
                 lineWidth="2px"
