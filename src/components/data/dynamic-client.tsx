@@ -1,8 +1,8 @@
 "use client";
 import dynamic from "next/dynamic";
-import SkeletonLoading from "./SkeletonComponent";
+import SkeletonLoading from "../SkeletonComponent";
 
-export const ClientCarousel = dynamic(() => import("./CarouselDeImagenes"), {
+export const ClientCarousel = dynamic(() => import("../CarouselDeImagenes"), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-[600px]">
@@ -12,7 +12,7 @@ export const ClientCarousel = dynamic(() => import("./CarouselDeImagenes"), {
 });
 
 export const ClientOrganigrama = dynamic(
-  () => import("../modules/institucional/components/Organigrama"),
+  () => import("../../modules/institucional/components/Organigrama"),
   {
     ssr: false,
     loading: () => (
