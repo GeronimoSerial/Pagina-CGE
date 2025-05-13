@@ -9,6 +9,7 @@
 }
 
 @media (max-width: 768px) {
+
   .swiper-button-next,
   .swiper-button-prev {
     display: none !important;
@@ -26,10 +27,30 @@
   font-weight: bold;
 }
 
+.swiper-pagination {
+  position: static !important;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .swiper-pagination-bullet {
-  background-color: white !important;
+  width: 8px;
+  height: 8px;
+  margin: 0 !important;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.2) !important;
+  opacity: 1;
+  transition: background-color 0.2s ease;
+}
+
+.swiper-pagination-bullet:hover {
+  background: rgba(0, 0, 0, 0.4) !important;
 }
 
 .swiper-pagination-bullet-active {
-  background-color: white !important;
+  background: #0a5a11 !important;
 }

@@ -86,6 +86,7 @@ export default function CarouselDeImagenes({
           </SwiperSlide>
         ))}
       </Swiper>
+      {/* Los dots se mostrarán debajo con CSS */}
     </div>
   );
 }
