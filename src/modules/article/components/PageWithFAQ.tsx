@@ -1,23 +1,17 @@
 "use client";
 import React, { useState } from "react";
-import {
-  Clock,
-  ChevronLeft,
-  ChevronRight,
-  Smartphone,
-  FileSearch,
-} from "lucide-react";
-import ArticlesGrid from "../article/components/ArticlesGrid";
-import HeroSubSection from "./Hero";
+import { Clock, Smartphone, FileSearch } from "lucide-react";
+import ArticlesGrid from "./ArticlesGrid";
+import HeroSection from "../../layout/Hero";
 import {
   filtrarArticulos,
   sortByDate,
   sortByAlphabetical,
-} from "../../lib/utils";
-import { Button } from "../../components/ui/button";
-import SearchInput from "./SearchInput";
-import FAQSection from "./FAQSection";
-import { FAQ } from "../faqs/faqs";
+} from "../../../lib/utils";
+import SearchInput from "../../layout/SearchInput";
+import FAQSection from "../../layout/FAQSection";
+import { FAQ } from "../../faqs/faqs";
+import { HeadlessPagination } from "../../documentation/components/HeadlessPagination";
 
 interface InfoBarItem {
   icon: React.ReactNode;
@@ -55,7 +49,7 @@ interface PageWithFAQProps {
   contactUrl?: string;
 
   //prop para el sorted
-  tramite?: boolean;
+  isNoticia?: boolean;
 }
 
 export default function PageWithFAQ({
@@ -77,7 +71,7 @@ export default function PageWithFAQ({
   contactSchedule,
   contactButtonText,
   contactUrl,
-  tramite,
+  isNoticia,
 }: PageWithFAQProps) {
   // Estado de paginación
   const PAGE_SIZE = 4;
@@ -85,11 +79,13 @@ export default function PageWithFAQ({
   const [searchTerm, setSearchTerm] = useState("");
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
 
-  // Nueva función para manejar el cambio de página
   const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPaginas) {
-      setPagina(page);
-    }
+    setPagina(page);
+    // Hacer scroll hacia arriba al cambiar de página
+    window.scrollTo({
+      top: document.getElementById("grid-container")?.offsetTop || 0,
+      behavior: "smooth",
+    });
   };
 
   // Determinar categorías únicas si no se pasan por props
@@ -108,7 +104,7 @@ export default function PageWithFAQ({
 
   // Ordenar artículos filtrados
   // Si el tipo es "tramites", ordenar alfabéticamente, de lo contrario, por fecha
-  const sortedArticles = tramite
+  const sortedArticles = !isNoticia
     ? sortByAlphabetical(articulosFiltrados)
     : sortByDate(articulosFiltrados, false);
 
@@ -123,7 +119,7 @@ export default function PageWithFAQ({
 
   return (
     <main className="bg-gray-50 min-h-screen">
-      <HeroSubSection title={heroTitle} description={heroDescription} />
+      <HeroSection title={heroTitle} description={heroDescription} />
       {/* Sección de información importante */}
       <div className="bg-white border-b border-gray-100 shadow-sm">
         <div className="container mx-auto px-4 md:px-6 py-2">
@@ -164,7 +160,7 @@ export default function PageWithFAQ({
                   />
                 </div>
               </div>
-              {tramite && (
+              {!isNoticia && (
                 <a
                   href="https://expgob.mec.gob.ar/lup_mod/ubicar_expedWeb.asp"
                   target="_blank"
@@ -179,61 +175,33 @@ export default function PageWithFAQ({
           </div>
         </section>
       )}
-      {/* Sección principal de contenido */}
-      <section>
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="py-8">
-            <ArticlesGrid
-              articles={articlesPagina}
-              buttonText={buttonText}
-              emptyStateTitle={emptyStateTitle}
-              emptyStateDescription={emptyStateDescription}
-              emptyStateButtonText={emptyStateButtonText}
-              showImportantBadge={true}
-              basePath={basePath}
-            />
-            {/* Controles de paginación */}
-          </div>
-        </div>
-        {totalPaginas > 1 && (
-          <div className="mt-6 flex justify-center items-center gap-2 mb-3">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(pagina - 1)}
-              disabled={pagina === 1}
-              className="w-9 h-9 p-0"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
 
-            {Array.from({ length: totalPaginas }, (_, i) => i + 1).map(
-              (page) => (
-                <Button
-                  key={page}
-                  variant={pagina === page ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handlePageChange(page)}
-                  className={`w-9 h-9 p-0 ${
-                    pagina === page ? "bg-[#3D8B37] hover:bg-[#2D6A27]" : ""
-                  }`}
-                >
-                  {page}
-                </Button>
-              )
-            )}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(pagina + 1)}
-              disabled={pagina === totalPaginas}
-              className="w-9 h-9 p-0"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+      {/* Contenedor del grid y paginación con altura mínima fija */}
+      <div className="container mx-auto px-4 md:px-6" id="grid-container">
+        {/* Contenedor del grid con altura mínima fija */}
+        <div className="min-h-screen/2 py-8">
+          <ArticlesGrid
+            articles={articlesPagina}
+            buttonText={buttonText}
+            emptyStateTitle={emptyStateTitle}
+            emptyStateDescription={emptyStateDescription}
+            emptyStateButtonText={emptyStateButtonText}
+            showImportantBadge={true}
+            basePath={basePath}
+          />
+        </div>
+
+        {/* Paginación separada y con posición estable */}
+        {totalPaginas > 1 && (
+          <div className="py-6 border-t border-gray-100">
+            <HeadlessPagination
+              currentPage={pagina}
+              totalPages={totalPaginas}
+              onPageChange={handlePageChange}
+            />
           </div>
         )}
-      </section>
+      </div>
 
       {/* Sección de preguntas frecuentes */}
       <FAQSection

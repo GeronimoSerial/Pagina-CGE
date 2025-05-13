@@ -1,62 +1,60 @@
 import Image from "next/image";
-import { Carousel, CarouselContent, CarouselItem } from "./ui/carousel";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+
+// Importar estilos de Swiper
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "../styles/swiper-custom.css";
 
 export interface ImagenCarruselGenerica {
-  imagen?: string; // para noticias
-  src?: string; // para institucional
-  titulo?: string; // para noticias
-  alt?: string; // para institucional
-  descripcion?: string; // para noticias
+  imagen?: string;
+  src?: string;
+  titulo?: string;
+  alt?: string;
+  descripcion?: string;
 }
-
-const carouselOptions = {
-  align: "start",
-  loop: true,
-  skipSnaps: false,
-  startIndex: 0,
-} as const;
 
 function CarouselSlide({
   slide,
-  idx,
+  isFirst,
 }: {
   slide: ImagenCarruselGenerica;
-  idx: number;
+  isFirst: boolean;
 }) {
   const src = slide.imagen || slide.src || "";
   const alt = slide.titulo || slide.alt || "";
   const description = slide.descripcion || "";
   return (
-    <CarouselItem>
-      <div className="relative h-64 md:h-[32rem] rounded-2xl overflow-hidden shadow-xl group">
-        <Image
-          src={src}
-          alt={alt}
-          className="object-cover object-[center_75%] w-full h-full z-10 transition-transform duration-700 group-hover:scale-105"
-          fill
-          priority={idx === 0}
-          loading={idx === 0 ? undefined : "lazy"}
-          placeholder="blur"
-          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2P4z8DwHwAFgwJ/lw2uWQAAAABJRU5ErkJggg=="
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 800px"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-20" />
-        {(alt || description) && (
-          <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8 z-30">
-            {alt && (
-              <h4 className="text-white text-xs md:text-3xl font-bold mb-1.5 md:mb-3 drop-shadow-lg">
-                {alt}
-              </h4>
-            )}
-            {description && (
-              <p className="text-white/90 drop-shadow text-xs md:text-lg max-w-3xl line-clamp-2 md:line-clamp-none">
-                {description}
-              </p>
-            )}
-          </div>
-        )}
-      </div>
-    </CarouselItem>
+    <div className="relative h-64 md:h-[32rem] rounded-2xl overflow-hidden shadow-xl">
+      <Image
+        src={src}
+        alt={alt}
+        className="object-cover object-[center_75%] w-full h-full z-10"
+        fill
+        priority={isFirst}
+        loading={isFirst ? undefined : "lazy"}
+        placeholder="blur"
+        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2P4z8DwHwAFgwJ/lw2uWQAAAABJRU5ErkJggg=="
+        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 800px"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-20" />
+      {(alt || description) && (
+        <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8 z-30">
+          {alt && (
+            <h4 className="text-white text-xs md:text-3xl font-bold mb-1.5 md:mb-3 drop-shadow-lg">
+              {alt}
+            </h4>
+          )}
+          {description && (
+            <p className="text-white/90 drop-shadow text-xs md:text-lg max-w-3xl line-clamp-2 md:line-clamp-none">
+              {description}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -66,24 +64,29 @@ export default function CarouselDeImagenes({
   imagenes: ImagenCarruselGenerica[];
 }) {
   if (!imagenes || imagenes.length === 0) return null;
+
   return (
-    <div className="w-full max-w-5xl mx-auto my-11">
-      <Carousel
-        className="w-full"
-        opts={carouselOptions}
-        autoplay={true}
-        autoplayInterval={5000}
+    <div className="w-full max-w-5xl mx-auto my-11 relative">
+      <Swiper
+        modules={[Navigation, Pagination, Autoplay]}
+        spaceBetween={30}
+        slidesPerView={1}
+        navigation
+        pagination={{ clickable: true }}
+        loop={true}
+        autoplay={{
+          delay: 5000,
+          disableOnInteraction: true,
+        }}
+        className="h-full w-full rounded-2xl"
       >
-        <CarouselContent>
-          {imagenes.map((slide, idx) => (
-            <CarouselSlide
-              key={slide.imagen || slide.src || idx}
-              slide={slide}
-              idx={idx}
-            />
-          ))}
-        </CarouselContent>
-      </Carousel>
+        {imagenes.map((slide, index) => (
+          <SwiperSlide key={index}>
+            <CarouselSlide slide={slide} isFirst={index === 0} />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+      {/* Los dots se mostrarán debajo con CSS */}
     </div>
   );
 }

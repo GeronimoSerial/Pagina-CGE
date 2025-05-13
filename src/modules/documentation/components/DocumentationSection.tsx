@@ -5,8 +5,6 @@ import {
   Download,
   ClipboardList,
   Scale,
-  ChevronLeft,
-  ChevronRight,
   File,
   FileCheck,
 } from "lucide-react";
@@ -24,9 +22,9 @@ import { documents } from "../data";
 import { useSearchParams } from "next/navigation";
 import { filterDocuments } from "../../../lib/utils";
 import SearchInput from "../../layout/SearchInput";
-import { Pagination } from "../../../components/ui/pagination";
+import { HeadlessPagination } from "./HeadlessPagination";
 
-const DocumentationSection = ({}) => {
+const DocumentationSection = () => {
   const searchParams = useSearchParams();
   const categoriaParam = searchParams.get("categoria");
   const [searchQuery, setSearchQuery] = useState("");
@@ -54,12 +52,10 @@ const DocumentationSection = ({}) => {
   );
 
   // Pagination logic
-  const totalItems = filteredDocuments.length;
-  const indexOfLastDocument = currentPage * documentsPerPage;
-  const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
+  const totalPages = Math.ceil(filteredDocuments.length / documentsPerPage);
   const currentDocuments = filteredDocuments.slice(
-    indexOfFirstDocument,
-    indexOfLastDocument
+    (currentPage - 1) * documentsPerPage,
+    currentPage * documentsPerPage
   );
 
   const handlePageChange = (page: number) => {
@@ -71,7 +67,6 @@ const DocumentationSection = ({}) => {
     setCurrentPage(1);
   }, [searchQuery, activeFilter]);
 
-  // Get icon based on document category
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case "licencias":
@@ -173,14 +168,12 @@ const DocumentationSection = ({}) => {
             </div>
           </div>
 
-          {/* Pagination Controls */}
           {filteredDocuments.length > documentsPerPage && (
-            <div className="mt-6 flex justify-center">
-              <Pagination
+            <div className="mt-6">
+              <HeadlessPagination
                 currentPage={currentPage}
-                totalItems={totalItems}
-                pageSize={documentsPerPage}
-                onChange={handlePageChange}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
               />
             </div>
           )}
