@@ -7,17 +7,17 @@ import {
   Smartphone,
   FileSearch,
 } from "lucide-react";
-import ArticlesGrid from "../article/components/ArticlesGrid";
-import HeroSection from "./Hero";
+import ArticlesGrid from "./ArticlesGrid";
+import HeroSection from "../../layout/Hero";
 import {
   filtrarArticulos,
   sortByDate,
   sortByAlphabetical,
-} from "../../lib/utils";
-import { Button } from "../../components/ui/button";
-import SearchInput from "./SearchInput";
-import FAQSection from "./FAQSection";
-import { FAQ } from "../faqs/faqs";
+} from "../../../lib/utils";
+import { Button } from "../../../components/ui/button";
+import SearchInput from "../../layout/SearchInput";
+import FAQSection from "../../layout/FAQSection";
+import { FAQ } from "../../faqs/faqs";
 
 interface InfoBarItem {
   icon: React.ReactNode;
@@ -55,7 +55,7 @@ interface PageWithFAQProps {
   contactUrl?: string;
 
   //prop para el sorted
-  tramite?: boolean;
+  isNoticia?: boolean;
 }
 
 export default function PageWithFAQ({
@@ -77,7 +77,7 @@ export default function PageWithFAQ({
   contactSchedule,
   contactButtonText,
   contactUrl,
-  tramite,
+  isNoticia,
 }: PageWithFAQProps) {
   // Estado de paginación
   const PAGE_SIZE = 4;
@@ -108,7 +108,7 @@ export default function PageWithFAQ({
 
   // Ordenar artículos filtrados
   // Si el tipo es "tramites", ordenar alfabéticamente, de lo contrario, por fecha
-  const sortedArticles = tramite
+  const sortedArticles = !isNoticia
     ? sortByAlphabetical(articulosFiltrados)
     : sortByDate(articulosFiltrados, false);
 
@@ -164,7 +164,7 @@ export default function PageWithFAQ({
                   />
                 </div>
               </div>
-              {tramite && (
+              {!isNoticia && (
                 <a
                   href="https://expgob.mec.gob.ar/lup_mod/ubicar_expedWeb.asp"
                   target="_blank"
