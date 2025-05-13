@@ -28,11 +28,15 @@ export default function Organigrama({}: OrganigramaProps) {
   };
 
   return (
-    <section>
-      {/* <div className=""> */}
+    <section className="h-[calc(100vh-4rem)] overflow-hidden">
       {isMobile ? (
-        <div className="overflow-y-auto px-4 flex-grow">
-          <MobileView members={members} onViewDetails={handleViewDetails} />
+        <div
+          className="h-full overflow-y-auto flex-grow pb-20"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          <div className="px-4">
+            <MobileView members={members} onViewDetails={handleViewDetails} />
+          </div>
         </div>
       ) : (
         <div className="flex-grow overflow-hidden">
@@ -42,7 +46,6 @@ export default function Organigrama({}: OrganigramaProps) {
           />
         </div>
       )}
-      {/* </div> */}
 
       {/* Componente para mostrar los detalles del miembro */}
       <MemberDetails member={selectedMember} onClose={handleCloseDetails} />
