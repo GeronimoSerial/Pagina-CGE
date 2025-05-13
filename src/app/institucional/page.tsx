@@ -9,9 +9,10 @@ import {
   BookOpen,
 } from "lucide-react";
 import HeroSection from "../../modules/layout/Hero";
-import CarouselDeImagenes from "../../components/CarouselDeImagenes";
 import { Metadata } from "next";
 import { OrganigramaModal } from "../../modules/institucional/modal/organigrama-modal";
+import { ClientCarousel } from "../../components/dynamic-client";
+
 export const metadata: Metadata = {
   title: "Institucional",
   description:
@@ -177,7 +178,7 @@ export default function Institucional() {
                 </div>
               </div>
             </section>
-            <CarouselDeImagenes imagenes={imagenesInstitucionales} />
+            <ClientCarousel imagenes={imagenesInstitucionales} />
           </div>
 
           {/* CONTACTO STICKY (ESCRITORIO) */}

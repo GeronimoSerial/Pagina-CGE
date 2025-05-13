@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import {
   Dialog,
@@ -10,16 +9,7 @@ import {
 } from "../../../components/ui/dialog";
 import { GroupIcon as Organization } from "lucide-react";
 import { Button } from "../../../components/ui/button";
-import dynamic from "next/dynamic";
-
-const Organigrama = dynamic(() => import("../components/Organigrama"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center h-[600px]">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#217A4B]"></div>
-    </div>
-  ),
-});
+import { ClientOrganigrama } from "../../../components/dynamic-client";
 
 export function OrganigramaModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +29,7 @@ export function OrganigramaModal() {
           </DialogTitle>
         </DialogHeader>
         <div className="h-full overflow-hidden scrollbar-hide">
-          <Organigrama isOpen={isOpen} onOpenChange={setIsOpen} />
+          <ClientOrganigrama isOpen={isOpen} onOpenChange={setIsOpen} />
         </div>
       </DialogContent>
     </Dialog>
