@@ -16,8 +16,7 @@ import { formatearFecha } from "../../../lib/utils";
 import ShareButton from "./ShareButton";
 import PrintButton from "./PrintButton";
 import Image from "next/image";
-import CarouselDeImagenes from "../../../components/CarouselDeImagenes";
-
+import { ClientCarousel } from "../../../components/dynamic-client";
 export default function FullArticle({
   post,
   sectionTitle = "Artículo",
@@ -215,7 +214,7 @@ export default function FullArticle({
             {/* Carrusel de imágenes al final del artículo */}
             {post.imagenes_carrusel && post.imagenes_carrusel.length > 0 && (
               <div className="mt-12">
-                <CarouselDeImagenes imagenes={post.imagenes_carrusel} />
+                <ClientCarousel imagenes={post.imagenes_carrusel} />
               </div>
             )}
           </article>
