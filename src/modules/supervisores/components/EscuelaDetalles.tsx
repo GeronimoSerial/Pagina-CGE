@@ -13,13 +13,8 @@ import {
   User,
   Users,
   MapPin,
-  Calendar,
-  Building,
   Clock,
-  Wifi,
   Info,
-  BookOpen,
-  MonitorSmartphone,
   Home,
   BookText,
   X,
@@ -239,44 +234,6 @@ const EscuelaDetalles = memo(({ escuela, onClose }: EscuelaDetallesProps) => {
                     label="Ubicación"
                     value={escuela.ubicacion}
                   />
-                </div>
-              </Section>
-
-              <Section title="Servicios" icon={Building}>
-                <div className="space-y-4 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-                  <InfoDetail
-                    icon={Wifi}
-                    label="Conexión a Internet"
-                    value={escuela.conexionInternet}
-                  />
-                  <InfoDetail
-                    icon={Calendar}
-                    label="Empresa de Limpieza"
-                    value={escuela.empresaLimpieza}
-                  />
-                </div>
-              </Section>
-            </div>
-
-            <div className="space-y-5 sm:space-y-6">
-              <Section title="Programas de Acompañamiento" icon={BookOpen}>
-                <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                  <p className="text-sm text-gray-800 whitespace-pre-line leading-relaxed">
-                    {escuela.programasAcompañamiento ||
-                      "No hay programas de acompañamiento especificados para esta escuela."}
-                  </p>
-                </div>
-              </Section>
-
-              <Section
-                title="Problemáticas Identificadas"
-                icon={MonitorSmartphone}
-              >
-                <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                  <p className="text-sm text-gray-800 whitespace-pre-line leading-relaxed">
-                    {escuela.problematicas ||
-                      "No se han identificado problemáticas específicas para esta escuela."}
-                  </p>
                 </div>
               </Section>
             </div>
