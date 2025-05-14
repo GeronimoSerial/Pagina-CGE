@@ -1,4 +1,4 @@
-import { Info, Phone, HelpCircle, ArrowRight, Clock } from "lucide-react";
+import { Info, Phone } from "lucide-react";
 import DocumentationSection from "../../modules/documentation/components/DocumentationSection";
 import HeroSection from "../../modules/layout/Hero";
 import FAQSection from "../../modules/layout/FAQSection";
