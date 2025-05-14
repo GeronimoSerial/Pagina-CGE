@@ -106,21 +106,35 @@ const EscuelasTable = memo(
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-[#205C3B]/10 sticky top-0 z-10">
                     <tr>
-                      <th className="px-6 py-3 text-left text-sm font-semibold text-[#205C3B]">CUE</th>
-                      <th className="px-6 py-3 text-left text-sm font-semibold text-[#205C3B]">Nombre</th>
-                      <th className="px-6 py-3 text-left text-sm font-semibold text-[#205C3B]">Director</th>
-                      <th className="px-6 py-3 text-center text-sm font-semibold text-[#205C3B]">Matrícula 2024</th>
-                      <th className="px-6 py-3 text-center text-sm font-semibold text-[#205C3B]">Matrícula 2025</th>
-                      <th className="px-6 py-3 text-left text-sm font-semibold text-[#205C3B]">Tipo</th>
-                      <th className="px-6 py-3 text-right text-sm font-semibold text-[#205C3B]">Acciones</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold text-[#205C3B]">
+                        CUE
+                      </th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold text-[#205C3B]">
+                        Nombre
+                      </th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold text-[#205C3B]">
+                        Director
+                      </th>
+                      <th className="px-6 py-3 text-center text-sm font-semibold text-[#205C3B]">
+                        Matrícula 2024
+                      </th>
+                      <th className="px-6 py-3 text-center text-sm font-semibold text-[#205C3B]">
+                        Matrícula 2025
+                      </th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold text-[#205C3B]">
+                        Tipo
+                      </th>
+                      <th className="px-6 py-3 text-right text-sm font-semibold text-[#205C3B]">
+                        Acciones
+                      </th>
                     </tr>
                   </thead>
                   <tbody
                     className="divide-y divide-gray-200 bg-white"
                     style={{
                       height: `${rowVirtualizer.getTotalSize()}px`,
-                      width: '100%',
-                      position: 'relative',
+                      width: "100%",
+                      position: "relative",
                     }}
                   >
                     {rowVirtualizer.getVirtualItems().map((virtualRow) => {
@@ -128,14 +142,17 @@ const EscuelasTable = memo(
                       return (
                         <tr
                           key={escuela.cue}
-                          className={`${virtualRow.index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
-                            } cursor-pointer hover:bg-[#217A4B]/5 transition-colors`}
+                          className={`${
+                            virtualRow.index % 2 === 0
+                              ? "bg-white"
+                              : "bg-gray-50"
+                          } cursor-pointer hover:bg-[#217A4B]/5 transition-colors`}
                           onClick={() => onSelectEscuela(escuela)}
                           style={{
-                            position: 'absolute',
+                            position: "absolute",
                             top: 0,
                             left: 0,
-                            width: '100%',
+                            width: "100%",
                             height: `${virtualRow.size}px`,
                             transform: `translateY(${virtualRow.start}px)`,
                           }}
@@ -146,7 +163,9 @@ const EscuelasTable = memo(
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
                               <School className="h-4 w-4 text-[#217A4B] mr-2 flex-shrink-0" />
-                              <span className="text-gray-800 line-clamp-2">{escuela.nombre}</span>
+                              <span className="text-gray-800 line-clamp-2">
+                                {escuela.nombre}
+                              </span>
                             </div>
                           </td>
                           <td className="px-6 py-4 text-gray-600 max-w-[200px]">
