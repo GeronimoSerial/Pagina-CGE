@@ -1,4 +1,4 @@
-import React, { useCallback, memo } from "react";
+import React, { useCallback, memo, useRef } from "react";
 import {
   Table,
   TableHeader,
@@ -10,6 +10,7 @@ import {
 import { Button } from "../../../components/ui/button";
 import { Escuela } from "./SupervisoresClient";
 import { Eye, School } from "lucide-react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 
 interface EscuelasTableProps {
   escuelas: Escuela[];
@@ -25,11 +26,6 @@ const EscuelasTable = memo(
       },
       [onSelectEscuela]
     );
-
-    // Función para alternar clases para filas pares e impares
-    const getRowClass = (index: number) => {
-      return index % 2 === 0 ? "bg-white" : "bg-gray-50";
-    };
 
     // Versión móvil: tarjetas en lugar de tabla
     const MobileView = () => (
@@ -92,92 +88,108 @@ const EscuelasTable = memo(
     );
 
     // Versión desktop: tabla completa
-    const DesktopView = () => (
-      <div className="hidden sm:block rounded-lg overflow-hidden border border-gray-200 shadow-sm">
-        <div className="overflow-auto max-h-[500px]">
-          <Table>
-            <TableHeader className="bg-[#205C3B]/10 sticky top-0 z-10">
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="font-semibold text-[#205C3B] h-12">
-                  CUE
-                </TableHead>
-                <TableHead className="font-semibold text-[#205C3B]">
-                  Nombre
-                </TableHead>
-                <TableHead className="font-semibold text-[#205C3B]">
-                  Director
-                </TableHead>
-                <TableHead className="font-semibold text-[#205C3B] text-center">
-                  Matrícula 2024
-                </TableHead>
-                <TableHead className="font-semibold text-[#205C3B] text-center">
-                  Matrícula 2025
-                </TableHead>
-                <TableHead className="font-semibold text-[#205C3B]">
-                  Tipo
-                </TableHead>
-                <TableHead className="font-semibold text-[#205C3B] text-right">
-                  Acciones
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {escuelas.map((escuela, index) => (
-                <TableRow
-                  key={escuela.cue}
-                  onClick={() => onSelectEscuela(escuela)}
-                  className={`${getRowClass(
-                    index
-                  )} cursor-pointer transition-colors hover:bg-[#217A4B]/5`}
-                >
-                  <TableCell className="font-mono text-xs text-gray-600">
-                    {escuela.cue}
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    <div className="flex items-center">
-                      <School className="h-4 w-4 text-[#217A4B] mr-2 flex-shrink-0" />
-                      <span className="text-gray-800 line-clamp-2">
-                        {escuela.nombre}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-gray-600 max-w-[200px]">
-                    <div className="line-clamp-2">
-                      {escuela.director || "No especificado"}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-center font-semibold">
-                    {escuela.matricula2024}
-                  </TableCell>
-                  <TableCell className="text-center font-semibold">
-                    {escuela.matricula2025}
-                  </TableCell>
-                  <TableCell>
-                    <span className="px-2 py-1 bg-[#217A4B]/10 text-[#217A4B] rounded-md text-xs font-medium">
-                      {escuela.tipoEscuela || "No especificado"}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => handleClick(e, escuela)}
-                      className="rounded-full bg-white hover:bg-[#217A4B] hover:text-white border-[#217A4B]/30 text-[#217A4B] transition-colors"
-                    >
-                      <Eye className="h-3.5 w-3.5 mr-1.5" />
-                      Ver detalles
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+    const DesktopView = () => {
+      const parentRef = useRef<HTMLDivElement>(null);
+
+      const rowVirtualizer = useVirtualizer({
+        count: escuelas.length,
+        getScrollElement: () => parentRef.current,
+        estimateSize: () => 56, // altura estimada de cada fila
+        overscan: 10,
+      });
+
+      return (
+        <div className="hidden sm:block rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+          <div ref={parentRef} className="overflow-auto max-h-[500px]">
+            <div className="min-w-full inline-block align-middle">
+              <div className="overflow-hidden">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-[#205C3B]/10 sticky top-0 z-10">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-sm font-semibold text-[#205C3B]">CUE</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold text-[#205C3B]">Nombre</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold text-[#205C3B]">Director</th>
+                      <th className="px-6 py-3 text-center text-sm font-semibold text-[#205C3B]">Matrícula 2024</th>
+                      <th className="px-6 py-3 text-center text-sm font-semibold text-[#205C3B]">Matrícula 2025</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold text-[#205C3B]">Tipo</th>
+                      <th className="px-6 py-3 text-right text-sm font-semibold text-[#205C3B]">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    className="divide-y divide-gray-200 bg-white"
+                    style={{
+                      height: `${rowVirtualizer.getTotalSize()}px`,
+                      width: '100%',
+                      position: 'relative',
+                    }}
+                  >
+                    {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                      const escuela = escuelas[virtualRow.index];
+                      return (
+                        <tr
+                          key={escuela.cue}
+                          className={`${virtualRow.index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                            } cursor-pointer hover:bg-[#217A4B]/5 transition-colors`}
+                          onClick={() => onSelectEscuela(escuela)}
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: `${virtualRow.size}px`,
+                            transform: `translateY(${virtualRow.start}px)`,
+                          }}
+                        >
+                          <td className="px-6 py-4 whitespace-nowrap font-mono text-xs text-gray-600">
+                            {escuela.cue}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <School className="h-4 w-4 text-[#217A4B] mr-2 flex-shrink-0" />
+                              <span className="text-gray-800 line-clamp-2">{escuela.nombre}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-gray-600 max-w-[200px]">
+                            <div className="line-clamp-2">
+                              {escuela.director || "No especificado"}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-center font-semibold">
+                            {escuela.matricula2024}
+                          </td>
+                          <td className="px-6 py-4 text-center font-semibold">
+                            {escuela.matricula2025}
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="px-2 py-1 bg-[#217A4B]/10 text-[#217A4B] rounded-md text-xs font-medium">
+                              {escuela.tipoEscuela || "No especificado"}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={(e) => handleClick(e, escuela)}
+                              className="rounded-full bg-white hover:bg-[#217A4B] hover:text-white border-[#217A4B]/30 text-[#217A4B] transition-colors"
+                            >
+                              <Eye className="h-3.5 w-3.5 mr-1.5" />
+                              Ver detalles
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div className="bg-gray-50 py-3 px-4 border-t border-gray-200 text-sm text-gray-500">
+            Total de escuelas: {escuelas.length}
+          </div>
         </div>
-        <div className="bg-gray-50 py-3 px-4 border-t border-gray-200 text-sm text-gray-500">
-          Total de escuelas: {escuelas.length}
-        </div>
-      </div>
-    );
+      );
+    };
 
     return (
       <>
