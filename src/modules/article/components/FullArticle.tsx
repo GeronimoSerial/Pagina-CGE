@@ -6,7 +6,6 @@ import {
   ChevronRight,
   Bookmark,
   Newspaper,
-  BadgeInfo,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../../../components/ui/button";
@@ -44,6 +43,11 @@ export default function FullArticle({
       url: "/documentacion",
     },
   ];
+
+  const section = sectionTitle
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -93,7 +97,7 @@ export default function FullArticle({
                 className="text-emerald-700 hover:text-emerald-800 hover:bg-emerald-100/40 transition-all duration-300 font-medium rounded-full px-4 py-2"
               >
                 <ArrowLeftIcon className="mr-2" size={18} />
-                Volver a {sectionTitle.toLowerCase()}
+                Volver a {section}
               </Button>
             </Link>
 
@@ -260,7 +264,7 @@ export default function FullArticle({
                 {articulosRelacionados.slice(0, 3).map((articulo) => (
                   <a
                     key={articulo.slug}
-                    href={`/${sectionTitle.toLowerCase()}/${articulo.slug}`}
+                    href={`/${section}/${articulo.slug}`}
                     className="block group hover:bg-slate-50 p-3 rounded-xl transition-all duration-300"
                   >
                     <div className="space-y-2">
@@ -274,7 +278,7 @@ export default function FullArticle({
                     </div>
                   </a>
                 ))}
-                <Link href={`/${sectionTitle.toLowerCase()}`}>
+                <Link href={`/${section}`}>
                   <Button
                     variant="ghost"
                     className="w-full justify-center text-sm text-slate-600 hover:bg-slate-50 mt-2 py-2 rounded-xl font-medium"
