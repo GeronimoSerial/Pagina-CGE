@@ -39,6 +39,11 @@ export async function generateMetadata({
   };
 }
 
+// Generación estática de rutas
+export async function generateStaticParams() {
+  return [{ articulo: "noticias" }, { articulo: "tramites" }];
+}
+
 export default async function ContenidoGrid({
   params,
 }: {
