@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import {
   Card,
   CardContent,
@@ -37,7 +37,7 @@ interface ArticlesGridProps {
   basePath?: string;
 }
 
-const ArticlesGrid = ({
+const ArticlesGridContent = ({
   articles,
   buttonText = "Leer más",
   emptyStateTitle = "No se encontraron artículos",
@@ -169,6 +169,27 @@ const ArticlesGrid = ({
         )}
       </div>
     </section>
+  );
+};
+
+// Wrapped component with Suspense
+const ArticlesGrid = (props: ArticlesGridProps) => {
+  return (
+    <Suspense
+      fallback={
+        <section className="w-full">
+          <div className="container mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[...Array(4)].map((_, index) => (
+                <SkeletonCard key={index} />
+              ))}
+            </div>
+          </div>
+        </section>
+      }
+    >
+      <ArticlesGridContent {...props} />
+    </Suspense>
   );
 };
 

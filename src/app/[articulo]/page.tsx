@@ -68,11 +68,15 @@ export default async function ContenidoGrid({
     ? parseInt(resolvedSearchParams.page)
     : 1;
   const limit = 4; // Fijamos el límite a 4 artículos por página
+  const searchTerm = resolvedSearchParams?.search || "";
+  const categoria = resolvedSearchParams?.categoria || "";
 
   const { items: rawData, pagination } = await getAllContentMetadata(
     articulo,
     page,
-    limit
+    limit,
+    searchTerm,
+    categoria
   );
 
   const data = rawData.map((item: any) => {

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, Suspense } from "react";
 import { Clock, Smartphone, FileSearch } from "lucide-react";
 import ArticlesGrid from "./ArticlesGrid";
 import HeroSection from "@modules/layout/Hero";
@@ -57,7 +57,21 @@ interface PageWithFAQProps {
   };
 }
 
-export default function PageWithFAQ({
+export default function PageWithFAQWrapper(props: PageWithFAQProps) {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-pulse text-lg text-gray-600">Cargando...</div>
+        </div>
+      }
+    >
+      <PageWithFAQContent {...props} />
+    </Suspense>
+  );
+}
+
+function PageWithFAQContent({
   heroTitle,
   heroDescription,
   infoBarItems,
@@ -164,6 +178,11 @@ export default function PageWithFAQ({
                           window.location.search
                         );
                         params.delete("page");
+                        if (e.target.value) {
+                          params.set("search", e.target.value);
+                        } else {
+                          params.delete("search");
+                        }
                         router.push(`${basePath}?${params.toString()}`, {
                           scroll: false,
                         });
