@@ -1,9 +1,9 @@
-import React, { useState, useCallback, useEffect, useMemo } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import type { Escuela } from "@/src/interfaces";
-import { createSearchIndex, searchEscuelas } from "../utils/searchUtils";
+import { buscarEscuelasAvanzado } from "../utils/searchUtils";
 import { Button } from "@components/ui/button";
 import { Input } from "@components/ui/input";
-import { Search, X, School, User } from "lucide-react";
+import { Search, X, School, User, MapPin } from "lucide-react";
 import { Badge } from "@components/ui/badge";
 
 interface BuscadorEscuelasProps {
@@ -15,14 +15,11 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
   escuelas,
   onSelectEscuela,
 }) => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [resultados, setResultados] = useState<Escuela[]>([]);
   const [showResults, setShowResults] = useState<boolean>(false);
 
-  // Crear el índice de búsqueda una sola vez cuando se montan los datos
-  const searchIndex = useMemo(() => createSearchIndex(escuelas), [escuelas]);
-
-  // Manejar la búsqueda
+  // Función de búsqueda usando la utilidad avanzada
   const handleSearch = useCallback(() => {
     if (searchTerm.trim() === "") {
       setResultados([]);
@@ -30,16 +27,19 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
       return;
     }
 
-    const results = searchEscuelas(escuelas, searchIndex, searchTerm);
+    const results = buscarEscuelasAvanzado(escuelas, searchTerm);
     setResultados(results);
     setShowResults(true);
-  }, [escuelas, searchIndex, searchTerm]);
+  }, [escuelas, searchTerm]);
 
   // Ejecutar la búsqueda cuando el término cambie (con debounce)
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (searchTerm.trim()) {
         handleSearch();
+      } else {
+        setResultados([]);
+        setShowResults(false);
       }
     }, 300); // 300ms de debounce
 
@@ -77,7 +77,7 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Buscar por nombre, director o CUE..."
+            placeholder="Buscar por nombre, director, CUE, departamento o localidad..."
             className="flex-1 border-none shadow-none focus-visible:ring-0 placeholder:text-gray-400"
           />
           {searchTerm && (
@@ -130,11 +130,22 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
                       </p>
 
                       {/* Destacar el supervisor asignado */}
-                      <div className="mt-2 flex items-center">
+                      <div className="mt-2 flex items-center gap-2 flex-wrap">
                         <Badge className="bg-[#217A4B] text-white border-0 px-3 py-1 flex items-center gap-1">
                           <User className="h-3 w-3" />
                           <span className="font-semibold">
                             {getSupervisorNombre(escuela.supervisorID)}
+                          </span>
+                        </Badge>
+
+                        {/* Añadir la ubicación */}
+                        <Badge
+                          variant="outline"
+                          className="px-3 py-1 flex items-center gap-1 border-gray-200"
+                        >
+                          <MapPin className="h-3 w-3" />
+                          <span>
+                            {escuela.departamento} - {escuela.localidad}
                           </span>
                         </Badge>
                       </div>
@@ -143,6 +154,7 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
                         <span>{escuela.director || "Sin director"}</span>
                         <span className="font-mono">CUE: {escuela.cue}</span>
                         <span>{escuela.tipoEscuela || "Sin tipo"}</span>
+                        <span>Turno: {escuela.turno}</span>
                       </div>
                     </div>
                   </div>

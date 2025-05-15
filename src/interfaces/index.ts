@@ -55,6 +55,7 @@ export interface Escuela {
   ubicacion: string;
   cabecera: string;
   supervisorID: number;
+  mail?: string | null;
 }
 export interface Supervisor {
   id: number;
