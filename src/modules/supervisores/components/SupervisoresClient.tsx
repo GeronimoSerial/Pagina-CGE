@@ -9,9 +9,8 @@ import { getSupervisoresFicticios } from "../utils/escuelas";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@components/ui/alert";
 
-const supervisores = useMemo(() => getSupervisoresFicticios(), []);
-
 export default function SupervisoresClient() {
+  const supervisores = useMemo(() => getSupervisoresFicticios(), []);
   const [expanded, setExpanded] = useState<string | undefined>(undefined);
   const [escuelaSeleccionada, setEscuelaSeleccionada] =
     useState<Escuela | null>(null);
