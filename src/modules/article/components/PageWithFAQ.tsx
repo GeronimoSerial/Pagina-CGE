@@ -88,7 +88,7 @@ export default function PageWithFAQ({
   const transformedArticles = useMemo(() => {
     // Si está cargando una nueva página, devolver undefined para mostrar el skeleton
     if (loadingPage) return undefined;
-    
+
     return articles.map((item) => ({
       id: item.slug,
       slug: item.slug,
@@ -102,13 +102,18 @@ export default function PageWithFAQ({
   }, [articles, loadingPage]);
 
   const handlePageChange = (page: number) => {
-    setIsPageChanging(true);
     if (pagination) {
+      setLoadingPage(true);
       const params = new URLSearchParams(window.location.search);
       params.set("page", page.toString());
-      router.push(`${basePath}?${params.toString()}`);
+      router.push(`${basePath}?${params.toString()}`, { scroll: false });
     }
   };
+
+  // Efecto para quitar el loading cuando los artículos cambian
+  useEffect(() => {
+    setLoadingPage(false);
+  }, [articles]);
 
   // Determinar categorías únicas si no se pasan por props
   const categorias =
