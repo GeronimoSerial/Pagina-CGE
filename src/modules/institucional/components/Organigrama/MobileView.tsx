@@ -1,14 +1,14 @@
-import { Mail, Phone, Briefcase, Building2 } from "lucide-react";
-import { MemberInfo } from "../../data/OrganigramaData";
-import { Card, CardContent } from "../../../../components/ui/card";
-import { Button } from "../../../../components/ui/button";
+import { Mail, Briefcase, Building2 } from "lucide-react";
+import { MemberInfo } from "@modules/institucional/data/OrganigramaData";
+import { Card, CardContent } from "@components/ui/card";
+import { Button } from "@components/ui/button";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "../../../../components/ui/accordion";
-import { cn } from "../../../../lib/utils";
+} from "@components/ui/accordion";
+import { cn } from "@lib/utils";
 
 interface MobileViewProps {
   members: MemberInfo[];

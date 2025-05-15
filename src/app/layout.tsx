@@ -1,8 +1,8 @@
 import "./index.css";
-import Footer from "../modules/layout/Footer";
-import Header from "../modules/layout/Header";
+import Footer from "@modules/layout/Footer";
+import Header from "@modules/layout/Header";
 import { Lora, Inter } from "next/font/google";
-import ModalAvisoDesarrollo from "../components/ModalAvisoDesarrollo";
+import ModalAvisoDesarrollo from "@components/ModalAvisoDesarrollo";
 
 import metadata from "./metadata";
 import Head from "next/head";

@@ -1,17 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect, Suspense } from "react";
 import { Clock, Smartphone, FileSearch } from "lucide-react";
 import ArticlesGrid from "./ArticlesGrid";
-import HeroSection from "../../layout/Hero";
-import {
-  filtrarArticulos,
-  sortByDate,
-  sortByAlphabetical,
-} from "../../../lib/utils";
-import SearchInput from "../../layout/SearchInput";
-import FAQSection from "../../layout/FAQSection";
-import { FAQ } from "../../faqs/faqs";
-import { HeadlessPagination } from "../../documentation/components/HeadlessPagination";
+import HeroSection from "@modules/layout/Hero";
+import SearchInput from "@modules/layout/SearchInput";
+import FAQSection from "@modules/layout/FAQSection";
+import { FAQ } from "@modules/faqs/faqs";
+import { HeadlessPagination } from "@modules/documentation/components/HeadlessPagination";
+import { useRouter } from "next/navigation";
 
 interface InfoBarItem {
   icon: React.ReactNode;
@@ -50,9 +46,32 @@ interface PageWithFAQProps {
 
   //prop para el sorted
   isNoticia?: boolean;
+
+  // Props para la paginación del servidor
+  pagination?: {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }
 
-export default function PageWithFAQ({
+export default function PageWithFAQWrapper(props: PageWithFAQProps) {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-pulse text-lg text-gray-600">Cargando...</div>
+        </div>
+      }
+    >
+      <PageWithFAQContent {...props} />
+    </Suspense>
+  );
+}
+
+function PageWithFAQContent({
   heroTitle,
   heroDescription,
   infoBarItems,
@@ -72,21 +91,43 @@ export default function PageWithFAQ({
   contactButtonText,
   contactUrl,
   isNoticia,
+  pagination,
 }: PageWithFAQProps) {
-  // Estado de paginación
-  const PAGE_SIZE = 4;
-  const [pagina, setPagina] = useState(1);
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
+  const [loadingPage, setLoadingPage] = useState(false);
+
+  // Optimización: Memoizar la transformación de artículos
+  const transformedArticles = useMemo(() => {
+    // Si está cargando una nueva página, devolver undefined para mostrar el skeleton
+    if (loadingPage) return undefined;
+
+    return articles.map((item) => ({
+      id: item.slug,
+      slug: item.slug,
+      titulo: item.titulo,
+      description: item.description,
+      date: item.fecha,
+      imagen: item.imagen,
+      categoria: item.categoria,
+      esImportante: item.esImportante,
+    }));
+  }, [articles, loadingPage]);
 
   const handlePageChange = (page: number) => {
-    setPagina(page);
-    // Hacer scroll hacia arriba al cambiar de página
-    window.scrollTo({
-      top: document.getElementById("grid-container")?.offsetTop || 0,
-      behavior: "smooth",
-    });
+    if (pagination) {
+      setLoadingPage(true);
+      const params = new URLSearchParams(window.location.search);
+      params.set("page", page.toString());
+      router.push(`${basePath}?${params.toString()}`, { scroll: false });
+    }
   };
+
+  // Efecto para quitar el loading cuando los artículos cambian
+  useEffect(() => {
+    setLoadingPage(false);
+  }, [articles]);
 
   // Determinar categorías únicas si no se pasan por props
   const categorias =
@@ -95,27 +136,11 @@ export default function PageWithFAQ({
       new Set(articles.map((item: any) => item.categoria).filter(Boolean))
     );
 
-  // Filtrar artículos por búsqueda y categoría antes de la paginación
-  const articulosFiltrados = filtrarArticulos(
-    articles,
-    searchTerm,
-    categoriaSeleccionada
-  );
-
-  // Ordenar artículos filtrados
-  // Si el tipo es "tramites", ordenar alfabéticamente, de lo contrario, por fecha
-  const sortedArticles = !isNoticia
-    ? sortByAlphabetical(articulosFiltrados)
-    : sortByDate(articulosFiltrados, false);
-
-  // Calcular total de páginas basado en los artículos filtrados
-  const totalPaginas = Math.ceil(sortedArticles.length / PAGE_SIZE);
-
-  // Aplicar paginación después de filtrar y ordenar
-  const articlesPagina = sortedArticles.slice(
-    (pagina - 1) * PAGE_SIZE,
-    pagina * PAGE_SIZE
-  );
+  // La paginación, filtrado y ordenamiento ahora se hace en el servidor
+  const totalPaginas = pagination
+    ? pagination.totalPages
+    : Math.ceil(articles.length / 4);
+  const currentPage = pagination ? pagination.currentPage : 1;
 
   return (
     <main className="bg-gray-50 min-h-screen">
@@ -147,14 +172,42 @@ export default function PageWithFAQ({
                     value={searchTerm}
                     onChange={(e) => {
                       setSearchTerm(e.target.value);
-                      setPagina(1);
+                      if (pagination) {
+                        setLoadingPage(true);
+                        const params = new URLSearchParams(
+                          window.location.search
+                        );
+                        params.delete("page");
+                        if (e.target.value) {
+                          params.set("search", e.target.value);
+                        } else {
+                          params.delete("search");
+                        }
+                        router.push(`${basePath}?${params.toString()}`, {
+                          scroll: false,
+                        });
+                      }
                     }}
                     placeholder={searchPlaceholder}
                     categories={categorias}
                     selectedCategory={categoriaSeleccionada}
                     onCategoryChange={(cat) => {
                       setCategoriaSeleccionada(cat);
-                      setPagina(1);
+                      if (pagination) {
+                        setLoadingPage(true);
+                        const params = new URLSearchParams(
+                          window.location.search
+                        );
+                        params.delete("page");
+                        if (cat) {
+                          params.set("categoria", cat);
+                        } else {
+                          params.delete("categoria");
+                        }
+                        router.push(`${basePath}?${params.toString()}`, {
+                          scroll: false,
+                        });
+                      }
                     }}
                     allLabel="Todas las categorías"
                   />
@@ -176,12 +229,11 @@ export default function PageWithFAQ({
         </section>
       )}
 
-      {/* Contenedor del grid y paginación con altura mínima fija */}
+      {/* Contenedor del grid y paginación */}
       <div className="container mx-auto px-4 md:px-6" id="grid-container">
-        {/* Contenedor del grid con altura mínima fija */}
         <div className="min-h-screen/2 py-8">
           <ArticlesGrid
-            articles={articlesPagina}
+            articles={transformedArticles}
             buttonText={buttonText}
             emptyStateTitle={emptyStateTitle}
             emptyStateDescription={emptyStateDescription}
@@ -191,11 +243,10 @@ export default function PageWithFAQ({
           />
         </div>
 
-        {/* Paginación separada y con posición estable */}
         {totalPaginas > 1 && (
           <div className="py-6 border-t border-gray-100">
             <HeadlessPagination
-              currentPage={pagina}
+              currentPage={currentPage}
               totalPages={totalPaginas}
               onPageChange={handlePageChange}
             />

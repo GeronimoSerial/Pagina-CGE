@@ -15,13 +15,13 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../../components/ui/card";
-import { Button } from "../../../components/ui/button";
-import { Badge } from "../../../components/ui/badge";
+} from "@components/ui/card";
+import { Button } from "@components/ui/button";
+import { Badge } from "@components/ui/badge";
 import { documents } from "../data";
 import { useSearchParams } from "next/navigation";
-import { filterDocuments } from "../../../lib/utils";
-import SearchInput from "../../layout/SearchInput";
+import { filterDocuments } from "@lib/utils";
+import SearchInput from "@modules/layout/SearchInput";
 import { HeadlessPagination } from "./HeadlessPagination";
 
 const DocumentationSection = () => {

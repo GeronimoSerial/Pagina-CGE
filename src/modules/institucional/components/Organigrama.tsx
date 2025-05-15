@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent } from "../../../components/ui/dialog";
-import { useIsMobile } from "../../../hooks/use-mobile";
+import { useIsMobile } from "@hooks/use-mobile";
 import { members } from "../data/OrganigramaData";
 import { MemberInfo, MemberDetails } from "./MemberDetails";
 import { OrganizationChart } from "./Organigrama/DesktopView";
