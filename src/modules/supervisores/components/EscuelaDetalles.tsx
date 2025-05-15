@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -18,11 +18,19 @@ import {
   Home,
   BookText,
   X,
+  Phone,
+  Mail,
+  Calendar,
+  BarChart3,
+  Building2,
+  Shield,
 } from "lucide-react";
+import { getSupervisoresFicticios } from "../utils/escuelas";
 
 interface EscuelaDetallesProps {
   escuela: Escuela;
   onClose: () => void;
+  correoEscuela?: string;
 }
 
 // Componente de detalles de información - memoizado para evitar re-renderizados
@@ -36,11 +44,13 @@ const InfoDetail = memo(
     label: string;
     value: string | number;
   }) => (
-    <div className="flex items-start">
-      <Icon className="h-4 w-4 mt-1 mr-3 text-[#217A4B] flex-shrink-0" />
+    <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-100 hover:border-[#217A4B]/30 transition-all hover:shadow-sm">
+      <div className="bg-[#217A4B]/10 p-2 rounded-lg flex-shrink-0">
+        <Icon className="h-4 w-4 text-[#217A4B]" />
+      </div>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-gray-700">{label}:</p>
-        <p className="text-sm text-gray-800 break-words">
+        <p className="text-sm font-medium text-gray-600">{label}</p>
+        <p className="text-sm font-semibold text-gray-800 break-words">
           {value || "No especificado"}
         </p>
       </div>
@@ -56,25 +66,17 @@ const Section = memo(
     title,
     icon: Icon,
     children,
-    light = false,
+    className = "",
   }: {
     title: string;
     icon: React.ElementType;
     children: React.ReactNode;
-    light?: boolean;
+    className?: string;
   }) => (
-    <div
-      className={`rounded-xl p-4 sm:p-5 border ${
-        light
-          ? "bg-white border-gray-100"
-          : "bg-[#217A4B]/5 border-[#217A4B]/20"
-      }`}
-    >
-      <h3 className="text-base sm:text-lg font-semibold text-[#205C3B] mb-3 sm:mb-4 flex items-center">
-        <div className="bg-[#217A4B]/20 p-1.5 rounded-lg mr-3 flex-shrink-0">
-          <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-[#217A4B]" />
-        </div>
-        <span className="truncate">{title}</span>
+    <div className={`space-y-4 ${className}`}>
+      <h3 className="text-base font-semibold text-[#205C3B] flex items-center gap-2">
+        <Icon className="h-5 w-5 text-[#217A4B]" />
+        <span>{title}</span>
       </h3>
       {children}
     </div>
@@ -100,158 +102,215 @@ const MatriculaStats = memo(({ escuela }: { escuela: Escuela }) => {
     cambio > 0 ? "aumento" : cambio < 0 ? "disminución" : "sin cambios";
   const tendenciaColor =
     cambio > 0
-      ? "text-green-600"
+      ? "text-emerald-600"
       : cambio < 0
-      ? "text-red-500"
-      : "text-gray-500";
+      ? "text-rose-600"
+      : "text-gray-600";
+
+  const tendenciaIcon = cambio > 0 ? "↑" : cambio < 0 ? "↓" : "→";
 
   return (
-    <Section title="Matrícula" icon={Users} light>
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
-        <div className="text-center p-3 sm:p-4 bg-[#217A4B]/5 rounded-lg border border-[#217A4B]/10">
-          <p className="text-xs text-gray-600 mb-1">Matrícula 2024</p>
-          <p className="text-xl sm:text-2xl font-bold text-[#217A4B]">
+    <div className="bg-gradient-to-br from-[#217A4B]/5 to-[#217A4B]/10 rounded-xl p-3 md:p-4 border border-[#217A4B]/20">
+      <div className="flex items-center gap-2 mb-2 md:mb-3">
+        <BarChart3 className="h-4 w-4 md:h-5 md:w-5 text-[#217A4B]" />
+        <h3 className="text-base md:text-lg font-semibold text-[#205C3B]">
+          Matrícula Escolar
+        </h3>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2 md:gap-3">
+        <div className="bg-white rounded-xl p-3 shadow-sm border border-gray-100 flex flex-col items-center justify-center">
+          <p className="text-xs md:text-sm text-gray-500 mb-1">2024</p>
+          <p className="text-xl md:text-2xl lg:text-3xl font-bold text-[#217A4B]">
             {escuela.matricula2024}
           </p>
+          <p className="text-xs text-gray-500 mt-1">alumnos</p>
         </div>
-        <div className="text-center p-3 sm:p-4 bg-[#217A4B]/5 rounded-lg border border-[#217A4B]/10">
-          <p className="text-xs text-gray-600 mb-1">Matrícula 2025</p>
-          <p className="text-xl sm:text-2xl font-bold text-[#217A4B]">
+
+        <div className="bg-white rounded-xl p-3 shadow-sm border border-gray-100 flex flex-col items-center justify-center">
+          <p className="text-xs md:text-sm text-gray-500 mb-1">2025</p>
+          <p className="text-xl md:text-2xl lg:text-3xl font-bold text-[#217A4B]">
             {escuela.matricula2025}
           </p>
+          <p className="text-xs text-gray-500 mt-1">alumnos</p>
         </div>
       </div>
-      <div className="mt-2 sm:mt-3 text-xs sm:text-sm">
-        <p>
-          <span className="font-medium">Variación matrícula: </span>
-          <span className={tendenciaColor}>
+
+      <div className="mt-2 md:mt-3 flex items-center justify-center">
+        <div
+          className={`px-3 py-1.5 md:px-4 md:py-2 rounded-full ${tendenciaColor} bg-white shadow-sm border border-gray-100 flex items-center gap-2 text-sm`}
+        >
+          <span className="font-bold">{tendenciaIcon}</span>
+          <span className="font-medium">
             {cambio === 0
               ? "Sin cambios"
               : `${cambio > 0 ? "+" : ""}${porcentajeCambio}% (${Math.abs(
                   escuela.matricula2025 - escuela.matricula2024
                 )} alumnos)`}
           </span>
-        </p>
+        </div>
       </div>
-    </Section>
+    </div>
   );
 });
 
 MatriculaStats.displayName = "MatriculaStats";
 
+// Componente de información rápida
+const QuickInfo = memo(
+  ({
+    icon: Icon,
+    label,
+    value,
+  }: {
+    icon: React.ElementType;
+    label: string;
+    value: string | number;
+  }) => (
+    <div className="flex items-center gap-2 bg-white rounded-lg p-2 md:p-3 shadow-sm border border-gray-100 hover:border-[#217A4B]/30 transition-all hover:shadow-md">
+      <div className="bg-[#217A4B]/10 p-1.5 md:p-2 rounded-full">
+        <Icon className="h-3.5 w-3.5 md:h-5 md:w-5 text-[#217A4B]" />
+      </div>
+      <div className="min-w-0">
+        <p className="text-xs text-gray-500 font-medium">{label}</p>
+        <p className="font-semibold text-xs md:text-sm truncate">
+          {value || "No especificado"}
+        </p>
+      </div>
+    </div>
+  )
+);
+
+QuickInfo.displayName = "QuickInfo";
+
 // Componente principal - memoizado para máximo rendimiento
-const EscuelaDetalles = memo(({ escuela, onClose }: EscuelaDetallesProps) => {
-  if (!escuela) return null;
+const EscuelaDetalles = memo(
+  ({
+    escuela,
+    onClose,
+    correoEscuela = "No disponible",
+  }: EscuelaDetallesProps) => {
+    if (!escuela) return null;
 
-  return (
-    <Dialog open={!!escuela} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl p-0 overflow-hidden max-h-[90vh] w-[95vw] md:w-auto rounded-xl">
-        <DialogHeader className="bg-gradient-to-r from-[#205C3B]/10 to-[#217A4B]/10 p-4 sm:p-6 border-b border-gray-200 relative">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="absolute right-2 sm:right-4 top-2 sm:top-4 text-gray-500 hover:text-gray-700 hover:bg-[#217A4B]/10 rounded-full"
-          >
-            <X className="h-4 w-4" />
-          </Button>
+    // Obtener supervisores ficticios y encontrar el supervisor correspondiente
+    const supervisores = useMemo(() => getSupervisoresFicticios(), []);
+    const supervisor = useMemo(
+      () =>
+        supervisores.find((s) => s.id === escuela.supervisorID) || {
+          id: 0,
+          nombre: "No asignado",
+        },
+      [supervisores, escuela.supervisorID]
+    );
 
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-            <div className="bg-gradient-to-br from-[#217A4B] to-[#205C3B] rounded-xl p-3 inline-flex shadow-md">
-              <School className="h-7 w-7 text-white" />
-            </div>
-            <div className="min-w-0 space-y-1">
-              <DialogTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-[#205C3B] break-words leading-tight">
+    return (
+      <Dialog open={!!escuela} onOpenChange={onClose}>
+        <DialogContent className="max-w-4xl p-0 overflow-hidden w-[98vw] md:w-auto rounded-xl shadow-xl border-0 max-h-[95vh] flex flex-col">
+          {/* Cabecera con gradiente y cierre */}
+          <div className="bg-gradient-to-r from-[#205C3B] to-[#217A4B] p-3 md:p-5 text-white relative shrink-0">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="absolute right-2 top-2 md:right-3 md:top-3 text-white/80 hover:text-white hover:bg-white/10 rounded-full"
+            >
+              <X className="h-4 w-4 md:h-5 md:w-5" />
+            </Button>
+
+            <div className="flex items-center gap-3 md:gap-4 mb-2 md:mb-4">
+              <div className="bg-white/10 p-2 md:p-3 rounded-full backdrop-blur-sm">
+                <School className="h-5 w-5 md:h-8 md:w-8" />
+              </div>
+              <DialogTitle className="text-lg md:text-2xl lg:text-3xl font-bold break-words">
                 {escuela.nombre}
               </DialogTitle>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-gray-600 text-sm sm:text-base">
-                <span className="font-mono bg-gray-100 px-2 py-0.5 rounded-md text-xs sm:text-sm">
+            </div>
+
+            <div className="flex flex-wrap items-center gap-x-2 md:gap-x-4 gap-y-1 md:gap-y-2 mt-1">
+              <div className="bg-white/20 backdrop-blur-sm px-2 py-1 md:px-3 md:py-1.5 rounded-full flex items-center gap-1.5">
+                <Building2 className="h-3 w-3 md:h-3.5 md:w-3.5" />
+                <span className="text-xs md:text-sm font-medium">
                   CUE: {escuela.cue}
                 </span>
-                <div className="flex items-center">
-                  <MapPin className="h-3.5 w-3.5 mr-1 text-gray-500 flex-shrink-0" />
-                  <span className="break-all">
-                    {escuela.departamento}, {escuela.localidad}
-                  </span>
-                </div>
+              </div>
+
+              <div className="bg-white/20 backdrop-blur-sm px-2 py-1 md:px-3 md:py-1.5 rounded-full flex items-center gap-1.5">
+                <MapPin className="h-3 w-3 md:h-3.5 md:w-3.5" />
+                <span className="text-xs md:text-sm font-medium truncate max-w-[150px] md:max-w-[200px]">
+                  {escuela.departamento}, {escuela.localidad}
+                </span>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
-            <div className="bg-white rounded-xl p-3 shadow-sm border border-gray-200 hover:border-[#217A4B]/50 transition-all flex items-center">
-              <div className="bg-[#217A4B]/10 p-2 rounded-lg mr-3">
-                <User className="h-5 w-5 text-[#217A4B]" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-xs text-gray-500 font-medium">Director/a</p>
-                <p className="font-semibold text-sm truncate">
-                  {escuela.director || "No especificado"}
-                </p>
-              </div>
-            </div>
-            <div className="bg-white rounded-xl p-3 shadow-sm border border-gray-200 hover:border-[#217A4B]/50 transition-all flex items-center">
-              <div className="bg-[#217A4B]/10 p-2 rounded-lg mr-3">
-                <BookText className="h-5 w-5 text-[#217A4B]" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-xs text-gray-500 font-medium">
-                  Tipo de Escuela
-                </p>
-                <p className="font-semibold text-sm truncate">
-                  {escuela.tipoEscuela || "No especificado"}
-                </p>
-              </div>
-            </div>
-            <div className="bg-white rounded-xl p-3 shadow-sm border border-gray-200 hover:border-[#217A4B]/50 transition-all flex items-center">
-              <div className="bg-[#217A4B]/10 p-2 rounded-lg mr-3">
-                <Clock className="h-5 w-5 text-[#217A4B]" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-xs text-gray-500 font-medium">Turno</p>
-                <p className="font-semibold text-sm truncate">
-                  {escuela.turno || "No especificado"}
-                </p>
-              </div>
+          {/* Información rápida */}
+          <div className="bg-[#F9FAFB] border-b border-gray-200 shrink-0">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 p-2 md:gap-3 md:p-4">
+              <QuickInfo
+                icon={Shield}
+                label="Supervisor/a"
+                value={supervisor.nombre}
+              />
+              <QuickInfo
+                icon={BookText}
+                label="Tipo"
+                value={escuela.tipoEscuela}
+              />
+              <QuickInfo icon={Clock} label="Turno" value={escuela.turno} />
+              <QuickInfo
+                icon={Mail}
+                label="Cabecera"
+                value={escuela.cabecera}
+              />
             </div>
           </div>
-        </DialogHeader>
 
-        <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(90vh-250px)]">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
-            <div className="space-y-5 sm:space-y-6">
+          {/* Contenido principal */}
+          <div className="p-3 md:p-5 overflow-y-auto flex-grow">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
               <MatriculaStats escuela={escuela} />
 
-              <Section title="Información General" icon={Info}>
-                <div className="space-y-4 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-                  <InfoDetail
-                    icon={Home}
-                    label="Cabecera"
-                    value={escuela.cabecera}
-                  />
+              <Section title="Información Detallada" icon={Info}>
+                <div className="grid grid-cols-1 gap-2 md:gap-3">
                   <InfoDetail
                     icon={MapPin}
                     label="Ubicación"
                     value={escuela.ubicacion}
                   />
+                  <InfoDetail
+                    icon={User}
+                    label="Director/a"
+                    value={escuela.director}
+                  />
+                  <InfoDetail
+                    icon={Building2}
+                    label="Departamento"
+                    value={escuela.departamento}
+                  />
+                  <InfoDetail
+                    icon={Mail}
+                    label="Correo"
+                    value={correoEscuela}
+                  />
                 </div>
               </Section>
             </div>
           </div>
-        </div>
 
-        <DialogFooter className="p-4 sm:p-6 border-t border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
-          <Button
-            onClick={onClose}
-            className="bg-gradient-to-r from-[#217A4B] to-[#205C3B] hover:from-[#205C3B] hover:to-[#16412b] text-white shadow-md hover:shadow-lg transition-all w-full sm:w-auto px-8 py-2 rounded-lg font-medium"
-          >
-            Cerrar
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-});
+          {/* Footer */}
+          <DialogFooter className="p-3 md:p-4 border-t border-gray-200 bg-white flex flex-col sm:flex-row justify-end gap-2 md:gap-3 shrink-0">
+            <Button
+              onClick={onClose}
+              className="bg-[#217A4B] hover:bg-[#166039] text-white shadow-sm hover:shadow-md transition-all px-6 md:px-8 py-1.5 md:py-2 rounded-full text-sm md:text-base font-medium"
+            >
+              Cerrar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+);
 
 EscuelaDetalles.displayName = "EscuelaDetalles";
 
