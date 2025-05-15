@@ -160,9 +160,13 @@ export default function PageWithFAQ({
                       setSearchTerm(e.target.value);
                       if (pagination) {
                         setLoadingPage(true);
-                        const params = new URLSearchParams(window.location.search);
+                        const params = new URLSearchParams(
+                          window.location.search
+                        );
                         params.delete("page");
-                        router.push(`${basePath}?${params.toString()}`, { scroll: false });
+                        router.push(`${basePath}?${params.toString()}`, {
+                          scroll: false,
+                        });
                       }
                     }}
                     placeholder={searchPlaceholder}
@@ -172,14 +176,18 @@ export default function PageWithFAQ({
                       setCategoriaSeleccionada(cat);
                       if (pagination) {
                         setLoadingPage(true);
-                        const params = new URLSearchParams(window.location.search);
+                        const params = new URLSearchParams(
+                          window.location.search
+                        );
                         params.delete("page");
                         if (cat) {
                           params.set("categoria", cat);
                         } else {
                           params.delete("categoria");
                         }
-                        router.push(`${basePath}?${params.toString()}`, { scroll: false });
+                        router.push(`${basePath}?${params.toString()}`, {
+                          scroll: false,
+                        });
                       }
                     }}
                     allLabel="Todas las categorías"
