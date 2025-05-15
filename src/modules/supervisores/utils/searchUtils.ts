@@ -1,4 +1,4 @@
-import { Escuela } from "../components/SupervisoresClient";
+import type { Escuela } from "@src/interfaces"
 
 // Tipo para representar el índice de búsqueda
 export interface SearchIndex {

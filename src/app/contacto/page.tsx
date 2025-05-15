@@ -6,10 +6,10 @@ import {
   FormControl,
   FormMessage,
   Form,
-} from "../../components/ui/form";
-import { Input } from "../../components/ui/input";
-import { Textarea } from "../../components/ui/textarea";
-import { Card, CardContent, CardFooter } from "../../components/ui/card";
+} from "@components/ui/form";
+import { Input } from "@components/ui/input";
+import { Textarea } from "@components/ui/textarea";
+import { Card, CardContent, CardFooter } from "@components/ui/card";
 import {
   Mail,
   User,
@@ -19,12 +19,13 @@ import {
   Phone,
   CheckCircle2,
 } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert";
-import SocialMediaSection from "../../modules/socials/SocialMediaSection";
-import HeroSection from "../../modules/layout/Hero";
-import FAQSection from "../../modules/layout/FAQSection";
-import { useContactForm } from "../../hooks/useContactForm";
-import { faqsContact } from "../../modules/faqs/faqs";
+import { Alert, AlertDescription, AlertTitle } from "@components/ui/alert";
+import SocialMediaSection from "@modules/socials/SocialMediaSection";
+import HeroSection from "@modules/layout/Hero";
+import FAQSection from "@modules/layout/FAQSection";
+import { useContactForm } from "@hooks/useContactForm";
+import { faqsContact } from "@modules/faqs/faqs";
+
 // import { Metadata } from "next";
 
 // export const metadata: Metadata = {

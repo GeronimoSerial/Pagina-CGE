@@ -2,8 +2,8 @@ import {
   getContentBySlug,
   getAllContentSlugs,
   getAllContent,
-} from "../../../modules/article/data/content";
-import FullArticle from "../../../modules/article/components/FullArticle";
+} from "@modules/article/data/content";
+import FullArticle from "@modules/article/components/FullArticle";
 import { notFound } from "next/navigation";
 
 const tiposPermitidos = ["noticias", "tramites"] as const;
@@ -37,7 +37,7 @@ export default async function Page({ params }: PageProps) {
   let postRaw;
   try {
     // Llamamos a la función con el tipo dinámico basado en el valor de 'articulo'
-    postRaw = await getContentBySlug(articulo, id);  // Sin necesidad de casteo forzado
+    postRaw = await getContentBySlug(articulo, id); // Sin necesidad de casteo forzado
   } catch {
     return notFound();
   }
@@ -45,11 +45,12 @@ export default async function Page({ params }: PageProps) {
   if (!postRaw) return notFound();
   const post = { ...postRaw };
 
-  const todosLosArticulos = await getAllContent(articulo);  // Usamos 'articulo' dinámicamente
+  const todosLosArticulos = await getAllContent(articulo); // Usamos 'articulo' dinámicamente
 
   const articulosRelacionados = todosLosArticulos.filter(
     (art) =>
-      (art as any).subcategoria === (post as any).subcategoria && art.slug !== post.slug
+      (art as any).subcategoria === (post as any).subcategoria &&
+      art.slug !== post.slug
   );
   return (
     <FullArticle

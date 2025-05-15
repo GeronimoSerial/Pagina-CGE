@@ -64,3 +64,21 @@ export const EscuelasTable = dynamic(
     ),
   }
 );
+
+export const ArticlesGridClient = dynamic(
+  () =>
+    import("../../modules/article/components/ArticlesGrid").then(
+      (mod) => mod.default
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex justify-center items-center py-12">
+        <div className="flex flex-col items-center">
+          <Loader2 className="h-10 w-10 text-[#217A4B] animate-spin mb-4" />
+          <p className="text-gray-600 text-sm">Cargando artículos...</p>
+        </div>
+      </div>
+    ),
+  }
+);

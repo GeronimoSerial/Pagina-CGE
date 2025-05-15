@@ -4,9 +4,9 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "../../../components/ui/accordion";
-import { Escuela } from "./SupervisoresClient";
-import { EscuelasTable } from "../../../components/data/dynamic-client";
+} from "@components/ui/accordion";
+import { EscuelasTable } from "@components/data/dynamic-client";
+import type { Escuela } from "@/src/interfaces";
 
 interface Props {
   supervisor: {

@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
-import { Button } from "../../components/ui/button";
+import { Button } from "@components/ui/button";
 import { ArrowLeftIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export default function NotFound() {
-    const pathname = usePathname();
-    const section = pathname.split("/")[1];
+  const pathname = usePathname();
+  const section = pathname.split("/")[1];
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-slate-100 to-emerald-50">

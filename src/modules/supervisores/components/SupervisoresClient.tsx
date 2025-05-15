@@ -1,72 +1,51 @@
-import React, { useMemo, useState, Suspense, useCallback } from "react";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "../../../components/ui/accordion";
-import { School, Loader2, SearchIcon, CheckCircle2 } from "lucide-react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
+import { Accordion } from "@components/ui/accordion";
 import BuscadorEscuelas from "./BuscadorEscuelas";
-import {
-  EscuelaDetalles,
-  EscuelasTable,
-} from "../../../components/data/dynamic-client";
+import { EscuelaDetalles } from "@components/data/dynamic-client";
 import SupervisoresAccordionItem from "./Accordion";
+import type { Escuela } from "@src/interfaces";
+import { agruparEscuelasPorSupervisor } from "../utils/escuelas";
+import { getSupervisoresFicticios } from "../utils/escuelas";
+import { Loader2, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@components/ui/alert";
 
-export interface Escuela {
-  cue: number;
-  nombre: string;
-  director: string;
-  matricula2024: number;
-  matricula2025: number;
-  tipoEscuela: string;
-  departamento: string;
-  localidad: string;
-  turno: string;
-  ubicacion: string;
-  cabecera: string;
-  supervisorID: number;
-}
+const supervisores = useMemo(() => getSupervisoresFicticios(), []);
 
-export interface Supervisor {
-  id: number;
-  nombre: string;
-}
-
-interface SupervisoresClientProps {
-  datosSimulados: Escuela[];
-}
-
-// Función para crear datos de supervisores
-function getSupervisoresFicticios() {
-  return Array.from({ length: 14 }, (_, i) => ({
-    id: i + 1,
-    nombre: `Supervisor/a ${i + 1}`,
-  }));
-}
-
-// Función para agrupar escuelas por supervisor
-function agruparEscuelasPorSupervisor(escuelas: Escuela[]) {
-  const mapa: { [key: number]: Escuela[] } = {};
-  escuelas.forEach((escuela) => {
-    if (!mapa[escuela.supervisorID]) mapa[escuela.supervisorID] = [];
-    mapa[escuela.supervisorID].push(escuela);
-  });
-  return mapa;
-}
-
-export default function SupervisoresClient({
-  datosSimulados,
-}: SupervisoresClientProps) {
+export default function SupervisoresClient() {
   const [expanded, setExpanded] = useState<string | undefined>(undefined);
   const [escuelaSeleccionada, setEscuelaSeleccionada] =
     useState<Escuela | null>(null);
+  const [escuelas, setEscuelas] = useState<Escuela[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Memoización de datos pesados
-  const supervisor = useMemo(() => getSupervisoresFicticios(), []);
+  useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+    fetch("/api/escuelas")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("No se pudieron cargar los datos");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setEscuelas(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error al obtener los datos de las escuelas:", error);
+        setError(
+          "No se pudieron cargar los datos de las escuelas. Por favor, intente más tarde."
+        );
+        setIsLoading(false);
+      });
+  }, []);
+
+  //memoización
   const escuelasPorSupervisor = useMemo(
-    () => agruparEscuelasPorSupervisor(datosSimulados),
-    [datosSimulados]
+    () => agruparEscuelasPorSupervisor(escuelas),
+    [escuelas]
   );
 
   // Callbacks para evitar re-renderizados
@@ -82,13 +61,44 @@ export default function SupervisoresClient({
     setEscuelaSeleccionada(null);
   }, []);
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-20">
+        <Loader2 className="h-10 w-10 text-[#217A4B] animate-spin" />
+        <span className="ml-3 text-lg text-gray-600">
+          Cargando datos de escuelas...
+        </span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    );
+  }
+
+  if (!escuelas.length) {
+    return (
+      <Alert>
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          No hay escuelas disponibles en este momento.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
   return (
     <div className="bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-md border border-gray-100 p-8">
       <div className="mb-10">
         {/* Integración del buscador de escuelas */}
         <div className="ml-6 mb-4">
           <BuscadorEscuelas
-            escuelas={datosSimulados}
+            escuelas={escuelas}
             onSelectEscuela={handleSelectEscuela}
           />
         </div>
@@ -101,7 +111,7 @@ export default function SupervisoresClient({
           value={expanded}
           onValueChange={setExpanded}
         >
-          {supervisor.map((sup) => (
+          {supervisores.map((sup) => (
             <SupervisoresAccordionItem
               key={sup.id}
               supervisor={sup}

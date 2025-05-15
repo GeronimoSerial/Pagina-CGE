@@ -1,13 +1,13 @@
 // src/app/noticia/[id]/page.tsx
-import { getAllContent } from "../modules/article/data/content";
-import { formatearFecha, sortByDate } from "../lib/utils";
-import HeroMain from "../modules/home/components/HeroSection";
-import QuickAccess from "../modules/home/components/QuickAccess";
+import { getAllContent } from "@modules/article/data/content";
+import { formatearFecha, sortByDate } from "@lib/utils";
+import HeroMain from "@modules/home/components/HeroSection";
+import QuickAccess from "@modules/home/components/QuickAccess";
 import { Separator } from "@radix-ui/react-separator";
-import ArticlesGrid from "../modules/article/components/ArticlesGrid";
+import ArticlesGrid from "@modules/article/components/ArticlesGrid";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import SocialMediaSection from "../modules/socials/SocialMediaSection";
+import SocialMediaSection from "@modules/socials/SocialMediaSection";
 
 export async function generateStaticParams() {
   return [
