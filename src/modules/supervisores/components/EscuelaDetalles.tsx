@@ -5,9 +5,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "../../../components/ui/dialog";
-import { Button } from "../../../components/ui/button";
-import { Escuela } from "./SupervisoresClient";
+} from "@components/ui/dialog";
+import { Button } from "@components/ui/button";
+import type { Escuela } from "@src/interfaces";
 import {
   School,
   User,

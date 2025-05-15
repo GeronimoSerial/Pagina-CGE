@@ -1,8 +1,8 @@
-import { formatearFecha } from "../../lib/utils";
-import { getAllContentMetadata } from "../../modules/article/data/content";
-import { Info, Phone } from "lucide-react";
-import PageWithFAQ from "../../modules/article/components/PageWithFAQ";
-import { faqsNews, faqsTramites } from "../../modules/faqs/faqs";
+import { formatearFecha } from "@lib/utils";
+import { getAllContentMetadata } from "@modules/article/data/content";
+import { Info } from "lucide-react";
+import PageWithFAQ from "@modules/article/components/PageWithFAQ";
+import { faqsNews, faqsTramites } from "@modules/faqs/faqs";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -46,39 +46,52 @@ export async function generateStaticParams() {
 
 export default async function ContenidoGrid({
   params,
+  searchParams,
 }: {
   params: Promise<{ articulo: string }>;
+  searchParams?: Promise<{ [key: string]: string }>;
 }) {
-  // Primero esperamos el objeto params
-  const resolvedParams = await params;
+  // Primero esperamos el objeto params y searchParams
+  const [resolvedParams, resolvedSearchParams] = await Promise.all([
+    params,
+    searchParams,
+  ]);
 
-  // Ahora podemos acceder a articulo de manera segura
   const articulo = resolvedParams.articulo;
 
   if (articulo !== "noticias" && articulo !== "tramites") {
     return notFound();
   }
 
-  const rawData = await getAllContentMetadata(articulo); // articulo: 'noticias' | 'tramites'
+  // Obtener página actual de los parámetros de búsqueda
+  const page = resolvedSearchParams?.page
+    ? parseInt(resolvedSearchParams.page)
+    : 1;
+  const limit = 4; // Fijamos el límite a 4 artículos por página
+
+  const { items: rawData, pagination } = await getAllContentMetadata(
+    articulo,
+    page,
+    limit
+  );
 
   const data = rawData.map((item: any) => {
     const date = formatearFecha(item.date || item.fecha);
     return {
       id: item.slug,
       slug: item.slug,
-      title: item.title || item.titulo,
       titulo: item.titulo,
       description: item.description || item.resumen,
-      resumen: item.resumen,
       date,
       fecha: date,
-      imageUrl: item.imageUrl || item.imagen,
-      imagen: item.imagen,
+      imagen:
+        item.imagen ||
+        (articulo === "noticias" ? "/images/news.png" : "/images/tramites.png"),
       categoria: item.subcategoria,
-      content: item.content,
       esImportante: item.esImportante || false,
     };
   });
+
   const isNoticias = articulo === "noticias";
 
   const categorias = isNoticias
@@ -99,11 +112,6 @@ export default async function ContenidoGrid({
           label: "Horario de atención:",
           value: "Lunes a Viernes de 7:00 a 18:00 hs",
         },
-        // {
-        //   icon: <Phone className="h-5 w-5 text-[#3D8B37] mr-2" />,
-        //   label: "Teléfono:",
-        //   value: "+54 3794-852954",
-        // },
       ];
 
   return (
@@ -155,6 +163,7 @@ export default async function ContenidoGrid({
       }
       isNoticia={isNoticias}
       categories={categorias}
+      pagination={pagination}
     />
   );
 }

@@ -4,8 +4,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "../../../components/ui/dialog";
+} from "@components/ui/dialog";
 import Image from "next/image";
+
 // Tipo para la información de cada miembro
 export type MemberInfo = {
   id: string;

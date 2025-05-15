@@ -1,6 +1,5 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { articlesItem } from "../interfaces";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -18,12 +17,7 @@ export function formatearFecha(fechaStr: string | Date) {
   });
 }
 
-export interface ArticlesGridProp
- {
-  articles?: articlesItem[];
-  title?: string;
-  subtitle?: string;
-}
+
 
 // Filtra articulos por término de búsqueda y categoría
 export function filtrarArticulos(article: any[], searchTerm: string, categoriaSeleccionada: string) {
@@ -86,28 +80,26 @@ export const sortByDate = <T extends { date: string }>(items: T[], ascending: bo
   });
 };
 
-export const sortByAlphabetical = <T extends { title: string }>(items: T[], ascending: boolean = false): T[] => {
+export const sortByAlphabetical = <T extends { titulo: string }>(items: T[], ascending: boolean = false): T[] => {
   const parseTitle = (title: string) => {
     const match = title.match(/(\d+)/);
     return match ? parseInt(match[1], 10) : title.toLowerCase();
   };
 
   return [...items].sort((a, b) => {
-    const valueA = parseTitle(a.title);
-    const valueB = parseTitle(b.title);
+    const titleA = parseTitle(a.titulo);
+    const titleB = parseTitle(b.titulo);
 
-    if (typeof valueA === "number" && typeof valueB === "number") {
-      return ascending ? valueA - valueB : valueB - valueA;
+    if (typeof titleA === 'number' && typeof titleB === 'number') {
+      return ascending ? titleA - titleB : titleB - titleA;
     }
 
-    if (typeof valueA === "string" && typeof valueB === "string") {
-      return ascending
-        ? valueA.localeCompare(valueB)
-        : valueB.localeCompare(valueA);
-    }
+    if (typeof titleA === 'number') return ascending ? -1 : 1;
+    if (typeof titleB === 'number') return ascending ? 1 : -1;
 
-    // Handle mixed types (number vs string)
-    return typeof valueA === "number" ? -1 : 1;
+    return ascending
+      ? titleA.localeCompare(titleB)
+      : titleB.localeCompare(titleA);
   });
 }
 

@@ -1,20 +1,13 @@
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import type { ImagenCarruselGenerica } from "@interfaces/index";
 
 // Importar estilos de Swiper
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "../styles/swiper-custom.css";
-
-export interface ImagenCarruselGenerica {
-  imagen?: string;
-  src?: string;
-  titulo?: string;
-  alt?: string;
-  descripcion?: string;
-}
 
 function CarouselSlide({
   slide,

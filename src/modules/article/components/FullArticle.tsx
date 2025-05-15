@@ -8,14 +8,14 @@ import {
   Newspaper,
 } from "lucide-react";
 import Link from "next/link";
-import { Button } from "../../../components/ui/button";
+import { Button } from "@components/ui/button";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { formatearFecha } from "../../../lib/utils";
+import { formatearFecha } from "@lib/utils";
 import ShareButton from "./ShareButton";
 import PrintButton from "./PrintButton";
 import Image from "next/image";
-import { ClientCarousel } from "../../../components/data/dynamic-client";
+import { ClientCarousel } from "@components/data/dynamic-client";
 export default function FullArticle({
   post,
   sectionTitle = "Artículo",

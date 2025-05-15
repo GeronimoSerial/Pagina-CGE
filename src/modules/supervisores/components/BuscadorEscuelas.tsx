@@ -1,14 +1,10 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
-import { Escuela } from "./SupervisoresClient";
-import {
-  SearchIndex,
-  createSearchIndex,
-  searchEscuelas,
-} from "../utils/searchUtils";
-import { Button } from "../../../components/ui/button";
-import { Input } from "../../../components/ui/input";
+import type { Escuela } from "@/src/interfaces";
+import { createSearchIndex, searchEscuelas } from "../utils/searchUtils";
+import { Button } from "@components/ui/button";
+import { Input } from "@components/ui/input";
 import { Search, X, School, User } from "lucide-react";
-import { Badge } from "../../../components/ui/badge";
+import { Badge } from "@components/ui/badge";
 
 interface BuscadorEscuelasProps {
   escuelas: Escuela[];
