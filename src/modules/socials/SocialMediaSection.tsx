@@ -1,11 +1,5 @@
 import { Facebook, Instagram, ExternalLink } from "lucide-react";
-
-interface SocialMediaProps {
-  facebookUrl?: string;
-  instagramUrl?: string;
-  title?: string;
-  description?: string;
-}
+import type { SocialMediaProps } from "@/src/interfaces";
 
 const SocialMediaSection = ({
   facebookUrl = "https://facebook.com/ConsejoGeneralEducacion",

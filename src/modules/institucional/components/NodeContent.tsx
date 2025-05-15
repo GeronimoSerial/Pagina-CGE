@@ -1,6 +1,6 @@
 import React from "react";
-import { cn } from "../../../lib/utils";
-import { Card, CardContent } from "../../../components/ui/card";
+import { cn } from "@lib/utils";
+import { Card, CardContent } from "@components/ui/card";
 import { MemberInfo } from "./MemberDetails";
 
 interface NodeContentProps {

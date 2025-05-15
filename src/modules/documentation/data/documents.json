@@ -377,6 +377,15 @@
       "type": "formulario",
       "date": "2024",
       "downloadUrl": "https://geronimoserial.github.io/pdf-cge/Declaracion%20Jurada%20de%20Cargos.xls"
+    },
+    {
+      "id": "52",
+      "title": "Resolución 195/2024 - Ciclo Lectivo 2025",
+      "description": "Normativa que establece un mínimo de 190 días de clases para el ciclo lectivo 2025, incluyendo jornadas los días sábados.",
+      "category": "normativas",
+      "type": "resolución",
+      "date": "2024",
+      "downloadUrl": "https://geronimoserial.github.io/pdf-cge/Res.195.pdf"
     }
   ]
 }

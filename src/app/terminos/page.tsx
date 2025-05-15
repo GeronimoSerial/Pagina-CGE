@@ -1,4 +1,4 @@
-import HeroSection from "../../modules/layout/Hero";
+import HeroSection from "@modules/layout/Hero";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

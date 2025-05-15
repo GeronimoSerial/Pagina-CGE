@@ -44,6 +44,7 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@supabase/supabase-js": "^2.45.6",
     "@tailwindcss/typography": "^0.5.16",
+    "@tanstack/react-virtual": "^3.13.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
@@ -66,6 +67,8 @@
     "react-resizable-panels": "^2.0.19",
     "react-router": "^6.23.1",
     "react-router-dom": "^6.23.1",
+    "react-virtualized-auto-sizer": "^1.0.26",
+    "react-window": "^1.8.11",
     "react-zoom-pan-pinch": "^3.7.0",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
@@ -81,11 +84,14 @@
     "@types/node": "^20.14.2",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
+    "@types/react-virtualized-auto-sizer": "^1.0.8",
+    "@types/react-window": "^1.8.8",
     "@vitejs/plugin-react-swc": "^3.8.1",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
     "tailwindcss": "3.4.1",
     "tempo-devtools": "^2.0.102",
-    "typescript": "^5.8.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }

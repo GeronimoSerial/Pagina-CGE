@@ -8,10 +8,10 @@ import {
   Users,
   BookOpen,
 } from "lucide-react";
-import HeroSection from "../../modules/layout/Hero";
+import HeroSection from "@modules/layout/Hero";
 import { Metadata } from "next";
-import { OrganigramaModal } from "../../modules/institucional/modal/organigrama-modal";
-import { ClientCarousel } from "../../components/data/dynamic-client";
+import { OrganigramaModal } from "@modules/institucional/modal/organigrama-modal";
+import { ClientCarousel } from "@components/data/dynamic-client";
 
 export const metadata: Metadata = {
   title: "Institucional",
