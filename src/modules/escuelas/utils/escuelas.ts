@@ -1,26 +1,29 @@
 import escuelas from "../data/escuelas.json";
 import type { Escuela } from "@/src/interfaces";
 
-export default function getEscuelas() {
-    return escuelas.map((e) => ({
-    cue: Number(e.cue),
-    nombre: String(e.nombre),
-    director: String(e.director || ""),
-    matricula2024: Number(e.matricula2024),
-    matricula2025: Number(e.matricula2025),
-    tipoEscuela: String(e.tipoEscuela || ""),
-    departamento: String(e.departamento),
-    localidad: String(e.localidad),
-    turno: String(e.turno),
-    ubicacion: String(e.ubicacion || ""),
-    cabecera: String(e.cabecera),
-    supervisorID: Number(e.supervisorId),
-  }));
+export function getEscuelas(): Escuela[] {
+  const processedEscuelas = escuelas.map((escuela) => {
+    // Normalizar fechaFundacion2 si existe y es string
+    let fechaFundacion2: number | undefined = undefined;
+    if (typeof escuela.fechaFundacion2 === "string") {
+      const parsed = parseInt(escuela.fechaFundacion2, 10);
+      fechaFundacion2 = isNaN(parsed) ? undefined : parsed;
+    } else if (typeof escuela.fechaFundacion2 === "number") {
+      fechaFundacion2 = escuela.fechaFundacion2;
+    }
 
+    // Convert categoria to string if it's a number
+    const categoria = escuela.categoria?.toString();
+
+    return {
+      ...escuela,
+      fechaFundacion2,
+      categoria,
+    } as Escuela;
+  });
+
+  return processedEscuelas;
 }
-
-
-
 interface SupervisoresClientProps {
   datosSimulados: Escuela[];
 }
@@ -32,8 +35,6 @@ export function getSupervisoresFicticios() {
     nombre: `Supervisor/a ${i + 1}`,
   }));
 }
-
-
 
 // Función para agrupar escuelas por supervisor
 export function agruparEscuelasPorDepartamento(escuelas: Escuela[]) {

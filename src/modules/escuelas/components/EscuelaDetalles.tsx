@@ -10,21 +10,15 @@ import { Button } from "@components/ui/button";
 import type { Escuela } from "@src/interfaces";
 import {
   School,
-  User,
-  Users,
   MapPin,
-  Clock,
   Info,
-  Home,
-  BookText,
-  X,
-  Mail,
   BarChart3,
   Building2,
-  Shield,
   Bookmark,
+  Calendar,
+  Map,
+  ArrowRight,
 } from "lucide-react";
-import { getSupervisoresFicticios } from "../utils/escuelas";
 
 interface EscuelaDetallesProps {
   escuela: Escuela;
@@ -86,7 +80,6 @@ Section.displayName = "Section";
 
 // Estadísticas de matrícula
 const MatriculaStats = memo(({ escuela }: { escuela: Escuela }) => {
-  // Calcular el cambio porcentual en la matrícula de 2024 a 2025
   const porcentajeCambio = escuela.matricula2024
     ? (
         ((escuela.matricula2025 - escuela.matricula2024) /
@@ -95,60 +88,50 @@ const MatriculaStats = memo(({ escuela }: { escuela: Escuela }) => {
       ).toFixed(1)
     : 0;
 
-  // Determinar si hubo aumento, disminución o sin cambio
   const cambio = Number(porcentajeCambio);
-  const tendencia =
-    cambio > 0 ? "aumento" : cambio < 0 ? "disminución" : "sin cambios";
   const tendenciaColor =
     cambio > 0
       ? "text-emerald-600"
       : cambio < 0
       ? "text-rose-600"
       : "text-gray-600";
-
   const tendenciaIcon = cambio > 0 ? "↑" : cambio < 0 ? "↓" : "→";
 
   return (
-    <div className="bg-gradient-to-br from-[#217A4B]/5 to-[#217A4B]/15 rounded-xl p-4 md:p-5 border border-[#217A4B]/20 hover:shadow-lg transition-all duration-300">
-      <div className="flex items-center gap-3 mb-3 md:mb-4">
-        <div className="bg-white p-2 rounded-lg shadow-sm">
-          <BarChart3 className="h-5 w-5 md:h-6 md:w-6 text-[#217A4B]" />
-        </div>
-        <h3 className="text-base md:text-lg font-semibold text-[#205C3B]">
+    <div className="border-b border-gray-100 pb-3">
+      <div className="flex items-center gap-2 mb-3">
+        <BarChart3 className="h-4 w-4 text-[#217A4B]" />
+        <h3 className="text-sm font-semibold text-[#205C3B]">
           Matrícula Escolar
         </h3>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 md:gap-4">
-        <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100 flex flex-col items-center justify-center hover:border-[#217A4B]/30 transition-all transform hover:-translate-y-1 duration-300">
-          <p className="text-sm text-gray-500 mb-1 font-medium">2024</p>
-          <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#217A4B]">
+      <div className="grid grid-cols-2 gap-x-8 gap-y-2 px-2">
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-gray-500">2024:</span>
+          <span className="text-lg font-semibold text-[#217A4B]">
             {escuela.matricula2024}
-          </p>
-          <p className="text-xs text-gray-500 mt-1.5">alumnos</p>
-        </div>
-
-        <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100 flex flex-col items-center justify-center hover:border-[#217A4B]/30 transition-all transform hover:-translate-y-1 duration-300">
-          <p className="text-sm text-gray-500 mb-1 font-medium">2025</p>
-          <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#217A4B]">
-            {escuela.matricula2025}
-          </p>
-          <p className="text-xs text-gray-500 mt-1.5">alumnos</p>
-        </div>
-      </div>
-
-      <div className="mt-4 flex items-center justify-center">
-        <div
-          className={`px-4 py-2 md:px-5 md:py-2.5 rounded-full ${tendenciaColor} bg-white shadow-md border border-gray-100 flex items-center gap-2.5 text-sm font-medium hover:shadow-lg transition-all duration-300`}
-        >
-          <span className="font-bold text-base">{tendenciaIcon}</span>
-          <span>
-            {cambio === 0
-              ? "Sin cambios"
-              : `${cambio > 0 ? "+" : ""}${porcentajeCambio}% (${Math.abs(
-                  escuela.matricula2025 - escuela.matricula2024
-                )} alumnos)`}
           </span>
+        </div>
+
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-gray-500">2025:</span>
+          <span className="text-lg font-semibold text-[#217A4B]">
+            {escuela.matricula2025}
+          </span>
+        </div>
+
+        <div className="col-span-2 flex items-center justify-end mt-1">
+          <div className={`flex items-center gap-1 ${tendenciaColor}`}>
+            <span className="text-base font-semibold">{tendenciaIcon}</span>
+            <span className="text-sm">
+              {cambio === 0
+                ? "Sin cambios"
+                : `${cambio > 0 ? "+" : ""}${porcentajeCambio}% (${Math.abs(
+                    escuela.matricula2025 - escuela.matricula2024
+                  )} alumnos)`}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -156,34 +139,6 @@ const MatriculaStats = memo(({ escuela }: { escuela: Escuela }) => {
 });
 
 MatriculaStats.displayName = "MatriculaStats";
-
-// Componente de información rápida
-const QuickInfo = memo(
-  ({
-    icon: Icon,
-    label,
-    value,
-  }: {
-    icon: React.ElementType;
-    label: string;
-    value: string | number;
-  }) => (
-    <div className="flex items-center gap-3 bg-white rounded-lg p-3 md:p-4 shadow-sm border border-gray-100 hover:border-[#217A4B]/40 transition-all hover:shadow-md group transform hover:-translate-y-0.5 duration-200">
-      <div className="bg-[#217A4B]/10 p-2 rounded-full group-hover:bg-[#217A4B]/20 transition-all duration-200">
-        <Icon className="h-4 w-4 md:h-5 md:w-5 text-[#217A4B]" />
-      </div>
-      <div className="min-w-0">
-        <p className="text-xs text-gray-500 font-medium">{label}</p>
-        <p className="font-semibold text-sm truncate text-gray-800 mt-0.5">
-          {value || "No especificado"}
-        </p>
-      </div>
-    </div>
-  )
-);
-
-QuickInfo.displayName = "QuickInfo";
-
 // Componente principal - memoizado para máximo rendimiento
 const EscuelaDetalles = memo(
   ({
@@ -193,111 +148,170 @@ const EscuelaDetalles = memo(
   }: EscuelaDetallesProps) => {
     if (!escuela) return null;
 
-    // Obtener supervisores ficticios y encontrar el supervisor correspondiente
-    const supervisores = useMemo(() => getSupervisoresFicticios(), []);
-    const supervisor = useMemo(
-      () =>
-        supervisores.find((s) => s.id === escuela.supervisorID) || {
-          id: 0,
-          nombre: "No asignado",
-        },
-      [supervisores, escuela.supervisorID]
-    );
+    const commonBadgeClasses =
+      "bg-gray-50 px-2 py-1 sm:px-3 sm:py-1.5 rounded-md sm:rounded-lg flex items-center gap-1 sm:gap-2 border border-gray-200 text-xs sm:text-sm";
+    const commonIconClasses = "h-3 w-3 sm:h-4 sm:w-4 text-gray-600";
+    ("bg-gray-50 p-1.5 sm:p-2 rounded-md sm:rounded-lg mt-0.5");
 
     return (
       <Dialog open={!!escuela} onOpenChange={onClose}>
-        <DialogContent className="max-w-4xl p-0 overflow-hidden w-[95vw] md:w-auto rounded-l shadow-xl border-0 max-h-[95vh] flex flex-col data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-bottom-[2%] data-[state=open]:slide-in-from-bottom-[2%] duration-300">
-          {/* Cabecera con gradiente y cierre */}
-          <div className="bg-gradient-to-r from-[#1a5034] via-[#217A4B] to-[#2a8d59] p-4 md:p-6 text-white relative shrink-0">
-            <div className="flex items-center gap-4 md:gap-5 mb-3 md:mb-5">
-              <div className="bg-white/15 p-3 md:p-4 rounded-full backdrop-blur-sm shadow-lg">
-                <School className="h-7 w-7 md:h-9 md:w-9" />
+        <DialogContent className="max-w-4xl p-0 overflow-hidden w-[95vw] md:w-[85vw] lg:w-[70vw] xl:w-[60vw] rounded-2xl shadow-2xl border-0 max-h-[95vh] flex flex-col data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-bottom-[2%] data-[state=open]:slide-in-from-bottom-[2%] duration-300">
+          <div className="bg-white pt-6 pb-4 sm:pt-8 sm:pb-5 md:pt-10 md:pb-6 px-4 sm:px-5 md:px-6 border-b border-gray-100">
+            <div className="flex items-center gap-3">
+              <div className="flex-shrink-0 bg-white p-2 rounded-lg shadow-sm border border-gray-100">
+                <School className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-[#217A4B]" />
               </div>
-              <DialogTitle className="text-xl md:text-2xl lg:text-3xl font-bold break-words tracking-tight">
+              <DialogTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 tracking-tight break-words">
                 {escuela.nombre}
               </DialogTitle>
             </div>
 
-            <div className="flex flex-wrap items-center gap-x-3 md:gap-x-4 gap-y-2">
-              <div className="bg-white/20 backdrop-blur-sm px-3 py-1.5 md:px-4 md:py-2 rounded-full flex items-center gap-2 shadow-sm hover:bg-white/25 transition-all cursor-default duration-200">
-                <Building2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                <span className="text-sm font-medium">CUE: {escuela.cue}</span>
+            <div className="flex flex-wrap items-center gap-2 mt-3 sm:mt-4">
+              <div className={commonBadgeClasses}>
+                <Building2 className={commonIconClasses} />
+                <span className="font-medium text-gray-700">
+                  CUE: {escuela.cue}
+                </span>
               </div>
 
-              <div className="bg-white/20 backdrop-blur-sm px-3 py-1.5 md:px-4 md:py-2 rounded-full flex items-center gap-2 shadow-sm hover:bg-white/25 transition-all cursor-default duration-200">
-                <MapPin className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                <span className="text-sm font-medium truncate max-w-[200px] md:max-w-[250px]">
+              <div className={commonBadgeClasses}>
+                <MapPin className={commonIconClasses} />
+                <span className="font-medium text-gray-700 truncate max-w-[120px] xs:max-w-[150px] sm:max-w-[180px] md:max-w-[200px]">
                   {escuela.departamento}, {escuela.localidad}
                 </span>
               </div>
 
-              <div className="bg-white/20 backdrop-blur-sm px-3 py-1.5 md:px-4 md:py-2 rounded-full flex items-center gap-2 shadow-sm hover:bg-white/25 transition-all cursor-default duration-200">
-                <Bookmark className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                <span className="text-sm font-medium truncate max-w-[200px] md:max-w-[250px]">
+              <div className={commonBadgeClasses}>
+                <Bookmark className={commonIconClasses} />
+                <span className="font-medium text-gray-700 truncate max-w-[120px] xs:max-w-[150px]">
                   {escuela.tipoEscuela}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Información rápida */}
-          <div className="bg-[#F9FAFB] border-b border-gray-200 shrink-0">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-3 md:gap-4 md:p-4 lg:p-5">
-              <QuickInfo
-                icon={Shield}
-                label="Supervisor/a"
-                value={supervisor.nombre}
-              />
-              <QuickInfo
-                icon={BookText}
-                label="Tipo"
-                value={escuela.tipoEscuela}
-              />
-              <QuickInfo icon={Clock} label="Turno" value={escuela.turno} />
-              <QuickInfo
-                icon={Mail}
-                label="Cabecera"
-                value={escuela.cabecera}
-              />
-            </div>
-          </div>
+          <div className="p-4 sm:p-5 md:p-6 overflow-y-auto flex-grow bg-gray-50/50">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-h-[calc(80vh-100px)] overflow-y-auto">
+              <div className="bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-gray-100">
+                <MatriculaStats escuela={escuela} />
 
-          {/* Contenido principal */}
-          <div className="p-4 md:p-6 overflow-y-auto flex-grow bg-gray-50">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-              <MatriculaStats escuela={escuela} />
+                <div className="space-y-4 mt-4">
+                  <div className="border-b border-gray-100 pb-3">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Calendar className="h-4 w-4 text-[#217A4B]" />
+                      <h3 className="text-sm font-semibold text-[#205C3B]">
+                        Información General
+                      </h3>
+                    </div>
 
-              <Section title="Información Detallada" icon={Info}>
-                <div className="grid grid-cols-1 gap-3 md:gap-4">
-                  <InfoDetail
-                    icon={MapPin}
-                    label="Ubicación"
-                    value={escuela.ubicacion}
-                  />
-                  <InfoDetail
-                    icon={User}
-                    label="Director/a"
-                    value={escuela.director}
-                  />
-                  <InfoDetail
-                    icon={Building2}
-                    label="Departamento"
-                    value={escuela.departamento}
-                  />
-                  <InfoDetail
-                    icon={Mail}
-                    label="Correo"
-                    value={correoEscuela}
-                  />
+                    <div className="space-y-2 px-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-500">
+                          Fecha de Fundación:
+                        </span>
+                        <span className="text-sm font-medium text-gray-800">
+                          {escuela.fechaFundacion || "No especificada"}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-500">
+                          Categoría:
+                        </span>
+                        <span className="text-sm font-medium text-gray-800">
+                          {escuela.categoria || "No especificada"}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-500">Zona:</span>
+                        <span className="text-sm font-medium text-gray-800">
+                          {escuela.zona || "No especificada"}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-500">Turno:</span>
+                        <span className="text-sm font-medium text-gray-800">
+                          {escuela.turno}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </Section>
+              </div>
+
+              <div className="bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-gray-100">
+                <div className="border-b border-gray-100 pb-3">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Info className="h-4 w-4 text-[#217A4B]" />
+                    <h3 className="text-sm font-semibold text-[#205C3B]">
+                      Ubicación y Contacto
+                    </h3>
+                  </div>
+
+                  <div className="space-y-2 px-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-500">
+                        Departamento:
+                      </span>
+                      <span className="text-sm font-medium text-gray-800">
+                        {escuela.departamento}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-500">Ubicación:</span>
+                      <span className="text-sm font-medium text-gray-800">
+                        {escuela.ubicacion}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-500">Director/a:</span>
+                      <span className="text-sm font-medium text-gray-800">
+                        {escuela.director}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-500">Correo:</span>
+                      <span className="text-sm font-medium text-gray-800 break-all">
+                        {correoEscuela}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
+                      <a
+                        href="http://mapa.mec.gob.ar/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm underline text-[#217A4B] hover:text-[#205C3B] flex items-center gap-1.5"
+                      >
+                        <Map className="h-4 w-4" />
+                        Consulte la ubicación exacta en el mapa escolar{" "}
+                        <ArrowRight />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Footer */}
-          <DialogFooter className="p-4 md:p-5 border-t border-gray-200 bg-white flex justify-end gap-3 shrink-0">
-            <DialogClose asChild>
-              <Button className="bg-[#217A4B] hover:bg-[#166039] text-white shadow-md hover:shadow-lg transition-all px-8 md:px-10 py-2 md:py-2.5 rounded-full text-sm md:text-base font-medium">
+          <DialogFooter className="p-3 sm:p-4 md:p-5 border-t border-gray-200 bg-white flex flex-col xs:flex-row justify-between items-center gap-3">
+            <div className="text-xs sm:text-sm text-gray-500 order-2 xs:order-1">
+              <span className="font-medium">Última actualización:</span>{" "}
+              {new Date().toLocaleDateString()}
+            </div>
+            <DialogClose
+              asChild
+              className="order-1 xs:order-2 w-full xs:w-auto"
+            >
+              <Button
+                variant="outline"
+                className="border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-1.5 sm:px-5 sm:py-2 rounded-lg font-medium shadow-sm hover:shadow transition-all w-full xs:w-auto text-sm sm:text-base"
+              >
                 Cerrar
               </Button>
             </DialogClose>

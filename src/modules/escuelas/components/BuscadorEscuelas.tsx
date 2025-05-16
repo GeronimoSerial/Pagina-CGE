@@ -3,7 +3,7 @@ import type { Escuela } from "@/src/interfaces";
 import { buscarEscuelasAvanzado } from "../utils/searchUtils";
 import { Button } from "@components/ui/button";
 import { Input } from "@components/ui/input";
-import { Search, X, School, User, MapPin } from "lucide-react";
+import { Search, X, School, User, MapPin, Info } from "lucide-react";
 import { Badge } from "@components/ui/badge";
 
 interface BuscadorEscuelasProps {
@@ -136,10 +136,8 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
                       {/* Destacar el supervisor asignado */}
                       <div className="mt-2 flex items-center gap-2 flex-wrap">
                         <Badge className="bg-[#217A4B] text-white border-0 px-3 py-1 flex items-center gap-1">
-                          <User className="h-3 w-3" />
-                          <span className="font-semibold">
-                            {getSupervisorNombre(escuela.supervisorID)}
-                          </span>
+                          <Info className="h-3 w-3" />
+                          <span className="font-mono">CUE: {escuela.cue}</span>
                         </Badge>
 
                         {/* Añadir la ubicación */}
@@ -155,8 +153,10 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
                       </div>
 
                       <div className="flex flex-wrap gap-x-4 mt-2 text-xs text-gray-500">
-                        <span>{escuela.director || "Sin director"}</span>
-                        <span className="font-mono">CUE: {escuela.cue}</span>
+                        <span>
+                          Directora: <b>{escuela.director || "Sin director"}</b>
+                        </span>
+
                         <span>{escuela.tipoEscuela || "Sin tipo"}</span>
                         <span>Turno: {escuela.turno}</span>
                       </div>

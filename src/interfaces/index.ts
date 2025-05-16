@@ -1,26 +1,26 @@
 export interface ContactoForm {
-    nombre: string;
-    email: string;
-    mensaje: string;
-  }
+  nombre: string;
+  email: string;
+  mensaje: string;
+}
 
 export interface articlesItem {
-    id: string;
-    title: string;
-    description: string;
-    date: string;
-    imageUrl: string;
-    categoria: string;
-    content?: string;
-  }
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  imageUrl: string;
+  categoria: string;
+  content?: string;
+}
 
 export interface QuickAccessItemProps {
-    icon: React.ReactNode;
-    title: string;
-    description: string;
-    href: string;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  href: string;
 }
-  
+
 export interface ImagenCarruselGenerica {
   imagen?: string;
   src?: string;
@@ -29,7 +29,7 @@ export interface ImagenCarruselGenerica {
   descripcion?: string;
 }
 
-export interface ArticlesGridProps{
+export interface ArticlesGridProps {
   articles?: articlesItem[];
   title?: string;
   subtitle?: string;
@@ -56,6 +56,10 @@ export interface Escuela {
   cabecera: string;
   supervisorID?: number;
   mail?: string | null;
+  fechaFundacion?: string;
+  fechaFundacion2?: number;
+  zona?: string;
+  categoria?: string;
 }
 export interface Supervisor {
   id: number;
