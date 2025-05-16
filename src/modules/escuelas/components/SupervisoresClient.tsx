@@ -1,11 +1,13 @@
-import React, { useMemo, useState, useEffect, useCallback } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import { Accordion } from "@components/ui/accordion";
 import BuscadorEscuelas from "./BuscadorEscuelas";
 import { EscuelaDetalles } from "@components/data/dynamic-client";
-import SupervisoresAccordionItem from "./Accordion";
+import AccordionItemUnificado from "./Accordion";
 import type { Escuela } from "@src/interfaces";
-import { agruparEscuelasPorSupervisor } from "../utils/escuelas";
-import { getSupervisoresFicticios } from "../utils/escuelas";
+import {
+  agruparEscuelasPorSupervisor,
+  getSupervisoresFicticios,
+} from "../utils/escuelas";
 import { Loader2, AlertCircle, School } from "lucide-react";
 import { Alert, AlertDescription } from "@components/ui/alert";
 import {
@@ -22,39 +24,15 @@ interface EscuelaConMail extends Escuela {
   mail?: string | null;
 }
 
-export default function SupervisoresClient() {
+export default function SupervisoresClient({
+  escuelas,
+}: {
+  escuelas: EscuelaConMail[];
+}) {
   const supervisores = useMemo(() => getSupervisoresFicticios(), []);
   const [expanded, setExpanded] = useState<string | undefined>(undefined);
   const [escuelaSeleccionada, setEscuelaSeleccionada] =
     useState<EscuelaConMail | null>(null);
-  const [escuelas, setEscuelas] = useState<EscuelaConMail[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // Cargar los datos de las escuelas
-  useEffect(() => {
-    setIsLoading(true);
-    setError(null);
-
-    fetch("/api/escuelas")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("No se pudieron cargar los datos");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setEscuelas(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error al obtener los datos de las escuelas:", error);
-        setError(
-          "No se pudieron cargar los datos de las escuelas. Por favor, intente más tarde."
-        );
-        setIsLoading(false);
-      });
-  }, []);
 
   //memoización
   const escuelasPorSupervisor = useMemo(
@@ -74,26 +52,6 @@ export default function SupervisoresClient() {
   const handleCloseDetalles = useCallback(() => {
     setEscuelaSeleccionada(null);
   }, []);
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center py-20">
-        <Loader2 className="h-10 w-10 text-[#217A4B] animate-spin" />
-        <span className="ml-3 text-lg text-gray-600">
-          Cargando datos de escuelas...
-        </span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
-        <AlertDescription>{error}</AlertDescription>
-      </Alert>
-    );
-  }
 
   if (!escuelas.length) {
     return (
@@ -207,11 +165,12 @@ export default function SupervisoresClient() {
               value={expanded}
               onValueChange={setExpanded}
             >
-              <SupervisoresAccordionItem
-                supervisor={sup}
+              <AccordionItemUnificado
+                agrupador={sup}
                 escuelas={escuelasPorSupervisor[sup.id] || []}
                 isExpanded={expanded === String(sup.id)}
                 onSelectEscuela={handleSelectEscuela}
+                tipo="supervisor"
               />
             </Accordion>
           </div>
