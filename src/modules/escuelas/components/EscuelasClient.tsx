@@ -114,7 +114,7 @@ export default function EscuelasClient({
 
       <div className="p-8">
         {/* Buscador con mejor estilo */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-lg p-6 mb-8 transform transition hover:shadow-xl">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-lg p-6 mb-8 transform transition hover:shadow-xl relative z-20">
           <div className="flex items-center mb-4">
             <div className="rounded-full bg-emerald-100 p-3 mr-4">
               <Search className="h-5 w-5 text-emerald-600" />
@@ -124,7 +124,7 @@ export default function EscuelasClient({
                 Búsqueda de Instituciones
               </h2>
               <p className="text-sm text-gray-500">
-                Encuentra rápidamente cualquier institución por nombre o código
+                Encuentra rápidamente cualquier institución.
               </p>
             </div>
           </div>
@@ -239,7 +239,7 @@ export default function EscuelasClient({
         </div>
 
         {/* Panel por departamento mejorado */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden mb-8 transform transition hover:shadow-xl">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden mb-8 transform transition hover:shadow-xl z-10 relative">
           <div className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
@@ -301,7 +301,7 @@ export default function EscuelasClient({
         </div>
 
         {/* Acordeón de departamentos con animaciones */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden mt-6 z-10 relative">
           <div className="p-1">
             {expanded &&
               Object.keys(escuelasPorDepartamento).map((dep) => (
@@ -309,38 +309,33 @@ export default function EscuelasClient({
                   key={dep}
                   className={expanded === dep ? "block" : "hidden"}
                 >
-                  <div className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] p-4 mb-4 rounded-lg mx-4 mt-4 border border-emerald-100">
-                    <div className="flex items-center mb-2">
-                      <Map className="h-5 w-5 text-white mr-2" />
-                      <h3 className="font-semibold text-lg text-white">
-                        Departamento: <u> {dep} </u>
-                      </h3>
-                    </div>
-                    <p className="text-white text-sm">
-                      Mostrando{" "}
-                      <b>{escuelasPorDepartamento[dep].length} instituciones</b>
-                    </p>
-                  </div>
-                  <Accordion
-                    type="single"
-                    collapsible
-                    value={expanded}
-                    onValueChange={setExpanded}
-                    className="border-0"
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    transition={{ duration: 0.4 }}
                   >
-                    <AccordionItemUnificado
-                      agrupador={{ id: dep, nombre: dep }}
-                      escuelas={escuelasPorDepartamento[dep] || []}
-                      isExpanded={expanded === dep}
-                      onSelectEscuela={handleSelectEscuela}
-                      tipo="departamento"
-                    />
-                  </Accordion>
+                    <Accordion
+                      type="single"
+                      collapsible
+                      value={expanded}
+                      onValueChange={setExpanded}
+                      className="border-0"
+                    >
+                      <AccordionItemUnificado
+                        agrupador={{ id: dep, nombre: dep }}
+                        escuelas={escuelasPorDepartamento[dep] || []}
+                        isExpanded={expanded === dep}
+                        onSelectEscuela={handleSelectEscuela}
+                        tipo="departamento"
+                      />
+                    </Accordion>
+                  </motion.div>
                 </div>
               ))}
 
             {!expanded && (
-              <div className="flex flex-col items-center justify-center p-16 text-center">
+              <div className="flex flex-col items-center justify-center p-16 text-center animate-fade-in">
                 <Map className="h-12 w-12 text-emerald-300 mb-4" />
                 <h3 className="text-xl font-medium text-gray-700 mb-2">
                   Seleccione un departamento

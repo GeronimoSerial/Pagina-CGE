@@ -1,4 +1,4 @@
-import { School, CheckCircle2, Loader2, SearchIcon } from "lucide-react";
+import { Loader2, SearchIcon, Building2 } from "lucide-react";
 import React, { Suspense } from "react";
 import {
   AccordionContent,
@@ -52,45 +52,30 @@ export const AccordionItemUnificado = React.memo(
             : "hover:border-gray-300 hover:shadow"
         }`}
       >
-        <AccordionTrigger className="px-6 py-4 hover:no-underline">
-          <div className="flex items-center w-full">
-            <div
-              className={`rounded-full p-2.5 mr-4 transition-colors ${
-                isExpanded
-                  ? "bg-[#217A4B]/20 text-[#217A4B]"
-                  : "bg-gray-100 text-gray-500"
-              }`}
-            >
-              <School className="h-5 w-5" />
-            </div>
-            <div className="flex flex-col items-start text-left">
-              <span
-                className={`font-semibold text-lg ${
-                  isExpanded ? "text-[#205C3B]" : "text-gray-700"
-                }`}
-              >
-                {titulo}
-              </span>
-              <div className="flex items-center text-sm text-gray-500 mt-1">
-                <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />
-                <span>
-                  {cantidadEscuelas} {cantidadTexto}
-                </span>
-              </div>
-            </div>
-            <div className="ml-auto">
-              <div
-                className={`px-2 rounded-full text-xs font-medium transition-colors ${
-                  isExpanded
-                    ? "bg-red-400 text-white"
-                    : "bg-gray-100 text-gray-600"
-                }`}
-              >
-                {isExpanded ? "Cerrar" : "Ver escuelas"}
-              </div>
+        {/* Encabezado personalizado sin botón de desplegar */}
+        <div className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] p-6 rounded-l w-full flex items-center justify-between cursor-default select-none">
+          <div className="flex items-center">
+            <Building2 className="h-8 w-8 text-white mr-4" />
+            <div>
+              <h2 className="text-xl font-bold text-white">
+                {tipo === "departamento" ? (
+                  <>
+                    Departamento:{" "}
+                    <u className="decoration-emerald-200/80">{titulo}</u>
+                  </>
+                ) : (
+                  titulo
+                )}
+              </h2>
+              <p className="text-emerald-50 opacity-90 text-sm mt-1">
+                Mostrando <b>{cantidadEscuelas}</b> {cantidadTexto}
+              </p>
             </div>
           </div>
-        </AccordionTrigger>
+          <span className="bg-white text-emerald-700 font-bold px-3 py-1 rounded-full">
+            {cantidadEscuelas} instituciones
+          </span>
+        </div>
         <AccordionContent className="bg-gray-50 border-t border-gray-100">
           <div className="px-4 py-4">
             {cantidadEscuelas > 0 ? (
