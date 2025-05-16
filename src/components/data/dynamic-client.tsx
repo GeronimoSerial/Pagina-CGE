@@ -27,7 +27,7 @@ export const ClientOrganigrama = dynamic(
 
 export const EscuelasClient = dynamic(
   () => import("@/src/modules/escuelas/components/EscuelasClient"),
-  { ssr: false } // Desactivar SSR para este componente pesado
+  { ssr: false }
 );
 
 export const SupervisoresClient = dynamic(

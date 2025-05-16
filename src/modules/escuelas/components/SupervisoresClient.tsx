@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useCallback } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import { Accordion } from "@components/ui/accordion";
 import BuscadorEscuelas from "./BuscadorEscuelas";
 import { EscuelaDetalles } from "@components/data/dynamic-client";
@@ -24,39 +24,15 @@ interface EscuelaConMail extends Escuela {
   mail?: string | null;
 }
 
-export default function EscuelasClient() {
+export default function SupervisoresClient({
+  escuelas,
+}: {
+  escuelas: EscuelaConMail[];
+}) {
   const supervisores = useMemo(() => getSupervisoresFicticios(), []);
   const [expanded, setExpanded] = useState<string | undefined>(undefined);
   const [escuelaSeleccionada, setEscuelaSeleccionada] =
     useState<EscuelaConMail | null>(null);
-  const [escuelas, setEscuelas] = useState<EscuelaConMail[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // Cargar los datos de las escuelas
-  useEffect(() => {
-    setIsLoading(true);
-    setError(null);
-
-    fetch("/api/escuelas")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("No se pudieron cargar los datos");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setEscuelas(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error al obtener los datos de las escuelas:", error);
-        setError(
-          "No se pudieron cargar los datos de las escuelas. Por favor, intente más tarde."
-        );
-        setIsLoading(false);
-      });
-  }, []);
 
   //memoización
   const escuelasPorSupervisor = useMemo(
@@ -76,26 +52,6 @@ export default function EscuelasClient() {
   const handleCloseDetalles = useCallback(() => {
     setEscuelaSeleccionada(null);
   }, []);
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center py-20">
-        <Loader2 className="h-10 w-10 text-[#217A4B] animate-spin" />
-        <span className="ml-3 text-lg text-gray-600">
-          Cargando datos de escuelas...
-        </span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
-        <AlertDescription>{error}</AlertDescription>
-      </Alert>
-    );
-  }
 
   if (!escuelas.length) {
     return (

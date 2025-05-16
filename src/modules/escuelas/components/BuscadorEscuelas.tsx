@@ -63,7 +63,8 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
   );
 
   // Obtener el nombre del supervisor a partir del ID
-  const getSupervisorNombre = useCallback((supervisorID: number) => {
+  const getSupervisorNombre = useCallback((supervisorID?: number) => {
+    if (supervisorID === undefined) return "Sin supervisor asignado";
     return `Supervisor/a ${supervisorID}`;
   }, []);
 

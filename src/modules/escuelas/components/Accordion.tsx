@@ -80,13 +80,13 @@ export const AccordionItemUnificado = React.memo(
             </div>
             <div className="ml-auto">
               <div
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                className={`px-2 rounded-full text-xs font-medium transition-colors ${
                   isExpanded
-                    ? "bg-[#217A4B]/20 text-[#217A4B]"
+                    ? "bg-red-400 text-white"
                     : "bg-gray-100 text-gray-600"
                 }`}
               >
-                {isExpanded ? "Expandido" : "Ver escuelas"}
+                {isExpanded ? "Cerrar" : "Ver escuelas"}
               </div>
             </div>
           </div>

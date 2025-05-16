@@ -14,7 +14,7 @@ export default function getEscuelas() {
     turno: String(e.turno),
     ubicacion: String(e.ubicacion || ""),
     cabecera: String(e.cabecera),
-    supervisorID: Number(e.supervisorID),
+    supervisorID: Number(e.supervisorId),
   }));
 
 }
@@ -47,6 +47,7 @@ export function agruparEscuelasPorDepartamento(escuelas: Escuela[]) {
 export function agruparEscuelasPorSupervisor(escuelas: Escuela[]) {
   const mapa: { [key: number]: Escuela[] } = {};
   escuelas.forEach((escuela) => {
+    if (escuela.supervisorID === undefined) return;
     if (!mapa[escuela.supervisorID]) mapa[escuela.supervisorID] = [];
     mapa[escuela.supervisorID].push(escuela);
   });
