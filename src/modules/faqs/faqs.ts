@@ -162,3 +162,37 @@ export const faqsNews: FAQ[] = [
     },
   },
 ];
+
+export const faqsEscuelas: FAQ[] = [
+  {
+    question: "¿De dónde provienen los datos de las escuelas?",
+    answer: {
+      text: "Los datos publicados en esta sección provienen de un relevamiento realizado por el Consejo General de Educación."
+    },
+  },
+  {
+    question: "¿Pueden existir errores en la información de las escuelas?",
+    answer: {
+      text: "Sí, debido a que los datos son cargados manualmente a partir de relevamientos, pueden existir errores o información desactualizada."
+    },
+  },
+  {
+    question: "¿Cómo puedo informar un error en los datos de una escuela?",
+    answer: {
+      text: "Agradecemos que nos avise si detecta algún error o información incorrecta. Puede contactarnos a través del formulario de contacto para reportar cualquier inconveniente.",
+      links: [
+        {
+          text: "Ir al formulario de contacto",
+          url: "/contacto"
+        }
+      ]
+    },
+  },
+  {
+    question: "Supervisores asignados",
+    answer: {
+      text: "En el corto plazo se cargará la información sobre los supervisores asignados a cada escuela. Agradecemos su comprensión mientras trabajamos para mejorar y actualizar los datos disponibles.",
+    },
+  }
+];
+

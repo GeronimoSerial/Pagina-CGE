@@ -25,20 +25,29 @@ export const ClientOrganigrama = dynamic(
   }
 );
 
+export const EscuelasClient = dynamic(
+  () => import("@/src/modules/escuelas/components/EscuelasClient"),
+  { ssr: false }
+);
+
 export const SupervisoresClient = dynamic(
-  () => import("../../modules/supervisores/components/SupervisoresClient"),
-  { ssr: false } // Desactivar SSR para este componente pesado
+  () => import("@modules/escuelas/components/SupervisoresClient")
 );
 
 export const EscuelaDetalles = dynamic(
-  () => import("../../modules/supervisores/components/EscuelaDetalles"),
+  () => import("../../modules/escuelas/components/EscuelaDetalles"),
   {
     ssr: false,
     loading: () => (
-      <div className="fixed inset-0 bg-black/25 flex items-center justify-center z-50">
-        <div className="bg-white p-4 rounded-lg shadow-lg flex items-center space-x-3">
-          <Loader2 className="h-5 w-5 text-[#217A4B] animate-spin" />
-          <p>Cargando detalles...</p>
+      <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="bg-white p-5 rounded-xl shadow-xl flex items-center space-x-4 border border-gray-100">
+          <div className="bg-[#217A4B]/10 p-2.5 rounded-full">
+            <Loader2 className="h-6 w-6 text-[#217A4B] animate-spin" />
+          </div>
+          <div>
+            <p className="font-medium text-gray-800">Cargando detalles...</p>
+            <p className="text-sm text-gray-500">Espere un momento por favor</p>
+          </div>
         </div>
       </div>
     ),
@@ -47,7 +56,7 @@ export const EscuelaDetalles = dynamic(
 
 export const EscuelasTable = dynamic(
   () =>
-    import("../../modules/supervisores/components/EscuelasTable").then(
+    import("../../modules/escuelas/components/EscuelasTable").then(
       (mod) => mod.default
     ),
   {
