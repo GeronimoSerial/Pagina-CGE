@@ -9,26 +9,43 @@ import { EscuelasTable } from "@components/data/dynamic-client";
 import type { Escuela } from "@/src/interfaces";
 
 interface Props {
-  supervisor: {
-    id: number;
+  agrupador: {
+    id: number | string;
     nombre: string;
   };
   escuelas: Escuela[];
   isExpanded: boolean;
   onSelectEscuela: (escuela: Escuela) => void;
+  tipo: "supervisor" | "departamento";
 }
 
-// Componente para manejar todos los accordions juntos
-
-const SupervisorAccordionItem = React.memo(
-  ({ supervisor, escuelas, isExpanded, onSelectEscuela }: Props) => {
-    const supervisorId = String(supervisor.id);
+// Componente Accordion unificado para departamentos y supervisores
+export const AccordionItemUnificado = React.memo(
+  ({ agrupador, escuelas, isExpanded, onSelectEscuela, tipo }: Props) => {
+    const id = String(agrupador.id);
     const cantidadEscuelas = escuelas.length;
-
+    // Textos condicionales
+    const titulo = agrupador.nombre;
+    const cantidadTexto =
+      tipo === "departamento"
+        ? cantidadEscuelas === 1
+          ? "escuela en el departamento"
+          : "escuelas en el departamento"
+        : cantidadEscuelas === 1
+        ? "escuela asignada"
+        : "escuelas asignadas";
+    const vacioTitulo =
+      tipo === "departamento"
+        ? "No hay escuelas en este departamento"
+        : "No hay escuelas asignadas";
+    const vacioDescripcion =
+      tipo === "departamento"
+        ? "Este departamento no tiene escuelas asignadas actualmente en el sistema."
+        : "Este supervisor no tiene escuelas asignadas actualmente en el sistema.";
     return (
       <AccordionItem
-        key={supervisorId}
-        value={supervisorId}
+        key={id}
+        value={id}
         className={`bg-white rounded-xl overflow-hidden border border-gray-200 shadow-sm transition-all duration-300 ${
           isExpanded
             ? "shadow-md border-[#217A4B]/30 transform scale-[1.01]"
@@ -52,15 +69,12 @@ const SupervisorAccordionItem = React.memo(
                   isExpanded ? "text-[#205C3B]" : "text-gray-700"
                 }`}
               >
-                {supervisor.nombre}
+                {titulo}
               </span>
               <div className="flex items-center text-sm text-gray-500 mt-1">
                 <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />
                 <span>
-                  {cantidadEscuelas}{" "}
-                  {cantidadEscuelas === 1
-                    ? "escuela asignada"
-                    : "escuelas asignadas"}
+                  {cantidadEscuelas} {cantidadTexto}
                 </span>
               </div>
             </div>
@@ -103,11 +117,10 @@ const SupervisorAccordionItem = React.memo(
               <div className="text-center py-12 px-4">
                 <SearchIcon className="h-12 w-12 text-gray-300 mb-4 mx-auto" />
                 <h3 className="text-gray-700 font-medium text-lg mb-2">
-                  No hay escuelas asignadas
+                  {vacioTitulo}
                 </h3>
                 <p className="text-gray-500 max-w-md mx-auto">
-                  Este supervisor no tiene escuelas asignadas actualmente en el
-                  sistema.
+                  {vacioDescripcion}
                 </p>
               </div>
             )}
@@ -117,5 +130,6 @@ const SupervisorAccordionItem = React.memo(
     );
   }
 );
-SupervisorAccordionItem.displayName = "SupervisorAccordionItem";
-export default SupervisorAccordionItem;
+AccordionItemUnificado.displayName = "AccordionItemUnificado";
+
+export default AccordionItemUnificado;

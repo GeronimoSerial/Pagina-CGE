@@ -11,7 +11,7 @@ const navLinks = [
   { href: "/noticias", label: "Noticias" },
   { href: "/tramites", label: "Trámites" },
   { href: "/documentacion", label: "Documentación" },
-  // { href: "/supervisores", label: "Supervisores" },
+  { href: "/escuelas", label: "Escuelas" },
   { href: "/institucional", label: "Nuestra Institución" },
   { href: "/contacto", label: "Contacto" },
 

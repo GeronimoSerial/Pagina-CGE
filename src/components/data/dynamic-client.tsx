@@ -25,13 +25,17 @@ export const ClientOrganigrama = dynamic(
   }
 );
 
-export const SupervisoresClient = dynamic(
-  () => import("../../modules/supervisores/components/SupervisoresClient"),
+export const EscuelasClient = dynamic(
+  () => import("@/src/modules/escuelas/components/EscuelasClient"),
   { ssr: false } // Desactivar SSR para este componente pesado
 );
 
+export const SupervisoresClient = dynamic(
+  () => import("@modules/escuelas/components/SupervisoresClient")
+);
+
 export const EscuelaDetalles = dynamic(
-  () => import("../../modules/supervisores/components/EscuelaDetalles"),
+  () => import("../../modules/escuelas/components/EscuelaDetalles"),
   {
     ssr: false,
     loading: () => (
@@ -47,7 +51,7 @@ export const EscuelaDetalles = dynamic(
 
 export const EscuelasTable = dynamic(
   () =>
-    import("../../modules/supervisores/components/EscuelasTable").then(
+    import("../../modules/escuelas/components/EscuelasTable").then(
       (mod) => mod.default
     ),
   {
