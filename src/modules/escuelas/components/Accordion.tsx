@@ -1,10 +1,6 @@
 import { Loader2, SearchIcon, Building2 } from "lucide-react";
 import React, { Suspense } from "react";
-import {
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@components/ui/accordion";
+import { AccordionContent, AccordionItem } from "@components/ui/accordion";
 import { EscuelasTable } from "@components/data/dynamic-client";
 import type { Escuela } from "@/src/interfaces";
 
@@ -57,7 +53,7 @@ export const AccordionItemUnificado = React.memo(
           <div className="flex items-center">
             <Building2 className="h-8 w-8 text-white mr-4" />
             <div>
-              <h2 className="text-xl font-bold text-white">
+              <h3 className="text-xl font-bold text-white">
                 {tipo === "departamento" ? (
                   <>
                     Departamento:{" "}
@@ -66,13 +62,13 @@ export const AccordionItemUnificado = React.memo(
                 ) : (
                   titulo
                 )}
-              </h2>
+              </h3>
               <p className="text-emerald-50 opacity-90 text-sm mt-1">
                 Mostrando <b>{cantidadEscuelas}</b> {cantidadTexto}
               </p>
             </div>
           </div>
-          <span className="hidden md:flex bg-white text-emerald-700 font-bold px-3 py-1 rounded-full">
+          <span className="hidden md:flex bg-white text-[#2D6A27] font-bold px-3 py-1 text-sm rounded-xl">
             {cantidadEscuelas} instituciones
           </span>
         </div>

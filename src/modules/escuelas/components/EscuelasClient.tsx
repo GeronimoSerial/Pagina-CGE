@@ -163,14 +163,14 @@ export default function EscuelasClient({
                   <h2 className="text-xl font-bold text-white">
                     Panel por Departamento
                   </h2>
-                  <p className="text-emerald-50 opacity-90 text-sm mt-1">
+                  <p className="text-white opacity-90 text-sm mt-1">
                     Explore escuelas organizadas por ubicación geográfica
                   </p>
                 </div>
               </div>
-              <Badge className="hidden md:flex bg-white text-emerald-700 font-bold px-3 py-1">
+              <span className="hidden md:flex bg-white text-[#2D6A27] text-sm rounded-full font-bold px-3 py-1">
                 {Object.keys(escuelasPorDepartamento).length} departamentos
-              </Badge>
+              </span>
             </div>
           </div>
 
@@ -183,32 +183,28 @@ export default function EscuelasClient({
                 value={expanded}
                 onValueChange={(value) => setExpanded(value)}
               >
-                <SelectTrigger className="w-full bg-white border-gray-200 hover:border-emerald-300 transition-colors focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50">
+                <SelectTrigger className="w-full bg-white border-gray-200 hover:border-[#3D8B37] transition-colors focus:ring-2 focus:ring-[#3D8B37] focus:ring-opacity-50">
                   <SelectValue placeholder="Seleccionar departamento" />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.keys(escuelasPorDepartamento).map((dep) => {
-                    const cantidadEscuelas =
-                      escuelasPorDepartamento[dep].length;
-                    return (
-                      <SelectItem
-                        key={dep}
-                        value={dep}
-                        className="flex items-center justify-between py-2 hover:bg-green"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <Map className="h-4 w-4 text-emerald-600" />
-                          <span className="font-medium">{dep}</span>
-                          <Badge
-                            variant="secondary"
-                            className="ml-2 bg-emerald-100 text-emerald-700"
-                          >
-                            {cantidadEscuelas}
-                          </Badge>
-                        </div>
-                      </SelectItem>
-                    );
-                  })}
+                  {Object.keys(escuelasPorDepartamento)
+                    .sort((a, b) => a.localeCompare(b))
+                    .map((dep) => {
+                      const cantidadEscuelas =
+                        escuelasPorDepartamento[dep].length;
+                      return (
+                        <SelectItem
+                          key={dep}
+                          value={dep}
+                          className="flex items-center justify-between py-2 transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-200 focus:text-gray-900"
+                        >
+                          <div className="flex items-center space-x-3">
+                            <Map className="h-4 w-4 text-[#3D8B37] group-hover:text-[#2D6A27] transition-colors" />
+                            <span className="font-medium">{dep}</span>
+                          </div>
+                        </SelectItem>
+                      );
+                    })}
                 </SelectContent>
               </Select>
             </div>
