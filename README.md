@@ -1,107 +1,138 @@
-# Proyecto Web Next.js
+# Portal Web del Consejo General de Educación
 
-## Descripción
+## 📋 Descripción y Propósito
 
-Este proyecto es el sitio web del Consejo General de Educación, parte del Ministerio de Educación de la Provincia de Corrientes.
+Portal web oficial del Consejo General de Educación que proporciona información sobre trámites, documentación y servicios para docentes. La plataforma está diseñada para facilitar el acceso a información crucial sobre procedimientos administrativos, requisitos y gestiones relacionadas con la carrera docente.
 
-Este proyecto es una aplicación web construida con Next.js y TypeScript, diseñada para ofrecer una experiencia completa y organizada al usuario. La aplicación cuenta con un diseño moderno y funcional, estructurado con un layout principal que incluye un encabezado (header) y un pie de página (footer).
+### 🎯 Propósito
 
-## Características Principales
+- **Centralización de Información**: Unificar en un solo lugar toda la información relevante para la comunidad educativa.
+- **Eficiencia Administrativa**: Agilizar los procesos y trámites administrativos mediante herramientas digitales.
+- **Transparencia**: Garantizar el acceso público a la información institucional y procedimientos.
+- **Comunicación Efectiva**: Establecer un canal directo entre el Consejo y la comunidad educativa.
+- **Desarrollo Profesional**: Facilitar recursos y herramientas para el crecimiento profesional docente.
+- **Inclusión Digital**: Promover la adopción de tecnologías digitales en el ámbito educativo.
 
--   **Layout Principal:**
-    -   **Header:** Encabezado principal para la navegación y la identidad del sitio.
-    -   **Footer:** Pie de página con información adicional y enlaces relevantes.
+## 🚀 Características Principales
 
--   **Páginas:**
-    -   **Contacto:** Formulario o información de contacto para los usuarios.
-    -   **Documentación:** Sección donde se puede acceder a diferentes documentos y guías.
-    -   **Institucional:** Información sobre la institución u organización.
-    -   **Trámites:** Detalles y procedimientos sobre distintos trámites disponibles.
+- Sistema de gestión de trámites docentes
+- Información actualizada sobre requisitos y procedimientos
+- Sección de noticias y actualizaciones
+- Interfaz responsive y accesible
+- Sistema de búsqueda integrado
+- Sección de documentación y recursos
 
--   **Secciones:**
-    -   **Noticias:** Un espacio para las últimas novedades y noticias relevantes.
-    -   **Artículos:** Publicaciones más extensas y detalladas sobre temas específicos.
-    -   **Documentación:** Una sección dedicada a proporcionar recursos y guías.
-    -   **Home:** Página principal con una sección de Hero y accesos rápidos.
-    -   **Hero Section:** Presentación visual impactante en la página principal.
-    -   **Quick Access:** Enlaces rápidos a secciones importantes del sitio.
+## 🛠️ Tecnologías Utilizadas
 
--   **Tecnologías:**
-    -   **Next.js:** Framework de React para el desarrollo web.
-    -   **TypeScript:** Lenguaje de programación que añade tipado estático a JavaScript.
+### 💻 Frontend
 
-## Estructura del Proyecto
+- **Next.js 13+**: Framework de React con renderizado del lado del servidor (SSR)
+- **React 18**: Biblioteca para construcción de interfaces de usuario
+- **TypeScript 5**: Superset de JavaScript con tipado estático
+- **Tailwind CSS 3**: Framework de CSS utilitario para diseño responsive
+- **Shadcn/ui**: Componentes de UI reutilizables y accesibles
 
-La estructura del proyecto se organiza de la siguiente manera:
+### 🔧 Herramientas de Desarrollo
 
--   `public/`: Contiene los archivos estáticos como imágenes y documentos.
--   `src/`:
-    -   `app/`: Rutas y páginas de la aplicación.
-        -   `contacto/`: Página de contacto.
-        -   `documentacion/`: Página de documentación.
-        -   `institucional/`: Página institucional.
-        -   `tramites/`: Página de trámites.
-        -`noticias/[id]` Página de noticias.
-        -`tramites/[id]` Página de tramites.
-        -   `page.tsx`: Página principal.
-    -   `components/ui/`: Contiene los componentes de interfaz de usuario reutilizables.
-    -   `modules/`: Componentes modulares específicos para cada sección.
-        -   `layout/`: Header y Footer.
-        -   `home/`: Componentes de la pagina de inicio.
-        -   `documentation/`: Componentes de la sección de documentación.
-        - `article/`: Componentes de la sección de noticias y articulos.
-    -   `interfaces/`: Definición de interfaces para el tipado de datos.
-    -   `lib/`: Funciones utilitarias.
-    -   `styles/`: Estilos y fuentes.
-    -   `types/`: Definiciones de tipos para Supabase.
-    -   `content/`: Contenido markdown para noticias y tramites.
+- **ESLint**: Herramienta de linting para JavaScript/TypeScript
+- **Prettier**: Formateador de código
+- **Husky**: Gestión de git hooks
+- **Jest**: Framework de testing
+- **React Testing Library**: Utilidades para testing de componentes
 
-## Instalación y Ejecución
+### 📦 Gestión de Contenido
 
-1.  **Clonar el Repositorio:**
+- **Sistema de archivos Markdown**: Para contenido estático
+- **Gray Matter**: Parseador de frontmatter para Markdown
+- **Remark**: Procesador de Markdown a HTML
+
+### 🔍 SEO y Rendimiento
+
+- **Next SEO**: Optimización para motores de búsqueda
+- **Core Web Vitals**: Optimización de métricas de rendimiento
+- **Lighthouse**: Herramienta de auditoría de calidad web
+
+## 📁 Estructura del Proyecto
+
 ```
-bash
-    git clone [URL del repositorio]
-    
+├── public/                  # Archivos estáticos
+│   ├── admin/              # Configuración del panel administrativo
+│   ├── carrousel/          # Imágenes del carrusel
+│   ├── content/            # Contenido en Markdown
+│   │   ├── noticias/       # Artículos de noticias
+│   │   └── tramites/       # Información de trámites
+│   ├── images/             # Imágenes generales
+│   └── organigrama/        # Fotos del personal
+├── src/
+│   ├── app/                # Páginas y rutas de la aplicación
+│   │   ├── [articulo]/     # Rutas dinámicas para artículos
+│   │   ├── accesibilidad/  # Página de accesibilidad
+│   │   ├── contacto/       # Página de contacto
+│   │   ├── documentacion/  # Sección de documentación
+│   │   ├── escuelas/       # Información de escuelas
+│   │   ├── institucional/  # Información institucional
+│   │   ├── supervisores/   # Área de supervisores
+│   │   └── terminos/       # Términos y condiciones
+│   ├── components/         # Componentes reutilizables
+│   ├── hooks/              # Hooks personalizados
+│   ├── interfaces/         # Definiciones de tipos
+│   ├── lib/                # Utilidades y configuraciones
+│   ├── modules/            # Módulos específicos de funcionalidad
+│   └── styles/             # Estilos globales
 ```
-2.  **Navegar al Directorio del Proyecto:**
-```
-bash
-    cd [nombre del proyecto]
-    
-```
-3.  **Instalar las Dependencias:**
-```
-bash
-    npm install
-    
-```
-4.  **Iniciar el Servidor de Desarrollo:**
-```
-bash
-    npm run dev
-    
-```
-Esto iniciará la aplicación en modo desarrollo. Podrás acceder a ella en `http://localhost:3000`.
 
-5.  **Construir el Proyecto:**
-```
-bash
-    npm run build
-    
-```
-6.  **Iniciar el Proyecto en Producción**
-```
-bash
-    npm start
-    
-```
-## Información Adicional
+## 🔧 Instalación
 
--   **Dependencias:** Asegúrate de tener Node.js y npm instalados en tu sistema.
--   **Configuración:** Revisa los archivos de configuración como `next.config.js` y `tsconfig.json` para adaptarlos a tus necesidades.
--   **Contribuciones:** Si deseas contribuir al proyecto, sigue las pautas de contribución establecidas.
+1. Clonar el repositorio:
 
-## Licencia
+```bash
+git clone [URL_DEL_REPOSITORIO]
+```
 
-Este proyecto se distribuye bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+2. Instalar dependencias:
+
+```bash
+npm install
+```
+
+3. Iniciar el servidor de desarrollo:
+
+```bash
+npm run dev
+```
+
+## 📦 Estructura de Módulos
+
+### 🎯 Módulos Principales
+
+- **Article**: Gestión y visualización de artículos y trámites
+- **Documentation**: Sistema de documentación y recursos
+- **Escuelas**: Información sobre instituciones educativas
+- **Home**: Componentes de la página principal
+- **Institucional**: Información institucional y organizativa
+- **Layout**: Componentes estructurales de la interfaz
+
+### 🔍 Funcionalidades Destacadas
+
+- Sistema de búsqueda integrado
+- Componentes UI personalizados
+- Gestión de formularios de contacto
+- Sistema de compartir contenido
+- Visualización de documentos
+- Interfaz adaptativa para dispositivos móviles
+
+## 🤝 Contribución
+
+Para contribuir al proyecto:
+
+1. Crear un fork del repositorio
+2. Crear una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit de los cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abrir un Pull Request
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/GeronimoSerial/Pagina-CGE)
+
+## 📞 Contacto
+
+Para más información o consultas, contactar a través de la sección de contacto en el portal web.
