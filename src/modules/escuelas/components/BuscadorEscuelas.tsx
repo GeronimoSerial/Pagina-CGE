@@ -94,9 +94,12 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
         </div>
       </div>
 
-      {/* Panel de resultados de búsqueda */}
+      {/* Panel de resultados de búsqueda con mayor prioridad de posición */}
       {showResults && resultados.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-xl z-30 overflow-hidden max-h-[350px] overflow-y-auto">
+        <div
+          className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-xl z-[100] overflow-hidden max-h-[350px] overflow-y-auto"
+          style={{ filter: "drop-shadow(0 20px 13px rgb(0 0 0 / 0.1))" }}
+        >
           <div className="p-3 bg-[#217A4B]/5 border-b border-gray-100 flex justify-between items-center">
             <Badge
               variant="secondary"
@@ -168,7 +171,7 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
 
       {/* Mensaje de no resultados */}
       {showResults && searchTerm && resultados.length === 0 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-xl z-30 p-6 text-center">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-xl z-[100] p-6 text-center">
           <div className="flex flex-col items-center">
             <div className="bg-gray-100 p-3 rounded-full mb-3">
               <Search className="h-5 w-5 text-gray-400" />

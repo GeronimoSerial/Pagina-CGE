@@ -4,6 +4,8 @@ import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 import { EscuelasClient } from "@components/data/dynamic-client";
 import escuelasOriginales from "@/src/modules/escuelas/data/escuelas.json";
+import { faqsEscuelas } from "@/src/modules/faqs/faqs";
+import FAQSection from "@/src/modules/layout/FAQSection";
 
 export const metadata: Metadata = {
   title: "Escuelas",
@@ -49,6 +51,11 @@ export default async function Escuelas() {
           <EscuelasClient escuelas={escuelas} />
         </Suspense>
       </div>
+      <FAQSection
+        faqTitle="Información importante"
+        faqDescription=""
+        faqs={faqsEscuelas}
+      />
     </main>
   );
 }
