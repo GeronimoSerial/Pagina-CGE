@@ -6,16 +6,11 @@ import AccordionItemUnificado from "./Accordion";
 import type { Escuela } from "@src/interfaces";
 import { agruparEscuelasPorDepartamento } from "../utils/escuelas";
 import {
-  Loader2,
   AlertCircle,
   School,
   Search,
   Map,
   Users,
-  BarChart3,
-  TrendingUp,
-  TrendingDown,
-  BookOpen,
   Building2,
 } from "lucide-react";
 import { Alert, AlertDescription } from "@components/ui/alert";
@@ -27,7 +22,6 @@ import {
   SelectItem,
 } from "@components/ui/select";
 import { Badge } from "@components/ui/badge";
-import { motion } from "framer-motion";
 
 // Extender la interfaz Escuela para incluir el campo mail
 interface EscuelaConMail extends Escuela {
@@ -52,7 +46,7 @@ export default function EscuelasClient({
   // Sumar matrícula 2025
   const totalMatricula2025 = useMemo(() => {
     return escuelas.reduce(
-      (acc, escuela) => acc + (escuela.matricula2025 || 0),
+      (acc, escuela) => acc + Number(escuela.matricula2025 || 0),
       0
     );
   }, [escuelas]);
@@ -60,7 +54,7 @@ export default function EscuelasClient({
   // Sumar matrícula 2024
   const totalMatricula2024 = useMemo(() => {
     return escuelas.reduce(
-      (acc, escuela) => acc + (escuela.matricula2024 || 0),
+      (acc, escuela) => acc + Number(escuela.matricula2024 || 0),
       0
     );
   }, [escuelas]);
@@ -101,11 +95,11 @@ export default function EscuelasClient({
 
   return (
     <div className="bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-      <div className="p-8">
-        {/* Buscador con mejor estilo */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-lg p-6 mb-8 transform transition hover:shadow-xl relative z-20">
-          <div className="flex items-center mb-4">
-            <div className="rounded-full bg-emerald-100 p-3 mr-4">
+      <div className="p-8 space-y-6">
+        {/* Search section with improved responsive design */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-lg p-4 sm:p-6 transform transition hover:shadow-xl relative z-20">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
+            <div className="rounded-full bg-emerald-100 p-3 shrink-0">
               <Search className="h-5 w-5 text-emerald-600" />
             </div>
             <div>
@@ -117,17 +111,17 @@ export default function EscuelasClient({
               </p>
             </div>
           </div>
-          <BuscadorEscuelas
-            escuelas={escuelas}
-            onSelectEscuela={handleSelectEscuela}
-          />
+          <div className="w-full">
+            <BuscadorEscuelas
+              escuelas={escuelas}
+              onSelectEscuela={handleSelectEscuela}
+            />
+          </div>
         </div>
-
-        {/* Tarjetas de estadísticas con diseño mejorado */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          {/* Tarjeta 1: Total Escuelas */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-md p-4 flex items-center">
-            <div className="rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 p-2 mr-3 shadow-md">
+        {/* Stats cards with improved responsive layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="bg-white rounded-xl border border-gray-200 shadow-md p-4 flex items-center hover:shadow-lg transition-shadow">
+            <div className="rounded-full bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] p-2 mr-3 shadow-md">
               <School className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -137,27 +131,13 @@ export default function EscuelasClient({
               <p className="text-xl font-bold text-gray-800">
                 {escuelas.length}
               </p>
-            </div>
-          </div>
-
-          {/* Tarjeta 2: Departamentos */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-md p-4 flex items-center">
-            <div className="rounded-full bg-gradient-to-br from-blue-400 to-blue-600 p-2 mr-3 shadow-md">
-              <Map className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <p className="text-[10px] uppercase font-semibold text-gray-500 tracking-wider">
-                Departamentos
-              </p>
-              <p className="text-xl font-bold text-gray-800">
-                {Object.keys(escuelasPorDepartamento).length}
+              <p className="text-sm text-gray-500">
+                en {Object.keys(escuelasPorDepartamento).length} departamentos
               </p>
             </div>
           </div>
-
-          {/* Tarjeta 3: Matrícula */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-md p-4 flex items-center">
-            <div className="rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 p-2 mr-3 shadow-md">
+          <div className="bg-white rounded-xl border border-gray-200 shadow-md p-4 flex items-center hover:shadow-lg transition-shadow">
+            <div className="rounded-full bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] p-2 mr-3 shadow-md">
               <Users className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -165,69 +145,15 @@ export default function EscuelasClient({
                 Matrícula 2025
               </p>
               <p className="text-xl font-bold text-gray-800">
-                {totalMatricula2025.toLocaleString()}
+                {totalMatricula2025.toLocaleString()} alumnos
               </p>
-            </div>
-          </div>
-
-          {/* Tarjeta 4: Variación Matrícula */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-md p-4 flex items-center">
-            <div
-              className={`rounded-full p-2 mr-3 shadow-md bg-gradient-to-br ${
-                variacionMatricula
-                  ? variacionMatricula.diferencia > 0
-                    ? "from-emerald-300 to-emerald-500"
-                    : variacionMatricula.diferencia < 0
-                    ? "from-blue-300 to-blue-500"
-                    : "from-gray-300 to-gray-500"
-                  : "from-gray-300 to-gray-500"
-              } border-2 ${
-                variacionMatricula
-                  ? variacionMatricula.diferencia > 0
-                    ? "border-emerald-400"
-                    : variacionMatricula.diferencia < 0
-                    ? "border-blue-400"
-                    : "border-gray-400"
-                  : "border-gray-400"
-              }`}
-            >
-              <BarChart3 className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <p className="text-[10px] uppercase font-semibold text-gray-500 tracking-wider">
-                Variación Matrícula
+              <p className="text-sm text-gray-500">
+                en la provincia de Corrientes
               </p>
-              <p
-                className={`text-lg font-bold ${
-                  variacionMatricula
-                    ? variacionMatricula.diferencia > 0
-                      ? "text-emerald-700"
-                      : variacionMatricula.diferencia < 0
-                      ? "text-blue-700"
-                      : "text-gray-700"
-                    : "text-gray-700"
-                } flex items-center gap-1`}
-              >
-                {variacionMatricula
-                  ? `${variacionMatricula.diferencia > 0 ? "+" : ""}${
-                      variacionMatricula.diferencia
-                    } (${variacionMatricula.porcentaje}%)`
-                  : "Sin datos"}
-              </p>
-              {variacionMatricula && (
-                <span className="text-xs text-gray-500 mt-1 block">
-                  {variacionMatricula.diferencia > 0
-                    ? "¡Aumento respecto a 2024!"
-                    : variacionMatricula.diferencia < 0
-                    ? "Leve descenso respecto a 2024"
-                    : "Sin cambios respecto a 2024"}
-                </span>
-              )}
             </div>
           </div>
         </div>
 
-        {/* Panel por departamento mejorado */}
         <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden mb-8 transform transition hover:shadow-xl z-10 relative">
           <div className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] p-6">
             <div className="flex items-center justify-between">
@@ -268,7 +194,7 @@ export default function EscuelasClient({
                       <SelectItem
                         key={dep}
                         value={dep}
-                        className="flex items-center justify-between py-2 hover:bg-emerald-50"
+                        className="flex items-center justify-between py-2 hover:bg-green"
                       >
                         <div className="flex items-center space-x-2">
                           <Map className="h-4 w-4 text-emerald-600" />
@@ -289,7 +215,6 @@ export default function EscuelasClient({
           </div>
         </div>
 
-        {/* Acordeón de departamentos con animaciones */}
         <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden mt-6 z-10 relative">
           <div className="p-1">
             {expanded &&
@@ -298,28 +223,21 @@ export default function EscuelasClient({
                   key={dep}
                   className={expanded === dep ? "block" : "hidden"}
                 >
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
-                    transition={{ duration: 0.4 }}
+                  <Accordion
+                    type="single"
+                    collapsible
+                    value={expanded}
+                    onValueChange={setExpanded}
+                    className="border-0"
                   >
-                    <Accordion
-                      type="single"
-                      collapsible
-                      value={expanded}
-                      onValueChange={setExpanded}
-                      className="border-0"
-                    >
-                      <AccordionItemUnificado
-                        agrupador={{ id: dep, nombre: dep }}
-                        escuelas={escuelasPorDepartamento[dep] || []}
-                        isExpanded={expanded === dep}
-                        onSelectEscuela={handleSelectEscuela}
-                        tipo="departamento"
-                      />
-                    </Accordion>
-                  </motion.div>
+                    <AccordionItemUnificado
+                      agrupador={{ id: dep, nombre: dep }}
+                      escuelas={escuelasPorDepartamento[dep] || []}
+                      isExpanded={expanded === dep}
+                      onSelectEscuela={handleSelectEscuela}
+                      tipo="departamento"
+                    />
+                  </Accordion>
                 </div>
               ))}
 
@@ -339,7 +257,6 @@ export default function EscuelasClient({
         </div>
       </div>
 
-      {/* Modal de detalles mejorado */}
       {escuelaSeleccionada && (
         <EscuelaDetalles
           escuela={escuelaSeleccionada}
