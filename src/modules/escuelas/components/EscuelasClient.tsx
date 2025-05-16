@@ -101,17 +101,6 @@ export default function EscuelasClient({
 
   return (
     <div className="bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-      {/* Header con gradiente */}
-      {/* <div className="bg-gradient-to-r from-emerald-600 to-teal-500 text-white p-8">
-        <div className="flex items-center space-x-3 mb-2">
-          <BookOpen className="h-8 w-8" />
-          <h1 className="text-2xl font-bold">Sistema de Gestión Educativa</h1>
-        </div>
-        <p className="text-emerald-50 opacity-90 ml-11">
-          Panel de control y exploración de instituciones educativas
-        </p>
-      </div> */}
-
       <div className="p-8">
         {/* Buscador con mejor estilo */}
         <div className="bg-white rounded-xl border border-gray-200 shadow-lg p-6 mb-8 transform transition hover:shadow-xl relative z-20">
@@ -253,7 +242,7 @@ export default function EscuelasClient({
                   </p>
                 </div>
               </div>
-              <Badge className="bg-white text-emerald-700 font-bold px-3 py-1">
+              <Badge className="hidden md:flex bg-white text-emerald-700 font-bold px-3 py-1">
                 {Object.keys(escuelasPorDepartamento).length} departamentos
               </Badge>
             </div>
