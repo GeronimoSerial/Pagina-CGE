@@ -368,6 +368,15 @@ export function buscarEscuelasAvanzado(
       // Coincidencia en otros campos
       if (directorNormalizado.includes(terminoNormalizado)) {
         puntuacion += 100;
+      } else {
+        // Si el término tiene dos palabras, buscar también el orden invertido
+        const partes = terminoNormalizado.split(' ');
+        if (partes.length === 2) {
+          const invertido = `${partes[1]} ${partes[0]}`;
+          if (directorNormalizado.includes(invertido)) {
+            puntuacion += 100;
+          }
+        }
       }
       
       if (cueString === terminoNormalizado) {
