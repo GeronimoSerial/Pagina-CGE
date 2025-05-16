@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import escuelasOriginales from "@modules/supervisores/data/escuelas.json";
-import type { Escuela } from "@src/interfaces";
+import escuelasOriginales from "@/src/modules/escuelas/data/escuelas.json";
 
 export async function GET() {
     // Transformar los datos originales con el campo mail incluido

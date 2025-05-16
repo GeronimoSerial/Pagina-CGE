@@ -2,10 +2,12 @@ import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { Accordion } from "@components/ui/accordion";
 import BuscadorEscuelas from "./BuscadorEscuelas";
 import { EscuelaDetalles } from "@components/data/dynamic-client";
-import SupervisoresAccordionItem from "./Accordion";
+import AccordionItemUnificado from "./Accordion";
 import type { Escuela } from "@src/interfaces";
-import { agruparEscuelasPorSupervisor } from "../utils/escuelas";
-import { getSupervisoresFicticios } from "../utils/escuelas";
+import {
+  agruparEscuelasPorSupervisor,
+  getSupervisoresFicticios,
+} from "../utils/escuelas";
 import { Loader2, AlertCircle, School } from "lucide-react";
 import { Alert, AlertDescription } from "@components/ui/alert";
 import {
@@ -22,7 +24,7 @@ interface EscuelaConMail extends Escuela {
   mail?: string | null;
 }
 
-export default function SupervisoresClient() {
+export default function EscuelasClient() {
   const supervisores = useMemo(() => getSupervisoresFicticios(), []);
   const [expanded, setExpanded] = useState<string | undefined>(undefined);
   const [escuelaSeleccionada, setEscuelaSeleccionada] =
@@ -207,11 +209,12 @@ export default function SupervisoresClient() {
               value={expanded}
               onValueChange={setExpanded}
             >
-              <SupervisoresAccordionItem
-                supervisor={sup}
+              <AccordionItemUnificado
+                agrupador={sup}
                 escuelas={escuelasPorSupervisor[sup.id] || []}
                 isExpanded={expanded === String(sup.id)}
                 onSelectEscuela={handleSelectEscuela}
+                tipo="supervisor"
               />
             </Accordion>
           </div>

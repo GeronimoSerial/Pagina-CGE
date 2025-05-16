@@ -2,7 +2,6 @@ import React, { memo, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogFooter,
 } from "@components/ui/dialog";
@@ -18,9 +17,7 @@ import {
   Home,
   BookText,
   X,
-  Phone,
   Mail,
-  Calendar,
   BarChart3,
   Building2,
   Shield,
