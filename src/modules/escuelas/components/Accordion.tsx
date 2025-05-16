@@ -72,7 +72,7 @@ export const AccordionItemUnificado = React.memo(
               </p>
             </div>
           </div>
-          <span className="bg-white text-emerald-700 font-bold px-3 py-1 rounded-full">
+          <span className="hidden md:flex bg-white text-emerald-700 font-bold px-3 py-1 rounded-full">
             {cantidadEscuelas} instituciones
           </span>
         </div>

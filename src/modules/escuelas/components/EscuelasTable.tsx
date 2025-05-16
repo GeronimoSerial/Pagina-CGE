@@ -33,7 +33,7 @@ const EscuelasTable = memo(
       const cardVirtualizer = useVirtualizer({
         count: escuelas.length,
         getScrollElement: () => parentRef.current,
-        estimateSize: () => 150, // altura estimada reducida de cada tarjeta
+        estimateSize: () => 130, // altura estimada más reducida
         overscan: 5,
       });
 
@@ -75,11 +75,11 @@ const EscuelasTable = memo(
                   >
                     {/* Encabezado de la tarjeta */}
                     <div
-                      className="bg-[#217A4B]/10 px-4 py-3 border-b border-gray-100 
+                      className="bg-[#217A4B]/10 px-3 py-2 border-b border-gray-100 
                                 flex items-center justify-between"
                     >
                       <div className="flex items-center">
-                        <School className="h-4 w-4 text-[#217A4B] mr-2 flex-shrink-0" />
+                        <School className="h-3 w-3 text-[#217A4B] mr-1.5 flex-shrink-0" />
                         <span className="font-mono text-xs text-gray-600 truncate">
                           CUE: {escuela.cue}
                         </span>
@@ -87,27 +87,23 @@ const EscuelasTable = memo(
                     </div>
 
                     {/* Cuerpo de la tarjeta simplificado */}
-                    <div className="p-4">
-                      <h3 className="font-medium text-gray-800 mb-2 line-clamp-2">
+                    <div className="px-3 py-2">
+                      <h3 className="font-medium text-xs text-gray-800 mb-1.5 line-clamp-1">
                         {escuela.nombre}
                       </h3>
-                      <div className="flex items-center text-sm text-gray-600 mb-3">
+                      <div className="flex items-center text-xs text-gray-600 mb-2">
                         <span className="truncate">
                           <span className="font-medium mr-1">Director:</span>
                           {escuela.director || "No especificado"}
                         </span>
                       </div>
                       <div className="flex justify-end">
-                        <Button
-                          variant="outline"
-                          size="sm"
+                        <span
+                          className="text-xs text-[#217A4B] underline decoration-[#217A4B]/70 cursor-pointer hover:text-[#217A4B]/80"
                           onClick={(e) => handleClick(e, escuela)}
-                          className="rounded-full bg-white hover:bg-[#217A4B] 
-                                  hover:text-white border-[#217A4B]/40 text-[#217A4B] transition-all"
                         >
-                          <Eye className="h-4 w-4 mr-1.5" />
-                          Ver detalles
-                        </Button>
+                          Ver detalles →
+                        </span>
                       </div>
                     </div>
                   </div>
