@@ -113,7 +113,7 @@ const EscuelasTable = memo(
           </div>
           <div
             className="bg-gray-50 py-3 px-4 border border-gray-200 rounded-md 
-                      text-xs text-gray-500 text-center font-medium mt-4"
+                      text-xs text-gray-500 text-center font-medium mt-4 underline"
           >
             Total de escuelas: {escuelas.length}
           </div>
@@ -137,8 +137,8 @@ const EscuelasTable = memo(
         cue: 10,
         nombre: 25,
         director: 18,
-        matricula2024: 12,
-        matricula2025: 12,
+        categoria: 12,
+        zona: 12,
         tipo: 13,
         acciones: 10,
       };
@@ -169,25 +169,25 @@ const EscuelasTable = memo(
                       className="px-6 py-4 text-left text-sm font-semibold text-[#217A4B]"
                       style={{ width: `${columnWidths.nombre}%` }}
                     >
-                      Nombre
+                      Nombre de la institución
                     </th>
                     <th
                       className="px-6 py-4 text-left text-sm font-semibold text-[#217A4B]"
                       style={{ width: `${columnWidths.director}%` }}
                     >
-                      Director
+                      Nombre del Director
                     </th>
                     <th
                       className="px-6 py-4 text-center text-sm font-semibold text-[#217A4B]"
-                      style={{ width: `${columnWidths.matricula2024}%` }}
+                      style={{ width: `${columnWidths.categoria}%` }}
                     >
-                      Matrícula 2024
+                      Categoría
                     </th>
                     <th
                       className="px-6 py-4 text-center text-sm font-semibold text-[#217A4B]"
-                      style={{ width: `${columnWidths.matricula2025}%` }}
+                      style={{ width: `${columnWidths.zona}%` }}
                     >
-                      Matrícula 2025
+                      Zona
                     </th>
                     <th
                       className="px-9 py-4 text-left text-sm font-semibold text-[#217A4B]"
@@ -258,15 +258,15 @@ const EscuelasTable = memo(
                       </div>
                       <div
                         className="px-6 py-4 text-center font-semibold text-[#217A4B] flex items-center justify-center"
-                        style={{ width: `${columnWidths.matricula2024}%` }}
+                        style={{ width: `${columnWidths.categoria}%` }}
                       >
-                        {escuela.matricula2024}
+                        {escuela.categoria}
                       </div>
                       <div
                         className="px-6 py-4 text-center font-semibold text-[#217A4B] flex items-center justify-center"
-                        style={{ width: `${columnWidths.matricula2025}%` }}
+                        style={{ width: `${columnWidths.zona}%` }}
                       >
-                        {escuela.matricula2025}
+                        {escuela.zona}
                       </div>
                       <div
                         className="px-6 py-4 flex items-center"
@@ -299,8 +299,8 @@ const EscuelasTable = memo(
           </div>
 
           {/* Pie de tabla con contador */}
-          <div className="bg-gray-50 py-3 px-6 border-t border-gray-200 text-sm text-gray-500 font-medium">
-            Total de escuelas: {escuelas.length}
+          <div className="underline bg-gray-50 py-3 px-6 border-t border-gray-200 text-sm text-gray-500 font-medium">
+            Total de escuelas: <b>{escuelas.length}</b>
           </div>
         </div>
       );
