@@ -17,18 +17,18 @@ export function formatearFecha(fechaStr: string | Date) {
   });
 }
 
-
+export const normalizeText = (text: string = '') => {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+    .replace(/[^\w\s]/g, " ") // Replace special characters with spaces
+    .trim();
+};
 
 // Filtra articulos por término de búsqueda y categoría
 export function filtrarArticulos(article: any[], searchTerm: string, categoriaSeleccionada: string) {
-  const normalizeText = (text: string = '') => {
-    return text
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
-      .replace(/[^\w\s]/g, " ") // Replace special characters with spaces
-      .trim();
-  };
+  
 
   return article.filter((item) => {
     const coincideCategoria =
