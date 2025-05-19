@@ -82,7 +82,8 @@ export function getAllContentMetadata(
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "") // Eliminar acentos
-        .replace(/[^\w\s]/g, " ") // Reemplazar caracteres especiales con espacios
+        .replace(/\s+/g, "-") // Reemplazar espacios por guiones
+        .replace(/[^a-z0-9\-]/g, "") // Solo letras, números y guiones
         .trim();
     };
 
@@ -94,8 +95,8 @@ export function getAllContentMetadata(
     filteredFilenames = filteredFilenames.filter((filename) => {
       const fileData = getFileData(filename);
       
-      // Filtrar por categoría si está especificada
-      if (categoria && fileData.subcategoria !== categoria) {
+      // Filtrar por categoría si está especificada (comparando normalizado)
+      if (categoria && normalizeText(fileData.subcategoria) !== categoria) {
         return false;
       }
       
