@@ -178,7 +178,10 @@ export default function Institucional() {
                 </div>
               </div>
             </section>
-            <ClientCarousel imagenes={imagenesInstitucionales} />
+            <ClientCarousel
+              imagenes={imagenesInstitucionales}
+              horizontal={true}
+            />
           </div>
 
           {/* CONTACTO STICKY (ESCRITORIO) */}
