@@ -17,14 +17,20 @@ function CarouselSlide({
   slide,
   isFirst,
   onClick,
+  horizontal = false,
 }: {
   slide: ImagenCarruselGenerica;
   isFirst: boolean;
   onClick?: () => void;
+  horizontal?: boolean;
 }) {
   const src = slide.imagen || slide.src || "";
   const alt = slide.alt || slide.titulo || "";
   const description = slide.descripcion || "";
+
+  const orientacion = horizontal
+    ? "object-cover object-[center_75%] w-full h-full z-10"
+    : "object-contain w-full h-full z-10";
 
   return (
     <div
@@ -34,7 +40,7 @@ function CarouselSlide({
       <Image
         src={src}
         alt={alt}
-        className="object-cover object-[center_75%] w-full h-full z-10"
+        className={orientacion}
         fill
         priority={isFirst}
         loading={isFirst ? undefined : "lazy"}
@@ -112,8 +118,10 @@ function ModalCarrusel({
 
 export default function CarouselDeImagenes({
   imagenes,
+  horizontal,
 }: {
   imagenes: ImagenCarruselGenerica[];
+  horizontal?: boolean;
 }) {
   if (!imagenes || imagenes.length === 0) return null;
 
@@ -166,6 +174,7 @@ export default function CarouselDeImagenes({
               slide={slide}
               isFirst={index === 0}
               onClick={manejarClickSlide(index)}
+              horizontal={horizontal}
             />
           </SwiperSlide>
         ))}
