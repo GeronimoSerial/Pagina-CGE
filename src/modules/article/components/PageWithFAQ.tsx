@@ -8,55 +8,11 @@ import FAQSection from "@modules/layout/FAQSection";
 import { FAQ } from "@modules/faqs/faqs";
 import { HeadlessPagination } from "@modules/documentation/components/HeadlessPagination";
 import { useRouter } from "next/navigation";
+import Fuse from "fuse.js";
+import { PageWithFAQProps } from "../data/types";
+import { normalizeText } from "@/src/lib/utils";
 
-interface InfoBarItem {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}
-
-interface PageWithFAQProps {
-  // Props para la sección Hero
-  heroTitle: string;
-  heroDescription: string;
-
-  // Props para la barra de información
-  infoBarItems: InfoBarItem[];
-
-  // Props para el grid de artículos
-  articles: any[];
-  categories?: string[];
-  searchPlaceholder: string;
-  buttonText: string;
-  emptyStateTitle: string;
-  emptyStateDescription: string;
-  emptyStateButtonText: string;
-  basePath: string;
-
-  // Props para la sección FAQ
-  faqTitle: string;
-  faqDescription: string;
-  faqs: FAQ[];
-
-  // Props para la sección de contacto
-  contactTitle: string;
-  contactSchedule: string;
-  contactButtonText: string;
-  contactUrl?: string;
-
-  //prop para el sorted
-  isNoticia?: boolean;
-
-  // Props para la paginación del servidor
-  pagination?: {
-    currentPage: number;
-    totalPages: number;
-    totalItems: number;
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-  };
-}
-
+// Componente principal de página con FAQ, buscador y grid de artículos
 export default function PageWithFAQWrapper(props: PageWithFAQProps) {
   return (
     <Suspense
@@ -71,6 +27,7 @@ export default function PageWithFAQWrapper(props: PageWithFAQProps) {
   );
 }
 
+// Contenido principal de la página con lógica de búsqueda y filtrado
 function PageWithFAQContent({
   heroTitle,
   heroDescription,
@@ -94,27 +51,73 @@ function PageWithFAQContent({
   pagination,
 }: PageWithFAQProps) {
   const router = useRouter();
+  // Estado para el término de búsqueda
   const [searchTerm, setSearchTerm] = useState("");
+  // Estado para la categoría seleccionada
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
+  // Estado para mostrar loading al cambiar de página
   const [loadingPage, setLoadingPage] = useState(false);
+  // Estado con todos los artículos indexados (metadatos)
+  const [allArticles, setAllArticles] = useState<any[]>([]);
 
-  // Optimización: Memoizar la transformación de artículos
+  // Cuando cambia la categoría, actualizar la URL (filtrado en servidor)
+  const handleCategoryChange = (cat: string) => {
+    setCategoriaSeleccionada(cat);
+    setLoadingPage(true);
+    const params = new URLSearchParams(window.location.search);
+    if (cat && cat !== "") {
+      params.set("categoria", normalizeText(cat));
+    } else {
+      params.delete("categoria");
+    }
+    params.set("page", "1"); // Siempre volver a la primera página al filtrar
+    router.push(`${basePath}?${params.toString()}`, { scroll: false });
+  };
+
+  // Cargar el index.json de metadatos al montar el componente o cambiar basePath
+  useEffect(() => {
+    const tipo = basePath.includes("noticia") ? "noticias" : "tramites";
+    fetch(`/content/${tipo}/index.json`)
+      .then((res) => res.json())
+      .then((data) => setAllArticles(data))
+      .catch(() => setAllArticles([]));
+  }, [basePath]);
+
+  // Instancia de Fuse.js para búsqueda difusa, solo se recrea si cambian los artículos
+  const fuse = useMemo(() => {
+    if (allArticles.length === 0) return null;
+    return new Fuse(allArticles, {
+      keys: ["titulo", "resumen", "subcategoria"],
+      threshold: 0.3,
+    });
+  }, [allArticles]);
+
+  // Si hay búsqueda activa, filtrar en cliente; si no, usar artículos del servidor
+  const filteredArticles = useMemo(() => {
+    if (searchTerm.trim() !== "" && fuse) {
+      return fuse.search(searchTerm).map((r) => r.item);
+    }
+    return undefined;
+  }, [searchTerm, fuse]);
+
+  // Transformar los artículos para el grid
   const transformedArticles = useMemo(() => {
-    // Si está cargando una nueva página, devolver undefined para mostrar el skeleton
     if (loadingPage) return undefined;
-
-    return articles.map((item) => ({
+    const source =
+      filteredArticles !== undefined ? filteredArticles.slice(0, 4) : articles;
+    return source.map((item) => ({
       id: item.slug,
       slug: item.slug,
       titulo: item.titulo,
-      description: item.description,
+      description: item.description || item.resumen,
       date: item.fecha,
       imagen: item.imagen,
-      categoria: item.categoria,
+      categoria: item.categoria || item.subcategoria,
       esImportante: item.esImportante,
     }));
-  }, [articles, loadingPage]);
+  }, [articles, loadingPage, filteredArticles]);
 
+  // Cambiar de página (solo para paginación del servidor)
   const handlePageChange = (page: number) => {
     if (pagination) {
       setLoadingPage(true);
@@ -124,7 +127,7 @@ function PageWithFAQContent({
     }
   };
 
-  // Efecto para quitar el loading cuando los artículos cambian
+  // Quitar loading cuando los artículos cambian
   useEffect(() => {
     setLoadingPage(false);
   }, [articles]);
@@ -136,16 +139,21 @@ function PageWithFAQContent({
       new Set(articles.map((item: any) => item.categoria).filter(Boolean))
     );
 
-  // La paginación, filtrado y ordenamiento ahora se hace en el servidor
-  const totalPaginas = pagination
-    ? pagination.totalPages
-    : Math.ceil(articles.length / 4);
+  // Calcular datos de paginación
+  const totalPaginas =
+    searchTerm.trim() !== ""
+      ? Math.ceil((filteredArticles?.length || 0) / 4)
+      : pagination
+      ? pagination.totalPages
+      : Math.ceil(articles.length / 4);
   const currentPage = pagination ? pagination.currentPage : 1;
 
+  // Render principal
   return (
     <main className="bg-gray-50 min-h-screen">
+      {/* Hero principal */}
       <HeroSection title={heroTitle} description={heroDescription} />
-      {/* Sección de información importante */}
+      {/* Barra de información */}
       <div className="bg-white border-b border-gray-100 shadow-sm">
         <div className="container mx-auto px-4 md:px-6 py-2">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
@@ -161,7 +169,7 @@ function PageWithFAQContent({
           </div>
         </div>
       </div>
-      {/* Barra de búsqueda y filtros */}
+      {/* Buscador y selector de categorías */}
       {categorias.length > 1 && (
         <section className="w-full py-8">
           <div className="container mx-auto px-4">
@@ -172,47 +180,16 @@ function PageWithFAQContent({
                     value={searchTerm}
                     onChange={(e) => {
                       setSearchTerm(e.target.value);
-                      if (pagination) {
-                        setLoadingPage(true);
-                        const params = new URLSearchParams(
-                          window.location.search
-                        );
-                        params.delete("page");
-                        if (e.target.value) {
-                          params.set("search", e.target.value);
-                        } else {
-                          params.delete("search");
-                        }
-                        router.push(`${basePath}?${params.toString()}`, {
-                          scroll: false,
-                        });
-                      }
                     }}
                     placeholder={searchPlaceholder}
                     categories={categorias}
                     selectedCategory={categoriaSeleccionada}
-                    onCategoryChange={(cat) => {
-                      setCategoriaSeleccionada(cat);
-                      if (pagination) {
-                        setLoadingPage(true);
-                        const params = new URLSearchParams(
-                          window.location.search
-                        );
-                        params.delete("page");
-                        if (cat) {
-                          params.set("categoria", cat);
-                        } else {
-                          params.delete("categoria");
-                        }
-                        router.push(`${basePath}?${params.toString()}`, {
-                          scroll: false,
-                        });
-                      }
-                    }}
+                    onCategoryChange={handleCategoryChange}
                     allLabel="Todas las categorías"
                   />
                 </div>
               </div>
+              {/* Enlace externo solo para trámites */}
               {!isNoticia && (
                 <a
                   href="https://expgob.mec.gob.ar/lup_mod/ubicar_expedWeb.asp"
@@ -229,7 +206,7 @@ function PageWithFAQContent({
         </section>
       )}
 
-      {/* Contenedor del grid y paginación */}
+      {/* Grid de artículos y paginación */}
       <div className="container mx-auto px-4 md:px-6" id="grid-container">
         <div className="min-h-screen/2 py-8">
           <ArticlesGrid

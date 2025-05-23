@@ -15,6 +15,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import SkeletonCard from "./SkeletonCard";
+import { formatearFecha } from "@lib/utils";
 
 interface ArticlesGridProps {
   articles:
@@ -115,7 +116,7 @@ const ArticlesGridContent = ({
                       )}
                       {item.date && (
                         <span className="text-xs text-gray-500 font-medium">
-                          {item.date}
+                          {formatearFecha(item.date)}
                         </span>
                       )}
                     </div>

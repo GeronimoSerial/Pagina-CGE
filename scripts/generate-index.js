@@ -2,16 +2,16 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
-const CONTENT_DIR = path.join(process.cwd(), "content");
+const CONTENT_DIR = path.join(process.cwd(), "public", "content");
 const tipos = ["noticias", "tramites"];
 
-function getMarkdownFiles(dir: string) {
+function getMarkdownFiles(dir) {
   return fs
     .readdirSync(dir)
     .filter((file) => file.endsWith(".md"));
 }
 
-function extractMetadata(filePath: string) {
+function extractMetadata(filePath) {
   const raw = fs.readFileSync(filePath, "utf8");
   const { data } = matter(raw);
   // El slug será el nombre del archivo sin extensión
@@ -19,7 +19,7 @@ function extractMetadata(filePath: string) {
   return { ...data, slug };
 }
 
-function generateIndexForType(tipo: string) {
+function generateIndexForType(tipo) {
   const dir = path.join(CONTENT_DIR, tipo);
   if (!fs.existsSync(dir)) return;
   const files = getMarkdownFiles(dir);
@@ -31,4 +31,4 @@ function generateIndexForType(tipo: string) {
 
 tipos.forEach(generateIndexForType);
 
-console.log("Índices generados correctamente.");
+console.log("Índices generados correctamente."); 
