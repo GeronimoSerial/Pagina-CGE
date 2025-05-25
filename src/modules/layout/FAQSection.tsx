@@ -33,7 +33,6 @@ const getFaqsbyPath = (path: string): FAQ[] => {
 
 export default function FAQSection({ basePath }: FAQSectionProps) {
   const faqs = getFaqsbyPath(basePath);
-  console.log("FAQs for path:", basePath, faqs);
 
   return (
     <section className="bg-gray-50 border-t border-gray-100 z-10 relative py-16">

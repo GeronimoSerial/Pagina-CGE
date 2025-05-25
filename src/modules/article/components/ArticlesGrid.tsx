@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense } from "react";
+import React, { Suspense, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -12,10 +12,11 @@ import { Button } from "@components/ui/button";
 import { Badge } from "@components/ui/badge";
 import { FileText, ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import SkeletonCard from "./SkeletonCard";
 import { formatearFecha } from "@lib/utils";
+import { HeadlessPagination } from "@modules/documentation/components/HeadlessPagination";
 
 interface ArticlesGridProps {
   articles:
@@ -36,16 +37,21 @@ interface ArticlesGridProps {
   emptyStateButtonText?: string;
   showImportantBadge?: boolean;
   basePath?: string;
+  pagination?: {
+    currentPage: number;
+    totalPages: number;
+  };
 }
 
 const ArticlesGridContent = ({
   articles,
-
   showImportantBadge = false,
   basePath,
+  pagination,
 }: ArticlesGridProps) => {
   const pathname = usePathname();
-  // const searchParams = useSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const isNoticia = basePath?.includes("noticias") || false;
   const emptyStateButtonText = isNoticia
@@ -59,6 +65,26 @@ const ArticlesGridContent = ({
   const buttonText = isNoticia
     ? "Ver noticia completa"
     : "Ver trámite completo";
+
+  // Memoizar cálculos de paginación
+  const { totalPaginas, currentPage } = useMemo(
+    () => ({
+      totalPaginas: pagination
+        ? pagination.totalPages
+        : Math.ceil((articles?.length || 0) / 4),
+      currentPage: pagination ? pagination.currentPage : 1,
+    }),
+    [pagination, articles?.length]
+  );
+
+  // Manejar cambio de página
+  const handlePageChange = (page: number) => {
+    if (pagination) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", page.toString());
+      router.push(`${basePath}?${params.toString()}`, { scroll: false });
+    }
+  };
 
   const getItemLink = (id: string) => {
     if (basePath) {
@@ -77,89 +103,100 @@ const ArticlesGridContent = ({
             ))}
           </div>
         ) : articles.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {articles.map((item) => (
-              <Card
-                key={item.id}
-                className="h-[28rem] flex flex-col overflow-hidden border-0 shadow-[0_2px_8px_rgba(0,0,0,0.08)] md:hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] md:transition-all md:duration-300"
-              >
-                <Link
-                  href={getItemLink(item.id)}
-                  title="Ver artículo completo"
-                  className="flex flex-col h-full"
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {articles.map((item) => (
+                <Card
+                  key={item.id}
+                  className="h-[28rem] flex flex-col overflow-hidden border-0 shadow-[0_2px_8px_rgba(0,0,0,0.08)] md:hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] md:transition-all md:duration-300"
                 >
-                  <div className="h-48 overflow-hidden relative">
-                    {item.imagen ? (
-                      <Image
-                        src={
-                          item.imagen.startsWith("http")
-                            ? item.imagen
-                            : item.imagen.startsWith("/")
-                            ? item.imagen
-                            : `/images/${item.imagen}`
-                        }
-                        alt={item.titulo}
-                        width={500}
-                        height={500}
-                        className="object-cover w-full h-full md:transition-transform md:duration-300 md:hover:scale-105"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                        <FileText className="h-12 w-12 text-gray-400" />
-                      </div>
-                    )}
-                    {showImportantBadge && item.esImportante && (
-                      <Badge className="underline absolute top-3 right-3 bg-gray-600 text-white border-0">
-                        Importante
-                      </Badge>
-                    )}
-                  </div>
-                  <CardHeader className="pb-2 flex-none">
-                    <div className="flex justify-between items-center mb-2">
-                      {item.categoria && (
-                        <Badge
-                          variant="outline"
-                          className="bg-[#3D8B37]/10 text-[#3D8B37] border-0 font-medium"
-                        >
-                          {item.categoria}
+                  <Link
+                    href={getItemLink(item.id)}
+                    title="Ver artículo completo"
+                    className="flex flex-col h-full"
+                  >
+                    <div className="h-48 overflow-hidden relative">
+                      {item.imagen ? (
+                        <Image
+                          src={
+                            item.imagen.startsWith("http")
+                              ? item.imagen
+                              : item.imagen.startsWith("/")
+                              ? item.imagen
+                              : `/images/${item.imagen}`
+                          }
+                          alt={item.titulo}
+                          width={500}
+                          height={500}
+                          className="object-cover w-full h-full md:transition-transform md:duration-300 md:hover:scale-105"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                          <FileText className="h-12 w-12 text-gray-400" />
+                        </div>
+                      )}
+                      {showImportantBadge && item.esImportante && (
+                        <Badge className="underline absolute top-3 right-3 bg-gray-600 text-white border-0">
+                          Importante
                         </Badge>
                       )}
-                      {item.date && (
-                        <span className="text-xs text-gray-500 font-medium">
-                          {formatearFecha(item.date)}
-                        </span>
-                      )}
                     </div>
-                    <CardTitle
-                      title={item.titulo}
-                      className="text-lg font-bold line-clamp-2 text-gray-800"
-                    >
-                      {item.titulo}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="flex-grow">
-                    <CardDescription
-                      className="text-gray-600 line-clamp-3"
-                      title={item.description}
-                    >
-                      {item.description}
-                    </CardDescription>
-                  </CardContent>
-                  <CardFooter className="pt-0 pb-4 flex-none">
-                    <Button
-                      variant="link"
-                      className="p-0 h-auto text-[#3D8B37] font-medium hover:text-[#2D6A27] flex items-center gap-1 hover:underline"
-                      asChild
-                    >
-                      <p className="flex items-center gap-3">
-                        {buttonText} <ArrowRightIcon size={16} />
-                      </p>
-                    </Button>
-                  </CardFooter>
-                </Link>
-              </Card>
-            ))}
-          </div>
+                    <CardHeader className="pb-2 flex-none">
+                      <div className="flex justify-between items-center mb-2">
+                        {item.categoria && (
+                          <Badge
+                            variant="outline"
+                            className="bg-[#3D8B37]/10 text-[#3D8B37] border-0 font-medium"
+                          >
+                            {item.categoria}
+                          </Badge>
+                        )}
+                        {item.date && (
+                          <span className="text-xs text-gray-500 font-medium">
+                            {formatearFecha(item.date)}
+                          </span>
+                        )}
+                      </div>
+                      <CardTitle
+                        title={item.titulo}
+                        className="text-lg font-bold line-clamp-2 text-gray-800"
+                      >
+                        {item.titulo}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                      <CardDescription
+                        className="text-gray-600 line-clamp-3"
+                        title={item.description}
+                      >
+                        {item.description}
+                      </CardDescription>
+                    </CardContent>
+                    <CardFooter className="pt-0 pb-4 flex-none">
+                      <Button
+                        variant="link"
+                        className="p-0 h-auto text-[#3D8B37] font-medium hover:text-[#2D6A27] flex items-center gap-1 hover:underline"
+                        asChild
+                      >
+                        <p className="flex items-center gap-3">
+                          {buttonText} <ArrowRightIcon size={16} />
+                        </p>
+                      </Button>
+                    </CardFooter>
+                  </Link>
+                </Card>
+              ))}
+            </div>
+            {totalPaginas > 1 && (
+              <div className="py-6 border-t border-gray-100 mt-6">
+                <HeadlessPagination
+                  currentPage={currentPage}
+                  totalPages={totalPaginas}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            )}
+          </>
         ) : (
           <div className="col-span-full rounded-xl shadow-sm p-10 text-center">
             <FileText className="h-12 w-12 mx-auto text-black mb-4" />

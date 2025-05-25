@@ -1,11 +1,27 @@
-//PAGE PRINCIPAL
-
 import { formatearFecha } from "@lib/utils";
 import { getAllContentMetadata } from "@modules/article/data/content";
-import { Info } from "lucide-react";
-import PageWithFAQ from "@modules/article/components/PageWithFAQ";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import ArticlesGrid from "@modules/article/components/ArticlesGrid";
+import HeroSection from "@modules/layout/Hero";
+import SearchSection from "@modules/article/components/SearchSection";
+import Contact from "@modules/layout/Contact";
+import InfoBar from "@modules/article/components/InfoBar";
+import FAQSection from "@modules/layout/FAQSection";
+
+// Constantes para textos del hero
+const HERO = {
+  noticias: {
+    title: "Noticias",
+    description:
+      "Mantente informado con las últimas noticias y novedades del Consejo General de Educación.",
+  },
+  tramites: {
+    title: "Trámites",
+    description:
+      "Portal centralizado de trámites del Consejo General de Educación. Acceda a toda la información y documentación necesaria.",
+  },
+};
 
 // Generación dinámica de metadata
 export async function generateMetadata({
@@ -97,16 +113,31 @@ export default async function ContenidoGrid({
     };
   });
 
-  const isNoticias = articulo === "noticias";
-
-
+  // Determinar tipo de contenido y textos del hero
+  const heroConfig = articulo === "noticias" ? HERO.noticias : HERO.tramites;
 
   return (
-    <PageWithFAQ
-      articles={data}
-      basePath={`/${articulo}`}
-      isNoticia={isNoticias}
-      pagination={pagination}
-    />
+    <main className="bg-gray-50 min-h-screen">
+      <HeroSection
+        title={heroConfig.title}
+        description={heroConfig.description}
+      />
+
+      <InfoBar basePath={`/${articulo}`} />
+      <SearchSection basePath={`/${articulo}`} />
+
+      <div className="container mx-auto px-4 md:px-6" id="grid-container">
+        <div className="min-h-screen/2 py-8">
+          <ArticlesGrid
+            articles={data}
+            basePath={`/${articulo}`}
+            pagination={pagination}
+          />
+        </div>
+      </div>
+
+      <FAQSection basePath={`/${articulo}`} />
+      <Contact basePath={`/${articulo}`} />
+    </main>
   );
 }
