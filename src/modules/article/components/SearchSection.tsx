@@ -26,9 +26,7 @@ interface Article {
   esImportante?: boolean;
 }
 
-export default function SearchSection({
-  basePath,
-}: SearchSectionProps) {
+export default function SearchSection({ basePath }: SearchSectionProps) {
   const isNoticia = basePath.includes("noticias");
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
@@ -38,12 +36,11 @@ export default function SearchSection({
 
   const categories = isNoticia
     ? ["General", "Novedades", "Eventos", "Comunicados"]
-        : ["Licencias", "Títulos", "Inscripción", "Otros"];
-    
-    const searchPlaceholder = isNoticia
-        ? "Buscar noticias..."
-        : "Buscar trámites...";
+    : ["Licencias", "Títulos", "Inscripción", "Otros"];
 
+  const searchPlaceholder = isNoticia
+    ? "Buscar noticias..."
+    : "Buscar trámites...";
 
   // Cuando cambia la categoría, actualizar la URL (filtrado en servidor)
   const handleCategoryChange = (cat: string) => {
@@ -105,10 +102,10 @@ export default function SearchSection({
   }, [articles, loadingPage, filteredArticles]);
 
   return (
-    <main className="bg-gray-50 border-t border-gray-100 z-10 relative py-16">
+    <main className="bg-gray-50 border-t border-gray-100 z-10 relative py-8">
       {/* Buscador y selector de categorías */}
       {categories.length > 1 && (
-        <section className="w-full py-8">
+        <section className="w-full ">
           <div className="container mx-auto px-4">
             <div className="flex flex-col items-center gap-4">
               <div className="w-full max-w-3xl">
