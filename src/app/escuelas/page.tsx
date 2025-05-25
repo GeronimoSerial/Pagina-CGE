@@ -24,11 +24,7 @@ export default async function Escuelas() {
       <div className="container mx-auto px-4 py-8">
         <EscuelasClient escuelas={escuelas} />
       </div>
-      <FAQSection
-        faqTitle="Información importante"
-        faqDescription=""
-        faqs={faqsEscuelas}
-      />
+      <FAQSection basePath="/escuelas" />
     </main>
   );
 }

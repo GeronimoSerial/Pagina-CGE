@@ -40,15 +40,25 @@ interface ArticlesGridProps {
 
 const ArticlesGridContent = ({
   articles,
-  buttonText = "Leer más",
-  emptyStateTitle = "No se encontraron artículos",
-  emptyStateDescription = "No hay resultados para tu búsqueda. Intenta con otros términos o selecciona otra categoría.",
-  emptyStateButtonText = "Mostrar todos los artículos",
+
   showImportantBadge = false,
   basePath,
 }: ArticlesGridProps) => {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
+
+  const isNoticia = basePath?.includes("noticias") || false;
+  const emptyStateButtonText = isNoticia
+    ? "Mostrar todas las noticias"
+    : "Mostrar todos los trámites";
+  const emptyStateTitle = isNoticia
+    ? "No se encontraron noticias"
+    : "No se encontraron trámites";
+  const emptyStateDescription =
+    "No se encontraron resultados para tu búsqueda. Intenta con otra palabra clave o revisa la categoría seleccionada.";
+  const buttonText = isNoticia
+    ? "Ver noticia completa"
+    : "Ver trámite completo";
 
   const getItemLink = (id: string) => {
     if (basePath) {

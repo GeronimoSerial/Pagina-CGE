@@ -222,11 +222,7 @@ export default function Contacto() {
         </div>
       </section>
 
-      <FAQSection
-        faqTitle="Preguntas Frecuentes"
-        faqDescription="Encuentra respuestas comunes"
-        faqs={faqsContact}
-      />
+      <FAQSection basePath="/contacto" />
       <SocialMediaSection
         title="Seguinos en redes sociales"
         description="Contactános a través de nuestras redes"
