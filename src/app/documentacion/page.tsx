@@ -52,11 +52,7 @@ export default function Documentacion() {
         </div>
       </section>
       {/* Sección de preguntas frecuentes */}
-      <FAQSection
-        faqTitle="Preguntas Frecuentes"
-        faqDescription="Encuentra respuestas a las preguntas más comunes sobre la documentación."
-        faqs={faqsDocs}
-      />
+      <FAQSection basePath="/documentacion" />
     </main>
   );
 }

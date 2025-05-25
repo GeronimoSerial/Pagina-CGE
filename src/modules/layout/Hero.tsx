@@ -7,12 +7,17 @@ import {
 } from "lucide-react";
 
 interface HeroSectionProps {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   ctaText?: string;
 }
 
-export default function HeroSection({ title, description }: HeroSectionProps) {
+export default function HeroSection({
+  title,
+  description,
+  ctaText,
+}: HeroSectionProps) {
+  
   return (
     <div className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] text-white  shadow-xl hover:shadow-2xl transition-all duration-500 h-[250px] flex items-center justify-center overflow-hidden relative">
       {/* Patrón educativo más visible */}
