@@ -1,56 +1,36 @@
-# Portal Web del Consejo General de Educación
+# Portal Web del Consejo General de Educación (CGE)
 
-## 📋 Descripción y Propósito
+## 📋 Descripción General
 
-Portal web oficial del Consejo General de Educación que proporciona información sobre trámites, documentación y servicios para docentes. La plataforma está diseñada para facilitar el acceso a información crucial sobre procedimientos administrativos, requisitos y gestiones relacionadas con la carrera docente.
+Este portal es la plataforma oficial del Consejo General de Educación, orientada a la comunidad educativa de Corrientes. Su objetivo es centralizar información institucional, trámites, documentación y recursos útiles para docentes, supervisores, directivos y la ciudadanía en general.
 
-### 🎯 Propósito
+El sitio está diseñado para ser accesible, moderno y adaptable a distintos dispositivos, facilitando la consulta y gestión de información relevante.
 
-- **Centralización de Información**: Unificar en un solo lugar toda la información relevante para la comunidad educativa.
-- **Eficiencia Administrativa**: Agilizar los procesos y trámites administrativos mediante herramientas digitales.
-- **Transparencia**: Garantizar el acceso público a la información institucional y procedimientos.
-- **Comunicación Efectiva**: Establecer un canal directo entre el Consejo y la comunidad educativa.
-- **Desarrollo Profesional**: Facilitar recursos y herramientas para el crecimiento profesional docente.
-- **Inclusión Digital**: Promover la adopción de tecnologías digitales en el ámbito educativo.
+## 🎯 Objetivos del Portal
 
-## 🚀 Características Principales
+- **Centralizar información** relevante y actualizada sobre trámites, normativas y servicios.
+- **Facilitar el acceso** a documentación y recursos institucionales.
+- **Promover la transparencia** en la gestión educativa.
+- **Mejorar la comunicación** entre el CGE y la comunidad educativa.
+- **Impulsar la digitalización** de procesos administrativos.
 
-- Sistema de gestión de trámites docentes
-- Información actualizada sobre requisitos y procedimientos
-- Sección de noticias y actualizaciones
-- Interfaz responsive y accesible
-- Sistema de búsqueda integrado
-- Sección de documentación y recursos
+## 🚀 Funcionalidades Principales
 
-## 🛠️ Tecnologías Utilizadas
+- Consulta de trámites y requisitos para docentes.
+- Acceso a documentación oficial y normativa vigente.
+- Noticias y novedades institucionales.
+- Búsqueda avanzada de contenidos.
+- Sección de contacto y canales de comunicación.
+- Interfaz responsive y accesible.
 
-### 💻 Frontend
+## 🛠️ Tecnologías y Herramientas
 
-- **Next.js 13+**: Framework de React con renderizado del lado del servidor (SSR)
-- **React 18**: Biblioteca para construcción de interfaces de usuario
-- **TypeScript 5**: Superset de JavaScript con tipado estático
-- **Tailwind CSS 3**: Framework de CSS utilitario para diseño responsive
-- **Shadcn/ui**: Componentes de UI reutilizables y accesibles
-
-### 🔧 Herramientas de Desarrollo
-
-- **ESLint**: Herramienta de linting para JavaScript/TypeScript
-- **Prettier**: Formateador de código
-- **Husky**: Gestión de git hooks
-- **Jest**: Framework de testing
-- **React Testing Library**: Utilidades para testing de componentes
-
-### 📦 Gestión de Contenido
-
-- **Sistema de archivos Markdown**: Para contenido estático
-- **Gray Matter**: Parseador de frontmatter para Markdown
-- **Remark**: Procesador de Markdown a HTML
-
-### 🔍 SEO y Rendimiento
-
-- **Next SEO**: Optimización para motores de búsqueda
-- **Core Web Vitals**: Optimización de métricas de rendimiento
-- **Lighthouse**: Herramienta de auditoría de calidad web
+- **Next.js 13+** (React, SSR)
+- **TypeScript**
+- **Tailwind CSS**
+- **shadcn/ui**
+- **Markdown para contenido estático**
+- **Gray Matter** y **Remark** para procesamiento de Markdown
 
 ## 📁 Estructura del Proyecto
 
@@ -60,7 +40,7 @@ Portal web oficial del Consejo General de Educación que proporciona informació
 │   ├── carrousel/          # Imágenes del carrusel
 │   ├── content/            # Contenido en Markdown
 │   │   ├── noticias/       # Artículos de noticias
-│   │   └── tramites/       # Información de trámites
+│   │   └── tramites/       # Artículos de trámites
 │   ├── images/             # Imágenes generales
 │   └── organigrama/        # Fotos del personal
 ├── src/
@@ -81,58 +61,57 @@ Portal web oficial del Consejo General de Educación que proporciona informació
 │   └── styles/             # Estilos globales
 ```
 
-## 🔧 Instalación
+## 🔧 Instalación y Puesta en Marcha
 
 1. Clonar el repositorio:
 
 ```bash
-git clone [URL_DEL_REPOSITORIO]
+git clone [https://github.com/GeronimoSerial/Pagina-CGE]
 ```
 
-2. Instalar dependencias:
+2. Instala las dependencias:
 
 ```bash
 npm install
 ```
 
-3. Iniciar el servidor de desarrollo:
+3. Inicia el servidor de desarrollo:
 
 ```bash
 npm run dev
 ```
 
-## 📦 Estructura de Módulos
+El sitio estará disponible en `http://localhost:3000`.
 
-### 🎯 Módulos Principales
+## 📦 Módulos y Secciones
 
-- **Article**: Gestión y visualización de artículos y trámites
-- **Documentation**: Sistema de documentación y recursos
-- **Escuelas**: Información sobre instituciones educativas
-- **Home**: Componentes de la página principal
-- **Institucional**: Información institucional y organizativa
-- **Layout**: Componentes estructurales de la interfaz
+- **[articulo]/**: Visualización de artículos y trámites
+- **accesibilidad/**: Información sobre accesibilidad web
+- **contacto/**: Formulario de contacto
+- **documentacion/**: Documentos y recursos institucionales
+- **escuelas/**: Información de escuelas
+- **institucional/**: Datos institucionales y organigrama
+- **supervisores/**: Área de supervisores
+- **terminos/**: Términos y condiciones
 
-### 🔍 Funcionalidades Destacadas
+## 🔍 Funcionalidades Destacadas
 
-- Sistema de búsqueda integrado
+- Búsqueda integrada
 - Componentes UI personalizados
-- Gestión de formularios de contacto
-- Sistema de compartir contenido
+- Formularios de contacto
 - Visualización de documentos
 - Interfaz adaptativa para dispositivos móviles
 
-## 🤝 Contribución
+## 🤝 ¿Cómo Contribuir?
 
-Para contribuir al proyecto:
-
-1. Crear un fork del repositorio
-2. Crear una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit de los cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abrir un Pull Request
-
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/GeronimoSerial/Pagina-CGE)
+1. Haz un fork del repositorio.
+2. Crea una rama para tu funcionalidad (`git checkout -b feature/NuevaFuncionalidad`).
+3. Realiza tus cambios y haz commit (`git commit -m 'Agrega nueva funcionalidad'`).
+4. Haz push a tu rama (`git push origin feature/NuevaFuncionalidad`).
+5. Abre un Pull Request.
 
 ## 📞 Contacto
 
-Para más información o consultas, contactar a través de la sección de contacto en el portal web.
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/GeronimoSerial/Pagina-CGE)
+
+Para consultas o sugerencias, utiliza la sección de contacto del portal web.
