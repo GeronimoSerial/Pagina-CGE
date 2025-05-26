@@ -120,8 +120,8 @@ export default function ArticlesContainer({
     } else {
       params.delete("categoria");
     }
-    // Resetear la página a 1 y navegar a la nueva URL con el filtro
-    params.set("page", "1");
+    // Eliminar el parámetro 'page' para que siempre vuelva a la primera página
+    params.delete("page");
     router.push(`${basePath}?${params.toString()}`, { scroll: false });
     // isCategoryFiltering se desactiva cuando initialArticles (la nueva página) llegan
   };
