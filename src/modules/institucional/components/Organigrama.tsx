@@ -16,29 +16,22 @@ export default function Organigrama({}: OrganigramaProps) {
   const [selectedMember, setSelectedMember] = useState<MemberInfo | null>(null);
   const isMobile = useIsMobile();
 
-  // Función para mostrar detalles del miembro
   const handleViewDetails = (member: MemberInfo) => {
     setSelectedMember(member);
   };
 
-  // Función para cerrar detalles
   const handleCloseDetails = () => {
     setSelectedMember(null);
   };
 
   return (
-    <section className="h-[calc(100vh-4rem)] overflow-hidden">
+    <section className="relative h-full w-full">
       {isMobile ? (
-        <div
-          className="h-full overflow-y-auto flex-grow pb-20"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          <div className="px-4">
-            <MobileView members={members} onViewDetails={handleViewDetails} />
-          </div>
+        <div className="h-full overflow-y-auto">
+          <MobileView members={members} onViewDetails={handleViewDetails} />
         </div>
       ) : (
-        <div className="flex-grow overflow-hidden">
+        <div className="h-full overflow-hidden">
           <OrganizationChart
             members={members}
             onViewDetails={handleViewDetails}
@@ -46,7 +39,6 @@ export default function Organigrama({}: OrganigramaProps) {
         </div>
       )}
 
-      {/* Componente para mostrar los detalles del miembro */}
       <MemberDetails member={selectedMember} onClose={handleCloseDetails} />
     </section>
   );
