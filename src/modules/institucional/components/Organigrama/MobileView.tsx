@@ -23,11 +23,11 @@ export const MobileView = ({ members, onViewDetails }: MobileViewProps) => {
   const vocalesGremiales = members.filter((m) => m.department === "Gremial");
 
   return (
-    <section className="max-w-2xl mx-auto space-y-6 p-4">
+    <section className="max-w-2xl mx-auto space-y-3 px-3 pb-4">
       {/* Presidente */}
       {presidente && (
         <Card className="border-primary/30 shadow-md bg-gradient-to-br from-green-50 to-white hover:shadow-lg transition-shadow duration-300">
-          <CardContent className="p-6">
+          <CardContent className="p-4">
             <div className="text-center mb-3">
               <span className="text-xs font-medium text-primary/70 uppercase tracking-wider bg-primary/5 px-3 py-1 rounded-full">
                 Presidente
@@ -46,7 +46,7 @@ export const MobileView = ({ members, onViewDetails }: MobileViewProps) => {
       <Accordion
         type="single"
         collapsible
-        className="w-full space-y-4 pb-6"
+        className="w-full space-y-2"
         defaultValue="Secretaría"
       >
         {/* Secretaria General */}
@@ -55,19 +55,16 @@ export const MobileView = ({ members, onViewDetails }: MobileViewProps) => {
             value="Secretaría"
             className="border-primary/10 bg-white rounded-lg shadow-sm"
           >
-            <AccordionTrigger className="py-4 px-4 text-primary font-medium hover:bg-green-50/50 rounded-t-lg">
+            <AccordionTrigger className="py-3 px-4 text-primary font-medium hover:bg-green-50/50 rounded-t-lg">
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4" />
                 <span>Secretaría General</span>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="px-4 pb-4">
+            <AccordionContent className="px-4 pb-3">
               <div className="space-y-3 pt-2">
-                <Card
-                  key={secretaria.id}
-                  className="border-primary/10 hover:shadow-md transition-shadow"
-                >
-                  <CardContent className="p-4">
+                <Card className="border-primary/10 hover:shadow-md transition-shadow">
+                  <CardContent className="p-3">
                     <MobileCardContent
                       member={secretaria}
                       onViewDetails={onViewDetails}
@@ -78,26 +75,27 @@ export const MobileView = ({ members, onViewDetails }: MobileViewProps) => {
             </AccordionContent>
           </AccordionItem>
         )}
+
         {/* Vocales Estatales */}
         {vocalesEstatales.length > 0 && (
           <AccordionItem
             value="estatales"
             className="border-primary/10 bg-white rounded-lg shadow-sm"
           >
-            <AccordionTrigger className="py-4 px-4 text-primary font-medium hover:bg-green-50/50 rounded-t-lg">
+            <AccordionTrigger className="py-3 px-4 text-primary font-medium hover:bg-green-50/50 rounded-t-lg">
               <div className="flex items-center gap-2">
                 <Building2 className="w-4 h-4" />
                 <span>Vocales Estatales</span>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="px-4 pb-4">
-              <div className="space-y-4 pt-2">
+            <AccordionContent className="px-4 pb-3">
+              <div className="space-y-3 pt-2">
                 {vocalesEstatales.map((vocal) => (
                   <Card
                     key={vocal.id}
                     className="border-primary/10 hover:shadow-md transition-shadow"
                   >
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <MobileCardContent
                         member={vocal}
                         onViewDetails={onViewDetails}
@@ -116,20 +114,20 @@ export const MobileView = ({ members, onViewDetails }: MobileViewProps) => {
             value="gremiales"
             className="border-primary/10 bg-white rounded-lg shadow-sm"
           >
-            <AccordionTrigger className="py-4 px-4 text-primary font-medium hover:bg-green-50/50 rounded-t-lg">
+            <AccordionTrigger className="py-3 px-4 text-primary font-medium hover:bg-green-50/50 rounded-t-lg">
               <div className="flex items-center gap-2">
                 <Briefcase className="w-4 h-4" />
                 <span>Vocales Gremiales</span>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="px-4 pb-4">
-              <div className="space-y-4 pt-2">
+            <AccordionContent className="px-4 pb-3">
+              <div className="space-y-3 pt-2">
                 {vocalesGremiales.map((vocal) => (
                   <Card
                     key={vocal.id}
                     className="border-primary/10 hover:shadow-md transition-shadow"
                   >
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <MobileCardContent
                         member={vocal}
                         onViewDetails={onViewDetails}
@@ -160,14 +158,14 @@ const MobileCardContent = ({
   return (
     <div
       className={cn(
-        "flex items-center gap-4",
-        isPresident && "flex-col text-center"
+        "flex items-start gap-3",
+        isPresident && "flex-col items-center text-center"
       )}
     >
       <div
         className={cn(
-          "relative rounded-full overflow-hidden bg-primary/10 flex-shrink-0 ring-2 ring-primary/20 ring-offset-2",
-          isPresident ? "w-24 h-24" : "w-16 h-16"
+          "relative rounded-full overflow-hidden bg-primary/10 flex-shrink-0 ring-2 ring-primary/20 ring-offset-1",
+          isPresident ? "w-20 h-20" : "w-14 h-14"
         )}
       >
         <img
@@ -177,11 +175,14 @@ const MobileCardContent = ({
         />
       </div>
       <div
-        className={cn("flex-grow", isPresident && "flex flex-col items-center")}
+        className={cn(
+          "flex-grow min-w-0",
+          isPresident && "flex flex-col items-center"
+        )}
       >
         <h4
           className={cn(
-            "font-medium text-gray-800",
+            "font-medium text-gray-800 truncate",
             isPresident ? "text-lg" : "text-base"
           )}
         >
@@ -189,8 +190,8 @@ const MobileCardContent = ({
         </h4>
         <p
           className={cn(
-            "text-sm text-primary/80 font-medium",
-            !isPresident && "text-xs"
+            "text-primary/80 font-medium truncate",
+            isPresident ? "text-sm" : "text-xs"
           )}
         >
           {member.position}
@@ -201,18 +202,19 @@ const MobileCardContent = ({
           )}
         </p>
         {member.email && (
-          <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
-            <Mail className="w-3 h-3" /> {member.email}
+          <p className="text-xs text-gray-500 mt-1 flex items-center gap-1 truncate">
+            <Mail className="w-3 h-3 flex-shrink-0" />
+            <span className="truncate">{member.email}</span>
           </p>
         )}
-        <div className="mt-3">
+        <div className="mt-2">
           <Button
             variant="outline"
             size="sm"
             onClick={() => onViewDetails(member)}
             className={cn(
-              "h-8 px-4 text-xs font-medium text-primary hover:bg-primary/10 transition-colors",
-              isPresident && "w-full"
+              "h-7 px-3 text-xs font-medium text-primary hover:bg-primary/10 transition-colors",
+              isPresident && "w-full mt-1"
             )}
           >
             Ver detalles
