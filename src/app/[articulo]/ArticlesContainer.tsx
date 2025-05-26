@@ -11,7 +11,7 @@ import { Article } from "@/src/interfaces";
 
 interface ArticlesContainerProps {
   basePath: string;
-  articles?: Article[];
+  articles?: Article[]; // Artículos paginados que vienen como prop (página actual)
   pagination?: {
     currentPage: number;
     totalPages: number;
@@ -23,8 +23,7 @@ interface ArticlesContainerProps {
 const useArticleSearch = (articles: Article[], isNoticia: boolean) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
-  const [loadingPage, setLoadingPage] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // No manejamos los estados de carga/error de la búsqueda aquí, se manejan en el componente principal
 
   // Elegimos categorías distintas según el tipo de contenido para mejorar la experiencia de filtrado.
   const categories = useMemo(
@@ -65,20 +64,16 @@ const useArticleSearch = (articles: Article[], isNoticia: boolean) => {
 
     return results.map((article) => ({
       ...article,
-      id: article.id || article.slug,
+      id: article.id || article.slug, // Usar slug como fallback para ID
       description: article.description || article.resumen || "Sin descripción",
     }));
-  }, [searchTerm, categoriaSeleccionada, fuse, articles]);
+  }, [searchTerm, categoriaSeleccionada, fuse, articles]); // Dependencias correctas
 
   return {
     searchTerm,
     setSearchTerm,
     categoriaSeleccionada,
     setCategoriaSeleccionada,
-    loadingPage,
-    setLoadingPage,
-    error,
-    setError,
     categories,
     filteredResults,
   };
@@ -86,107 +81,119 @@ const useArticleSearch = (articles: Article[], isNoticia: boolean) => {
 
 export default function ArticlesContainer({
   basePath,
-  articles: initialArticles,
+  articles: initialArticles, // Artículos de la página actual (paginados por Next.js)
   pagination,
 }: ArticlesContainerProps) {
-  // Determinamos el tipo de contenido para adaptar la UI y la lógica de filtrado.
   const isNoticia = basePath.includes("noticias");
   const router = useRouter();
-  const [articles, setArticles] = useState<Article[]>([]);
 
-  // Centralizamos la lógica de búsqueda y filtrado en el hook para mantener el componente enfocado en el renderizado.
+  // Estado para almacenar TODOS los artículos cargados del JSON (usado para la búsqueda global)
+  const [allArticles, setAllArticles] = useState<Article[]>([]);
+  // Estados de carga y error
+  const [isLoadingFullList, setIsLoadingFullList] = useState(true); // Carga inicial de allArticles
+  const [errorLoadingFullList, setErrorLoadingFullList] = useState<string | null>(null);
+  const [isCategoryFiltering, setIsCategoryFiltering] = useState(false); // True mientras se navega a una nueva URL tras cambiar categoría
+
+  // Usamos el hook para la lógica de búsqueda, pasándole la lista COMPLETA de artículos.
   const {
     searchTerm,
     setSearchTerm,
     categoriaSeleccionada,
     setCategoriaSeleccionada,
-    loadingPage,
-    setLoadingPage,
-    error,
-    setError,
     categories,
     filteredResults,
-  } = useArticleSearch([...articles, ...(initialArticles || [])], isNoticia);
+  } = useArticleSearch(allArticles, isNoticia);
 
-  // El placeholder cambia según el tipo de contenido para guiar al usuario.
+  // Placeholder del buscador
   const searchPlaceholder = useMemo(
     () => (isNoticia ? "Buscar noticias..." : "Buscar trámites..."),
     [isNoticia]
   );
 
-  // Al cambiar la categoría, actualizamos la URL para permitir compartir enlaces filtrados y reiniciamos la paginación.
+  // Manejar cambio de categoría: actualiza URL y activa estado de carga de filtro
   const handleCategoryChange = (cat: string) => {
     setCategoriaSeleccionada(cat);
+    setIsCategoryFiltering(true); // Activar indicador de carga de categoría
     const params = new URLSearchParams(window.location.search);
     if (cat && cat !== "") {
       params.set("categoria", normalizeText(cat));
     } else {
       params.delete("categoria");
     }
+    // Resetear la página a 1 y navegar a la nueva URL con el filtro
     params.set("page", "1");
     router.push(`${basePath}?${params.toString()}`, { scroll: false });
+    // isCategoryFiltering se desactiva cuando initialArticles (la nueva página) llegan
   };
 
-  // Si no hay artículos iniciales, los cargamos desde un archivo estático para mejorar la velocidad de carga y evitar llamadas innecesarias al backend.
+  // Efecto para cargar la lista COMPLETA de artículos (index.json) para la búsqueda
   useEffect(() => {
-    if (!initialArticles || initialArticles.length === 0) {
-      const tipo = isNoticia ? "noticias" : "tramites";
-      setLoadingPage(true);
+    const tipo = isNoticia ? "noticias" : "tramites";
+    setIsLoadingFullList(true); // Iniciar carga
 
-      fetch(`/content/${tipo}/index.json`)
-        .then((res) => {
-          if (!res.ok) throw new Error("Error al cargar los artículos");
-          return res.json();
-        })
-        .then((data: Article[]) => {
-          setArticles(data);
-          setError(null);
-        })
-        .catch((err) => {
-          setError(err.message);
-          setArticles([]);
-        })
-        .finally(() => {
-          setLoadingPage(false);
-        });
-    }
-  }, [isNoticia, initialArticles]);
-  
-  // Efecto para manejar el estado de carga cuando cambian los initialArticles (e.g., por paginación)
+    fetch(`/content/${tipo}/index.json`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Error al cargar los artículos completos");
+        return res.json();
+      })
+      .then((data: Article[]) => {
+        setAllArticles(data); // Guardar todos los artículos
+        setErrorLoadingFullList(null);
+      })
+      .catch((err) => {
+        setErrorLoadingFullList(err.message);
+        setAllArticles([]); // Vaciar lista en caso de error
+      })
+      .finally(() => {
+        setIsLoadingFullList(false); // Finalizar carga
+      });
+  }, [isNoticia]); // Depende de isNoticia para recargar si cambia el tipo
+
+  // Efecto para desactivar el estado de carga de categoría cuando llegan los initialArticles de la nueva página
   useEffect(() => {
     if (initialArticles !== undefined) {
-      setLoadingPage(true);
-      // Pequeño retraso para permitir que el estado de carga se muestre antes de procesar los nuevos artículos
-      const timer = setTimeout(() => {
-        setLoadingPage(false);
-      }, 50);
-       return () => clearTimeout(timer);
+      setIsCategoryFiltering(false); // Desactivar carga de filtro de categoría
     }
-  }, [initialArticles]);
+  }, [initialArticles]); // Depende de initialArticles para saber cuándo la nueva página ha cargado
 
-  // Solo mostramos resultados filtrados si el usuario está buscando activamente.
+  // Determinar qué artículos mostrar: resultados filtrados (limitado a 4) si hay búsqueda,
+  // de lo contrario, artículos paginados (initialArticles).
   const showFilteredResults = searchTerm;
-  const displayedArticles = (showFilteredResults ? filteredResults : initialArticles)?.map((article) => ({
-    ...article,
-    id: article.id ?? article.slug,
-    description: article.description ?? article.resumen ?? "Sin descripción",
-  }));
+  const articlesToDisplay = useMemo(() => {
+    if (showFilteredResults) {
+      return filteredResults.slice(0, 4).map(article => ({
+        ...article,
+        id: article.id ?? article.slug,
+        description: article.description ?? article.resumen ?? "Sin descripción",
+      }));
+    } else {
+      return initialArticles?.map(article => ({
+        ...article,
+        id: article.id ?? article.slug,
+        description: article.description ?? article.resumen ?? "Sin descripción",
+      })) || []; // Asegurarse de devolver array vacío
+    }
+  }, [showFilteredResults, filteredResults, initialArticles]); // Dependencias correctas
 
-  // Mostramos un mensaje de error si la carga de artículos falla.
-  if (error) {
+  // Estado de carga general para el esqueleto: True si allArticles no han cargado o initialArticles no han llegado
+  const isLoading = isLoadingFullList || initialArticles === undefined;
+
+  // Mostrar mensaje de error si falla la carga de la lista completa de artículos
+  if (errorLoadingFullList) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
-          Error: {error}
+          Error al cargar artículos: {errorLoadingFullList}
         </div>
       </div>
     );
   }
 
-  // El layout principal prioriza la usabilidad: buscador, categorías y resultados.
+  // Renderizado principal: buscador, categorías y grilla de artículos
   return (
     <>
       <main className="bg-gray-50 border-t border-gray-100 z-10 relative py-8">
+        {/* Mostrar buscador/categorías si hay categorías */}
         {categories.length > 1 && (
           <section className="w-full">
             <div className="container mx-auto px-4">
@@ -221,12 +228,16 @@ export default function ArticlesContainer({
           </section>
         )}
       </main>
-      <ArticlesGrid 
-        articles={displayedArticles} 
-        basePath={basePath} 
-        pagination={pagination} 
-        isLoading={loadingPage}
-      />
+      {/* Contenedor con altura mínima para evitar salto de layout */}
+      <div className="min-h-[500px]"> {/* Altura mínima */}
+        <ArticlesGrid 
+          articles={articlesToDisplay}
+          basePath={basePath} 
+          pagination={pagination} 
+          isLoading={isLoading} // Carga general para esqueleto
+          isCategoryLoading={isCategoryFiltering} // Carga específica para Loader2
+        />
+      </div>
     </>
   );
 }

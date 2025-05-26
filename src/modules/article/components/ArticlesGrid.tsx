@@ -11,7 +11,7 @@ import {
 } from "@components/ui/card";
 import { Button } from "@components/ui/button";
 import { Badge } from "@components/ui/badge";
-import { FileText, ArrowRightIcon } from "lucide-react";
+import { FileText, ArrowRightIcon, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -43,6 +43,7 @@ interface ArticlesGridProps {
     totalPages: number;
   };
   isLoading?: boolean;
+  isCategoryLoading?: boolean;
 }
 
 // Componente principal que renderiza la grilla de artículos y maneja la lógica de paginación y estados vacíos.
@@ -52,6 +53,7 @@ const ArticlesGridContent = ({
   basePath,
   pagination,
   isLoading = false,
+  isCategoryLoading = false,
 }: ArticlesGridProps) => {
   const pathname = usePathname();
   const router = useRouter();
@@ -104,13 +106,18 @@ const ArticlesGridContent = ({
       <div className="container mx-auto">
         {/* Siempre renderizamos el contenedor de la grilla */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {isLoading ? (
-            // Mostramos 4 skeletons fijos cuando está cargando
-            [...Array(4)].map((_, index) => (
+          {isCategoryLoading ? (
+            // Si solo se está cargando por categoría, mostramos un spinner centrado
+            <div className="col-span-full flex justify-center items-center py-10">
+              <Loader2 className="h-10 w-10 text-[#217A4B] animate-spin" />
+            </div>
+          ) : isLoading ? (
+            // Si está cargando de forma general (inicial o paginación), muestra los esqueletos
+            [...Array(Math.min(articles?.length || 4, 4))].map((_, index) => (
               <SkeletonCard key={index} />
             ))
           ) : articles && articles.length > 0 ? (
-            // Mostramos los artículos si no está cargando y hay artículos
+            // Si no está cargando y hay artículos, muestra la grilla de artículos
             articles.map((item) => (
               <Card
                 key={item.id}
