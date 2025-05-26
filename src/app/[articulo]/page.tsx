@@ -1,3 +1,4 @@
+// Importaciones de utilidades, módulos y componentes
 import { formatearFecha } from "@lib/utils";
 import { getAllContentMetadata } from "@modules/article/data/content";
 import { Metadata } from "next";
@@ -11,29 +12,29 @@ import ArticlesContainer from "@/src/app/[articulo]/ArticlesContainer";
 // Constantes para textos del hero
 const HERO = {
   noticias: {
-    title: "Noticias",
+    title: "Noticias y Novedades",
     description:
       "Mantente informado con las últimas noticias y novedades del Consejo General de Educación.",
   },
   tramites: {
-    title: "Trámites",
+    title: "Trámites y Gestiones",
     description:
       "Portal centralizado de trámites del Consejo General de Educación. Acceda a toda la información y documentación necesaria.",
   },
 };
 
-// Generación dinámica de metadata
+// Generación dinámica de metadata para SEO y redes sociales
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ articulo: string }>;
 }): Promise<Metadata> {
-  // Primero debemos esperar el objeto params completo
   const resolvedParams = await params;
 
+  // Diccionarios para títulos y descripciones según el tipo de artículo
   const titles: Record<string, string> = {
-    noticias: "Noticias",
-    tramites: "Trámites",
+    noticias: "Noticias y Novedades",
+    tramites: "Trámites y Gestiones",
   };
 
   const descriptions: Record<string, string> = {
@@ -42,24 +43,27 @@ export async function generateMetadata({
     tramites: "Información detallada sobre los trámites disponibles en el CGE",
   };
 
-  // Ahora podemos acceder a articulo de manera segura
+  // Extraemos el parámetro 'articulo' de la URL
   const articulo = resolvedParams.articulo;
 
+  // Si el artículo no es válido, mostramos página 404
   if (!titles[articulo]) {
     return notFound();
   }
 
+  // Retornamos los metadatos correspondientes
   return {
     title: titles[articulo],
     description: descriptions[articulo],
   };
 }
 
-// Generación estática de rutas
+// Generación estática de rutas para SSG
 export async function generateStaticParams() {
   return [{ articulo: "noticias" }, { articulo: "tramites" }];
 }
 
+// Componente principal de la página de artículos
 export default async function ContenidoGrid({
   params,
   searchParams,
@@ -67,14 +71,16 @@ export default async function ContenidoGrid({
   params: Promise<{ articulo: string }>;
   searchParams?: Promise<{ [key: string]: string }>;
 }) {
-  // Primero esperamos el objeto params y searchParams
+  // Esperamos los parámetros de la URL y de búsqueda
   const [resolvedParams, resolvedSearchParams] = await Promise.all([
     params,
     searchParams,
   ]);
 
+  // Extraemos el tipo de artículo
   const articulo = resolvedParams.articulo;
 
+  // Validamos el tipo de artículo permitido
   if (articulo !== "noticias" && articulo !== "tramites") {
     return notFound();
   }
@@ -87,6 +93,7 @@ export default async function ContenidoGrid({
   const searchTerm = resolvedSearchParams?.search || "";
   const categoria = resolvedSearchParams?.categoria || "";
 
+  // Obtenemos los metadatos de los artículos según filtros
   const { items: rawData, pagination } = await getAllContentMetadata(
     articulo,
     page,
@@ -95,13 +102,14 @@ export default async function ContenidoGrid({
     categoria
   );
 
+  // Formateamos los datos para el componente
   const data = rawData.map((item: any) => {
     const date = formatearFecha(item.date || item.fecha);
     return {
       id: item.slug,
       slug: item.slug,
       titulo: item.titulo,
-      resumen: item.resumen || item.description || "", // Ensure resumen is present
+      resumen: item.resumen || item.description || "",
       description: item.description || item.resumen,
       date,
       fecha: date,
@@ -116,22 +124,24 @@ export default async function ContenidoGrid({
   // Determinar tipo de contenido y textos del hero
   const heroConfig = articulo === "noticias" ? HERO.noticias : HERO.tramites;
 
+  // Renderizado del layout principal
   return (
     <main className="bg-gray-50 min-h-screen">
+      {/* Hero e InfoBar */}
       <HeroSection
         title={heroConfig.title}
         description={heroConfig.description}
       />
-
       <InfoBar basePath={`/${articulo}`} />
+
+      {/* Contenedor de artículos y buscador */}
       <ArticlesContainer
         basePath={`/${articulo}`}
         articles={data}
         pagination={pagination}
       />
 
-      {/* Sección de Preguntas Frecuentes */}
-
+      {/* Sección de Preguntas Frecuentes y contacto */}
       <FAQSection basePath={`/${articulo}`} />
       <Contact basePath={`/${articulo}`} />
     </main>

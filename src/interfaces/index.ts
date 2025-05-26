@@ -65,3 +65,16 @@ export interface Supervisor {
   id: number;
   nombre: string;
 }
+
+export interface Article {
+  id?: string;
+  slug: string;
+  titulo: string;
+  resumen: string;
+  description?: string;
+  date?: string;
+  imagen?: string;
+  categoria?: string;
+  esImportante?: boolean;
+  subcategoria?: string;
+}

@@ -1,4 +1,5 @@
 "use client";
+// Importaciones principales de React y librerías externas
 import React, { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Fuse from "fuse.js";
@@ -6,24 +7,10 @@ import { FileSearch } from "lucide-react";
 import SearchInput from "@modules/layout/SearchInput";
 import { normalizeText } from "@/src/lib/utils";
 import ArticlesGrid from "../../modules/article/components/ArticlesGrid";
-
-interface Article {
-  id?: string;
-  slug: string;
-  titulo: string;
-  resumen: string;
-  description?: string;
-  date?: string;
-  imagen?: string;
-  categoria?: string;
-  esImportante?: boolean;
-  subcategoria?: string;
-}
+import { Article } from "@/src/interfaces";
 
 interface ArticlesContainerProps {
-  searchPlaceholder?: string;
   basePath: string;
-  isNoticia?: boolean;
   articles?: Article[];
   pagination?: {
     currentPage: number;
@@ -32,13 +19,14 @@ interface ArticlesContainerProps {
   };
 }
 
-// Hook personalizado para la lógica de búsqueda
+// Este hook abstrae la lógica de búsqueda y filtrado para que el componente principal permanezca limpio y enfocado en la UI.
 const useArticleSearch = (articles: Article[], isNoticia: boolean) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
   const [loadingPage, setLoadingPage] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Elegimos categorías distintas según el tipo de contenido para mejorar la experiencia de filtrado.
   const categories = useMemo(
     () =>
       isNoticia
@@ -47,6 +35,7 @@ const useArticleSearch = (articles: Article[], isNoticia: boolean) => {
     [isNoticia]
   );
 
+  // Usamos Fuse.js para permitir búsquedas tolerantes a errores de tipeo y más flexibles.
   const fuse = useMemo(() => {
     if (articles.length === 0) return null;
     return new Fuse(articles, {
@@ -55,6 +44,7 @@ const useArticleSearch = (articles: Article[], isNoticia: boolean) => {
     });
   }, [articles]);
 
+  // El filtrado se realiza en memoria para evitar llamadas innecesarias al backend y mejorar la velocidad de respuesta.
   const filteredResults = useMemo(() => {
     if (!articles || articles.length === 0) return [];
 
@@ -99,10 +89,12 @@ export default function ArticlesContainer({
   articles: initialArticles,
   pagination,
 }: ArticlesContainerProps) {
+  // Determinamos el tipo de contenido para adaptar la UI y la lógica de filtrado.
   const isNoticia = basePath.includes("noticias");
   const router = useRouter();
   const [articles, setArticles] = useState<Article[]>([]);
 
+  // Centralizamos la lógica de búsqueda y filtrado en el hook para mantener el componente enfocado en el renderizado.
   const {
     searchTerm,
     setSearchTerm,
@@ -116,11 +108,13 @@ export default function ArticlesContainer({
     filteredResults,
   } = useArticleSearch([...articles, ...(initialArticles || [])], isNoticia);
 
+  // El placeholder cambia según el tipo de contenido para guiar al usuario.
   const searchPlaceholder = useMemo(
     () => (isNoticia ? "Buscar noticias..." : "Buscar trámites..."),
     [isNoticia]
   );
 
+  // Al cambiar la categoría, actualizamos la URL para permitir compartir enlaces filtrados y reiniciamos la paginación.
   const handleCategoryChange = (cat: string) => {
     setCategoriaSeleccionada(cat);
     const params = new URLSearchParams(window.location.search);
@@ -133,7 +127,7 @@ export default function ArticlesContainer({
     router.push(`${basePath}?${params.toString()}`, { scroll: false });
   };
 
-  // Solo cargar datos adicionales si no hay datos iniciales
+  // Si no hay artículos iniciales, los cargamos desde un archivo estático para mejorar la velocidad de carga y evitar llamadas innecesarias al backend.
   useEffect(() => {
     if (!initialArticles || initialArticles.length === 0) {
       const tipo = isNoticia ? "noticias" : "tramites";
@@ -158,7 +152,7 @@ export default function ArticlesContainer({
     }
   }, [isNoticia, initialArticles]);
   
-  // Solo mostrar resultados filtrados si hay un término de búsqueda
+  // Solo mostramos resultados filtrados si el usuario está buscando activamente.
   const showFilteredResults = searchTerm;
   const displayedArticles = (showFilteredResults ? filteredResults : initialArticles)?.map((article) => ({
     ...article,
@@ -166,6 +160,7 @@ export default function ArticlesContainer({
     description: article.description ?? article.resumen ?? "Sin descripción",
   }));
 
+  // Mostramos un mensaje de error si la carga de artículos falla.
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -176,6 +171,7 @@ export default function ArticlesContainer({
     );
   }
 
+  // El layout principal prioriza la usabilidad: buscador, categorías y resultados.
   return (
     <>
       <main className="bg-gray-50 border-t border-gray-100 z-10 relative py-8">
@@ -196,6 +192,7 @@ export default function ArticlesContainer({
                     />
                   </div>
                 </div>
+                {/* El enlace a expedientes solo se muestra para trámites porque es relevante solo en ese contexto. */}
                 {!isNoticia && (
                   <a
                     href="https://expgob.mec.gob.ar/lup_mod/ubicar_expedWeb.asp"
