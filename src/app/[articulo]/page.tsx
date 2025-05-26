@@ -2,12 +2,11 @@ import { formatearFecha } from "@lib/utils";
 import { getAllContentMetadata } from "@modules/article/data/content";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import ArticlesGrid from "@modules/article/components/ArticlesGrid";
 import HeroSection from "@modules/layout/Hero";
-import SearchSection from "@modules/article/components/SearchSection";
 import Contact from "@modules/layout/Contact";
-import InfoBar from "@modules/article/components/InfoBar";
+import InfoBar from "@/src/modules/layout/InfoBar";
 import FAQSection from "@modules/layout/FAQSection";
+import ArticlesContainer from "@/src/app/[articulo]/ArticlesContainer";
 
 // Constantes para textos del hero
 const HERO = {
@@ -102,6 +101,7 @@ export default async function ContenidoGrid({
       id: item.slug,
       slug: item.slug,
       titulo: item.titulo,
+      resumen: item.resumen || item.description || "", // Ensure resumen is present
       description: item.description || item.resumen,
       date,
       fecha: date,
@@ -124,17 +124,13 @@ export default async function ContenidoGrid({
       />
 
       <InfoBar basePath={`/${articulo}`} />
-      <SearchSection basePath={`/${articulo}`} />
+      <ArticlesContainer
+        basePath={`/${articulo}`}
+        articles={data}
+        pagination={pagination}
+      />
 
-      <div className="container mx-auto px-4 md:px-6" id="grid-container">
-        <div className="min-h-screen/2 py-8">
-          <ArticlesGrid
-            articles={data}
-            basePath={`/${articulo}`}
-            pagination={pagination}
-          />
-        </div>
-      </div>
+      {/* Sección de Preguntas Frecuentes */}
 
       <FAQSection basePath={`/${articulo}`} />
       <Contact basePath={`/${articulo}`} />

@@ -94,7 +94,7 @@ const ArticlesGridContent = ({
   };
 
   return (
-    <section className="w-full">
+    <section className="w-full mb-3">
       <div className="container mx-auto">
         {articles === undefined ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
