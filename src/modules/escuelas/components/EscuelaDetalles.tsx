@@ -155,7 +155,7 @@ const EscuelaDetalles = memo(
 
     return (
       <Dialog open={!!escuela} onOpenChange={onClose}>
-        <DialogContent className="max-w-4xl p-0 overflow-hidden w-[95vw] md:w-[85vw] lg:w-[70vw] xl:w-[60vw] rounded-2xl shadow-2xl border-0 max-h-[95vh] flex flex-col data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-bottom-[2%] data-[state=open]:slide-in-from-bottom-[2%] duration-300">
+        <DialogContent className="max-w-4xl p-0 overflow-hidden w-[95vw] md:w-[85vw] lg:w-[70vw] xl:w-[60vw] rounded-2xl shadow-2xl border-0 max-h-[95vh] flex flex-col">
           <div className="bg-white pt-6 pb-4 sm:pt-8 sm:pb-5 md:pt-10 md:pb-6 px-4 sm:px-5 md:px-6 border-b border-gray-100">
             <div className="flex items-center gap-3">
               <div className="flex-shrink-0 bg-white p-2 rounded-lg shadow-sm border border-gray-100">
@@ -190,108 +190,114 @@ const EscuelaDetalles = memo(
             </div>
           </div>
 
-          <div className="p-4 sm:p-5 md:p-6 overflow-y-auto flex-grow bg-gray-50/50">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-h-[calc(80vh-100px)] overflow-y-auto">
-              <div className="bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-gray-100">
-                <MatriculaStats escuela={escuela} />
+          <div className="flex-grow overflow-y-auto bg-gray-50/50">
+            <div className="p-4 sm:p-5 md:p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-gray-100">
+                  <MatriculaStats escuela={escuela} />
 
-                <div className="space-y-4 mt-4">
+                  <div className="space-y-4 mt-4">
+                    <div className="border-b border-gray-100 pb-3">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Calendar className="h-4 w-4 text-[#217A4B]" />
+                        <h3 className="text-sm font-semibold text-[#205C3B]">
+                          Información General
+                        </h3>
+                      </div>
+
+                      <div className="space-y-2 px-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-500">
+                            Fecha de Fundación:
+                          </span>
+                          <span className="text-sm font-medium text-gray-800">
+                            {escuela.fechaFundacion || "No especificada"}
+                          </span>
+                        </div>
+
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-500">
+                            Categoría:
+                          </span>
+                          <span className="text-sm font-medium text-gray-800">
+                            {escuela.categoria || "No especificada"}
+                          </span>
+                        </div>
+
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-500">Zona:</span>
+                          <span className="text-sm font-medium text-gray-800">
+                            {escuela.zona || "No especificada"}
+                          </span>
+                        </div>
+
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-500">Turno:</span>
+                          <span className="text-sm font-medium text-gray-800">
+                            {escuela.turno}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-gray-100">
                   <div className="border-b border-gray-100 pb-3">
                     <div className="flex items-center gap-2 mb-3">
-                      <Calendar className="h-4 w-4 text-[#217A4B]" />
+                      <Info className="h-4 w-4 text-[#217A4B]" />
                       <h3 className="text-sm font-semibold text-[#205C3B]">
-                        Información General
+                        Ubicación y Contacto
                       </h3>
                     </div>
 
                     <div className="space-y-2 px-2">
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-500">
-                          Fecha de Fundación:
+                          Departamento:
                         </span>
                         <span className="text-sm font-medium text-gray-800">
-                          {escuela.fechaFundacion || "No especificada"}
+                          {escuela.departamento}
                         </span>
                       </div>
 
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-500">
-                          Categoría:
+                          Ubicación:
                         </span>
                         <span className="text-sm font-medium text-gray-800">
-                          {escuela.categoria || "No especificada"}
+                          {escuela.ubicacion}
                         </span>
                       </div>
 
                       <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-500">Zona:</span>
+                        <span className="text-sm text-gray-500">
+                          Director/a:
+                        </span>
                         <span className="text-sm font-medium text-gray-800">
-                          {escuela.zona || "No especificada"}
+                          {escuela.director}
                         </span>
                       </div>
 
                       <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-500">Turno:</span>
-                        <span className="text-sm font-medium text-gray-800">
-                          {escuela.turno}
+                        <span className="text-sm text-gray-500">Correo:</span>
+                        <span className="text-sm font-medium text-gray-800 break-all">
+                          {correoEscuela}
                         </span>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              <div className="bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-gray-100">
-                <div className="border-b border-gray-100 pb-3">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Info className="h-4 w-4 text-[#217A4B]" />
-                    <h3 className="text-sm font-semibold text-[#205C3B]">
-                      Ubicación y Contacto
-                    </h3>
-                  </div>
-
-                  <div className="space-y-2 px-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-500">
-                        Departamento:
-                      </span>
-                      <span className="text-sm font-medium text-gray-800">
-                        {escuela.departamento}
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-500">Ubicación:</span>
-                      <span className="text-sm font-medium text-gray-800">
-                        {escuela.ubicacion}
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-500">Director/a:</span>
-                      <span className="text-sm font-medium text-gray-800">
-                        {escuela.director}
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-500">Correo:</span>
-                      <span className="text-sm font-medium text-gray-800 break-all">
-                        {correoEscuela}
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
-                      <a
-                        href="http://mapa.mec.gob.ar/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm underline text-[#217A4B] hover:text-[#205C3B] flex items-center gap-1.5"
-                      >
-                        <Map className="h-4 w-4" />
-                        Consulte la ubicación exacta en el mapa escolar{" "}
-                        <ArrowRight />
-                      </a>
+                      <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
+                        <a
+                          href="http://mapa.mec.gob.ar/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm underline text-[#217A4B] hover:text-[#205C3B] flex items-center gap-1.5"
+                        >
+                          <Map className="h-4 w-4" />
+                          Consulte la ubicación exacta en el mapa escolar{" "}
+                          <ArrowRight />
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
