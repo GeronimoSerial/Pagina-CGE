@@ -42,7 +42,7 @@ export default function FAQSection({ basePath }: FAQSectionProps) {
             Preguntas Frecuentes
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-            Respuestas a las consultas más comunes sobre {basePath} del Consejo
+            Respuestas a las consultas más comunes sobre {basePath.slice(1)} del Consejo
             General de Educación
           </p>
         </div>

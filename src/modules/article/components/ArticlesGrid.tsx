@@ -1,4 +1,5 @@
 "use client";
+// Este componente muestra una grilla de artículos con paginación y estados vacíos, adaptándose tanto a noticias como a trámites.
 import React, { Suspense, useMemo } from "react";
 import {
   Card,
@@ -43,6 +44,7 @@ interface ArticlesGridProps {
   };
 }
 
+// Componente principal que renderiza la grilla de artículos y maneja la lógica de paginación y estados vacíos.
 const ArticlesGridContent = ({
   articles,
   showImportantBadge = false,
@@ -53,6 +55,7 @@ const ArticlesGridContent = ({
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  // Determinamos el tipo de contenido para adaptar textos y botones.
   const isNoticia = basePath?.includes("noticias") || false;
   const emptyStateButtonText = isNoticia
     ? "Mostrar todas las noticias"
@@ -66,7 +69,7 @@ const ArticlesGridContent = ({
     ? "Ver noticia completa"
     : "Ver trámite completo";
 
-  // Memoizar cálculos de paginación
+  // Memoizamos el cálculo de páginas para evitar recálculos innecesarios en renders.
   const { totalPaginas, currentPage } = useMemo(
     () => ({
       totalPaginas: pagination
@@ -77,7 +80,7 @@ const ArticlesGridContent = ({
     [pagination, articles?.length]
   );
 
-  // Manejar cambio de página
+  // Actualizamos la URL y el estado al cambiar de página para mantener la navegación y el historial.
   const handlePageChange = (page: number) => {
     if (pagination) {
       const params = new URLSearchParams(searchParams.toString());
@@ -86,6 +89,7 @@ const ArticlesGridContent = ({
     }
   };
 
+  // Generamos el enlace al detalle del artículo según el contexto (noticia o trámite).
   const getItemLink = (id: string) => {
     if (basePath) {
       return `${basePath}/${id}`;
@@ -96,6 +100,7 @@ const ArticlesGridContent = ({
   return (
     <section className="w-full mb-3">
       <div className="container mx-auto">
+        {/* Estado de carga: mostramos skeletons para mejorar la percepción de velocidad */}
         {articles === undefined ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[...Array(4)].map((_, index) => (
@@ -116,6 +121,7 @@ const ArticlesGridContent = ({
                     className="flex flex-col h-full"
                   >
                     <div className="h-48 overflow-hidden relative">
+                      {/* Mostramos imagen si existe, si no, un ícono por defecto */}
                       {item.imagen ? (
                         <Image
                           src={
@@ -135,6 +141,7 @@ const ArticlesGridContent = ({
                           <FileText className="h-12 w-12 text-gray-400" />
                         </div>
                       )}
+                      {/* Badge de importancia solo si corresponde y está habilitado */}
                       {showImportantBadge && item.esImportante && (
                         <Badge className="underline absolute top-3 right-3 bg-gray-600 text-white border-0">
                           Importante
@@ -143,6 +150,7 @@ const ArticlesGridContent = ({
                     </div>
                     <CardHeader className="pb-2 flex-none">
                       <div className="flex justify-between items-center mb-2">
+                        {/* Mostramos la categoría y la fecha si existen */}
                         {item.categoria && (
                           <Badge
                             variant="outline"
@@ -187,6 +195,7 @@ const ArticlesGridContent = ({
                 </Card>
               ))}
             </div>
+            {/* Paginación solo si hay más de una página */}
             {totalPaginas > 1 && (
               <div className="py-6 border-t border-gray-100 mt-6">
                 <HeadlessPagination
@@ -198,6 +207,7 @@ const ArticlesGridContent = ({
             )}
           </>
         ) : (
+          // Estado vacío: mensaje y botón para volver a la vista general
           <div className="col-span-full rounded-xl shadow-sm p-10 text-center">
             <FileText className="h-12 w-12 mx-auto text-black mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -220,7 +230,7 @@ const ArticlesGridContent = ({
   );
 };
 
-// Wrapped component with Suspense
+// Wrapper con Suspense para manejar estados de carga inicial de forma elegante.
 const ArticlesGrid = (props: ArticlesGridProps) => {
   return (
     <Suspense
