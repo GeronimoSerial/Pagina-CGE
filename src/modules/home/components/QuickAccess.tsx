@@ -1,6 +1,6 @@
 // import React from "react";
 import { Card, CardContent } from "../../../components/ui/card";
-import { FileText, School, Mail, Newspaper } from "lucide-react";
+import { FileText, School, BookOpen, Newspaper,  } from "lucide-react";
 import { QuickAccessItemProps } from "../../../interfaces";
 
 const QuickAccessItem = ({
@@ -44,7 +44,7 @@ const QuickAccess = ({ items = [] }: QuickAccessProps) => {
       href: "/tramites",
     },
     {
-      icon: <School size={24} />,
+      icon: <BookOpen size={24} />,
       title: "Documentación Institucional",
       description: "Toda la documentación institucional necesaria",
       href: "/documentacion",
@@ -56,10 +56,10 @@ const QuickAccess = ({ items = [] }: QuickAccessProps) => {
       href: "#noticias",
     },
     {
-      icon: <Mail size={24} />,
-      title: "Contacto",
-      description: "Comuníquese con nosotros",
-      href: "/contacto",
+      icon: <School size={24} />,
+      title: "Escuelas",
+      description: "Información sobre las escuelas pertenecientes al Consejo General de Educación",
+      href: "/escuelas",
     },
   ];
 
