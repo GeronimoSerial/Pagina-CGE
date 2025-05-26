@@ -22,13 +22,13 @@ export function OrganigramaModal() {
           Ver estructura organizacional
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[95vw] w-[1200px] max-h-[90vh] h-[800px] p-0 overflow-hidden">
-        <DialogHeader className="px-6 pt-6 pb-0">
-          <DialogTitle className="text-[#217A4B] text-2xl">
+      <DialogContent className="max-w-[95vw] w-full md:w-[90vw] lg:w-[1200px] h-[85vh] md:h-[90vh] p-0 flex flex-col">
+        <DialogHeader className="flex-shrink-0 bg-white/95 backdrop-blur-sm px-3 md:px-6 pt-3 md:pt-6 pb-2 border-b">
+          <DialogTitle className="text-[#217A4B] text-lg md:text-2xl">
             Estructura Organizacional del Consejo General de Educación
           </DialogTitle>
         </DialogHeader>
-        <div className="h-full overflow-hidden scrollbar-hide">
+        <div className="flex-grow overflow-hidden">
           <ClientOrganigrama isOpen={isOpen} onOpenChange={setIsOpen} />
         </div>
       </DialogContent>
