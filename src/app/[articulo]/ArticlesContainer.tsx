@@ -152,6 +152,18 @@ export default function ArticlesContainer({
     }
   }, [isNoticia, initialArticles]);
   
+  // Efecto para manejar el estado de carga cuando cambian los initialArticles (e.g., por paginación)
+  useEffect(() => {
+    if (initialArticles !== undefined) {
+      setLoadingPage(true);
+      // Pequeño retraso para permitir que el estado de carga se muestre antes de procesar los nuevos artículos
+      const timer = setTimeout(() => {
+        setLoadingPage(false);
+      }, 50);
+       return () => clearTimeout(timer);
+    }
+  }, [initialArticles]);
+
   // Solo mostramos resultados filtrados si el usuario está buscando activamente.
   const showFilteredResults = searchTerm;
   const displayedArticles = (showFilteredResults ? filteredResults : initialArticles)?.map((article) => ({
@@ -209,17 +221,12 @@ export default function ArticlesContainer({
           </section>
         )}
       </main>
-      {loadingPage ? (
-        <div className="container mx-auto px-4 py-8 text-center">
-          Cargando...
-        </div>
-      ) : (
-        <ArticlesGrid 
-          articles={displayedArticles} 
-          basePath={basePath} 
-          pagination={pagination} 
-        />
-      )}
+      <ArticlesGrid 
+        articles={displayedArticles} 
+        basePath={basePath} 
+        pagination={pagination} 
+        isLoading={loadingPage}
+      />
     </>
   );
 }
