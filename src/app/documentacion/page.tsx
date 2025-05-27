@@ -3,7 +3,6 @@ import DocumentationSection from "@modules/documentation/components/Documentatio
 import HeroSection from "@modules/layout/Hero";
 import FAQSection from "@modules/layout/FAQSection";
 import { Suspense } from "react";
-import { faqsDocs } from "@modules/faqs/faqs";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

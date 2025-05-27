@@ -195,7 +195,7 @@ export default function Institucional() {
                         Presidente
                       </h4>
                       <p className="text-gray-900">
-                        Prof. María Silvina Rollet
+                        Prof. Maria Silvina Rollet
                       </p>
                     </div>
 
