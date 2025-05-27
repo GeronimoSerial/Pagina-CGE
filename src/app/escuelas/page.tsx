@@ -1,7 +1,6 @@
 import HeroSection from "@modules/layout/Hero";
 import { Metadata } from "next";
 import { EscuelasClient } from "@components/data/dynamic-client";
-import { faqsEscuelas } from "@/src/modules/faqs/faqs";
 import FAQSection from "@/src/modules/layout/FAQSection";
 import { getEscuelas } from "@/src/modules/escuelas/utils/escuelas";
 
