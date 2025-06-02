@@ -112,6 +112,4 @@ El sitio estará disponible en `http://localhost:3000`.
 
 ## 📞 Contacto
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/GeronimoSerial/Pagina-CGE)
-
 Para consultas o sugerencias, utiliza la sección de contacto del portal web.
