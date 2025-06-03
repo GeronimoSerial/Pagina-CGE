@@ -6,8 +6,6 @@ import {
   ChevronRight,
   Bookmark,
   Newspaper,
-  Share2,
-  Printer,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -62,7 +60,7 @@ export default function FullArticle({
     <div className="min-h-screen bg-gray-50">
       {/* Header simplificado */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3">
           <div className="flex items-center justify-between">
             <Link href={`/${section}`}>
               <Button
@@ -82,8 +80,8 @@ export default function FullArticle({
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        <div className="lg:grid lg:grid-cols-4 lg:gap-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+        <div className="lg:grid lg:grid-cols-4 lg:gap-6">
           {/* Contenido principal */}
           <main className="lg:col-span-3">
             <article className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -103,9 +101,9 @@ export default function FullArticle({
               )}
 
               {/* Contenido del artículo */}
-              <div className="p-6 sm:p-8">
+              <div className="p-5 sm:p-6">
                 {/* Meta información */}
-                <div className="flex flex-wrap items-center gap-3 mb-6">
+                <div className="flex flex-wrap items-center gap-2 mb-4">
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                     <Tag className="w-3 h-3 mr-1" />
                     {post.subcategoria}
@@ -123,12 +121,12 @@ export default function FullArticle({
                 </div>
 
                 {/* Título */}
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-8 leading-tight">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-6 leading-tight">
                   {post.titulo}
                 </h1>
 
                 {/* Contenido markdown */}
-                <div className="prose prose-gray max-w-none prose-lg">
+                <div className="prose prose-gray max-w-none">
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     components={MarkdownComponent}
@@ -139,7 +137,7 @@ export default function FullArticle({
 
                 {/* Carrusel de imágenes */}
                 {post.imagenes_carrusel?.length > 0 && (
-                  <div className="mt-12 border-t border-gray-200 pt-8">
+                  <div className="mt-8 border-t border-gray-200 pt-6">
                     <ClientCarousel imagenes={post.imagenes_carrusel} />
                   </div>
                 )}
@@ -148,11 +146,11 @@ export default function FullArticle({
           </main>
 
           {/* Sidebar sticky */}
-          <aside className="lg:col-span-1 mt-8 lg:mt-0">
-            <div className="sticky top-24 space-y-6">
+          <aside className="lg:col-span-1 mt-6 lg:mt-0">
+            <div className="sticky top-20 space-y-4">
               {/* Enlaces de interés */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                <h2 className="text-base font-semibold text-gray-900 mb-3 flex items-center">
                   <ExternalLink className="w-5 h-5 mr-2 text-gray-600" />
                   Enlaces de interés
                 </h2>
@@ -171,12 +169,12 @@ export default function FullArticle({
               </div>
 
               {/* Artículos relacionados */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                <h2 className="text-base font-semibold text-gray-900 mb-3 flex items-center">
                   <Bookmark className="w-5 h-5 mr-2 text-gray-600" />
                   Artículos relacionados
                 </h2>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {articulosRelacionados.length === 0 ? (
                     <p className="text-sm text-gray-500 italic">
                       No hay artículos relacionados disponibles.
