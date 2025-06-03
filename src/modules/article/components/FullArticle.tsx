@@ -1,5 +1,4 @@
 import {
-  ArrowLeftIcon,
   Tag,
   Clock,
   ExternalLink,
@@ -16,6 +15,7 @@ import { formatearFecha } from "@lib/utils";
 import { ClientCarousel } from "@components/data/dynamic-client";
 import { MarkdownComponent } from "@src/modules/layout/MarkdownComponent";
 import ShareButton from "./ShareButton";
+import StickyNavbar from "./StickyNav"; // Importar el nuevo componente
 
 const ENLACES_RELACIONADOS = [
   {
@@ -58,27 +58,14 @@ export default function FullArticle({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header simplificado */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3">
-          <div className="flex items-center justify-between">
-            <Link href={`/${section}`}>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-              >
-                <ArrowLeftIcon className="w-4 h-4 mr-2" />
-                Volver a {sectionTitle.toLowerCase()}
-              </Button>
-            </Link>
-
-            <div className="flex items-center gap-2">
-              <ShareButton title={post}></ShareButton>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Navbar sticky como componente cliente separado */}
+      <StickyNavbar
+        sectionTitle={sectionTitle}
+        section={section}
+        postTitle={post.titulo}
+      >
+        <ShareButton title={post} />
+      </StickyNavbar>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
         <div className="lg:grid lg:grid-cols-4 lg:gap-6">
@@ -120,7 +107,7 @@ export default function FullArticle({
                   )}
                 </div>
 
-                {/* Título */}
+                {/* Título - mantener el h1 para que el componente StickyNavbar lo encuentre */}
                 <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-6 leading-tight">
                   {post.titulo}
                 </h1>
