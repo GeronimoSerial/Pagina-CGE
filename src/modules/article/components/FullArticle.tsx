@@ -3,8 +3,6 @@ import {
   Tag,
   Clock,
   ExternalLink,
-  ChevronRight,
-  Bookmark,
   Newspaper,
 } from "lucide-react";
 import Link from "next/link";
@@ -54,77 +52,6 @@ const ENLACES: Enlace[] = [
   },
 ];
 
-const ArticleHeader = ({
-  post,
-  sectionTitle,
-}: {
-  post: FullArticleProps["post"];
-  sectionTitle: string;
-}) => (
-  <header className="bg-white border-b border-gray-200">
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-[1200px] w-full mx-auto">
-        <div className="max-w-[800px] mx-auto">
-          <div className="flex flex-wrap items-center gap-3 mb-6">
-            <span className="inline-flex items-center px-3 py-1 bg-emerald-100 text-emerald-800 text-sm font-medium rounded-full">
-              <Tag size={14} className="mr-1" />
-              {post.subcategoria}
-            </span>
-            <span className="text-sm text-gray-500 flex items-center">
-              <Clock size={14} className="mr-1" />
-              {formatearFecha(post.fecha)}
-            </span>
-            {post.esImportante && (
-              <span className="inline-flex items-center gap-1 px-3 py-1 bg-red-100 text-red-800 text-sm font-medium rounded-full">
-                <Newspaper size={14} />
-                Importante
-              </span>
-            )}
-          </div>
-
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-6">
-            {post.titulo}
-          </h1>
-
-          {post.imagen && (
-            <div className="relative h-64 md:h-80 rounded-lg overflow-hidden mb-6">
-              <Image
-                src={post.imagen || "/placeholder.svg"}
-                alt={post.titulo}
-                width={1200}
-                height={600}
-                className="w-full h-full object-cover"
-                priority
-              />
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  </header>
-);
-
-const StickyLinks = () => (
-  <div className="absolute right-0 top-24 w-64">
-    <div className="sticky top-24 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-      <h3 className="font-semibold text-gray-900 mb-4">Enlaces relacionados</h3>
-      <ul className="space-y-3">
-        {ENLACES.map((enlace, index) => (
-          <li key={index}>
-            <Link
-              href={enlace.url}
-              className="flex items-center text-sm text-gray-600 hover:text-emerald-600 transition-colors"
-            >
-              <ExternalLink size={14} className="mr-2" />
-              {enlace.titulo}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </div>
-);
-
 export default function FullArticle({
   post,
   sectionTitle = "Artículo",
@@ -136,17 +63,18 @@ export default function FullArticle({
     .replace(/[\u0300-\u036f]/g, "");
 
   return (
-    <div className="min-h-screen bg-gray-50 relative">
+    <div className="min-h-screen bg-gray-50">
       {/* Header fijo */}
-      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-        <div className="container mx-auto px-4">
-          <div className="max-w-[1200px] w-full mx-auto flex justify-between items-center h-20">
+      <header className="sticky top-0 z-50 bg-white border-b shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
             <Link href={`/${section}`}>
               <Button
                 variant="ghost"
-                className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 transition-colors font-medium"
+                size="sm"
+                className="text-gray-700 hover:text-gray-900"
               >
-                <ArrowLeftIcon className="mr-2" size={16} />
+                <ArrowLeftIcon className="mr-2 h-4 w-4" />
                 Volver a {sectionTitle.toLowerCase()}
               </Button>
             </Link>
@@ -157,38 +85,123 @@ export default function FullArticle({
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Encabezado del artículo */}
-      <ArticleHeader post={post} sectionTitle={sectionTitle} />
+      {/* Layout principal */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="lg:grid lg:grid-cols-4 lg:gap-8">
+          {/* Contenido principal */}
+          <main className="lg:col-span-3">
+            <article className="bg-white rounded-lg shadow-sm border overflow-hidden">
+              {/* Header del artículo */}
+              <div className="px-6 py-8 border-b">
+                <div className="flex flex-wrap items-center gap-3 mb-4">
+                  <span className="inline-flex items-center px-2.5 py-1 bg-blue-50 text-blue-700 text-sm rounded-md">
+                    <Tag className="mr-1.5 h-3 w-3" />
+                    {post.subcategoria}
+                  </span>
+                  <span className="text-sm text-gray-500 flex items-center">
+                    <Clock className="mr-1.5 h-3 w-3" />
+                    {formatearFecha(post.fecha)}
+                  </span>
+                  {post.esImportante && (
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 text-red-700 text-sm rounded-md">
+                      <Newspaper className="h-3 w-3" />
+                      Importante
+                    </span>
+                  )}
+                </div>
 
-      {/* Contenido principal */}
-      <main className="container mx-auto px-4 py-8 relative">
-        {/* Artículo centrado */}
-        <div className="flex justify-center">
-          <article className="printable-article bg-white rounded-lg shadow-sm border border-gray-200 w-full max-w-[800px]">
-            <div className="p-6 md:p-8">
-              <div className="prose prose-lg prose-gray max-w-none">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  components={markdownComponents}
-                >
-                  {post.content ?? ""}
-                </ReactMarkdown>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
+                  {post.titulo}
+                </h1>
               </div>
+
+              {/* Imagen principal */}
+              {post.imagen && (
+                <div className="relative h-64 sm:h-80">
+                  <Image
+                    src={post.imagen || "/placeholder.svg"}
+                    alt={post.titulo}
+                    width={1200}
+                    height={600}
+                    className="w-full h-full object-cover"
+                    priority
+                  />
+                </div>
+              )}
+
+              {/* Contenido del artículo */}
+              <div className="px-6 py-8">
+                <div className="prose prose-gray max-w-none">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={markdownComponents}
+                  >
+                    {post.content ?? ""}
+                  </ReactMarkdown>
+                </div>
+              </div>
+
+              {/* Carrusel de imágenes */}
+              {post.imagenes_carrusel && post.imagenes_carrusel.length > 0 && (
+                <div className="px-6 pb-8">
+                  <ClientCarousel imagenes={post.imagenes_carrusel} />
+                </div>
+              )}
+            </article>
+          </main>
+
+          {/* Sidebar sticky */}
+          <aside className="mt-8 lg:mt-0">
+            <div className="sticky top-24 space-y-6">
+              {/* Enlaces relacionados */}
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Enlaces útiles
+                </h3>
+                <nav className="space-y-3">
+                  {ENLACES.map((enlace, index) => (
+                    <Link
+                      key={index}
+                      href={enlace.url}
+                      className="flex items-center text-sm text-gray-600 hover:text-blue-600 transition-colors group"
+                    >
+                      <ExternalLink className="mr-2 h-4 w-4 opacity-50 group-hover:opacity-100" />
+                      {enlace.titulo}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+
+              {/* Artículos relacionados */}
+              {articulosRelacionados.length > 0 && (
+                <div className="bg-white rounded-lg shadow-sm border p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Artículos relacionados
+                  </h3>
+                  <div className="space-y-3">
+                    {articulosRelacionados.map((articulo, index) => (
+                      <Link
+                        key={index}
+                        href={`/${section}/${articulo.slug}`}
+                        className="block p-3 rounded-md hover:bg-gray-50 transition-colors group"
+                      >
+                        <h4 className="text-sm font-medium text-gray-900 group-hover:text-blue-600 line-clamp-2">
+                          {articulo.titulo}
+                        </h4>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {formatearFecha(articulo.fecha)}
+                        </p>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-
-            {post.imagenes_carrusel && post.imagenes_carrusel.length > 0 && (
-              <div className="mt-12">
-                <ClientCarousel imagenes={post.imagenes_carrusel} />
-              </div>
-            )}
-          </article>
+          </aside>
         </div>
-
-        {/* Card sticky de enlaces */}
-        <StickyLinks />
-      </main>
+      </div>
     </div>
   );
 }
