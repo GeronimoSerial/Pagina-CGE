@@ -11,11 +11,12 @@ import Image from "next/image";
 import { Button } from "@components/ui/button";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { formatearFecha } from "@lib/utils";
 import { ClientCarousel } from "@components/data/dynamic-client";
 import { MarkdownComponent } from "@src/modules/layout/MarkdownComponent";
 import ShareButton from "./ShareButton";
-import StickyNavbar from "./StickyNav"; // Importar el nuevo componente
+import StickyNavbar from "./StickyNav";
+import { formatearFecha } from "@lib/utils";
+import { normalizarTexto } from "../../escuelas/utils/searchUtils";
 
 const ENLACES_RELACIONADOS = [
   {
@@ -51,14 +52,10 @@ export default function FullArticle({
   sectionTitle = "Artículo",
   articulosRelacionados = [],
 }: FullArticleProps) {
-  const section = sectionTitle
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+  const section = normalizarTexto(sectionTitle);
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navbar sticky como componente cliente separado */}
       <StickyNavbar
         sectionTitle={sectionTitle}
         section={section}
