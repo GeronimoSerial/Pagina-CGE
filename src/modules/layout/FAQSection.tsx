@@ -41,9 +41,9 @@ export default function FAQSection({ basePath }: FAQSectionProps) {
           <h2 className="text-5xl font-bold mb-6 z-100 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent leading-relaxed">
             Preguntas Frecuentes
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+          <p className="text-gray-600 max-w-2xl mx-auto text-lg text-balance">
             Respuestas a las consultas más comunes sobre {basePath.slice(1)} del Consejo
-            General de Educación
+            General de Educación.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -62,7 +62,7 @@ export default function FAQSection({ basePath }: FAQSectionProps) {
               </div>
               <div className="flex flex-col h-full justify-between">
                 <div className="ml-12">
-                  <p className="text-gray-600">{faq.answer.text}</p>
+                  <p className="text-gray-600 text-balance">{faq.answer.text}</p>
                 </div>
                 {faq.answer.links && faq.answer.links.length > 0 && (
                   <div className="mt-4 space-y-2 ml-12 ">

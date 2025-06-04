@@ -95,7 +95,7 @@ const DocumentationSection = () => {
               <SearchInput
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar"
+                placeholder="Buscar documentos..."
                 categories={categories}
                 selectedCategory={activeFilter === "all" ? "" : activeFilter}
                 onCategoryChange={(cat) =>

@@ -14,7 +14,7 @@ const SocialMediaSection = ({
           <h3 className="text-5xl leading-relaxed font-bold mb-6 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
             {title}
           </h3>
-          <p className="text-gray-600 text-xl leading-relaxed">{description}</p>
+          <p className="text-gray-600 text-xl leading-relaxed text-balance">{description}</p>
         </div>
 
         <div className="flex flex-col sm:flex-row justify-center gap-8 max-w-3xl mx-auto">
