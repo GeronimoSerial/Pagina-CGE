@@ -10,13 +10,12 @@ import { ArrowRight } from "lucide-react";
 import SocialMediaSection from "@modules/socials/SocialMediaSection";
 
 export default async function PagPrincipal() {
-  // Obtener y procesar noticias de manera segura
   const rawNews = await getAllContent("noticias");
 
-  // Asegurarse de que rawNews es un array
   const newsArray = Array.isArray(rawNews) ? rawNews : [];
 
-  // Normalizar y ordenar noticias
+
+  // PASARLO AL LAYOUT ------------------------------------------------------------------
   const news = newsArray
     .filter((item) => item && (item.date || item.fecha)) // Filtrar items sin fecha
     .sort((a, b) => {
@@ -40,7 +39,7 @@ export default async function PagPrincipal() {
       content: item.content || "",
       esImportante: item.esImportante || false,
     }));
-
+  // -----------------------------------------------------------------
   return (
     <div className="min-h-screen">
       <main>
@@ -62,7 +61,7 @@ export default async function PagPrincipal() {
                 <h3 className="text-5xl font-bold mb-6 leading-relaxed bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
                   Últimas noticias y novedades
                 </h3>
-                <p className="text-gray-600 text-xl leading-relaxed">
+                <p className="text-gray-600 text-xl leading-relaxed text-balance">
                   Mantente informado sobre las últimas novedades, publicaciones
                   y resoluciones del Consejo General de Educación
                 </p>
