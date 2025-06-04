@@ -18,7 +18,7 @@ export default async function Escuelas() {
     <main className="min-h-screen bg-gray-50">
       <HeroSection
         title="Escuelas"
-        description="Instituciones dependientes del Consejo General de Educación"
+        description="Instituciones dependientes del Consejo General de Educación."
       />
       <div className="container mx-auto px-4 py-8">
         <EscuelasClient escuelas={escuelas} />

@@ -58,7 +58,7 @@ export default function HeroSection({
           <h1 className="text-4xl mt-3 font-bold text-white drop-shadow-md">
             {title}
           </h1>
-          <p className="text-lg text-green-100/90 leading-relaxed">
+          <p className="text-lg text-green-100/90 leading-relaxed text-balance">
             {description}
           </p>
         </div>

@@ -17,7 +17,7 @@ export default function Documentacion() {
       {/* Hero section con degradado */}
       <HeroSection
         title="Documentación"
-        description="Portal de documentación del Consejo General de Educación"
+        description="Portal de documentación del Consejo General de Educación."
       />
       {/* Sección de información importante */}
       <InfoBar basePath="/documentacion" />
