@@ -1,5 +1,5 @@
 // Documentación descargable.
-import DocumentationSection from "@modules/documentation/components/DocumentationSection";
+import { DocumentacionSection } from "@/src/components/data/dynamic-client";
 import HeroSection from "@modules/layout/Hero";
 import FAQSection from "@modules/layout/FAQSection";
 import { Suspense } from "react";
@@ -22,9 +22,7 @@ export default function Documentacion() {
       <InfoBar basePath="/documentacion" />
       <section>
         <div className="container mx-auto px-4 md:px-6">
-          <Suspense fallback={<div>Cargando documentación...</div>}>
-            <DocumentationSection />
-          </Suspense>
+            <DocumentacionSection />
         </div>
       </section>
       <FAQSection basePath="/documentacion" />
