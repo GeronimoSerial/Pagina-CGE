@@ -1,7 +1,10 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import { normalizarTexto } from "../../escuelas/utils/searchUtils";
+import { normalizarTexto } from "@/src/lib/utils";
+
+
+
 function getDirectory(type: "noticias" | "tramites") {
   return path.join(process.cwd(), `/public/content/${type}`);
 }

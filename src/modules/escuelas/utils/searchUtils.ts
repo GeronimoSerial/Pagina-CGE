@@ -1,6 +1,8 @@
 //Buscador de Escuelas Avanzado con implementacion de sistema de puntos, a modo de prueba no final.
 import type { Escuela } from "@src/interfaces";
-
+import {
+  normalizarTexto
+} from "@/src/lib/utils";
 export interface SearchIndex {
   nombreIndex: Map<string, number[]>;
   directorIndex: Map<string, number[]>;
@@ -8,15 +10,6 @@ export interface SearchIndex {
   localidadIndex: Map<string, number[]>;
 }
 
-export function normalizarTexto(texto: unknown): string {
-  if (texto === null || texto === undefined) return "";
-  return String(texto)
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
 
 export function createSearchIndex(escuelas: Escuela[]): SearchIndex {
   const nombreIndex = new Map<string, number[]>();

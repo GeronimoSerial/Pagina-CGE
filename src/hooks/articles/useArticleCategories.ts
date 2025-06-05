@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation';
-import { normalizarTexto } from '@/src/modules/escuelas/utils/searchUtils';
+import { normalizarTexto } from '@/src/lib/utils';
 interface UseArticleCategoriesProps {
     basePath: string;
     setCategoriaSeleccionada: (categoria: string) => void;
