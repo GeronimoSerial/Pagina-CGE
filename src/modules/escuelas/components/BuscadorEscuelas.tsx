@@ -59,11 +59,6 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
     [onSelectEscuela]
   );
 
-  const getSupervisorNombre = useCallback((supervisorID?: number) => {
-    if (supervisorID === undefined) return "Sin supervisor asignado";
-    return `Supervisor/a ${supervisorID}`;
-  }, []);
-
   return (
     <div className="relative w-full">
       <div className="relative rounded-xl border-2 border-[#217A4B]/20 bg-white shadow-lg shadow-[#217A4B]/5 transition-all focus-within:border-[#217A4B]/70 focus-within:shadow-[#217A4B]/10 hover:border-[#217A4B]/30">
@@ -89,7 +84,6 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
         </div>
       </div>
 
-      {/* Panel de resultados de búsqueda con mayor prioridad de posición */}
       {showResults && resultados.length > 0 && (
         <div
           className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-xl z-[100] overflow-hidden max-h-[350px] overflow-y-auto"
@@ -128,14 +122,12 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
                         {escuela.nombre}
                       </p>
 
-                      {/* Destacar el supervisor asignado */}
                       <div className="mt-2 flex items-center gap-2 flex-wrap">
                         <Badge className="bg-[#217A4B] text-white border-0 px-3 py-1 flex items-center gap-1">
                           <Info className="h-3 w-3" />
                           <span className="font-mono">CUE: {escuela.cue}</span>
                         </Badge>
 
-                        {/* Añadir la ubicación */}
                         <Badge
                           variant="outline"
                           className="px-3 py-1 flex items-center gap-1 border-gray-200"

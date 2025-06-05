@@ -1,6 +1,6 @@
 // src/app/noticia/[id]/page.tsx
 import { getAllContent } from "@modules/article/data/content";
-import { ARTICLES_PER_PAGE } from "@lib/article-utils";
+import { ARTICLES_PER_PAGE } from "@/src/modules/article/data/article-utils";
 import HeroMain from "@modules/home/components/HeroSection";
 import QuickAccess from "@modules/home/components/QuickAccess";
 import { Separator } from "@radix-ui/react-separator";

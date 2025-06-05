@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useIsMobile } from "@hooks/use-mobile";
+import { useIsMobile } from "@/src/hooks/organigrama/use-mobile";
 import { members } from "../data/OrganigramaData";
 import { MemberInfo, MemberDetails } from "./MemberDetails";
 import { OrganizationChart } from "./Organigrama/DesktopView";

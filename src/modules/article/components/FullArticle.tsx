@@ -12,7 +12,8 @@ import Image from "next/image";
 import { Button } from "@components/ui/button";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { formatearFecha, normalizeText } from "@lib/utils";
+import { formatearFecha } from "@lib/utils";
+import { normalizarTexto } from "../../escuelas/utils/searchUtils";
 import ShareButton from "./ShareButton";
 import PrintButton from "./PrintButton";
 import { ClientCarousel } from "@components/data/dynamic-client";
@@ -52,7 +53,7 @@ export default function FullArticle({
   sectionTitle = "Artículo",
   articulosRelacionados = [],
 }: FullArticleProps) {
-  const section = normalizeText(sectionTitle);
+  const section = normalizarTexto(sectionTitle);
 
   return (
     <div className="min-h-screen bg-slate-50">

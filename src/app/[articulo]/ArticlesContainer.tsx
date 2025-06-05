@@ -1,13 +1,13 @@
 // Contenedor del articlesgrid y el buscador que requieren Client side
 "use client";
-import React, { useState, useMemo, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Fuse from "fuse.js";
+import React, { useMemo, useEffect } from "react";
 import { FileSearch } from "lucide-react";
 import SearchInput from "@modules/layout/SearchInput";
-import { normalizeText } from "@/src/lib/utils";
-import ArticlesGrid from "../../modules/article/components/ArticlesGrid";
+import ArticlesGrid from "@modules/article/components/ArticlesGrid";
 import { Article } from "@/src/interfaces";
+import { useArticleSearch } from "@/src/hooks/articles/useArticleSearch";
+import { useArticlesData } from "@/src/hooks/articles/useArticlesData";
+import { useArticleCategories } from "@/src/hooks/articles/useArticleCategories";
 
 interface ArticlesContainerProps {
   basePath: string;
@@ -19,75 +19,20 @@ interface ArticlesContainerProps {
   };
 }
 
-const useArticleSearch = (articles: Article[], isNoticia: boolean) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
-
-  const categories = useMemo(
-    () =>
-      isNoticia
-        ? ["General", "Novedades", "Eventos", "Comunicados"]
-        : ["Licencias", "Títulos", "Inscripción", "Otros"],
-    [isNoticia]
-  );
-
-  const fuse = useMemo(() => {
-    if (articles.length === 0) return null;
-    return new Fuse(articles, {
-      keys: ["titulo", "resumen", "subcategoria"],
-      threshold: 0.3,
-    });
-  }, [articles]);
-
-  const filteredResults = useMemo(() => {
-    if (!articles || articles.length === 0) return [];
-
-    let results = [...articles];
-
-    if (categoriaSeleccionada) {
-      results = results.filter(
-        (article) =>
-          article.categoria?.toLowerCase() ===
-          categoriaSeleccionada.toLowerCase()
-      );
-    }
-
-    if (searchTerm && fuse) {
-      const searchResults = fuse.search(searchTerm);
-      results = searchResults.map((result) => result.item);
-    }
-
-    return results.map((article) => ({
-      ...article,
-      id: article.id || article.slug,
-      description: article.description || article.resumen || "Sin descripción",
-    }));
-  }, [searchTerm, categoriaSeleccionada, fuse, articles]);
-  return {
-    searchTerm,
-    setSearchTerm,
-    categoriaSeleccionada,
-    setCategoriaSeleccionada,
-    categories,
-    filteredResults,
-  };
-};
-
 export default function ArticlesContainer({
   basePath,
   articles: initialArticles,
   pagination,
 }: ArticlesContainerProps) {
   const isNoticia = basePath.includes("noticias");
-  const router = useRouter();
 
-  const [allArticles, setAllArticles] = useState<Article[]>([]);
-
-  const [isLoadingFullList, setIsLoadingFullList] = useState(true);
-  const [errorLoadingFullList, setErrorLoadingFullList] = useState<
-    string | null
-  >(null);
-  const [isCategoryFiltering, setIsCategoryFiltering] = useState(false);
+  const {
+    allArticles,
+    isLoadingFullList,
+    errorLoadingFullList,
+    isCategoryFiltering,
+    setIsCategoryFiltering
+  } = useArticlesData(isNoticia);
 
   const {
     searchTerm,
@@ -102,42 +47,11 @@ export default function ArticlesContainer({
     () => (isNoticia ? "Buscar noticias..." : "Buscar trámites..."),
     [isNoticia]
   );
-
-  const handleCategoryChange = (cat: string) => {
-    setCategoriaSeleccionada(cat);
-    setIsCategoryFiltering(true);
-    const params = new URLSearchParams(window.location.search);
-    if (cat && cat !== "") {
-      params.set("categoria", normalizeText(cat));
-    } else {
-      params.delete("categoria");
-    }
-
-    params.delete("page");
-    router.push(`${basePath}?${params.toString()}`, { scroll: false });
-  };
-
-  useEffect(() => {
-    const tipo = isNoticia ? "noticias" : "tramites";
-    setIsLoadingFullList(true);
-
-    fetch(`/content/${tipo}/index.json`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Error al cargar los artículos completos");
-        return res.json();
-      })
-      .then((data: Article[]) => {
-        setAllArticles(data);
-        setErrorLoadingFullList(null);
-      })
-      .catch((err) => {
-        setErrorLoadingFullList(err.message);
-        setAllArticles([]);
-      })
-      .finally(() => {
-        setIsLoadingFullList(false);
-      });
-  }, [isNoticia]);
+  const { handleCategoryChange, } = useArticleCategories({
+    basePath,
+    setCategoriaSeleccionada,
+    setIsCategoryFiltering
+  });
 
   useEffect(() => {
     if (initialArticles !== undefined) {
