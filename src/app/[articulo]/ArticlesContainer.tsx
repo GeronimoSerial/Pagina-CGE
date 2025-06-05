@@ -11,7 +11,7 @@ import { Article } from "@/src/interfaces";
 
 interface ArticlesContainerProps {
   basePath: string;
-  articles?: Article[]; // Artículos paginados que vienen como prop (página actual)
+  articles?: Article[];
   pagination?: {
     currentPage: number;
     totalPages: number;
@@ -19,13 +19,10 @@ interface ArticlesContainerProps {
   };
 }
 
-// Este hook abstrae la lógica de búsqueda y filtrado para que el componente principal permanezca limpio y enfocado en la UI.
 const useArticleSearch = (articles: Article[], isNoticia: boolean) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
-  // No manejamos los estados de carga/error de la búsqueda aquí, se manejan en el componente principal
 
-  // Elegimos categorías distintas según el tipo de contenido para mejorar la experiencia de filtrado.
   const categories = useMemo(
     () =>
       isNoticia
@@ -34,7 +31,6 @@ const useArticleSearch = (articles: Article[], isNoticia: boolean) => {
     [isNoticia]
   );
 
-  // Usamos Fuse.js para permitir búsquedas tolerantes a errores de tipeo y más flexibles.
   const fuse = useMemo(() => {
     if (articles.length === 0) return null;
     return new Fuse(articles, {
@@ -43,7 +39,6 @@ const useArticleSearch = (articles: Article[], isNoticia: boolean) => {
     });
   }, [articles]);
 
-  // El filtrado se realiza en memoria para evitar llamadas innecesarias al backend y mejorar la velocidad de respuesta.
   const filteredResults = useMemo(() => {
     if (!articles || articles.length === 0) return [];
 
@@ -64,11 +59,10 @@ const useArticleSearch = (articles: Article[], isNoticia: boolean) => {
 
     return results.map((article) => ({
       ...article,
-      id: article.id || article.slug, // Usar slug como fallback para ID
+      id: article.id || article.slug,
       description: article.description || article.resumen || "Sin descripción",
     }));
-  }, [searchTerm, categoriaSeleccionada, fuse, articles]); // Dependencias correctas
-
+  }, [searchTerm, categoriaSeleccionada, fuse, articles]);
   return {
     searchTerm,
     setSearchTerm,
@@ -81,20 +75,20 @@ const useArticleSearch = (articles: Article[], isNoticia: boolean) => {
 
 export default function ArticlesContainer({
   basePath,
-  articles: initialArticles, // Artículos de la página actual (paginados por Next.js)
+  articles: initialArticles,
   pagination,
 }: ArticlesContainerProps) {
   const isNoticia = basePath.includes("noticias");
   const router = useRouter();
 
-  // Estado para almacenar TODOS los artículos cargados del JSON (usado para la búsqueda global)
   const [allArticles, setAllArticles] = useState<Article[]>([]);
-  // Estados de carga y error
-  const [isLoadingFullList, setIsLoadingFullList] = useState(true); // Carga inicial de allArticles
-  const [errorLoadingFullList, setErrorLoadingFullList] = useState<string | null>(null);
-  const [isCategoryFiltering, setIsCategoryFiltering] = useState(false); // True mientras se navega a una nueva URL tras cambiar categoría
 
-  // Usamos el hook para la lógica de búsqueda, pasándole la lista COMPLETA de artículos.
+  const [isLoadingFullList, setIsLoadingFullList] = useState(true);
+  const [errorLoadingFullList, setErrorLoadingFullList] = useState<
+    string | null
+  >(null);
+  const [isCategoryFiltering, setIsCategoryFiltering] = useState(false);
+
   const {
     searchTerm,
     setSearchTerm,
@@ -104,32 +98,28 @@ export default function ArticlesContainer({
     filteredResults,
   } = useArticleSearch(allArticles, isNoticia);
 
-  // Placeholder del buscador
   const searchPlaceholder = useMemo(
     () => (isNoticia ? "Buscar noticias..." : "Buscar trámites..."),
     [isNoticia]
   );
 
-  // Manejar cambio de categoría: actualiza URL y activa estado de carga de filtro
   const handleCategoryChange = (cat: string) => {
     setCategoriaSeleccionada(cat);
-    setIsCategoryFiltering(true); // Activar indicador de carga de categoría
+    setIsCategoryFiltering(true);
     const params = new URLSearchParams(window.location.search);
     if (cat && cat !== "") {
       params.set("categoria", normalizeText(cat));
     } else {
       params.delete("categoria");
     }
-    // Eliminar el parámetro 'page' para que siempre vuelva a la primera página
+
     params.delete("page");
     router.push(`${basePath}?${params.toString()}`, { scroll: false });
-    // isCategoryFiltering se desactiva cuando initialArticles (la nueva página) llegan
   };
 
-  // Efecto para cargar la lista COMPLETA de artículos (index.json) para la búsqueda
   useEffect(() => {
     const tipo = isNoticia ? "noticias" : "tramites";
-    setIsLoadingFullList(true); // Iniciar carga
+    setIsLoadingFullList(true);
 
     fetch(`/content/${tipo}/index.json`)
       .then((res) => {
@@ -137,48 +127,47 @@ export default function ArticlesContainer({
         return res.json();
       })
       .then((data: Article[]) => {
-        setAllArticles(data); // Guardar todos los artículos
+        setAllArticles(data);
         setErrorLoadingFullList(null);
       })
       .catch((err) => {
         setErrorLoadingFullList(err.message);
-        setAllArticles([]); // Vaciar lista en caso de error
+        setAllArticles([]);
       })
       .finally(() => {
-        setIsLoadingFullList(false); // Finalizar carga
+        setIsLoadingFullList(false);
       });
-  }, [isNoticia]); // Depende de isNoticia para recargar si cambia el tipo
+  }, [isNoticia]);
 
-  // Efecto para desactivar el estado de carga de categoría cuando llegan los initialArticles de la nueva página
   useEffect(() => {
     if (initialArticles !== undefined) {
-      setIsCategoryFiltering(false); // Desactivar carga de filtro de categoría
+      setIsCategoryFiltering(false);
     }
-  }, [initialArticles]); // Depende de initialArticles para saber cuándo la nueva página ha cargado
+  }, [initialArticles]);
 
-  // Determinar qué artículos mostrar: resultados filtrados (limitado a 4) si hay búsqueda,
-  // de lo contrario, artículos paginados (initialArticles).
   const showFilteredResults = searchTerm;
   const articlesToDisplay = useMemo(() => {
     if (showFilteredResults) {
-      return filteredResults.slice(0, 4).map(article => ({
+      return filteredResults.slice(0, 4).map((article) => ({
         ...article,
         id: article.id ?? article.slug,
-        description: article.description ?? article.resumen ?? "Sin descripción",
+        description:
+          article.description ?? article.resumen ?? "Sin descripción",
       }));
     } else {
-      return initialArticles?.map(article => ({
-        ...article,
-        id: article.id ?? article.slug,
-        description: article.description ?? article.resumen ?? "Sin descripción",
-      })) || []; // Asegurarse de devolver array vacío
+      return (
+        initialArticles?.map((article) => ({
+          ...article,
+          id: article.id ?? article.slug,
+          description:
+            article.description ?? article.resumen ?? "Sin descripción",
+        })) || []
+      );
     }
-  }, [showFilteredResults, filteredResults, initialArticles]); // Dependencias correctas
+  }, [showFilteredResults, filteredResults, initialArticles]);
 
-  // Estado de carga general para el esqueleto: True si allArticles no han cargado o initialArticles no han llegado
   const isLoading = isLoadingFullList || initialArticles === undefined;
 
-  // Mostrar mensaje de error si falla la carga de la lista completa de artículos
   if (errorLoadingFullList) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -189,11 +178,9 @@ export default function ArticlesContainer({
     );
   }
 
-  // Renderizado principal: buscador, categorías y grilla de artículos
   return (
     <>
       <main className="bg-gray-50 border-t border-gray-100 z-10 relative py-8">
-        {/* Mostrar buscador/categorías si hay categorías */}
         {categories.length > 1 && (
           <section className="w-full">
             <div className="container mx-auto px-4">
@@ -211,7 +198,6 @@ export default function ArticlesContainer({
                     />
                   </div>
                 </div>
-                {/* El enlace a expedientes solo se muestra para trámites porque es relevante solo en ese contexto. */}
                 {!isNoticia && (
                   <a
                     href="https://expgob.mec.gob.ar/lup_mod/ubicar_expedWeb.asp"
@@ -228,14 +214,13 @@ export default function ArticlesContainer({
           </section>
         )}
       </main>
-      {/* Contenedor con altura mínima para evitar salto de layout */}
-      <div className="min-h-[500px]"> {/* Altura mínima */}
-        <ArticlesGrid 
+      <div className="min-h-[500px]">
+        <ArticlesGrid
           articles={articlesToDisplay}
-          basePath={basePath} 
-          pagination={pagination} 
-          isLoading={isLoading} // Carga general para esqueleto
-          isCategoryLoading={isCategoryFiltering} // Carga específica para Loader2
+          basePath={basePath}
+          pagination={pagination}
+          isLoading={isLoading}
+          isCategoryLoading={isCategoryFiltering}
         />
       </div>
     </>

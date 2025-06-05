@@ -18,7 +18,6 @@ export const HeadlessPagination = ({
   const [isNextLoading, setIsNextLoading] = useState(false);
 
   const handlePageChange = (page: number) => {
-    // Determinar cuál botón se presionó basado en la dirección del cambio de página
     const isNext = page > currentPage;
     const setLoading = isNext ? setIsNextLoading : setIsPrevLoading;
 
@@ -26,7 +25,7 @@ export const HeadlessPagination = ({
     onPageChange(page);
     setTimeout(() => {
       setLoading(false);
-    }, 500); // Dar tiempo para que la navegación comience
+    }, 500);
   };
   return (
     <div className="flex items-center justify-center gap-2 md:gap-4 px-4">

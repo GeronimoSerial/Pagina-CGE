@@ -9,10 +9,7 @@ export const metadata: Metadata = {
   description: "Instituciones dependientes del Consejo General de Educación",
 };
 
-// Pre-procesado de datos antes de renderizar
-
 export default async function Escuelas() {
-  // Transformar los datos igual que en el API
   const escuelas = getEscuelas();
   return (
     <main className="min-h-screen bg-gray-50">

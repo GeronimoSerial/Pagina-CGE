@@ -26,7 +26,6 @@ interface EscuelaDetallesProps {
   correoEscuela?: string;
 }
 
-// Componente de detalles de información - memoizado para evitar re-renderizados
 const InfoDetail = memo(
   ({
     icon: Icon,
@@ -53,7 +52,6 @@ const InfoDetail = memo(
 
 InfoDetail.displayName = "InfoDetail";
 
-// Componente de sección - memoizado para evitar re-renderizados
 const Section = memo(
   ({
     title,
@@ -78,7 +76,6 @@ const Section = memo(
 
 Section.displayName = "Section";
 
-// Estadísticas de matrícula
 const MatriculaStats = memo(({ escuela }: { escuela: Escuela }) => {
   const porcentajeCambio = escuela.matricula2024
     ? (
@@ -139,7 +136,6 @@ const MatriculaStats = memo(({ escuela }: { escuela: Escuela }) => {
 });
 
 MatriculaStats.displayName = "MatriculaStats";
-// Componente principal - memoizado para máximo rendimiento
 const EscuelaDetalles = memo(
   ({
     escuela,

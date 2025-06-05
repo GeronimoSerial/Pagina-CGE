@@ -7,7 +7,6 @@ import {
 } from "@components/ui/dialog";
 import Image from "next/image";
 
-// Tipo para la información de cada miembro
 export type MemberInfo = {
   id: string;
   name: string;
@@ -21,7 +20,6 @@ export type MemberInfo = {
   children?: MemberInfo[];
 };
 
-// Componente para mostrar detalles del miembro seleccionado
 export const MemberDetails = ({
   member,
   onClose,
@@ -43,7 +41,7 @@ export const MemberDetails = ({
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-6">
           <div className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full overflow-hidden shadow-md bg-green-50 flex-shrink-0">
             <Image
-              src={member.imageUrl || "/placeholder.svg?height=144&width=144"} // Placeholder ajustado
+              src={member.imageUrl || "/placeholder.svg?height=144&width=144"}
               alt={member.name}
               className="object-cover w-full h-full"
               width={500}

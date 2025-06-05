@@ -3,7 +3,6 @@ import type { Escuela } from "@/src/interfaces";
 
 export function getEscuelas(): Escuela[] {
   const processedEscuelas = escuelas.map((escuela) => {
-    // Normalizar fechaFundacion2 si existe y es string
     let fechaFundacion2: number | undefined = undefined;
     if (typeof escuela.fechaFundacion2 === "string") {
       const parsed = parseInt(escuela.fechaFundacion2, 10);
@@ -12,7 +11,6 @@ export function getEscuelas(): Escuela[] {
       fechaFundacion2 = escuela.fechaFundacion2;
     }
 
-    // Convert categoria to string if it's a number
     const categoria = escuela.categoria?.toString();
 
     return {
@@ -28,7 +26,6 @@ interface SupervisoresClientProps {
   datosSimulados: Escuela[];
 }
 
-// Función para crear datos de supervisores
 export function getSupervisoresFicticios() {
   return Array.from({ length: 14 }, (_, i) => ({
     id: i + 1,
@@ -36,7 +33,6 @@ export function getSupervisoresFicticios() {
   }));
 }
 
-// Función para agrupar escuelas por supervisor
 export function agruparEscuelasPorDepartamento(escuelas: Escuela[]) {
   const mapa: { [key: string]: Escuela[] } = {};
   escuelas.forEach((escuela) => {

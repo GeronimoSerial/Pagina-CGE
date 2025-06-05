@@ -21,9 +21,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@components/ui/select";
-import { Badge } from "@components/ui/badge";
 
-// Extender la interfaz Escuela para incluir el campo mail
 interface EscuelaConMail extends Escuela {
   mail?: string | null;
 }
@@ -37,13 +35,11 @@ export default function EscuelasClient({
   const [escuelaSeleccionada, setEscuelaSeleccionada] =
     useState<EscuelaConMail | null>(null);
 
-  //memoización
   const escuelasPorDepartamento = useMemo(
     () => agruparEscuelasPorDepartamento(escuelas),
     [escuelas]
   );
 
-  // Sumar matrícula 2025
   const totalMatricula2025 = useMemo(() => {
     return escuelas.reduce(
       (acc, escuela) => acc + Number(escuela.matricula2025 || 0),
@@ -51,7 +47,6 @@ export default function EscuelasClient({
     );
   }, [escuelas]);
 
-  // Sumar matrícula 2024
   const totalMatricula2024 = useMemo(() => {
     return escuelas.reduce(
       (acc, escuela) => acc + Number(escuela.matricula2024 || 0),
@@ -59,7 +54,6 @@ export default function EscuelasClient({
     );
   }, [escuelas]);
 
-  // Variación de matrícula
   const variacionMatricula = useMemo(() => {
     if (totalMatricula2024 === 0) return null;
     const diferencia = totalMatricula2025 - totalMatricula2024;
@@ -67,7 +61,6 @@ export default function EscuelasClient({
     return { diferencia, porcentaje };
   }, [totalMatricula2024, totalMatricula2025]);
 
-  // Callbacks para evitar re-renderizados
   const handleToggleAccordion = useCallback((value: string) => {
     setExpanded(value || undefined);
   }, []);
@@ -96,7 +89,6 @@ export default function EscuelasClient({
   return (
     <div className="bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
       <div className="p-8 space-y-6">
-        {/* Search section with improved responsive design */}
         <div className="bg-white rounded-xl border border-gray-200 shadow-lg p-4 sm:p-6 transform transition hover:shadow-xl relative z-20">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
             <div className="rounded-full bg-emerald-100 p-3 shrink-0">

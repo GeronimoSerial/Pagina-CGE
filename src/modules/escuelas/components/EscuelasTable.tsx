@@ -4,18 +4,11 @@ import type { Escuela } from "@/src/interfaces";
 import { Eye, School } from "lucide-react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
-/**
- * Props para el componente EscuelasTable
- */
 interface EscuelasTableProps {
   escuelas: Escuela[];
   onSelectEscuela: (escuela: Escuela) => void;
 }
 
-/**
- * Componente EscuelasTable para mostrar listado de escuelas
- * Incluye vista responsiva para móvil y desktop con virtualización
- */
 const EscuelasTable = memo(
   ({ escuelas, onSelectEscuela }: EscuelasTableProps) => {
     const handleClick = useCallback(
@@ -26,14 +19,13 @@ const EscuelasTable = memo(
       [onSelectEscuela]
     );
 
-    // Versión móvil: tarjetas virtualizadas
     const MobileView = () => {
       const parentRef = useRef<HTMLDivElement>(null);
 
       const cardVirtualizer = useVirtualizer({
         count: escuelas.length,
         getScrollElement: () => parentRef.current,
-        estimateSize: () => 130, // altura estimada más reducida
+        estimateSize: () => 130,
         overscan: 5,
       });
 
@@ -47,7 +39,6 @@ const EscuelasTable = memo(
               scrollbarColor: "#d1d5db #f9fafb",
             }}
           >
-            {/* Contenedor con altura total para el scroll */}
             <div
               style={{
                 height: `${cardVirtualizer.getTotalSize()}px`,
@@ -73,7 +64,6 @@ const EscuelasTable = memo(
                     }}
                     onClick={() => onSelectEscuela(escuela)}
                   >
-                    {/* Encabezado de la tarjeta */}
                     <div
                       className="bg-[#217A4B]/10 px-3 py-2 border-b border-gray-100 
                                 flex items-center justify-between"
@@ -86,7 +76,6 @@ const EscuelasTable = memo(
                       </div>
                     </div>
 
-                    {/* Cuerpo de la tarjeta simplificado */}
                     <div className="px-3 py-2">
                       <h3 className="font-medium text-xs text-gray-800 mb-1.5 line-clamp-1">
                         {escuela.nombre}
@@ -121,18 +110,16 @@ const EscuelasTable = memo(
       );
     };
 
-    // Versión desktop: tabla completa con virtualización
     const DesktopView = () => {
       const parentRef = useRef<HTMLDivElement>(null);
 
       const rowVirtualizer = useVirtualizer({
         count: escuelas.length,
         getScrollElement: () => parentRef.current,
-        estimateSize: () => 60, // altura estimada de cada fila
+        estimateSize: () => 60,
         overscan: 10,
       });
 
-      // Definir proporciones de las columnas (en porcentaje)
       const columnWidths = {
         cue: 10,
         nombre: 25,
@@ -153,9 +140,7 @@ const EscuelasTable = memo(
               scrollbarColor: "#d1d5db #f9fafb",
             }}
           >
-            {/* Contenedor principal que mantiene la alineación */}
             <div className="w-full min-w-[900px] relative">
-              {/* Encabezado de tabla */}
               <table className="w-full border-collapse table-fixed">
                 <thead className="bg-[#217A4B]/10 sticky top-0 z-10">
                   <tr>
@@ -205,7 +190,6 @@ const EscuelasTable = memo(
                 </thead>
               </table>
 
-              {/* Cuerpo de la tabla virtualizado */}
               <div
                 style={{
                   height: `${rowVirtualizer.getTotalSize()}px`,
@@ -298,7 +282,6 @@ const EscuelasTable = memo(
             </div>
           </div>
 
-          {/* Pie de tabla con contador */}
           <div className="underline bg-gray-50 py-3 px-6 border-t border-gray-200 text-sm text-gray-500 font-medium">
             Total de escuelas: <b>{escuelas.length}</b>
           </div>
@@ -306,7 +289,6 @@ const EscuelasTable = memo(
       );
     };
 
-    // Renderizar ambas vistas (móvil y desktop)
     return (
       <>
         <MobileView />

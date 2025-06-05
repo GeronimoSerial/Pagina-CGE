@@ -9,18 +9,11 @@ import {
 interface HeroSectionProps {
   title?: string;
   description?: string;
-  ctaText?: string;
 }
 
-export default function HeroSection({
-  title,
-  description,
-  ctaText,
-}: HeroSectionProps) {
-  
+export default function HeroSection({ title, description }: HeroSectionProps) {
   return (
     <div className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] text-white  shadow-xl hover:shadow-2xl transition-all duration-500 h-[250px] flex items-center justify-center overflow-hidden relative">
-      {/* Patrón educativo más visible */}
       <div className="absolute inset-0 flex flex-wrap justify-center items-center pointer-events-none">
         {[...Array(18)].map((_, i) => {
           const iconSize = 24;
@@ -50,7 +43,6 @@ export default function HeroSection({
         })}
       </div>
 
-      {/* Efecto de brillo sutil */}
       <div className="absolute inset-0 bg-gradient-to-tr from-white/15 to-transparent pointer-events-none" />
 
       <div className="container mx-auto text-center px-5 relative z-10">
@@ -64,7 +56,6 @@ export default function HeroSection({
         </div>
       </div>
 
-      {/* Libro grande destacado */}
       <div className="absolute bottom-6 right-6 opacity-25">
         <BookText size={100} className="text-white" strokeWidth={1.2} />
       </div>

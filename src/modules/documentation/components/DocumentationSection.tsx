@@ -32,10 +32,8 @@ const DocumentationSection = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const documentsPerPage = 6;
 
-  // Categorías disponibles para el filtro
   const categories = ["licencias", "formularios", "normativas", "guias"];
 
-  // Set initial filter from URL param only on mount
   React.useEffect(() => {
     if (categoriaParam && categories.includes(categoriaParam)) {
       setActiveFilter(categoriaParam);
@@ -44,14 +42,12 @@ const DocumentationSection = () => {
     }
   }, [categoriaParam]);
 
-  // Filter documents based on search query and active filter
   const filteredDocuments = filterDocuments(
     documents,
     searchQuery,
     activeFilter
   );
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredDocuments.length / documentsPerPage);
   const currentDocuments = filteredDocuments.slice(
     (currentPage - 1) * documentsPerPage,
@@ -62,7 +58,6 @@ const DocumentationSection = () => {
     setCurrentPage(page);
   };
 
-  // Reset to first page when filter or search changes
   React.useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, activeFilter]);

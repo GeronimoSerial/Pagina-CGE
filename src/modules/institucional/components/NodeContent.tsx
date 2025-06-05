@@ -19,7 +19,7 @@ export const NodeContent = ({
       <Card
         className={cn(
           "bg-white rounded-lg border border-gray-200 shadow-md transition-all duration-300 transform hover:shadow-lg hover:-translate-y-0.5 cursor-pointer group",
-          isPresident ? "w-56 sm:w-64" : "w-36 sm:w-40", // Aumentado aún más el ancho para el presidente
+          isPresident ? "w-56 sm:w-64" : "w-36 sm:w-40",
           "max-w-full relative overflow-hidden",
           isPresident && "border-2 border-green-600 shadow-green-500/30"
         )}
@@ -31,11 +31,11 @@ export const NodeContent = ({
             <div
               className={cn(
                 "relative rounded-full overflow-hidden bg-green-50 mb-2",
-                isPresident ? "w-20 h-20" : "w-16 h-16" // Aumentado tamaño de imagen
+                isPresident ? "w-20 h-20" : "w-16 h-16"
               )}
             >
               <img
-                src={member.imageUrl || "/placeholder.svg?height=80&width=80"} // Ajustado placeholder
+                src={member.imageUrl || "/placeholder.svg?height=80&width=80"}
                 alt={member.name}
                 className="object-cover w-full h-full"
               />
@@ -43,10 +43,10 @@ export const NodeContent = ({
             <div className="text-center">
               <h4
                 className={cn(
-                  "text-slate-700 line-clamp-2 text-center", // Permitir dos líneas para nombres largos
-                  isPresident ? "text-md font-bold" : "text-sm font-semibold" // Ajustado tamaño y peso de fuente
+                  "text-slate-700 line-clamp-2 text-center",
+                  isPresident ? "text-md font-bold" : "text-sm font-semibold"
                 )}
-                style={{ minHeight: "2.5em" }} // Asegurar espacio para dos líneas
+                style={{ minHeight: "2.5em" }}
               >
                 {member.name}
               </h4>
@@ -55,7 +55,7 @@ export const NodeContent = ({
                   "text-center mt-0.5 min-h-[2.5em]",
                   isPresident
                     ? "font-bold text-slate-800 text-sm"
-                    : "text-xs text-green-600" // "Presidente" en negro y más grande, otros en verde y tamaño original
+                    : "text-xs text-green-600"
                 )}
               >
                 {isPresident ? "PRESIDENTE" : ""}
@@ -72,8 +72,6 @@ export const NodeContent = ({
           </div>
 
           <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-lg" />
-
-          {/* Popover eliminado para simplificar, el botón de detalles es más claro */}
         </CardContent>
       </Card>
     </div>
