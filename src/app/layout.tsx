@@ -6,6 +6,7 @@ import ModalAvisoDesarrollo from "@components/ModalAvisoDesarrollo";
 
 import metadata from "./metadata";
 import Head from "next/head";
+import { Separator } from "@radix-ui/react-separator";
 
 export { metadata };
 
@@ -49,6 +50,7 @@ export default function RootLayout({
         <ModalAvisoDesarrollo />
 
         <div id="root">{children}</div>
+        <Separator className="my-8" />
         <Footer />
       </body>
     </html>

@@ -96,7 +96,7 @@ const ArticlesGridContent = ({
   };
 
   return (
-    <section className="w-full mb-3">
+    <section className="w-full">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {isCategoryLoading ? (
@@ -111,14 +111,14 @@ const ArticlesGridContent = ({
             articles.map((item) => (
               <Card
                 key={item.id}
-                className="h-[28rem] flex flex-col overflow-hidden border-0 shadow-[0_2px_8px_rgba(0,0,0,0.08)] md:hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] md:transition-all md:duration-300"
+                className="h-[24rem] flex flex-col overflow-hidden border-0 shadow-[0_2px_8px_rgba(0,0,0,0.08)] md:hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] md:transition-all md:duration-300"
               >
                 <Link
                   href={getItemLink(item.id)}
                   title="Ver artículo completo"
                   className="flex flex-col h-full"
                 >
-                  <div className="h-48 overflow-hidden relative">
+                  <div className="h-40 overflow-hidden relative">
                     {item.imagen ? (
                       <Image
                         src={

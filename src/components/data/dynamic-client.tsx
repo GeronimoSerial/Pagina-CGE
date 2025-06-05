@@ -27,16 +27,13 @@ export const ClientOrganigrama = dynamic(
 );
 
 export const EscuelasClient = dynamic(
-  () => import("@/src/modules/escuelas/components/EscuelasClient"),
+  () => import("@/src/modules/escuelas/components/index"),
   { ssr: false }
 );
 
-export const SupervisoresClient = dynamic(
-  () => import("@modules/escuelas/components/SupervisoresClient")
-);
 
 export const EscuelaDetalles = dynamic(
-  () => import("../../modules/escuelas/components/EscuelaDetalles"),
+  () => import("../../modules/escuelas/components/EscuelaDetalles/index"),
   {
     ssr: false,
     loading: () => (
@@ -57,7 +54,7 @@ export const EscuelaDetalles = dynamic(
 
 export const EscuelasTable = dynamic(
   () =>
-    import("../../modules/escuelas/components/EscuelasTable").then(
+    import("../../modules/escuelas/components/EscuelaTable/index").then(
       (mod) => mod.default
     ),
   {

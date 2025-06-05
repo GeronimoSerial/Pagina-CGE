@@ -1,10 +1,10 @@
-import { formatearFecha } from "./utils";
+import { formatearFecha } from "../../../lib/utils";
 
 export const ARTICLES_PER_PAGE = 4;
 
 export function normalizeArticle(item: any) {
   const date = formatearFecha(item.date || item.fecha || "");
-  
+
   return {
     id: item.slug,
     slug: item.slug,
