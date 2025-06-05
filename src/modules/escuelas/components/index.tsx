@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useMemo, useState, useCallback, useEffect } from "react";
 import { Accordion } from "@components/ui/accordion";
 import BuscadorEscuelas from "./BuscadorEscuelas";
 import { EscuelaDetalles } from "@components/data/dynamic-client";
@@ -21,16 +21,14 @@ import {
   SelectContent,
   SelectItem,
 } from "@components/ui/select";
+import { useEscuelas } from "@/src/hooks/useEscuelas";
 
 interface EscuelaConMail extends Escuela {
   mail?: string | null;
 }
 
-export default function EscuelasClient({
-  escuelas,
-}: {
-  escuelas: EscuelaConMail[];
-}) {
+export default function EscuelasClient() {
+  const { escuelas, loading, error } = useEscuelas();
   const [expanded, setExpanded] = useState<string | undefined>(undefined);
   const [escuelaSeleccionada, setEscuelaSeleccionada] =
     useState<EscuelaConMail | null>(null);
@@ -72,6 +70,32 @@ export default function EscuelasClient({
   const handleCloseDetalles = useCallback(() => {
     setEscuelaSeleccionada(null);
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Alert className="rounded-xl border-amber-200 bg-amber-50 shadow-md w-full max-w-md">
+          <AlertCircle className="h-6 w-6 text-amber-500 animate-spin" />
+          <AlertDescription className="font-medium text-amber-800 ml-2">
+            Cargando escuelas...
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Alert className="rounded-xl border-red-200 bg-red-50 shadow-md w-full max-w-md">
+          <AlertCircle className="h-6 w-6 text-red-500" />
+          <AlertDescription className="font-medium text-red-800 ml-2">
+            Error: {error}
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   if (!escuelas.length) {
     return (

@@ -10,8 +10,7 @@ export const metadata: Metadata = {
   description: "Instituciones dependientes del Consejo General de Educación",
 };
 
-export default async function Escuelas() {
-  const escuelas = getEscuelas();
+export default function Escuelas() {
   return (
     <main className="min-h-screen bg-gray-50">
       <HeroSection
@@ -19,7 +18,7 @@ export default async function Escuelas() {
         description="Instituciones dependientes del Consejo General de Educación."
       />
       <div className="container mx-auto px-4 py-8">
-        <EscuelasClient escuelas={escuelas} />
+        <EscuelasClient />
       </div>
       <FAQSection basePath="/escuelas" />
     </main>
