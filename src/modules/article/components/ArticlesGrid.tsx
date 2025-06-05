@@ -118,7 +118,7 @@ const ArticlesGridContent = ({
                   title="Ver artículo completo"
                   className="flex flex-col h-full"
                 >
-                  <div className="h-40 overflow-hidden relative">
+                  <div className="h-40 min-h-40 max-h-40 overflow-hidden relative flex items-center justify-center">
                     {item.imagen ? (
                       <Image
                         src={
@@ -132,6 +132,7 @@ const ArticlesGridContent = ({
                         width={500}
                         height={500}
                         className="object-cover w-full h-full md:transition-transform md:duration-300 md:hover:scale-105"
+                        style={{ aspectRatio: "1.6/1", objectFit: "cover" }}
                       />
                     ) : (
                       <div className="w-full h-full bg-gray-100 flex items-center justify-center">
@@ -162,7 +163,7 @@ const ArticlesGridContent = ({
                     </div>
                     <CardTitle
                       title={item.titulo}
-                      className="text-lg font-bold line-clamp-2 text-gray-800"
+                      className="text-base font-semibold line-clamp-2 text-gray-800 min-h-[2.5rem]"
                     >
                       {item.titulo}
                     </CardTitle>
