@@ -1,5 +1,5 @@
 // Modal que muestra la información de cada escuela
-import React, { memo, useMemo } from "react";
+import React, {memo} from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,130 +13,19 @@ import {
   School,
   MapPin,
   Info,
-  BarChart3,
   Building2,
   Bookmark,
   Calendar,
   Map,
   ArrowRight,
 } from "lucide-react";
-
+import { MatriculaStats } from "./MatriculaStats";
 interface EscuelaDetallesProps {
   escuela: Escuela;
   onClose: () => void;
   correoEscuela?: string;
 }
 
-const InfoDetail = memo(
-  ({
-    icon: Icon,
-    label,
-    value,
-  }: {
-    icon: React.ElementType;
-    label: string;
-    value: string | number;
-  }) => (
-    <div className="flex items-start gap-3 p-4 bg-white rounded-lg border border-gray-100 hover:border-[#217A4B]/40 transition-all hover:shadow-md group">
-      <div className="bg-[#217A4B]/10 p-2.5 rounded-lg flex-shrink-0 group-hover:bg-[#217A4B]/20 transition-all duration-300">
-        <Icon className="h-5 w-5 text-[#217A4B]" />
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-gray-500">{label}</p>
-        <p className="text-sm font-semibold text-gray-800 break-words mt-0.5">
-          {value || "No especificado"}
-        </p>
-      </div>
-    </div>
-  )
-);
-
-InfoDetail.displayName = "InfoDetail";
-
-const Section = memo(
-  ({
-    title,
-    icon: Icon,
-    children,
-    className = "",
-  }: {
-    title: string;
-    icon: React.ElementType;
-    children: React.ReactNode;
-    className?: string;
-  }) => (
-    <div className={`space-y-4 ${className}`}>
-      <h3 className="text-base font-semibold text-[#205C3B] flex items-center gap-2 border-b border-[#217A4B]/20 pb-2">
-        <Icon className="h-5 w-5 text-[#217A4B]" />
-        <span>{title}</span>
-      </h3>
-      {children}
-    </div>
-  )
-);
-
-Section.displayName = "Section";
-
-const MatriculaStats = memo(({ escuela }: { escuela: Escuela }) => {
-  const porcentajeCambio = escuela.matricula2024
-    ? (
-        ((escuela.matricula2025 - escuela.matricula2024) /
-          escuela.matricula2024) *
-        100
-      ).toFixed(1)
-    : 0;
-
-  const cambio = Number(porcentajeCambio);
-  const tendenciaColor =
-    cambio > 0
-      ? "text-emerald-600"
-      : cambio < 0
-      ? "text-rose-600"
-      : "text-gray-600";
-  const tendenciaIcon = cambio > 0 ? "↑" : cambio < 0 ? "↓" : "→";
-
-  return (
-    <div className="border-b border-gray-100 pb-3">
-      <div className="flex items-center gap-2 mb-3">
-        <BarChart3 className="h-4 w-4 text-[#217A4B]" />
-        <h3 className="text-sm font-semibold text-[#205C3B]">
-          Matrícula Escolar
-        </h3>
-      </div>
-
-      <div className="grid grid-cols-2 gap-x-8 gap-y-2 px-2">
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-500">2024:</span>
-          <span className="text-lg font-semibold text-[#217A4B]">
-            {escuela.matricula2024}
-          </span>
-        </div>
-
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-500">2025:</span>
-          <span className="text-lg font-semibold text-[#217A4B]">
-            {escuela.matricula2025}
-          </span>
-        </div>
-
-        <div className="col-span-2 flex items-center justify-end mt-1">
-          <div className={`flex items-center gap-1 ${tendenciaColor}`}>
-            <span className="text-base font-semibold">{tendenciaIcon}</span>
-            <span className="text-sm">
-              {cambio === 0
-                ? "Sin cambios"
-                : `${cambio > 0 ? "+" : ""}${porcentajeCambio}% (${Math.abs(
-                    escuela.matricula2025 - escuela.matricula2024
-                  )} alumnos)`}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-});
-
-MatriculaStats.displayName = "MatriculaStats";
 const EscuelaDetalles = memo(
   ({
     escuela,

@@ -4,6 +4,16 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function normalizarTexto(texto: unknown): string {
+  if (texto === null || texto === undefined) return "";
+  return String(texto)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export function formatearFecha(fechaStr: string | Date) {
   if (!fechaStr) return "";
 
@@ -17,14 +27,6 @@ export function formatearFecha(fechaStr: string | Date) {
   });
 }
 
-export const normalizeText = (text: string = "") => {
-  return text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^\w\s]/g, " ")
-    .trim();
-};
 
 export function filtrarArticulos(
   article: any[],
@@ -39,9 +41,9 @@ export function filtrarArticulos(
       return coincideCategoria;
     }
 
-    const searchTermNormalized = normalizeText(searchTerm);
-    const titleNormalized = normalizeText(item.title || item.titulo);
-    const descriptionNormalized = normalizeText(
+    const searchTermNormalized = normalizarTexto(searchTerm);
+    const titleNormalized = normalizarTexto(item.title || item.titulo);
+    const descriptionNormalized = normalizarTexto(
       item.description || item.resumen
     );
     const contentToSearch = titleNormalized + " " + descriptionNormalized;
@@ -130,13 +132,7 @@ export const filterDocuments = (
   searchTerm: string,
   filter: string = "all"
 ) => {
-  const normalizeText = (text: string = "") => {
-    return text
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^\w\s]/g, " ");
-  };
+
 
   return documents.filter((doc) => {
     const matchesFilter = filter === "all" || doc.category === filter;
@@ -145,9 +141,9 @@ export const filterDocuments = (
       return matchesFilter;
     }
 
-    const searchTermNormalized = normalizeText(searchTerm);
-    const titleNormalized = normalizeText(doc.title);
-    const descriptionNormalized = normalizeText(doc.description);
+    const searchTermNormalized = normalizarTexto(searchTerm);
+    const titleNormalized = normalizarTexto(doc.title);
+    const descriptionNormalized = normalizarTexto(doc.description);
     const contentToSearch = titleNormalized + " " + descriptionNormalized;
 
     const searchWords = searchTermNormalized

@@ -1,9 +1,11 @@
 //REVISAR
-import escuelas from "../data/escuelas.json";
+// import escuelas from "../data/escuelas.json";
 import type { Escuela } from "@/src/interfaces";
 
-export function getEscuelas(): Escuela[] {
-  const processedEscuelas = escuelas.map((escuela) => {
+export async function getEscuelas(): Promise<Escuela[]> {
+  // Importación dinámica para que solo se cargue cuando se llama a la función
+  const escuelas: any[] = (await import("../data/escuelas.json")).default;
+  const processedEscuelas = escuelas.map((escuela: any) => {
     let fechaFundacion2: number | undefined = undefined;
     if (typeof escuela.fechaFundacion2 === "string") {
       const parsed = parseInt(escuela.fechaFundacion2, 10);
@@ -23,6 +25,7 @@ export function getEscuelas(): Escuela[] {
 
   return processedEscuelas;
 }
+
 interface SupervisoresClientProps {
   datosSimulados: Escuela[];
 }
