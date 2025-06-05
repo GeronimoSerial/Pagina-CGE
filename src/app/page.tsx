@@ -44,14 +44,14 @@ export default async function PagPrincipal() {
       <main>
         {/* Hero Section */}
         <HeroMain />
-        <Separator className="my-8 bg-[#217A4B]/20" />
+        <Separator className="my-8 " />
         {/* Quick Access Section */}
-        <section className="py-12 bg-transparent">
+        <section className=" bg-transparent">
           <div className="container mx-auto px-4 md:px-6">
             <QuickAccess />
           </div>
         </section>
-        <Separator className="my-8 bg-[#217A4B]/20" />
+        <Separator className="my-8" />
         {/* News Section */}
         <section id="noticias" className="bg-transparent">
           <div className="container mx-auto px-4 md:px-6">
