@@ -83,10 +83,10 @@ const DocumentationSection = () => {
   };
 
   return (
-    <section id="documentacion" className="w-full py-6">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col min-h-[800px]">
-          <div className="flex flex-col md:flex-row gap-6 mb-8">
+    <section id="documentacion" className="w-full py-3">
+      <div className="container mx-auto px-2">
+        <div className="flex flex-col min-h-[500px]">
+          <div className="flex flex-col md:flex-row gap-3 mb-4">
             <div className="w-full max-w-3xl mx-auto rounded-2xl shadow-lg bg-white/80 backdrop-blur-sm p-6 border border-gray-100">
               <SearchInput
                 value={searchQuery}
@@ -102,46 +102,46 @@ const DocumentationSection = () => {
             </div>
           </div>
 
-          <div className="relative rounded-lg border border-gray-200 shadow-md bg-white">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
+          <div className="relative rounded-md border border-gray-200 shadow bg-white">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-3">
               {currentDocuments.length > 0 ? (
                 currentDocuments.map((doc) => (
                   <Card
                     key={doc.id}
-                    className="flex flex-col h-72 border border-gray-200 hover:border-green-300 hover:shadow-lg transition-all duration-300"
+                    className="flex flex-col h-56 border border-gray-200 hover:border-green-300 hover:shadow transition-all duration-300 rounded-md"
                   >
-                    <CardHeader className="pb-2 pt-4">
+                    <CardHeader className="pb-1 pt-2">
                       <div className="flex justify-between items-start">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
                           {getCategoryIcon(doc.category)}
                           <Badge
                             variant="outline"
-                            className="text-xs font-medium capitalize px-2 py-0.5"
+                            className="text-sm font-medium capitalize px-2 py-0.5"
                           >
                             {doc.type}
                           </Badge>
                         </div>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-sm text-gray-500">
                           {doc.date}
                         </span>
                       </div>
                     </CardHeader>
                     <CardContent className="flex-grow overflow-hidden">
-                      <CardTitle className="text-lg font-semibold mb-2 line-clamp-2">
+                      <CardTitle className="text-lg font-semibold mb-1 line-clamp-2">
                         {doc.title}
                       </CardTitle>
-                      <CardDescription className="text-gray-600 text-sm line-clamp-4">
+                      <CardDescription className="text-gray-600 text-sm line-clamp-3">
                         {doc.description}
                       </CardDescription>
                     </CardContent>
-                    <CardFooter className="pt-2 pb-4">
+                    <CardFooter className="pt-1 pb-2">
                       <Button
                         variant="outline"
-                        className="w-full flex items-center gap-2 hover:bg-green-50 transition-colors"
+                        className="w-full flex items-center gap-1 hover:bg-green-50 transition-colors text-sm py-1 px-2"
                         asChild
                       >
                         <a href={doc.downloadUrl}>
-                          <Download className="h-4 w-4" />
+                          <Download className="h-3 w-3" />
                           Descargar
                         </a>
                       </Button>
@@ -149,13 +149,13 @@ const DocumentationSection = () => {
                   </Card>
                 ))
               ) : (
-                <div className="col-span-full flex items-center justify-center h-96">
-                  <div className="text-center p-8 rounded-lg bg-gray-50">
-                    <FileText className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-700">
+                <div className="col-span-full flex items-center justify-center h-60">
+                  <div className="text-center p-4 rounded-md bg-gray-50">
+                    <FileText className="h-8 w-8 mx-auto text-gray-300 mb-2" />
+                    <h3 className="text-base font-medium text-gray-700">
                       No se encontraron documentos
                     </h3>
-                    <p className="text-gray-500 mt-2 max-w-md">
+                    <p className="text-gray-500 mt-1 max-w-xs text-sm">
                       Intenta con otra búsqueda o selecciona otra categoría
                     </p>
                   </div>
@@ -165,7 +165,7 @@ const DocumentationSection = () => {
           </div>
 
           {filteredDocuments.length > documentsPerPage && (
-            <div className="mt-6">
+            <div className="mt-3">
               <HeadlessPagination
                 currentPage={currentPage}
                 totalPages={totalPages}
@@ -174,14 +174,14 @@ const DocumentationSection = () => {
             </div>
           )}
 
-          <div className="text-center mt-10">
-            <p className="text-gray-500 mb-4">
+          <div className="text-center mt-6">
+            <p className="text-gray-500 mb-2 text-sm">
               Próximamente más documentos y recursos estarán disponibles
             </p>
             <a href="/contacto">
               <Button
                 variant="outline"
-                className="border-green-600 text-green-700 hover:bg-green-50"
+                className="border-green-600 text-green-700 hover:bg-green-50 text-sm py-1 px-3"
               >
                 Solicitar documentación específica
               </Button>

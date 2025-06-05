@@ -38,7 +38,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   }, []);
 
   return (
-    <div className="w-full space-y-3">
+    <div className="w-full space-y-2">
       <div className="relative group">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5 pointer-events-none" />
         <input

@@ -43,13 +43,13 @@ export default function Contacto() {
         description="Si tienes alguna consulta o sugerencia, no dudes en contactarnos. Estamos aquí para ayudarte."
       />
 
-      <section className="py-12 md:py-16">
+      <section className="py-8 md:py-12">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-2xl mx-auto">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/30 to-teal-500/30 blur-3xl opacity-20 rounded-3xl -z-10"></div>
               <Card className="w-full backdrop-blur-sm bg-white/90 dark:bg-black/80 border border-gray-200/50 dark:border-gray-800/50 shadow-[0_20px_70px_-15px_rgba(61,139,55,0.25)] hover:shadow-[0_20px_70px_-15px_rgba(61,139,55,0.35)] transition-shadow duration-300 rounded-3xl overflow-hidden">
-                <CardContent className="p-8">
+                <CardContent className="p-6">
                   {enviado && (
                     <Alert className="mb-6 border-green-500 bg-green-50">
                       <AlertTitle>¡Mensaje enviado con éxito!</AlertTitle>

@@ -99,7 +99,7 @@ export default function ArticlesContainer({
           <section className="w-full">
             <div className="container mx-auto px-4">
               <div className="flex flex-col items-center gap-4">
-                <div className="w-full max-w-3xl">
+                <div className="w-full max-w-2xl">
                   <div className="rounded-2xl shadow-lg bg-white/80 backdrop-blur-sm p-6 border border-gray-100">
                     <SearchInput
                       value={searchTerm}
