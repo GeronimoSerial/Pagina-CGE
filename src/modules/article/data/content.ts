@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-
+import { normalizarTexto } from "../../escuelas/utils/searchUtils";
 function getDirectory(type: "noticias" | "tramites") {
   return path.join(process.cwd(), `/public/content/${type}`);
 }
@@ -74,17 +74,8 @@ export function getAllContentMetadata(
     });
 
   if (searchTerm || categoria) {
-    const normalizeText = (text: string = "") => {
-      return text
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/\s+/g, "-")
-        .replace(/[^a-z0-9\-]/g, "")
-        .trim();
-    };
 
-    const searchTermNormalized = searchTerm ? normalizeText(searchTerm) : "";
+    const searchTermNormalized = searchTerm ? normalizarTexto(searchTerm) : "";
     const searchWords = searchTermNormalized
       ? searchTermNormalized.split(/\s+/).filter((word) => word.length > 0)
       : [];
@@ -92,7 +83,7 @@ export function getAllContentMetadata(
     filteredFilenames = filteredFilenames.filter((filename) => {
       const fileData = getFileData(filename);
 
-      if (categoria && normalizeText(fileData.subcategoria) !== categoria) {
+      if (categoria && normalizarTexto(fileData.subcategoria) !== categoria) {
         return false;
       }
 
@@ -100,8 +91,8 @@ export function getAllContentMetadata(
         return true;
       }
 
-      const titleNormalized = normalizeText(fileData.titulo || "");
-      const descriptionNormalized = normalizeText(
+      const titleNormalized = normalizarTexto(fileData.titulo || "");
+      const descriptionNormalized = normalizarTexto(
         fileData.description || fileData.resumen || ""
       );
       const contentToSearch = titleNormalized + " " + descriptionNormalized;

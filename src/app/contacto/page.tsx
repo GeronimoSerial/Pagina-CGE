@@ -24,7 +24,7 @@ import { Alert, AlertDescription, AlertTitle } from "@components/ui/alert";
 import SocialMediaSection from "@modules/socials/SocialMediaSection";
 import HeroSection from "@modules/layout/Hero";
 import FAQSection from "@modules/layout/FAQSection";
-import { useContactForm } from "@hooks/useContactForm";
+import { useContactForm } from "@/src/hooks/contacto/useContactForm";
 
 // import { Metadata } from "next";
 
