@@ -13,7 +13,7 @@ import { Button } from "@components/ui/button";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { formatearFecha } from "@lib/utils";
-import { normalizarTexto } from "../../escuelas/utils/searchUtils";
+import { normalizarTexto } from "@lib/utils";
 import ShareButton from "./ShareButton";
 import PrintButton from "./PrintButton";
 import { ClientCarousel } from "@components/data/dynamic-client";
