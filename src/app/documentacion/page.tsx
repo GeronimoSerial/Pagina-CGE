@@ -1,3 +1,4 @@
+// Documentación descargable.
 import DocumentationSection from "@modules/documentation/components/DocumentationSection";
 import HeroSection from "@modules/layout/Hero";
 import FAQSection from "@modules/layout/FAQSection";

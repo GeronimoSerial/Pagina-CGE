@@ -1,3 +1,4 @@
+//Accordion para mostrar escuelas agrupadas por supervisor o departamento, importa escuelasTable con react-window
 import { Loader2, SearchIcon, Building2 } from "lucide-react";
 import React, { Suspense } from "react";
 import { AccordionContent, AccordionItem } from "@components/ui/accordion";

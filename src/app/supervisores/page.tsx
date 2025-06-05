@@ -1,3 +1,4 @@
+//
 import HeroSection from "@modules/layout/Hero";
 import { Metadata } from "next";
 import { Suspense } from "react";

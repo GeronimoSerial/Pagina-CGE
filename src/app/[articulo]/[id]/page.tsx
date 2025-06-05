@@ -1,3 +1,4 @@
+//Articulo completo de una noticia o trámite
 import {
   getContentBySlug,
   getAllContentSlugs,

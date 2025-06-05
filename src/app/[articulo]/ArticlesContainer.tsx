@@ -1,5 +1,5 @@
+// Contenedor del articlesgrid y el buscador que requieren Client side
 "use client";
-// Importaciones principales de React y librerías externas
 import React, { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Fuse from "fuse.js";

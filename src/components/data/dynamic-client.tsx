@@ -1,3 +1,4 @@
+// Componentes cargados dinamicamente
 "use client";
 import dynamic from "next/dynamic";
 import SkeletonLoading from "../SkeletonComponent";

@@ -1,3 +1,4 @@
+//Buscador de Escuelas Avanzado con implementacion de sistema de puntos, a modo de prueba no final.
 import type { Escuela } from "@src/interfaces";
 
 export interface SearchIndex {

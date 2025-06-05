@@ -1,3 +1,4 @@
+// Modal que muestra la información de cada escuela
 import React, { memo, useMemo } from "react";
 import {
   Dialog,
