@@ -1,3 +1,4 @@
+// Información detallada sobre las políticas de accesibilidad del CGE en Corrientes
 import HeroSection from "@modules/layout/Hero";
 import { Metadata } from "next";
 

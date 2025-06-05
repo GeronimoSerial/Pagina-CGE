@@ -1,3 +1,4 @@
+//Pagina principal para la sección de escuelas
 import HeroSection from "@modules/layout/Hero";
 import { Metadata } from "next";
 import { EscuelasClient } from "@components/data/dynamic-client";

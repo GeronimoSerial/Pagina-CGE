@@ -1,3 +1,4 @@
+//REVISAR
 import escuelas from "../data/escuelas.json";
 import type { Escuela } from "@/src/interfaces";
 

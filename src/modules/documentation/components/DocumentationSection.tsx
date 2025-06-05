@@ -1,3 +1,4 @@
+//Contenedor para la sección de documentación y buscador
 "use client";
 import React, { useState } from "react";
 import {

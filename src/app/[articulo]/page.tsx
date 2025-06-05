@@ -1,4 +1,4 @@
-// Importaciones de utilidades, módulos y componentes
+// Pagina principal para noticias o trámites
 import { formatearFecha } from "@lib/utils";
 import { getAllContentMetadata } from "@modules/article/data/content";
 import { Metadata } from "next";

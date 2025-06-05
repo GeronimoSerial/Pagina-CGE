@@ -1,3 +1,4 @@
+//Terminos y Condiciones de Uso del Sitio Web del Consejo General de Educación (CGE) en Corrientes
 import HeroSection from "@modules/layout/Hero";
 import { Metadata } from "next";
 
