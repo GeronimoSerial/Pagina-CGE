@@ -17,7 +17,6 @@ export const OrganizationChart = ({
   members,
   onViewDetails,
 }: OrganizationChartProps) => {
-  // Filter members by position
   const presidente = members.find((m) => m.position === "Presidente");
   const secretaria = members.find((m) => m.position === "Secretaria General");
   const vocalesEstatales = members.filter((m) => m.department === "Estatal");

@@ -15,12 +15,10 @@ interface Props {
   tipo: "supervisor" | "departamento";
 }
 
-// Componente Accordion unificado para departamentos y supervisores
 export const AccordionItemUnificado = React.memo(
   ({ agrupador, escuelas, isExpanded, onSelectEscuela, tipo }: Props) => {
     const id = String(agrupador.id);
     const cantidadEscuelas = escuelas.length;
-    // Textos condicionales
     const titulo = agrupador.nombre;
     const cantidadTexto =
       tipo === "departamento"
@@ -48,7 +46,6 @@ export const AccordionItemUnificado = React.memo(
             : "hover:border-gray-300 hover:shadow"
         }`}
       >
-        {/* Encabezado personalizado sin botón de desplegar */}
         <div className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] p-6 rounded-l w-full flex items-center justify-between cursor-default select-none">
           <div className="flex items-center">
             <Building2 className="h-8 w-8 text-white mr-4" />

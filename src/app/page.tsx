@@ -14,10 +14,9 @@ export default async function PagPrincipal() {
 
   const newsArray = Array.isArray(rawNews) ? rawNews : [];
 
-
   // PASARLO AL LAYOUT ------------------------------------------------------------------
   const news = newsArray
-    .filter((item) => item && (item.date || item.fecha)) // Filtrar items sin fecha
+    .filter((item) => item && (item.date || item.fecha))
     .sort((a, b) => {
       const dateA = new Date(a.date || a.fecha || "");
       const dateB = new Date(b.date || b.fecha || "");

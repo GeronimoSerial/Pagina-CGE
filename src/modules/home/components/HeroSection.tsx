@@ -7,7 +7,6 @@ import Image from "next/image";
 const HeroMain = () => {
   return (
     <div className="relative w-full h-[520px] md:h-[600px] bg-[#F7FAF9] overflow-hidden flex items-center">
-      {/* Imagen de fondo con overlay */}
       <div className="absolute inset-0 w-full h-full">
         <Image
           src="/images/hero2.png"
@@ -30,7 +29,6 @@ const HeroMain = () => {
       </div>
       <div className="absolute inset-0 bg-black/40" />
 
-      {/* Contenido */}
       <div className="relative z-10 h-full w-full max-w-7xl mx-auto px-8 md:px-12 lg:px-20 flex flex-col justify-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

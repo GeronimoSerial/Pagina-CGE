@@ -12,14 +12,12 @@ import Image from "next/image";
 import { Button } from "@components/ui/button";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { formatearFecha } from "@lib/utils";
+import { formatearFecha, normalizeText } from "@lib/utils";
 import ShareButton from "./ShareButton";
 import PrintButton from "./PrintButton";
 import { ClientCarousel } from "@components/data/dynamic-client";
-import {MarkdownComponent} from "@src/modules/layout/MarkdownComponent";
-// Componentes de Markdown optimizados y con mejor accesibilidad
+import { MarkdownComponent } from "@src/modules/layout/MarkdownComponent";
 
-// Enlaces relacionados constantes
 const ENLACES_RELACIONADOS = [
   {
     titulo: "Gestión Educativa",
@@ -54,14 +52,10 @@ export default function FullArticle({
   sectionTitle = "Artículo",
   articulosRelacionados = [],
 }: FullArticleProps) {
-  const section = sectionTitle
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+  const section = normalizeText(sectionTitle);
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Hero Header */}
       <header className="relative h-[300px] md:h-[400px] overflow-hidden bg-slate-900">
         <Image
           src={post.imagen}
@@ -104,7 +98,6 @@ export default function FullArticle({
         </div>
       </header>
 
-      {/* Navigation Bar */}
       <nav className="sticky top-[15px] z-[1000] backdrop-blur-md bg-white/90 border-b border-slate-200/60 shadow-sm">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="py-2 flex flex-row justify-between items-center min-h-[56px]">
@@ -119,7 +112,9 @@ export default function FullArticle({
                     size={18}
                     aria-hidden="true"
                   />
-                  <span className="whitespace-nowrap">Volver a {sectionTitle.toLowerCase()}</span>
+                  <span className="whitespace-nowrap">
+                    Volver a {sectionTitle.toLowerCase()}
+                  </span>
                 </Button>
               </Link>
             </div>
@@ -132,10 +127,8 @@ export default function FullArticle({
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="flex flex-col lg:flex-row justify-between">
-          {/* Article Content */}
           <article className="printable-article w-full lg:max-w-4xl lg:mx-auto bg-white rounded-xl overflow-hidden shadow-md border border-slate-200">
             <div className="p-4 md:p-6">
               <div className="max-w-none text-slate-800 text-base leading-relaxed">
@@ -154,11 +147,9 @@ export default function FullArticle({
             )}
           </article>
 
-          {/* Sidebar */}
           <aside className="hidden lg:block w-64 flex-shrink-0 ml-8">
             <div className="sticky top-[90px]">
               <div className="flex flex-col space-y-4 no-print">
-                {/* Enlaces relacionados */}
                 <section className="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 p-4 w-full">
                   <h2 className="text-base font-semibold text-slate-800 mb-3 border-b border-slate-100 pb-2 flex items-center">
                     <ExternalLink
@@ -187,7 +178,6 @@ export default function FullArticle({
                   </ul>
                 </section>
 
-                {/* Artículos relacionados */}
                 <section className="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 p-4 w-full">
                   <h2 className="text-base font-semibold text-slate-800 mb-3 border-b border-slate-100 pb-2 flex items-center">
                     <Bookmark

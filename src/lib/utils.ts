@@ -1,7 +1,7 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export function formatearFecha(fechaStr: string | Date) {
@@ -17,19 +17,20 @@ export function formatearFecha(fechaStr: string | Date) {
   });
 }
 
-export const normalizeText = (text: string = '') => {
+export const normalizeText = (text: string = "") => {
   return text
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
-    .replace(/[^\w\s]/g, " ") // Replace special characters with spaces
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\w\s]/g, " ")
     .trim();
 };
 
-// Filtra articulos por término de búsqueda y categoría
-export function filtrarArticulos(article: any[], searchTerm: string, categoriaSeleccionada: string) {
-  
-
+export function filtrarArticulos(
+  article: any[],
+  searchTerm: string,
+  categoriaSeleccionada: string
+) {
   return article.filter((item) => {
     const coincideCategoria =
       !categoriaSeleccionada || item.categoria === categoriaSeleccionada;
@@ -40,27 +41,38 @@ export function filtrarArticulos(article: any[], searchTerm: string, categoriaSe
 
     const searchTermNormalized = normalizeText(searchTerm);
     const titleNormalized = normalizeText(item.title || item.titulo);
-    const descriptionNormalized = normalizeText(item.description || item.resumen);
+    const descriptionNormalized = normalizeText(
+      item.description || item.resumen
+    );
     const contentToSearch = titleNormalized + " " + descriptionNormalized;
 
-    // Dividir el término de búsqueda en palabras y filtrar palabras vacías
-    const searchWords = searchTermNormalized.split(/\s+/).filter(word => word.length > 0);
-    
-    // Todas las palabras deben coincidir para que sea un resultado válido
-    const coincideBusqueda = searchWords.every(word => contentToSearch.includes(word));
+    const searchWords = searchTermNormalized
+      .split(/\s+/)
+      .filter((word) => word.length > 0);
+
+    const coincideBusqueda = searchWords.every((word) =>
+      contentToSearch.includes(word)
+    );
 
     return coincideCategoria && coincideBusqueda;
   });
 }
 
-export const sortByDate = <T extends { date: string }>(items: T[], ascending: boolean = false): T[] => {
+export const sortByDate = <T extends { date: string }>(
+  items: T[],
+  ascending: boolean = false
+): T[] => {
   const parseDate = (dateStr: string) => {
     let date = new Date(dateStr);
-    
+
     if (isNaN(date.getTime())) {
       const parts = dateStr.split(/[/-]/);
       if (parts.length === 3) {
-        date = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+        date = new Date(
+          Number(parts[2]),
+          Number(parts[1]) - 1,
+          Number(parts[0])
+        );
       }
     }
     return date;
@@ -70,17 +82,19 @@ export const sortByDate = <T extends { date: string }>(items: T[], ascending: bo
     const dateA = parseDate(a.date);
     const dateB = parseDate(b.date);
 
-    // Si alguna fecha es inválida, la movemos al final
     if (isNaN(dateA.getTime())) return ascending ? -1 : 1;
     if (isNaN(dateB.getTime())) return ascending ? 1 : -1;
 
-    return ascending 
-      ? dateA.getTime() - dateB.getTime() 
+    return ascending
+      ? dateA.getTime() - dateB.getTime()
       : dateB.getTime() - dateA.getTime();
   });
 };
 
-export const sortByAlphabetical = <T extends { titulo: string }>(items: T[], ascending: boolean = false): T[] => {
+export const sortByAlphabetical = <T extends { titulo: string }>(
+  items: T[],
+  ascending: boolean = false
+): T[] => {
   const parseTitle = (title: string) => {
     const match = title.match(/(\d+)/);
     return match ? parseInt(match[1], 10) : title.toLowerCase();
@@ -90,18 +104,18 @@ export const sortByAlphabetical = <T extends { titulo: string }>(items: T[], asc
     const titleA = parseTitle(a.titulo);
     const titleB = parseTitle(b.titulo);
 
-    if (typeof titleA === 'number' && typeof titleB === 'number') {
+    if (typeof titleA === "number" && typeof titleB === "number") {
       return ascending ? titleA - titleB : titleB - titleA;
     }
 
-    if (typeof titleA === 'number') return ascending ? -1 : 1;
-    if (typeof titleB === 'number') return ascending ? 1 : -1;
+    if (typeof titleA === "number") return ascending ? -1 : 1;
+    if (typeof titleB === "number") return ascending ? 1 : -1;
 
     return ascending
       ? titleA.localeCompare(titleB)
       : titleB.localeCompare(titleA);
   });
-}
+};
 
 export const truncateText = (text: string, wordLimit: number) => {
   const words = text.split(" ");
@@ -111,15 +125,17 @@ export const truncateText = (text: string, wordLimit: number) => {
   return text;
 };
 
-
-export const filterDocuments = (documents: any[], searchTerm: string, filter: string = "all") => {
-  const normalizeText = (text: string = '') => {
+export const filterDocuments = (
+  documents: any[],
+  searchTerm: string,
+  filter: string = "all"
+) => {
+  const normalizeText = (text: string = "") => {
     return text
       .toLowerCase()
       .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
-      .replace(/[^\w\s]/g, " ") // Replace special characters with spaces
-      .trim();
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^\w\s]/g, " ");
   };
 
   return documents.filter((doc) => {
@@ -134,12 +150,14 @@ export const filterDocuments = (documents: any[], searchTerm: string, filter: st
     const descriptionNormalized = normalizeText(doc.description);
     const contentToSearch = titleNormalized + " " + descriptionNormalized;
 
-    // Dividir el término de búsqueda en palabras y filtrar palabras vacías
-    const searchWords = searchTermNormalized.split(/\s+/).filter(word => word.length > 0);
-    
-    // Todas las palabras deben coincidir para que sea un resultado válido
-    const matchesSearch = searchWords.every(word => contentToSearch.includes(word));
+    const searchWords = searchTermNormalized
+      .split(/\s+/)
+      .filter((word) => word.length > 0);
+
+    const matchesSearch = searchWords.every((word) =>
+      contentToSearch.includes(word)
+    );
 
     return matchesSearch && matchesFilter;
   });
-}
+};

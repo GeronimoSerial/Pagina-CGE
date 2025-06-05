@@ -21,23 +21,19 @@ export async function generateStaticParams() {
   return allSlugs.flat();
 }
 
-// El tipo de params es efectivamente una Promise que resuelve a un objeto con las variables de ruta
 interface PageProps {
   params: Promise<{ articulo: "noticias" | "tramites"; id: string }>;
 }
 
 export default async function Page({ params }: PageProps) {
-  // Esperamos a que params esté completamente resuelto
   const resolvedParams = await params;
   const { articulo, id } = resolvedParams;
 
-  // Verificamos si 'articulo' es uno de los permitidos
   if (!tiposPermitidos.includes(articulo)) return notFound();
 
   let postRaw;
   try {
-    // Llamamos a la función con el tipo dinámico basado en el valor de 'articulo'
-    postRaw = await getContentBySlug(articulo, id); // Sin necesidad de casteo forzado
+    postRaw = await getContentBySlug(articulo, id);
   } catch {
     return notFound();
   }
@@ -45,7 +41,7 @@ export default async function Page({ params }: PageProps) {
   if (!postRaw) return notFound();
   const post = { ...postRaw };
 
-  const todosLosArticulos = await getAllContent(articulo); // Usamos 'articulo' dinámicamente
+  const todosLosArticulos = await getAllContent(articulo);
 
   const articulosRelacionados = todosLosArticulos.filter(
     (art) =>

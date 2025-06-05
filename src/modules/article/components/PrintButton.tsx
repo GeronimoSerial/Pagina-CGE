@@ -12,7 +12,6 @@ export default function PrintButton() {
       return;
     }
 
-    // Eliminamos cualquier elemento con clase 'no-print' dentro del artículo clonado
     article.querySelectorAll(".no-print").forEach((el) => el.remove());
 
     const printWindow = window.open("", "_blank");

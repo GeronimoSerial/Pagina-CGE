@@ -19,7 +19,6 @@ import {
 } from "@components/ui/select";
 import { Badge } from "@components/ui/badge";
 
-// Extender la interfaz Escuela para incluir el campo mail
 interface EscuelaConMail extends Escuela {
   mail?: string | null;
 }
@@ -34,13 +33,11 @@ export default function SupervisoresClient({
   const [escuelaSeleccionada, setEscuelaSeleccionada] =
     useState<EscuelaConMail | null>(null);
 
-  //memoización
   const escuelasPorSupervisor = useMemo(
     () => agruparEscuelasPorSupervisor(escuelas),
     [escuelas]
   );
 
-  // Callbacks para evitar re-renderizados
   const handleToggleAccordion = useCallback((value: string) => {
     setExpanded(value || undefined);
   }, []);
@@ -67,7 +64,6 @@ export default function SupervisoresClient({
   return (
     <div className="bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-md border border-gray-100 p-8">
       <div className="mb-10">
-        {/* Integración del buscador de escuelas */}
         <div className="ml-6 mb-4">
           <BuscadorEscuelas
             escuelas={escuelas}

@@ -19,7 +19,6 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
   const [resultados, setResultados] = useState<Escuela[]>([]);
   const [showResults, setShowResults] = useState<boolean>(false);
 
-  // Función de búsqueda usando la utilidad avanzada
   const handleSearch = useCallback(() => {
     if (searchTerm.trim() === "") {
       setResultados([]);
@@ -32,7 +31,6 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
     setShowResults(true);
   }, [escuelas, searchTerm]);
 
-  // Ejecutar la búsqueda cuando el término cambie (con debounce)
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (searchTerm.trim()) {
@@ -41,19 +39,17 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
         setResultados([]);
         setShowResults(false);
       }
-    }, 300); // 300ms de debounce
+    }, 300);
 
     return () => clearTimeout(timeoutId);
   }, [searchTerm, handleSearch]);
 
-  // Limpiar la búsqueda
   const handleClear = useCallback(() => {
     setSearchTerm("");
     setResultados([]);
     setShowResults(false);
   }, []);
 
-  // Seleccionar una escuela de los resultados
   const handleSelectEscuela = useCallback(
     (escuela: Escuela) => {
       onSelectEscuela(escuela);
@@ -62,7 +58,6 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
     [onSelectEscuela]
   );
 
-  // Obtener el nombre del supervisor a partir del ID
   const getSupervisorNombre = useCallback((supervisorID?: number) => {
     if (supervisorID === undefined) return "Sin supervisor asignado";
     return `Supervisor/a ${supervisorID}`;
@@ -70,7 +65,6 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
 
   return (
     <div className="relative w-full">
-      {/* Buscador con efecto de contorno luminoso */}
       <div className="relative rounded-xl border-2 border-[#217A4B]/20 bg-white shadow-lg shadow-[#217A4B]/5 transition-all focus-within:border-[#217A4B]/70 focus-within:shadow-[#217A4B]/10 hover:border-[#217A4B]/30">
         <div className="flex items-center px-3 py-2">
           <Search className="h-5 w-5 text-[#217A4B] mr-2" />

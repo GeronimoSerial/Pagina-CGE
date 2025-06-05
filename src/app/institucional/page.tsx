@@ -60,7 +60,6 @@ export default function Institucional() {
       id="institucional"
       className="bg-gradient-to-b from-white via-gray-50 to-white relative"
     >
-      {/* Hero Section - 600px height */}
       <HeroSection
         title="Consejo General de Educación"
         description="Trabajando desde 1875 para garantizar una educación de calidad en toda la provincia."

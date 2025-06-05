@@ -4,7 +4,6 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import type { ImagenCarruselGenerica } from "@interfaces/index";
 import { useState, useEffect, useCallback } from "react";
 
-// Importar estilos de Swiper
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
