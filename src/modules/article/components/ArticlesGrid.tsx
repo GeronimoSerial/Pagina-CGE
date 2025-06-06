@@ -140,8 +140,8 @@ const ArticlesGridContent = ({
                       </div>
                     )}
                     {showImportantBadge && item.esImportante && (
-                      <Badge className="underline absolute top-3 right-3 bg-gray-600 text-white border-0">
-                        Importante
+                      <Badge className="underline absolute top-3 right-3 bg-[#3D8B37] text-white border-0">
+                        IMPORTANTE
                       </Badge>
                     )}
                   </div>
