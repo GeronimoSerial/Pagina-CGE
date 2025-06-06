@@ -2,10 +2,9 @@
 import React, { useState, useCallback, useEffect } from "react";
 import type { Escuela } from "@/src/interfaces";
 import { buscarEscuelasAvanzado } from "../utils/searchUtils";
-import { Button } from "@components/ui/button";
-import { Input } from "@components/ui/input";
-import { Search, X, School, User, MapPin, Info } from "lucide-react";
-import { Badge } from "@components/ui/badge";
+import { Info, MapPin, School, Search } from "lucide-react";
+import { Badge } from "@/src/components/ui/badge";
+import { Button } from "@/src/components/ui/button";
 
 interface BuscadorEscuelasProps {
   escuelas: Escuela[];
@@ -60,28 +59,20 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
   );
 
   return (
-    <div className="relative w-full">
-      <div className="relative rounded-xl border-2 border-[#217A4B]/20 bg-white shadow-lg shadow-[#217A4B]/5 transition-all focus-within:border-[#217A4B]/70 focus-within:shadow-[#217A4B]/10 hover:border-[#217A4B]/30">
-        <div className="flex items-center px-3 py-2">
-          <Search className="h-5 w-5 text-[#217A4B] mr-2" />
-          <Input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Buscar por nombre, director, CUE, departamento o localidad..."
-            className="flex-1 border-none shadow-none focus-visible:ring-0 placeholder:text-gray-400"
-          />
-          {searchTerm && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleClear}
-              className="h-7 w-7 rounded-full hover:bg-gray-100"
-            >
-              <X className="h-4 w-4 text-gray-500" />
-            </Button>
-          )}
-        </div>
+    <div className="w-full space-y-2">
+      <div className="relative group">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5 pointer-events-none" />
+        <input
+          type="search"
+          placeholder="Buscar por nombre, director, CUE, departamento o localidad..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          className={`w-full pl-10 bg-white border-2 border-gray-300 rounded-xl py-2.5 px-4 
+            focus:outline-none focus:ring-2 focus:ring-[#3D8B37]/30 focus:border-[#3D8B37] 
+            transition-all duration-200 ease-in-out text-sm placeholder:text-gray-500 
+            hover:border-[#3D8B37] shadow-sm`}
+        />
       </div>
 
       {showResults && resultados.length > 0 && (
