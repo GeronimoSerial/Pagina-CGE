@@ -45,20 +45,19 @@ export default function EscuelasClient() {
     );
   }, [escuelas]);
 
-  const totalMatricula2024 = useMemo(() => {
-    return escuelas.reduce(
-      (acc, escuela) => acc + Number(escuela.matricula2024 || 0),
-      0
-    );
-  }, [escuelas]);
+  // const totalMatricula2024 = useMemo(() => {
+  //   return escuelas.reduce(
+  //     (acc, escuela) => acc + Number(escuela.matricula2024 || 0),
+  //     0
+  //   );
+  // }, [escuelas]);
 
-  const variacionMatricula = useMemo(() => {
-    if (totalMatricula2024 === 0) return null;
-    const diferencia = totalMatricula2025 - totalMatricula2024;
-    const porcentaje = ((diferencia / totalMatricula2024) * 100).toFixed(1);
-    return { diferencia, porcentaje };
-  }, [totalMatricula2024, totalMatricula2025]);
-
+  // const variacionMatricula = useMemo(() => {
+  //   if (totalMatricula2024 === 0) return null;
+  //   const diferencia = totalMatricula2025 - totalMatricula2024;
+  //   const porcentaje = ((diferencia / totalMatricula2024) * 100).toFixed(1);
+  //   return { diferencia, porcentaje };
+  // }, [totalMatricula2024, totalMatricula2025]);
 
   const handleSelectEscuela = useCallback((escuela: EscuelaConMail) => {
     setEscuelaSeleccionada(escuela);
@@ -67,25 +66,6 @@ export default function EscuelasClient() {
   const handleCloseDetalles = useCallback(() => {
     setEscuelaSeleccionada(null);
   }, []);
-
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-64 gap-4">
-        <div className="relative">
-          <div className="w-16 h-16 border-4 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <svg className="w-8 h-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-          </div>
-        </div>
-        <div className="text-center">
-          <p className="text-lg font-semibold text-amber-800">Cargando escuelas</p>
-          <p className="text-sm text-amber-600">Por favor espere un momento...</p>
-        </div>
-      </div>
-    );
-  }
 
   if (error) {
     return (
@@ -100,18 +80,18 @@ export default function EscuelasClient() {
     );
   }
 
-  if (!escuelas.length) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Alert className="rounded-xl border-amber-200 bg-amber-50 shadow-md w-full max-w-md">
-          <AlertCircle className="h-6 w-6 text-amber-500" />
-          <AlertDescription className="font-medium text-amber-800 ml-2">
-            No hay escuelas disponibles en este momento.
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
+  // if (!escuelas.length) {
+  //   return (
+  //     <div className="flex items-center justify-center h-64">
+  //       <Alert className="rounded-xl border-amber-200 bg-amber-50 shadow-md w-full max-w-md">
+  //         <AlertCircle className="h-6 w-6 text-amber-500" />
+  //         <AlertDescription className="font-medium text-amber-800 ml-2">
+  //           No hay escuelas disponibles en este momento.
+  //         </AlertDescription>
+  //       </Alert>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-xl border border-gray-100 overflow-hidden">

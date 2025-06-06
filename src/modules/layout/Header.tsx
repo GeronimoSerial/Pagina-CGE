@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { usePathname } from "next/navigation"
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const navLinks = [
   { href: "/", label: "Inicio" },
@@ -13,32 +13,33 @@ const navLinks = [
   { href: "/escuelas", label: "Escuelas" },
   { href: "/institucional", label: "Nuestra Institución" },
   { href: "/contacto", label: "Contacto" },
-]
+];
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const [scrollProgress, setScrollProgress] = useState(0)
-  const pathname = usePathname()
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const pathname = usePathname();
 
   useEffect(() => {
-    setMounted(true)
+    setMounted(true);
 
     const handleScroll = () => {
-      const scrollTop = window.scrollY
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      const scrollPercent = (scrollTop / docHeight) * 100
+      const scrollTop = window.scrollY;
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = (scrollTop / docHeight) * 100;
 
-      setScrolled(scrollTop > 10)
-      setScrollProgress(scrollPercent)
-    }
+      setScrolled(scrollTop > 10);
+      setScrollProgress(scrollPercent);
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
     <header
@@ -49,15 +50,18 @@ const Header = () => {
       }`}
     >
       {/* Scroll Progress Bar */}
-      <div
+      {/* <div
         className="absolute top-0 left-0 h-1 bg-gradient-to-r from-[#3D8B37] via-[#4a9f42] to-[#3D8B37] transition-all duration-300 ease-out"
         style={{ width: `${scrollProgress}%` }}
-      />
+      /> */}
 
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex h-20 items-center justify-between">
           {/* Logo Section with enhanced hover effect */}
-          <Link href="/" className="group flex items-center transition-all duration-300 hover:scale-[1.02]">
+          <Link
+            href="/"
+            className="group flex items-center transition-all duration-300 hover:scale-[1.02]"
+          >
             <div className="relative h-14 w-14 overflow-hidden rounded-full border-2 border-gray-200 bg-white shadow-sm transition-all duration-300 group-hover:shadow-lg group-hover:border-[#3D8B37]/30">
               <div className="absolute inset-0 bg-gradient-to-br from-[#3D8B37]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <Image
@@ -73,7 +77,9 @@ const Header = () => {
               <span className="block text-xl font-bold tracking-tight text-gray-800 md:text-2xl group-hover:text-[#3D8B37] transition-colors duration-300">
                 CGE
               </span>
-              <span className="block text-sm font-medium text-gray-600 md:text-base">Corrientes</span>
+              <span className="block text-sm font-medium text-gray-600 md:text-base">
+                Corrientes
+              </span>
             </div>
           </Link>
 
@@ -85,7 +91,9 @@ const Header = () => {
                   <Link
                     href={link.href}
                     className={`group relative inline-flex items-center py-3 text-sm font-semibold transition-all duration-300 hover:text-[#3D8B37] focus:outline-none focus:text-[#3D8B37] ${
-                      pathname === link.href ? "text-[#3D8B37]" : "text-gray-700"
+                      pathname === link.href
+                        ? "text-[#3D8B37]"
+                        : "text-gray-700"
                     }`}
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
@@ -153,14 +161,18 @@ const Header = () => {
                   <li
                     key={link.href}
                     className={`transform transition-all duration-500 ease-out ${
-                      isMenuOpen ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
+                      isMenuOpen
+                        ? "translate-x-0 opacity-100"
+                        : "translate-x-8 opacity-0"
                     }`}
                     style={{ transitionDelay: `${index * 75}ms` }}
                   >
                     <Link
                       href={link.href}
                       className={`group flex items-center justify-between px-3 py-3 text-base font-semibold transition-all duration-300 hover:text-[#3D8B37] focus:outline-none focus:text-[#3D8B37] relative rounded-lg hover:bg-gray-50 ${
-                        pathname === link.href ? "text-[#3D8B37] bg-green-50" : "text-gray-700"
+                        pathname === link.href
+                          ? "text-[#3D8B37] bg-green-50"
+                          : "text-gray-700"
                       }`}
                       onClick={() => setIsMenuOpen(false)}
                     >
@@ -169,11 +181,15 @@ const Header = () => {
                         {/* Mobile underline effect */}
                         <span
                           className={`absolute -bottom-1 left-0 h-0.5 bg-[#3D8B37] transition-all duration-300 ${
-                            pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
+                            pathname === link.href
+                              ? "w-full"
+                              : "w-0 group-hover:w-full"
                           }`}
                         />
                       </span>
-                      {pathname === link.href && <div className="h-2 w-2 rounded-full bg-[#3D8B37] animate-pulse" />}
+                      {pathname === link.href && (
+                        <div className="h-2 w-2 rounded-full bg-[#3D8B37] animate-pulse" />
+                      )}
                     </Link>
                   </li>
                 ))}
@@ -183,7 +199,7 @@ const Header = () => {
         </div>
       )}
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
