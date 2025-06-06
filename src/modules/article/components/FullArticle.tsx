@@ -99,7 +99,7 @@ export default function FullArticle({
         </div>
       </header>
 
-      <nav className="sticky top-[15px] z-[1000] backdrop-blur-md bg-white/90 border-b border-slate-200/60 shadow-sm">
+      <nav className="sticky top-[6px] py-2 z-50 backdrop-blur-md bg-white/90 border-b border-slate-200/60 shadow-sm">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="py-2 flex flex-row justify-between items-center min-h-[56px]">
             <div>

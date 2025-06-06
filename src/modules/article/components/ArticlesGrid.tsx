@@ -15,22 +15,12 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import SkeletonCard from "./SkeletonCard";
+import { Article } from "@/src/interfaces";
 import { formatearFecha } from "@lib/utils";
 import { HeadlessPagination } from "@modules/documentation/components/HeadlessPagination";
 
 interface ArticlesGridProps {
-  articles:
-    | Array<{
-        id: string;
-        slug: string;
-        titulo: string;
-        description: string;
-        date?: string;
-        imagen?: string;
-        categoria?: string;
-        esImportante?: boolean;
-      }>
-    | undefined;
+  articles?: Article[];
   buttonText?: string;
   emptyStateTitle?: string;
   emptyStateDescription?: string;
@@ -114,11 +104,11 @@ const ArticlesGridContent = ({
                 className="h-[24rem] flex flex-col overflow-hidden border-0 shadow-[0_2px_8px_rgba(0,0,0,0.08)] md:hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] md:transition-all md:duration-300"
               >
                 <Link
-                  href={getItemLink(item.id)}
+                  href={getItemLink(item.id || "")}
                   title="Ver artículo completo"
                   className="flex flex-col h-full"
                 >
-                  <div className="h-40 min-h-40 max-h-40 overflow-hidden relative flex items-center justify-center">
+                  <div className="h-40 flex-none overflow-hidden relative flex items-center justify-center">
                     {item.imagen ? (
                       <Image
                         src={
@@ -140,12 +130,13 @@ const ArticlesGridContent = ({
                       </div>
                     )}
                     {showImportantBadge && item.esImportante && (
-                      <Badge className="underline absolute top-3 right-3 bg-[#3D8B37] text-white border-0">
+                      <Badge className=" absolute top-3 right-3 bg-white/90 text-black border-0">
                         IMPORTANTE
                       </Badge>
                     )}
                   </div>
-                  <CardHeader className="pb-2 flex-none">
+
+                  <CardHeader className="pb-2 flex-none h-[5.5rem]">
                     <div className="flex justify-between items-center mb-2">
                       {item.categoria && (
                         <Badge
@@ -163,12 +154,13 @@ const ArticlesGridContent = ({
                     </div>
                     <CardTitle
                       title={item.titulo}
-                      className="text-base font-semibold line-clamp-2 text-gray-800 min-h-[2.5rem]"
+                      className="text-base font-semibold line-clamp-2 text-gray-800"
                     >
                       {item.titulo}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="flex-grow">
+
+                  <CardContent className="flex-1 min-h-0">
                     <CardDescription
                       className="text-gray-600 line-clamp-3"
                       title={item.description}
@@ -176,7 +168,8 @@ const ArticlesGridContent = ({
                       {item.description}
                     </CardDescription>
                   </CardContent>
-                  <CardFooter className="pt-0 pb-4 flex-none">
+
+                  <CardFooter className="pt-0 pb-4 flex-none h-[3rem]">
                     <Button
                       variant="link"
                       className="p-0 h-auto text-[#3D8B37] font-medium hover:text-[#2D6A27] flex items-center gap-1 hover:underline"
