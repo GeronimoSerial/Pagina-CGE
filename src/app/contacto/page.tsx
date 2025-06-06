@@ -1,10 +1,10 @@
 // Página de contacto
-import { Metadata } from "next";
 import ContactForm from "@/src/modules/contact";
 import SocialMediaSection from "@modules/socials/SocialMediaSection";
 import HeroSection from "@modules/layout/Hero";
 import FAQSection from "@modules/layout/FAQSection";
 import { Separator } from "@radix-ui/react-separator";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Contacto",

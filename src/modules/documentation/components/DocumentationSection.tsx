@@ -83,11 +83,11 @@ const DocumentationSection = () => {
   };
 
   return (
-    <section id="documentacion" className="w-full py-3">
+    <section id="documentacion" className="w-full py-8">
       <div className="container mx-auto px-2">
         <div className="flex flex-col min-h-[500px]">
           <div className="flex flex-col md:flex-row gap-3 mb-4">
-            <div className="w-full max-w-3xl mx-auto rounded-2xl shadow-lg bg-white/80 backdrop-blur-sm p-6 border border-gray-100">
+            <div className="w-full max-w-2xl mx-auto rounded-2xl shadow-lg bg-white/80 backdrop-blur-sm p-6 border border-gray-100">
               <SearchInput
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
