@@ -66,7 +66,11 @@ export default async function PagPrincipal() {
                 </p>
               </div>
             </div>
-            <ArticlesGrid articles={news} basePath="/noticias" />
+            <ArticlesGrid
+              articles={news}
+              basePath="/noticias"
+              showImportantBadge={true}
+            />
             <div className="container mx-auto py-6 px-4 pb-12">
               <div className="flex justify-center">
                 <Link

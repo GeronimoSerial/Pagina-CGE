@@ -59,9 +59,6 @@ export default function EscuelasClient() {
     return { diferencia, porcentaje };
   }, [totalMatricula2024, totalMatricula2025]);
 
-  const handleToggleAccordion = useCallback((value: string) => {
-    setExpanded(value || undefined);
-  }, []);
 
   const handleSelectEscuela = useCallback((escuela: EscuelaConMail) => {
     setEscuelaSeleccionada(escuela);
@@ -73,13 +70,19 @@ export default function EscuelasClient() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <Alert className="rounded-xl border-amber-200 bg-amber-50 shadow-md w-full max-w-md">
-          <AlertCircle className="h-6 w-6 text-amber-500 animate-spin" />
-          <AlertDescription className="font-medium text-amber-800 ml-2">
-            Cargando escuelas...
-          </AlertDescription>
-        </Alert>
+      <div className="flex flex-col items-center justify-center h-64 gap-4">
+        <div className="relative">
+          <div className="w-16 h-16 border-4 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <svg className="w-8 h-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+          </div>
+        </div>
+        <div className="text-center">
+          <p className="text-lg font-semibold text-amber-800">Cargando escuelas</p>
+          <p className="text-sm text-amber-600">Por favor espere un momento...</p>
+        </div>
       </div>
     );
   }

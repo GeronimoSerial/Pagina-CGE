@@ -31,7 +31,7 @@ export default function ArticlesContainer({
     isLoadingFullList,
     errorLoadingFullList,
     isCategoryFiltering,
-    setIsCategoryFiltering
+    setIsCategoryFiltering,
   } = useArticlesData(isNoticia);
 
   const {
@@ -47,10 +47,10 @@ export default function ArticlesContainer({
     () => (isNoticia ? "Buscar noticias..." : "Buscar trámites..."),
     [isNoticia]
   );
-  const { handleCategoryChange, } = useArticleCategories({
+  const { handleCategoryChange } = useArticleCategories({
     basePath,
     setCategoriaSeleccionada,
-    setIsCategoryFiltering
+    setIsCategoryFiltering,
   });
 
   useEffect(() => {
@@ -135,6 +135,7 @@ export default function ArticlesContainer({
           pagination={pagination}
           isLoading={isLoading}
           isCategoryLoading={isCategoryFiltering}
+          showImportantBadge={true}
         />
       </div>
     </>
