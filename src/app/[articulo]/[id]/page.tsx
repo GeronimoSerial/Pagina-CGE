@@ -4,6 +4,7 @@ import {
   getAllContentSlugs,
   getAllContent,
 } from "@modules/article/data/content";
+import { normalizeArticle } from "@modules/article/data/article-utils";
 import FullArticle from "@modules/article/components/FullArticle";
 import { notFound } from "next/navigation";
 
@@ -40,18 +41,20 @@ export default async function Page({ params }: PageProps) {
   }
 
   if (!postRaw) return notFound();
-  const post = { ...postRaw };
+  const post = normalizeArticle(postRaw);
 
   const todosLosArticulos = await getAllContent(articulo);
+  const articulosNormalizados = todosLosArticulos.map(normalizeArticle)
 
-  const articulosRelacionados = todosLosArticulos.filter(
+  const articulosRelacionados = articulosNormalizados.filter(
     (art) =>
-      (art as any).subcategoria === (post as any).subcategoria &&
+      art.categoria === post.categoria &&
       art.slug !== post.slug
-  );
+    
+    );
   return (
     <FullArticle
-      post={postRaw}
+      post={post}
       sectionTitle={articulo === "noticias" ? "Noticias" : "Trámites"}
       articulosRelacionados={articulosRelacionados}
     />
