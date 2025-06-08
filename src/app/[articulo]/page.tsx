@@ -1,6 +1,7 @@
 // Pagina principal para noticias o trámites
 import { formatearFecha } from "@lib/utils";
 import { getAllContentMetadata } from "@modules/article/data/content";
+import { normalizeArticle } from "@modules/article/data/article-utils";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import HeroSection from "@modules/layout/Hero";
@@ -8,7 +9,6 @@ import Contact from "@modules/layout/Contact";
 import InfoBar from "@/src/modules/layout/InfoBar";
 import FAQSection from "@modules/layout/FAQSection";
 import ArticlesContainer from "@/src/app/[articulo]/ArticlesContainer";
-
 
 const HERO = {
   noticias: {
@@ -89,21 +89,7 @@ export default async function ContenidoGrid({
     categoria
   );
 
-  const data = rawData.map((item: any) => {
-    return {
-      id: item.slug,
-      slug: item.slug,
-      titulo: item.titulo,
-      resumen: item.resumen || item.description || "",
-      description: item.description || item.resumen,
-      date: item.fecha || "",
-      imagen:
-        item.imagen ||
-        (articulo === "noticias" ? "/images/news.png" : "/images/tramites.png"),
-      categoria: item.subcategoria,
-      esImportante: item.esImportante || false,
-    };
-  });
+  const data = rawData.map(normalizeArticle);
 
   const heroConfig = articulo === "noticias" ? HERO.noticias : HERO.tramites;
 

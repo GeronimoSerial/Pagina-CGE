@@ -1,10 +1,7 @@
-import { formatearFecha } from "../../../lib/utils";
-
+import { Article } from "@/src/interfaces";
 export const ARTICLES_PER_PAGE = 4;
 
 export function normalizeArticle(item: any) {
-  const date = formatearFecha(item.date || item.fecha || "");
-
   return {
     id: item.slug,
     slug: item.slug,
@@ -12,8 +9,7 @@ export function normalizeArticle(item: any) {
     titulo: item.titulo,
     description: item.description || item.resumen,
     resumen: item.resumen,
-    date,
-    fecha: date,
+    date: item.fecha ? new Date(item.fecha).toISOString() : new Date().toISOString(),
     imageUrl: item.imageUrl || item.imagen,
     imagen: item.imagen,
     categoria: item.subcategoria,
