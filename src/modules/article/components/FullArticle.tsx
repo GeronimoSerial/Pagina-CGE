@@ -44,7 +44,7 @@ interface FullArticleProps {
   articulosRelacionados?: Array<{
     slug: string;
     titulo: string;
-    fecha: string;
+    date: string;
   }>;
 }
 
@@ -73,11 +73,11 @@ export default function FullArticle({
                 <div className="flex flex-wrap items-center gap-3 mb-4 text-white">
                   <span className="text-sm font-medium bg-emerald-600 px-3 py-1 rounded-full flex items-center gap-2 shadow-md">
                     <Tag size={14} aria-hidden="true" />
-                    {post.subcategoria}
+                    {post.categoria}
                   </span>
                   <span className="text-sm flex items-center gap-1.5 bg-black/30 px-3 py-1 rounded-full">
                     <Clock size={14} aria-hidden="true" />
-                    {formatearFecha(post.fecha)}
+                    {formatearFecha(post.date)}
                   </span>
                   {post.esImportante && (
                     <span className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full border border-green-300">
@@ -211,7 +211,7 @@ export default function FullArticle({
                                   className="mr-1"
                                   aria-hidden="true"
                                 />
-                                {formatearFecha(articulo.fecha)}
+                                {formatearFecha(articulo.date)}
                               </p>
                             </div>
                           </a>
