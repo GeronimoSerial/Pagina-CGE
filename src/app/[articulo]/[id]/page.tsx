@@ -2,11 +2,11 @@
 import {
   getContentBySlug,
   getAllContentSlugs,
-  getAllContent,
 } from "@modules/article/data/content";
 import { normalizeArticle } from "@modules/article/data/article-utils";
 import FullArticle from "@modules/article/components/FullArticle";
 import { notFound } from "next/navigation";
+import { getArticulosRelacionados } from "@/src/hooks/articles/useRelatedArticles";
 
 const tiposPermitidos = ["noticias", "tramites"] as const;
 
@@ -43,15 +43,8 @@ export default async function Page({ params }: PageProps) {
   if (!postRaw) return notFound();
   const post = normalizeArticle(postRaw);
 
-  const todosLosArticulos = await getAllContent(articulo);
-  const articulosNormalizados = todosLosArticulos.map(normalizeArticle)
+  const articulosRelacionados = await getArticulosRelacionados(post, articulo);
 
-  const articulosRelacionados = articulosNormalizados.filter(
-    (art) =>
-      art.categoria === post.categoria &&
-      art.slug !== post.slug
-    
-    );
   return (
     <FullArticle
       post={post}
