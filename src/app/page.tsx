@@ -1,6 +1,6 @@
 // src/app/noticia/[id]/page.tsx
-import { getAllContent } from "@modules/article/data/content";
-import { ARTICLES_PER_PAGE } from "@/src/modules/article/data/article-utils";
+import { getAllContentMetadata } from "@modules/article/data/content";
+import { ARTICLES_PER_PAGE, normalizeArticle } from "@modules/article/data/article-utils";
 import HeroMain from "@modules/home/components/HeroSection";
 import QuickAccess from "@modules/home/components/QuickAccess";
 import { Separator } from "@radix-ui/react-separator";
@@ -10,35 +10,10 @@ import { ArrowRight } from "lucide-react";
 import SocialMediaSection from "@modules/socials/SocialMediaSection";
 
 export default async function PagPrincipal() {
-  const rawNews = await getAllContent("noticias");
+  const { items: rawNews } = await getAllContentMetadata("noticias", 1, ARTICLES_PER_PAGE);
 
-  const newsArray = Array.isArray(rawNews) ? rawNews : [];
+  const news = rawNews.map(normalizeArticle);
 
-  // PASARLO AL LAYOUT ------------------------------------------------------------------
-  const news = newsArray
-    .filter((item) => item && (item.date || item.fecha))
-    .sort((a, b) => {
-      const dateA = new Date(a.date || a.fecha || "");
-      const dateB = new Date(b.date || b.fecha || "");
-      return dateB.getTime() - dateA.getTime();
-    })
-    .slice(0, ARTICLES_PER_PAGE)
-    .map((item) => ({
-      id: item.slug || "",
-      slug: item.slug || "",
-      title: item.title || item.titulo || "",
-      titulo: item.titulo || item.title || "",
-      description: item.description || item.resumen || "",
-      resumen: item.resumen || item.description || "",
-      date: item.date || item.fecha || "",
-      fecha: item.fecha || item.date || "",
-      imageUrl: item.imageUrl || item.imagen || "/images/news.png",
-      imagen: item.imagen || item.imageUrl || "/images/news.png",
-      categoria: item.subcategoria || "",
-      content: item.content || "",
-      esImportante: item.esImportante || false,
-    }));
-  // -----------------------------------------------------------------
   return (
     <div className="min-h-screen">
       <main>

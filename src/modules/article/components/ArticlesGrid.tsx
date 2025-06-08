@@ -10,7 +10,7 @@ import {
 } from "@components/ui/card";
 import { Button } from "@components/ui/button";
 import { Badge } from "@components/ui/badge";
-import { FileText, ArrowRightIcon, Loader2, CalendarDays } from "lucide-react";
+import { FileText, ArrowRightIcon, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -130,7 +130,7 @@ const ArticlesGridContent = ({
                       </div>
                     )}
                     {showImportantBadge && item.esImportante && (
-                      <Badge className="absolute top-3 right-3 bg-white/90 text-black border-0">
+                      <Badge className=" absolute top-3 right-3 bg-white/90 text-black border-0">
                         IMPORTANTE
                       </Badge>
                     )}
@@ -146,10 +146,11 @@ const ArticlesGridContent = ({
                           {item.categoria}
                         </Badge>
                       )}
-                      <span className="text-xs text-gray-500 font-medium flex items-center gap-1">
-                        <CalendarDays className="h-3 w-3" />
-                        {item.date ? formatearFecha(item.date) : ""}
-                      </span>
+                      {item.date && (
+                        <span className="text-xs text-gray-500 font-medium">
+                          {formatearFecha(item.date)}
+                        </span>
+                      )}
                     </div>
                     <CardTitle
                       title={item.titulo}
