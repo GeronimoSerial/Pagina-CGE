@@ -9,6 +9,7 @@ import InfoBar from "@/src/modules/layout/InfoBar";
 import FAQSection from "@modules/layout/FAQSection";
 import ArticlesContainer from "@/src/app/[articulo]/ArticlesContainer";
 
+
 const HERO = {
   noticias: {
     title: "Noticias y Novedades",
@@ -89,15 +90,13 @@ export default async function ContenidoGrid({
   );
 
   const data = rawData.map((item: any) => {
-    const date = formatearFecha(item.date || item.fecha);
     return {
       id: item.slug,
       slug: item.slug,
       titulo: item.titulo,
       resumen: item.resumen || item.description || "",
       description: item.description || item.resumen,
-      date,
-      fecha: date,
+      date: item.fecha || "",
       imagen:
         item.imagen ||
         (articulo === "noticias" ? "/images/news.png" : "/images/tramites.png"),
