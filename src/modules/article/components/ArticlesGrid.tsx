@@ -149,7 +149,7 @@ const ArticlesGridContent = ({
                       {item.date && (
                         <span className="text-xs text-gray-500 font-medium">
                           <CalendarDays
-                            size={14}
+                            size={12}
                             className="inline mr-1"
                             aria-hidden="true"
                           />
