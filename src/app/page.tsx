@@ -1,7 +1,10 @@
 // src/app/noticia/[id]/page.tsx
 import { getAllContentMetadata } from "@modules/article/data/content";
-import { ARTICLES_PER_PAGE, normalizeArticle } from "@modules/article/data/article-utils";
-import HeroMain from "@modules/home/components/HeroSection";
+import {
+  ARTICLES_PER_PAGE,
+  normalizeArticle,
+} from "@modules/article/data/article-utils";
+import HeroMain from "@/src/modules/home/components/HeroMain";
 import QuickAccess from "@modules/home/components/QuickAccess";
 import { Separator } from "@radix-ui/react-separator";
 import ArticlesGrid from "@modules/article/components/ArticlesGrid";
@@ -10,7 +13,11 @@ import { ArrowRight } from "lucide-react";
 import SocialMediaSection from "@modules/socials/SocialMediaSection";
 
 export default async function PagPrincipal() {
-  const { items: rawNews } = await getAllContentMetadata("noticias", 1, ARTICLES_PER_PAGE);
+  const { items: rawNews } = await getAllContentMetadata(
+    "noticias",
+    1,
+    ARTICLES_PER_PAGE
+  );
 
   const news = rawNews.map(normalizeArticle);
 
@@ -32,10 +39,10 @@ export default async function PagPrincipal() {
           <div className="container mx-auto px-4 md:px-6">
             <div className="container relative mx-auto px-6">
               <div className="text-center max-w-2xl mx-auto mb-16">
-                <h3 className="text-5xl font-bold mb-6 leading-relaxed bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
+                <h3 className="text-3xl md:text-5xl font-bold mb-6 leading-relaxed bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
                   Últimas noticias y novedades
                 </h3>
-                <p className="text-gray-600 text-xl leading-relaxed text-balance">
+                <p className="text-gray-600 text-lg md:text-xl leading-relaxed text-balance">
                   Mantente informado sobre las últimas novedades, publicaciones
                   y resoluciones del Consejo General de Educación
                 </p>
