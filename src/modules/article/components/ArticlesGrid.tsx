@@ -10,7 +10,7 @@ import {
 } from "@components/ui/card";
 import { Button } from "@components/ui/button";
 import { Badge } from "@components/ui/badge";
-import { FileText, ArrowRightIcon, Loader2 } from "lucide-react";
+import { FileText, ArrowRightIcon, CalendarDays, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -148,6 +148,11 @@ const ArticlesGridContent = ({
                       )}
                       {item.date && (
                         <span className="text-xs text-gray-500 font-medium">
+                          <CalendarDays
+                            size={12}
+                            className="inline mr-1"
+                            aria-hidden="true"
+                          />
                           {formatearFecha(item.date)}
                         </span>
                       )}

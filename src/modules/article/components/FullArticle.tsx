@@ -6,6 +6,7 @@ import {
   ChevronRight,
   Bookmark,
   Newspaper,
+  CalendarDays,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -206,7 +207,7 @@ export default function FullArticle({
                                 {articulo.titulo}
                               </h3>
                               <p className="text-xs text-slate-500 flex items-center">
-                                <Clock
+                                <CalendarDays
                                   size={12}
                                   className="mr-1"
                                   aria-hidden="true"

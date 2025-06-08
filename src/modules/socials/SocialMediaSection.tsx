@@ -11,10 +11,12 @@ const SocialMediaSection = ({
     <section className="relative overflow-hidden bg-gray-50 to-white">
       <div className="container relative mx-auto px-6">
         <div className="text-center max-w-2xl mx-auto mb-6">
-          <h3 className="text-5xl leading-relaxed font-bold mb-6 bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
+          <h3 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r leading-tight md:leading-normal lg:leading-relaxed from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
             {title}
           </h3>
-          <p className="text-gray-600 text-xl leading-relaxed text-balance">{description}</p>
+          <p className="text-gray-600 text-lg md:text-xl leading-relaxed text-balance">
+            {description}
+          </p>
         </div>
 
         <div className="flex flex-col sm:flex-row justify-center gap-8 max-w-2xl py-2 mx-auto">
