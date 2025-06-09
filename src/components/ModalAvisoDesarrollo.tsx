@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "./ui/dialog";
+import { Button } from "./ui/button";
 
 export default function ModalAvisoDesarrollo() {
   const [open, setOpen] = useState(false);
@@ -31,6 +32,12 @@ export default function ModalAvisoDesarrollo() {
             comprensión.
           </DialogDescription>
         </DialogHeader>
+        <Button
+          onClick={() => setOpen(false)}
+          className="bg-[#205C3B] hover:bg-[#194931] text-white font-medium px-6 py-2 rounded-lg transition-colors focus:ring-2 focus:ring-[#194931] focus:ring-offset-2"
+        >
+          Entendido
+        </Button>
       </DialogContent>
     </Dialog>
   );

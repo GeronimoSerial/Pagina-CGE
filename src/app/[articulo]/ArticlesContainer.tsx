@@ -107,9 +107,9 @@ export default function ArticlesContainer({
                     href="https://expgob.mec.gob.ar/lup_mod/ubicar_expedWeb.asp"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center px-5 py-2.5 rounded-lg bg-white hover:bg-gray-50 text-[#3D8B37] font-medium transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 border border-[#3D8B37]/20 hover:border-[#3D8B37]/40 text-sm"
+                    className="inline-flex items-center px-5 py-2.5 rounded-lg bg-white hover:bg-gray-50 text-[#2B682B] font-medium transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 border border-[#2B682B]/30 hover:border-[#2B682B]/50 text-sm"
                   >
-                    <FileSearch className="h-4 w-4 mr-2 text-[#3D8B37]" />
+                    <FileSearch className="h-4 w-4 mr-2 text-[#2B682B]" />
                     Consultar estado de tu expediente
                   </a>
                 )}

@@ -27,7 +27,7 @@ export default function Contact({ basePath }: { basePath: string }) {
                 : "https://wa.me/5493794852954?text=Hola,%20necesito%20ayuda%20con%20mi%20tr%C3%A1mite.%20Gracias!"}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center px-4 py-2 rounded-lg bg-[#3D8B37] hover:bg-[#2D6A27] text-white font-medium transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105"
+            className="inline-flex items-center px-4 py-2 rounded-lg bg-[#216B1D] hover:bg-[#195016] text-white font-medium transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105"
           >
             {isNoticia ? "Contactar Prensa" : "Contactar Mesa de Entradas y Salidas"}
             <Smartphone className="h-4 w-4 ml-2" />
