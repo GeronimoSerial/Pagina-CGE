@@ -4,10 +4,10 @@ import { normalizeArticle } from "@lib/utils";
 import HeroMain from "@/src/modules/home/components/HeroMain";
 import QuickAccess from "@modules/home/components/QuickAccess";
 import { Separator } from "@radix-ui/react-separator";
-import ArticlesGrid from "@modules/article/components/ArticlesGrid";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import SocialMediaSection from "@modules/socials/SocialMediaSection";
+import NewsGrid from "../modules/article/components/NewsGrid";
 
 export default async function PagPrincipal() {
   const { items: rawNews } = await getAllContentMetadata("noticias", 1, 4);
@@ -41,7 +41,8 @@ export default async function PagPrincipal() {
                 </p>
               </div>
             </div>
-            <ArticlesGrid
+
+            <NewsGrid
               articles={news}
               basePath="/noticias"
               showImportantBadge={true}

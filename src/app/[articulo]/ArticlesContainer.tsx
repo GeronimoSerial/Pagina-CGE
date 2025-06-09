@@ -9,6 +9,7 @@ import { useArticleSearch } from "@/src/hooks/articles/useArticleSearch";
 import { useArticlesData } from "@/src/hooks/articles/useArticlesData";
 import { useArticleCategories } from "@/src/hooks/articles/useArticleCategories";
 import { normalizeArticle } from "@lib/utils";
+import NewsGrid from "@/src/modules/article/components/NewsGrid";
 
 interface ArticlesContainerProps {
   basePath: string;
@@ -117,17 +118,28 @@ export default function ArticlesContainer({
             </div>
           </section>
         )}
-      <div className="mt-6 min-h-[500px]">
-        <ArticlesGrid
-          articles={articlesToDisplay}
-          basePath={basePath}
-          pagination={pagination}
-          isLoading={isLoading}
-          isCategoryLoading={isCategoryFiltering}
-          showImportantBadge={true}
-          />
-      </div>
-          </main>
+        <div className="mt-6 ">
+          {isNoticia ? (
+            <NewsGrid
+              articles={articlesToDisplay}
+              basePath={basePath}
+              pagination={pagination}
+              isLoading={isLoading}
+              isCategoryLoading={isCategoryFiltering}
+              showImportantBadge={true}
+            />
+          ) : (
+            <ArticlesGrid
+              articles={articlesToDisplay}
+              basePath={basePath}
+              pagination={pagination}
+              isLoading={isLoading}
+              isCategoryLoading={isCategoryFiltering}
+              showImportantBadge={true}
+            />
+          )}
+        </div>
+      </main>
     </>
   );
 }
