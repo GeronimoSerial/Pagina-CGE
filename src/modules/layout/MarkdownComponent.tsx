@@ -1,5 +1,5 @@
 import { Components } from "react-markdown";
-
+// renderizado de texto p/ full article
 export const MarkdownComponent: Components = {
   h1: ({ children }) => (
     <h1 className="text-xl font-bold text-slate-900 mt-8 mb-4 border-b pb-1 border-slate-200">
