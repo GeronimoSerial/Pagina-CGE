@@ -8,6 +8,7 @@ import { Article } from "@/src/interfaces";
 import { useArticleSearch } from "@/src/hooks/articles/useArticleSearch";
 import { useArticlesData } from "@/src/hooks/articles/useArticlesData";
 import { useArticleCategories } from "@/src/hooks/articles/useArticleCategories";
+import { normalizeArticle } from "@lib/utils";
 
 interface ArticlesContainerProps {
   basePath: string;
@@ -62,21 +63,9 @@ export default function ArticlesContainer({
   const showFilteredResults = searchTerm;
   const articlesToDisplay = useMemo(() => {
     if (showFilteredResults) {
-      return filteredResults.slice(0, 4).map((article) => ({
-        ...article,
-        id: article.id ?? article.slug,
-        description:
-          article.description ?? article.resumen ?? "Sin descripción",
-      }));
+      return filteredResults.slice(0, 4).map(normalizeArticle);
     } else {
-      return (
-        initialArticles?.map((article) => ({
-          ...article,
-          id: article.id ?? article.slug,
-          description:
-            article.description ?? article.resumen ?? "Sin descripción",
-        })) || []
-      );
+      return initialArticles?.map(normalizeArticle) || [];
     }
   }, [showFilteredResults, filteredResults, initialArticles]);
 
@@ -112,6 +101,7 @@ export default function ArticlesContainer({
                     />
                   </div>
                 </div>
+                {/* Expedientes Button */}
                 {!isNoticia && (
                   <a
                     href="https://expgob.mec.gob.ar/lup_mod/ubicar_expedWeb.asp"
@@ -127,8 +117,7 @@ export default function ArticlesContainer({
             </div>
           </section>
         )}
-      </main>
-      <div className="min-h-[500px]">
+      <div className="mt-6 min-h-[500px]">
         <ArticlesGrid
           articles={articlesToDisplay}
           basePath={basePath}
@@ -136,8 +125,9 @@ export default function ArticlesContainer({
           isLoading={isLoading}
           isCategoryLoading={isCategoryFiltering}
           showImportantBadge={true}
-        />
+          />
       </div>
+          </main>
     </>
   );
 }

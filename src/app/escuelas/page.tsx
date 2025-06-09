@@ -3,7 +3,6 @@ import HeroSection from "@modules/layout/Hero";
 import { Metadata } from "next";
 import { EscuelasClient } from "@components/data/dynamic-client";
 import FAQSection from "@/src/modules/layout/FAQSection";
-import { getEscuelas } from "@/src/modules/escuelas/utils/escuelas";
 
 export const metadata: Metadata = {
   title: "Escuelas",

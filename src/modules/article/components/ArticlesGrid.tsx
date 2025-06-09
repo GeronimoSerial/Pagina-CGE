@@ -15,25 +15,10 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import SkeletonCard from "./SkeletonCard";
-import { Article } from "@/src/interfaces";
+import { ArticlesGridProps } from "@/src/interfaces";
 import { formatearFecha } from "@lib/utils";
 import { HeadlessPagination } from "@modules/documentation/components/HeadlessPagination";
-
-interface ArticlesGridProps {
-  articles?: Article[];
-  buttonText?: string;
-  emptyStateTitle?: string;
-  emptyStateDescription?: string;
-  emptyStateButtonText?: string;
-  showImportantBadge?: boolean;
-  basePath?: string;
-  pagination?: {
-    currentPage: number;
-    totalPages: number;
-  };
-  isLoading?: boolean;
-  isCategoryLoading?: boolean;
-}
+import { TEXTS } from "../data/constants";
 
 const ArticlesGridContent = ({
   articles,
@@ -48,18 +33,7 @@ const ArticlesGridContent = ({
   const searchParams = useSearchParams();
 
   const isNoticia = basePath?.includes("noticias") || false;
-  const emptyStateButtonText = isNoticia
-    ? "Mostrar todas las noticias"
-    : "Mostrar todos los trámites";
-  const emptyStateTitle = isNoticia
-    ? "No se encontraron noticias"
-    : "No se encontraron trámites";
-  const emptyStateDescription =
-    "No se encontraron resultados para tu búsqueda. Intenta con otra palabra clave o revisa la categoría seleccionada.";
-  const buttonText = isNoticia
-    ? "Ver noticia completa"
-    : "Ver trámite completo";
-
+  const texts = isNoticia ? TEXTS.noticias : TEXTS.tramites;
   const { totalPaginas, currentPage } = useMemo(
     () => ({
       totalPaginas: pagination
@@ -181,7 +155,7 @@ const ArticlesGridContent = ({
                       asChild
                     >
                       <p className="flex items-center gap-3">
-                        {buttonText} <ArrowRightIcon size={16} />
+                        {texts.buttonText} <ArrowRightIcon size={16} />
                       </p>
                     </Button>
                   </CardFooter>
@@ -192,17 +166,17 @@ const ArticlesGridContent = ({
             <div className="col-span-full rounded-xl shadow-sm p-10 text-center">
               <FileText className="h-12 w-12 mx-auto text-black mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                {emptyStateTitle}
+                {texts.emptyStateTitle}
               </h3>
               <p className="text-gray-500 max-w-md mx-auto">
-                {emptyStateDescription}
+                {TEXTS.common.emptyStateDescription}
               </p>
               <Button
                 variant="outline"
                 onClick={() => (window.location.href = basePath || "/")}
                 className="mt-4 border-gray-200 text-gray-700 hover:bg-gray-50"
               >
-                {emptyStateButtonText}
+                {texts.emptyStateButtonText}
               </Button>
             </div>
           )}
