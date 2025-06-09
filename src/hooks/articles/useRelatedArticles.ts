@@ -1,5 +1,5 @@
 import { getAllContentMetadata } from "@/src/modules/article/data/content";
-import { normalizeArticle } from "@/src/modules/article/data/article-utils";
+import { normalizeArticle } from "@lib/utils";
 import { Article } from "@/src/interfaces";
 
 export async function getArticulosRelacionados(

@@ -1,7 +1,6 @@
 // Pagina principal para noticias o trámites
-import { formatearFecha } from "@lib/utils";
 import { getAllContentMetadata } from "@modules/article/data/content";
-import { normalizeArticle } from "@modules/article/data/article-utils";
+import { normalizeArticle } from "@lib/utils";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import HeroSection from "@modules/layout/Hero";
@@ -9,19 +8,7 @@ import Contact from "@modules/layout/Contact";
 import InfoBar from "@/src/modules/layout/InfoBar";
 import FAQSection from "@modules/layout/FAQSection";
 import ArticlesContainer from "@/src/app/[articulo]/ArticlesContainer";
-
-const HERO = {
-  noticias: {
-    title: "Noticias y Novedades",
-    description:
-      "Mantente informado con las últimas noticias y novedades del Consejo General de Educación.",
-  },
-  tramites: {
-    title: "Trámites y Gestiones",
-    description:
-      "Portal centralizado de trámites del Consejo General de Educación. Acceda a toda la información y documentación necesaria.",
-  },
-};
+import { HERO_CONFIG } from "@/src/modules/article/data/constants";
 
 export async function generateMetadata({
   params,
@@ -31,14 +18,13 @@ export async function generateMetadata({
   const resolvedParams = await params;
 
   const titles: Record<string, string> = {
-    noticias: "Noticias y Novedades",
-    tramites: "Trámites y Gestiones",
+    noticias: HERO_CONFIG.noticias.title,
+    tramites: HERO_CONFIG.tramites.title,
   };
 
   const descriptions: Record<string, string> = {
-    noticias:
-      "Noticias y novedades del Consejo General de Educación (CGE) en Corrientes",
-    tramites: "Información detallada sobre los trámites disponibles en el CGE",
+    noticias: HERO_CONFIG.noticias.description,
+    tramites: HERO_CONFIG.tramites.description,
   };
 
   const articulo = resolvedParams.articulo;
@@ -91,14 +77,12 @@ export default async function ContenidoGrid({
 
   const data = rawData.map(normalizeArticle);
 
-  const heroConfig = articulo === "noticias" ? HERO.noticias : HERO.tramites;
+  const hero =
+    articulo === "noticias" ? HERO_CONFIG.noticias : HERO_CONFIG.tramites;
 
   return (
     <main className="bg-gray-50 min-h-screen">
-      <HeroSection
-        title={heroConfig.title}
-        description={heroConfig.description}
-      />
+      <HeroSection title={hero.title} description={hero.description} />
       <InfoBar basePath={`/${articulo}`} />
 
       <ArticlesContainer

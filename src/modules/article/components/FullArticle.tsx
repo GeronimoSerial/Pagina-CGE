@@ -19,25 +19,7 @@ import ShareButton from "./ShareButton";
 import PrintButton from "./PrintButton";
 import { ClientCarousel } from "@components/data/dynamic-client";
 import { MarkdownComponent } from "@src/modules/layout/MarkdownComponent";
-
-const ENLACES_RELACIONADOS = [
-  {
-    titulo: "Gestión Educativa",
-    url: "https://ge.mec.gob.ar",
-  },
-  {
-    titulo: "Sitio oficial Ministerio de Educación",
-    url: "http://mec.gob.ar",
-  },
-  {
-    titulo: "Artículos relacionados",
-    url: "/articulos",
-  },
-  {
-    titulo: "Documentación",
-    url: "/documentacion",
-  },
-];
+import { ENLACES_RELACIONADOS } from "@modules/article/data/constants";
 
 interface FullArticleProps {
   post: any;
