@@ -1,9 +1,6 @@
 // src/app/noticia/[id]/page.tsx
 import { getAllContentMetadata } from "@modules/article/data/content";
-import {
-  ARTICLES_PER_PAGE,
-  normalizeArticle,
-} from "@modules/article/data/article-utils";
+import { normalizeArticle } from "@lib/utils";
 import HeroMain from "@/src/modules/home/components/HeroMain";
 import QuickAccess from "@modules/home/components/QuickAccess";
 import { Separator } from "@radix-ui/react-separator";
@@ -13,11 +10,7 @@ import { ArrowRight } from "lucide-react";
 import SocialMediaSection from "@modules/socials/SocialMediaSection";
 
 export default async function PagPrincipal() {
-  const { items: rawNews } = await getAllContentMetadata(
-    "noticias",
-    1,
-    ARTICLES_PER_PAGE
-  );
+  const { items: rawNews } = await getAllContentMetadata("noticias", 1, 4);
 
   const news = rawNews.map(normalizeArticle);
 

@@ -3,7 +3,7 @@ import {
   getContentBySlug,
   getAllContentSlugs,
 } from "@modules/article/data/content";
-import { normalizeArticle } from "@modules/article/data/article-utils";
+import { normalizeArticle } from "@lib/utils";
 import FullArticle from "@modules/article/components/FullArticle";
 import { notFound } from "next/navigation";
 import { getArticulosRelacionados } from "@/src/hooks/articles/useRelatedArticles";

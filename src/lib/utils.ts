@@ -27,6 +27,24 @@ export function formatearFecha(fechaStr: string | Date) {
   });
 }
 
+export function normalizeArticle(item: any) {
+  return {
+    id: item.slug,
+    slug: item.slug,
+    title: item.title || item.titulo,
+    titulo: item.titulo,
+    description: item.description || item.resumen,
+    resumen: item.resumen,
+    date: item.fecha
+      ? new Date(item.fecha).toISOString()
+      : new Date().toISOString(),
+    imageUrl: item.imageUrl || item.imagen,
+    imagen: item.imagen,
+    categoria: item.categoria || item.subcategoria,
+    content: item.content,
+    esImportante: item.esImportante || false,
+  };
+}
 
 export function filtrarArticulos(
   article: any[],
@@ -132,8 +150,6 @@ export const filterDocuments = (
   searchTerm: string,
   filter: string = "all"
 ) => {
-
-
   return documents.filter((doc) => {
     const matchesFilter = filter === "all" || doc.category === filter;
 

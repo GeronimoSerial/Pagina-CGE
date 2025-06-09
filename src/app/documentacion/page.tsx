@@ -2,7 +2,6 @@
 import { DocumentacionSection } from "@/src/components/data/dynamic-client";
 import HeroSection from "@modules/layout/Hero";
 import FAQSection from "@modules/layout/FAQSection";
-import { Suspense } from "react";
 import { Metadata } from "next";
 import InfoBar from "@/src/modules/layout/InfoBar";
 
