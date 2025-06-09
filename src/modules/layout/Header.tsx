@@ -29,7 +29,7 @@ const Header = () => {
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center group"
+            className="flex items-center group focus:outline-none focus:ring-2 focus:ring-[#2D6628] rounded-lg p-1"
             aria-label="Ir al inicio"
             onClick={closeMenu}
           >
@@ -44,10 +44,10 @@ const Header = () => {
               />
             </div>
             <div className="ml-3">
-              <span className="block text-lg sm:text-xl font-bold text-gray-800 group-hover:text-[#3D8B37] transition-colors">
+              <span className="block text-lg sm:text-xl font-bold text-gray-900">
                 CGE
               </span>
-              <span className="block text-xs sm:text-sm text-gray-600">
+              <span className="block text-xs sm:text-sm text-gray-700">
                 Corrientes
               </span>
             </div>
@@ -62,13 +62,13 @@ const Header = () => {
                     href={link.href}
                     className={`relative px-1 py-2 text-sm font-medium transition-colors ${
                       pathname === link.href
-                        ? "text-[#3D8B37] font-semibold"
-                        : "text-gray-700 hover:text-[#3D8B37]"
+                        ? "text-[#205C3B] font-semibold"
+                        : "text-gray-800 hover:text-[#205C3B]"
                     }`}
                   >
                     {link.label}
                     {pathname === link.href && (
-                      <span className="absolute bottom-0 left-0 h-0.5 w-full bg-[#3D8B37] rounded-full" />
+                      <span className="absolute bottom-0 left-0 h-0.5 w-full bg-[#205C3B] rounded-full" />
                     )}
                   </Link>
                 </li>
@@ -79,8 +79,8 @@ const Header = () => {
           {/* Botón Mobile */}
           <button
             onClick={toggleMenu}
-            className="lg:hidden p-2 rounded-md text-gray-700 hover:text-[#3D8B37] focus:outline-none focus:ring-2 focus:ring-[#3D8B37]/50"
-            aria-label="Menú de navegación"
+            className="lg:hidden p-2 rounded-md text-gray-800"
+            aria-label={isMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
             aria-expanded={isMenuOpen}
           >
             <div className="w-6 flex flex-col items-center">
@@ -109,18 +109,19 @@ const Header = () => {
             isMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          <nav className="pb-4">
-            <ul className="space-y-2">
+          <nav className="py-2" aria-label="Navegación móvil">
+            <ul className="space-y-1">
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className={`block px-4 py-3 rounded-lg text-base font-medium ${
+                    className={`block px-4 py-2.5 rounded-lg text-base font-medium ${
                       pathname === link.href
-                        ? "bg-[#3D8B37]/10 text-[#3D8B37]"
-                        : "text-gray-700 hover:bg-gray-100"
+                        ? "bg-[#205C3B]/10 text-[#205C3B] font-semibold"
+                        : "text-gray-800 hover:bg-gray-100 hover:text-[#205C3B]"
                     }`}
                     onClick={closeMenu}
+                    aria-current={pathname === link.href ? "page" : undefined}
                   >
                     {link.label}
                   </Link>
