@@ -38,7 +38,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   }, []);
 
   return (
-    <div className="w-full space-y-2">
+    <div className="w-full space-y-3">
       <div className="relative group">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5 pointer-events-none" />
         <input
@@ -55,13 +55,13 @@ const SearchInput: React.FC<SearchInputProps> = ({
       </div>
 
       {categories.length > 0 && onCategoryChange && (
-        <div className="flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-2">
           <button
-            className={`px-3 py-1.5 text-sm rounded-lg transition-all duration-200 border-2
+            className={`px-4 py-2 text-sm rounded-xl transition-all duration-200 border
               ${
                 !selectedCategory
-                  ? "bg-[#3D8B37] border-[#3D8B37] text-white font-medium shadow-md"
-                  : "text-gray-700 border-gray-300 hover:border-[#3D8B37] hover:text-[#3D8B37] hover:bg-[#3D8B37]/5"
+                  ? "bg-[#3D8B37] border-transparent text-white font-medium shadow-md hover:bg-[#34752f]"
+                  : "text-gray-700 border-gray-200 bg-white hover:border-[#3D8B37] hover:text-[#3D8B37] hover:bg-[#3D8B37]/10 shadow-sm"
               }`}
             onClick={() => onCategoryChange("")}
           >
@@ -70,11 +70,11 @@ const SearchInput: React.FC<SearchInputProps> = ({
           {categories.map((cat) => (
             <button
               key={cat}
-              className={`px-3 py-1.5 text-sm rounded-lg transition-all duration-200 border-2
+              className={`px-4 py-2 text-sm rounded-xl transition-all duration-200 border
                 ${
                   selectedCategory === cat
-                    ? "bg-[#3D8B37] border-[#3D8B37] text-white font-medium shadow-md"
-                    : "text-gray-700 border-gray-300 hover:border-[#3D8B37] hover:text-[#3D8B37] hover:bg-[#3D8B37]/5"
+                    ? "bg-[#3D8B37] border-transparent text-white font-medium shadow-md hover:bg-[#34752f]"
+                    : "text-gray-700 border-gray-200 bg-white hover:border-[#3D8B37] hover:text-[#3D8B37] hover:bg-[#3D8B37]/10 shadow-sm"
                 }`}
               onClick={() => onCategoryChange(cat)}
             >

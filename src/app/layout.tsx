@@ -10,7 +10,6 @@ import { Separator } from "@radix-ui/react-separator";
 
 export { metadata };
 
-//fonts
 
 const inter = Inter({ subsets: ["latin"] });
 const lora = Lora({
