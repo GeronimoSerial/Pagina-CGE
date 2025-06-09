@@ -117,8 +117,7 @@ export default function ArticlesContainer({
             </div>
           </section>
         )}
-      </main>
-      <div className="min-h-[500px]">
+      <div className="mt-6 min-h-[500px]">
         <ArticlesGrid
           articles={articlesToDisplay}
           basePath={basePath}
@@ -126,8 +125,9 @@ export default function ArticlesContainer({
           isLoading={isLoading}
           isCategoryLoading={isCategoryFiltering}
           showImportantBadge={true}
-        />
+          />
       </div>
+          </main>
     </>
   );
 }
