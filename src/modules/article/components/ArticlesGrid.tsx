@@ -110,12 +110,12 @@ const ArticlesGridContent = ({
                     )}
                   </div>
 
-                  <CardHeader className="pb-2 flex-none h-[5.5rem]">
+                  <CardHeader className="pb-2 flex-none min-h-[5.5rem]">
                     <div className="flex justify-between items-center mb-2">
                       {item.categoria && (
                         <Badge
                           variant="outline"
-                          className="bg-[#3D8B37]/10 text-[#3D8B37] border-0 font-medium"
+                          className="bg-[#E8F5E9] text-[#2E6B29] border-0 font-medium"
                         >
                           {item.categoria}
                         </Badge>
@@ -133,25 +133,25 @@ const ArticlesGridContent = ({
                     </div>
                     <CardTitle
                       title={item.titulo}
-                      className="text-base font-semibold line-clamp-2 text-gray-800"
+                      className="text-base font-semibold line-clamp-2 text-gray-800 leading-tight"
                     >
                       {item.titulo}
                     </CardTitle>
                   </CardHeader>
 
-                  <CardContent className="flex-1 min-h-0">
+                  <CardContent className="flex-1 overflow-hidden">
                     <CardDescription
-                      className="text-gray-600 line-clamp-3"
+                      className="text-gray-600 line-clamp-3 text-sm"
                       title={item.description}
                     >
                       {item.description}
                     </CardDescription>
                   </CardContent>
 
-                  <CardFooter className="pt-0 pb-4 flex-none h-[3rem]">
+                  <CardFooter className="pt-0 pb-4 flex-none">
                     <Button
                       variant="link"
-                      className="p-0 h-auto text-[#3D8B37] font-medium hover:text-[#2D6A27] flex items-center gap-1 hover:underline"
+                      className="p-0 h-auto text-[#216B1D] font-medium hover:text-[#195016] flex items-center gap-1 hover:underline"
                       asChild
                     >
                       <p className="flex items-center gap-3">

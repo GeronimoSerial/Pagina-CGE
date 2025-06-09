@@ -73,7 +73,7 @@ export default function FAQSection({ basePath }: FAQSectionProps) {
                         <a
                           key={linkIndex}
                           href={link.url}
-                          className="inline-block text-[#3D8B37] hover:text-[#2D6A27] font-medium transition-colors duration-200 text-sm"
+                          className="inline-block text-[#216B1D] font-medium hover:text-[#195016] transition-colors duration-200 text-sm"
                         >
                           {link.text} →
                         </a>

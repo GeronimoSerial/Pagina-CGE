@@ -32,7 +32,7 @@ export default async function PagPrincipal() {
           <div className="container mx-auto px-4 md:px-6">
             <div className="container relative mx-auto px-6">
               <div className="text-center max-w-2xl mx-auto mb-16">
-                <h3 className="text-3xl md:text-5xl font-bold mb-6 leading-relaxed bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
+                <h3 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r md:leading-normal lg:leading-relaxed from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
                   Últimas noticias y novedades
                 </h3>
                 <p className="text-gray-600 text-lg md:text-xl leading-relaxed text-balance">
@@ -50,7 +50,7 @@ export default async function PagPrincipal() {
               <div className="flex justify-center">
                 <Link
                   href="/noticias"
-                  className="inline-flex items-center gap-2 bg-[#3D8B37] hover:bg-[#2D6A27] text-white font-medium px-6 py-3 mt-5 rounded-lg transition-colors duration-300"
+                  className="inline-flex items-center gap-2 bg-[#216B1D] hover:bg-[#195016] text-white font-medium px-6 py-3 mt-5 rounded-lg transition-colors duration-300"
                 >
                   Ver todas las noticias
                   <ArrowRight className="h-5 w-5" />

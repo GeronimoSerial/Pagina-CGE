@@ -53,7 +53,7 @@ const HeroMain = () => {
           <Button
             asChild
             size="default"
-            className="bg-[#217A4B] hover:bg-[#205C3B] text-white font-bold px-6 py-3 rounded-xl text-base shadow-lg transition-colors border-2 border-white/10 focus:ring-2 focus:ring-[#205C3B]"
+            className="bg-[#205C3B] hover:bg-[#194931] text-white font-bold px-6 py-3 rounded-xl text-base shadow-lg transition-colors border-2 border-white/10 focus:ring-2 focus:ring-[#194931]"
           >
             <Link href="/institucional">Conocé nuestras acciones</Link>
           </Button>
