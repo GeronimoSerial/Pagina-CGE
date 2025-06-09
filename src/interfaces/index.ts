@@ -5,15 +5,6 @@ export interface ContactoForm {
   mensaje: string;
 }
 
-export interface articlesItem {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-  imageUrl: string;
-  categoria: string;
-  content?: string;
-}
 
 export interface QuickAccessItemProps {
   icon: React.ReactNode;
@@ -31,9 +22,15 @@ export interface ImagenCarruselGenerica {
 }
 
 export interface ArticlesGridProps {
-  articles?: articlesItem[];
-  title?: string;
-  subtitle?: string;
+  articles?: Article[];
+  showImportantBadge?: boolean;
+  basePath?: string;
+  pagination?: {
+    currentPage: number;
+    totalPages: number;
+  };
+  isLoading?: boolean;
+  isCategoryLoading?: boolean;
 }
 
 export interface SocialMediaProps {
