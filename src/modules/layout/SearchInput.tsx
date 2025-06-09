@@ -60,7 +60,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
             className={`px-4 py-2 text-sm rounded-xl transition-all duration-200 border
               ${
                 !selectedCategory
-                  ? "bg-[#3D8B37] border-transparent text-white font-medium shadow-md hover:bg-[#34752f]"
+                  ? "bg-[#216B1D] hover:bg-[#195016] text-white border-transparent font-medium shadow-md"
                   : "text-gray-700 border-gray-200 bg-white hover:border-[#3D8B37] hover:text-[#3D8B37] hover:bg-[#3D8B37]/10 shadow-sm"
               }`}
             onClick={() => onCategoryChange("")}
@@ -73,8 +73,8 @@ const SearchInput: React.FC<SearchInputProps> = ({
               className={`px-4 py-2 text-sm rounded-xl transition-all duration-200 border
                 ${
                   selectedCategory === cat
-                    ? "bg-[#3D8B37] border-transparent text-white font-medium shadow-md hover:bg-[#34752f]"
-                    : "text-gray-700 border-gray-200 bg-white hover:border-[#3D8B37] hover:text-[#3D8B37] hover:bg-[#3D8B37]/10 shadow-sm"
+                    ? "bg-[#205C3B] border-transparent text-white font-medium shadow-md hover:bg-[#194931]"
+                    : "text-gray-800 border-gray-200 bg-white hover:border-[#205C3B] hover:text-[#205C3B] hover:bg-[#205C3B]/10 shadow-sm"
                 }`}
               onClick={() => onCategoryChange(cat)}
             >
