@@ -43,6 +43,7 @@ export function normalizeArticle(item: any) {
     categoria: item.categoria || item.subcategoria,
     content: item.content,
     esImportante: item.esImportante || false,
+    imagenes_carrusel: item.imagenes_carrusel || [],
   };
 }
 
