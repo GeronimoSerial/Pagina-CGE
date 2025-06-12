@@ -48,7 +48,9 @@ export const StickyImage = dynamic(
   () => import("../../modules/chatbot/components/StickyImage"),
   {
     ssr: false,
-    loading: () => <SkeletonLoading />,
+    loading: () => (
+      <LoadingSpinner text="Cargando imagen ilustrativa del chatbot" />
+    ),
   }
 );
 
