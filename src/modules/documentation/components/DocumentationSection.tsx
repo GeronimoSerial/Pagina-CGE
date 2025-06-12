@@ -114,12 +114,13 @@ const DocumentationSection = () => {
               transitionDuration: "700ms",
             }}
           >
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border border-green-100 shadow-md transition-all duration-700">
+            {" "}
+            <div className="bg-gradient-to-r from-[#3D8B37] to-[#2D6A27] rounded-xl p-4 border border-green-700/20 shadow-md transition-all duration-700">
               <div className="flex items-center gap-2 mb-3">
-                <div className="p-1.5 bg-green-100 rounded-lg">
-                  <FileText className="h-4 w-4 text-green-600" />
+                <div className="p-1.5 bg-white/20 rounded-lg">
+                  <FileText className="h-4 w-4 text-white" />
                 </div>
-                <h2 className="text-lg font-semibold text-gray-800">
+                <h2 className="text-xl font-semibold text-white">
                   Últimos documentos añadidos
                 </h2>
               </div>
@@ -130,7 +131,7 @@ const DocumentationSection = () => {
                   .map((doc) => (
                     <Card
                       key={doc.id}
-                      className="flex flex-col h-full border border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-300 rounded-md overflow-hidden bg-white/90 backdrop-blur-sm"
+                      className="flex flex-col h-full border border-gray-200 hover:border-green-300 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 rounded-md overflow-hidden bg-white shadow-sm"
                     >
                       <CardHeader className="pb-0 pt-2 px-3">
                         <div className="flex justify-between items-start">
