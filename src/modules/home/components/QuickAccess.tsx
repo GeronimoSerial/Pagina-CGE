@@ -1,6 +1,6 @@
 // import React from "react";
 import { Card, CardContent } from "../../../components/ui/card";
-import { FileText, School, BookOpen, Bot } from "lucide-react";
+import { FileText, School, BookOpen, BotMessageSquare } from "lucide-react";
 import { QuickAccessItemProps } from "../../../interfaces";
 
 const QuickAccessItem = ({
@@ -50,7 +50,7 @@ const QuickAccess = ({ items = [] }: QuickAccessProps) => {
       href: "/documentacion",
     },
     {
-      icon: <Bot size={24} />,
+      icon: <BotMessageSquare size={24} />,
       title: "Asistente Virtual",
       description:
         "Consultá normativa educativa con el chatbot oficial del Consejo General de Educación",

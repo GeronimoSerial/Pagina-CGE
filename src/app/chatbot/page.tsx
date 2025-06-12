@@ -128,7 +128,7 @@ function DesktopView() {
               className="block group focus:outline-none focus:ring-2 focus:ring-[#3D8B37] focus:ring-offset-2 rounded-xl"
               aria-label="Acceder al Chat Normativo CGE"
             >
-              <div className="cursor-pointer transition-all duration-500 hover:scale-105 shadow-xl hover:shadow-[#3D8B37]/30 transform hover:-translate-y-2 rounded-2xl p-1 bg-gradient-to-r from-[#216B1D] via-[#3D8B37] to-[#195016]">
+              <div className="cursor-pointer transition-all duration-500 hover:scale-105 shadow-xl hover:shadow-[#3D8B37]/30 transform hover:-translate-y-2 rounded-2xl p-1 bg-gradient-to-r from-[#3D8B37]/15 via-[#3D8B37]/20 to-[#3D8B37]/40">
                 <div className="relative h-[500px] sm:h-[550px] lg:h-[600px] overflow-hidden rounded-xl">
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 flex items-center justify-center">
                     <div className="text-center text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
@@ -145,7 +145,8 @@ function DesktopView() {
                   <Image
                     src="/images/Chatbot.png"
                     alt="Asistente virtual del CGE - Interfaz del Chat Normativo"
-                    fill
+                    width={800}
+                    height={700}
                     className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                     sizes="(max-width: 768px) 100vw, 50vw"
                     priority
