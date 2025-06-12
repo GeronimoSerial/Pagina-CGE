@@ -1,5 +1,5 @@
 // Modal que muestra la información de cada escuela
-import React, {memo} from "react";
+import React, { memo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -18,8 +18,9 @@ import {
   Calendar,
   Map,
   ArrowRight,
+  BarChart3,
 } from "lucide-react";
-import { MatriculaStats } from "./MatriculaStats";
+import { formatearFecha } from "@/src/lib/utils";
 interface EscuelaDetallesProps {
   escuela: Escuela;
   onClose: () => void;
@@ -60,9 +61,9 @@ const EscuelaDetalles = memo(
                 </span>
               </div>
 
-              <div className={commonBadgeClasses}>
+              <div className={`${commonBadgeClasses} w-auto`}>
                 <MapPin className={commonIconClasses} />
-                <span className="font-medium text-gray-700 truncate max-w-[120px] xs:max-w-[150px] sm:max-w-[180px] md:max-w-[200px]">
+                <span className="font-medium text-gray-700 whitespace-normal">
                   {escuela.departamento}, {escuela.localidad}
                 </span>
               </div>
@@ -80,13 +81,39 @@ const EscuelaDetalles = memo(
             <div className="p-4 sm:p-5 md:p-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-gray-100">
-                  <MatriculaStats escuela={escuela} />
+                  {/* Matricula */}
+                  <div className="border-b border-gray-100 pb-3">
+                    <div className="flex items-center gap-2 mb-3">
+                      <BarChart3 className="h-4 w-4 text-[#217A4B]" />
+                      <h3 className="text-lg font-semibold text-[#205C3B]">
+                        Matrícula Escolar
+                      </h3>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-2 px-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-500">2024:</span>
+                        <span className="text-lg font-semibold text-[#217A4B]">
+                          {escuela.matricula2024}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-500">2025:</span>
+                        <span className="text-lg font-semibold text-[#217A4B]">
+                          {escuela.matricula2025}
+                        </span>
+                      </div>
+
+                      <div className="col-span-2 flex items-center justify-end mt-1"></div>
+                    </div>
+                  </div>
 
                   <div className="space-y-4 mt-4">
                     <div className="border-b border-gray-100 pb-3">
                       <div className="flex items-center gap-2 mb-3">
                         <Calendar className="h-4 w-4 text-[#217A4B]" />
-                        <h3 className="text-sm font-semibold text-[#205C3B]">
+                        <h3 className="text-lg font-semibold text-[#205C3B]">
                           Información General
                         </h3>
                       </div>
@@ -97,7 +124,9 @@ const EscuelaDetalles = memo(
                             Fecha de Fundación:
                           </span>
                           <span className="text-sm font-medium text-gray-800">
-                            {escuela.fechaFundacion || "No especificada"}
+                            {formatearFecha(
+                              escuela.fechaFundacion || "No especificada"
+                            )}
                           </span>
                         </div>
 
@@ -132,7 +161,7 @@ const EscuelaDetalles = memo(
                   <div className="border-b border-gray-100 pb-3">
                     <div className="flex items-center gap-2 mb-3">
                       <Info className="h-4 w-4 text-[#217A4B]" />
-                      <h3 className="text-sm font-semibold text-[#205C3B]">
+                      <h3 className="text-lg font-semibold text-[#205C3B]">
                         Ubicación y Contacto
                       </h3>
                     </div>
@@ -164,13 +193,13 @@ const EscuelaDetalles = memo(
                           {escuela.director}
                         </span>
                       </div>
-
+                      {/* 
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-500">Correo:</span>
                         <span className="text-sm font-medium text-gray-800 break-all">
                           {correoEscuela}
                         </span>
-                      </div>
+                      </div> */}
 
                       <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
                         <a
