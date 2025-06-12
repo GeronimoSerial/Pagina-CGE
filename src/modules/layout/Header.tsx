@@ -10,8 +10,8 @@ const navLinks = [
   { href: "/noticias", label: "Noticias" },
   { href: "/tramites", label: "Trámites" },
   { href: "/documentacion", label: "Documentación" },
-  { href: "/escuelas", label: "Escuelas" },
   { href: "/chatbot", label: "Chat Normativo" },
+  { href: "/escuelas", label: "Escuelas" },
   { href: "/institucional", label: "Nuestra Institución" },
   { href: "/contacto", label: "Contacto" },
 ];
