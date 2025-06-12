@@ -2,7 +2,6 @@
 "use client";
 import dynamic from "next/dynamic";
 import SkeletonLoading from "../SkeletonComponent";
-import { Loader2 } from "lucide-react";
 
 const LoadingSpinner = ({ text }: { text?: string }) => (
   <div className="flex items-center justify-center h-[600px]">
@@ -25,7 +24,7 @@ const LoadingSpinner = ({ text }: { text?: string }) => (
 
 export const ClientCarousel = dynamic(() => import("../CarouselDeImagenes"), {
   ssr: false,
-  loading: () => <LoadingSpinner text="Cargando carrusel" />,
+  loading: () => <LoadingSpinner text="Cargando carrusel de imagenes" />,
 });
 
 export const ClientOrganigrama = dynamic(
