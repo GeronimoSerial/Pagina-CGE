@@ -1,6 +1,6 @@
 // import React from "react";
 import { Card, CardContent } from "../../../components/ui/card";
-import { FileText, School, BookOpen, Newspaper } from "lucide-react";
+import { FileText, School, BookOpen, Bot } from "lucide-react";
 import { QuickAccessItemProps } from "../../../interfaces";
 
 const QuickAccessItem = ({
@@ -45,15 +45,16 @@ const QuickAccess = ({ items = [] }: QuickAccessProps) => {
     },
     {
       icon: <BookOpen size={24} />,
-      title: "Documentación Institucional",
-      description: "Toda la documentación institucional necesaria",
+      title: "Documentación",
+      description: "Consulte normas y reglamentos oficiales del CGE",
       href: "/documentacion",
     },
     {
-      icon: <Newspaper size={24} />,
-      title: "Noticias",
-      description: "Consulte las ultimas noticias institucionales",
-      href: "#noticias",
+      icon: <Bot size={24} />,
+      title: "Asistente Virtual",
+      description:
+        "Consultá normativa educativa con el chatbot oficial del Consejo General de Educación",
+      href: "/chatbot",
     },
     {
       icon: <School size={24} />,
