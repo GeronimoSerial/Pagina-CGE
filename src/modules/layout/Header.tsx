@@ -11,6 +11,7 @@ const navLinks = [
   { href: "/tramites", label: "Trámites" },
   { href: "/documentacion", label: "Documentación" },
   { href: "/escuelas", label: "Escuelas" },
+  { href: "/chatbot", label: "Chat Normativo" },
   { href: "/institucional", label: "Nuestra Institución" },
   { href: "/contacto", label: "Contacto" },
 ];
@@ -80,7 +81,11 @@ const Header = () => {
           <button
             onClick={toggleMenu}
             className="lg:hidden p-2 rounded-md text-gray-800"
-            aria-label={isMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
+            aria-label={
+              isMenuOpen
+                ? "Cerrar menú de navegación"
+                : "Abrir menú de navegación"
+            }
             aria-expanded={isMenuOpen}
           >
             <div className="w-6 flex flex-col items-center">
