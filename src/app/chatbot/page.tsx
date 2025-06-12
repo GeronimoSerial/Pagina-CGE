@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { StickyImage } from "@src/components/data/dynamic-client";
 
 export const metadata: Metadata = {
-  title: "Chat Normativo CGE",
+  title: "Chat Normativo",
   description:
     "Asistente virtual para consultar normativa educativa del Consejo General de Educación de Corrientes.",
 };
@@ -39,50 +39,87 @@ function DesktopView() {
             </p>
           </section>
 
-          {/* Cómo funciona */}
+          {/* Funcionamiento */}
           <section
             className="bg-white p-6 lg:p-8 rounded-xl shadow-md border border-gray-100 hover:border-[#3D8B37]/20 transition-all duration-300 hover:shadow-lg"
             aria-labelledby="como-funciona"
           >
             <h2
               id="como-funciona"
-              className="text-2xl font-bold text-gray-800 mb-4 flex items-center"
+              className="text-2xl font-bold text-gray-800 mb-6 flex items-center"
             >
               <Sparkles className="h-6 w-6 text-[#3D8B37] mr-3 flex-shrink-0" />
               ¿Cómo funciona?
             </h2>
 
-            <div className="space-y-4">
-              <p className="text-gray-600 leading-relaxed">
-                Hacé clic en <strong>Iniciar Chat</strong> para comenzar a usar
-                el asistente virtual. Podés hacer consultas sobre normativas,
-                artículos o trámites específicos. Por ejemplo:
-              </p>
-
-              <blockquote className="pl-4 border-l-4 border-[#3D8B37] italic bg-gray-50 p-3 rounded-r-md">
-                <p className="text-gray-700">
-                  "¿En qué artículo se menciona el traslado docente?"
+            <div className="space-y-6 text-gray-600 leading-relaxed">
+              {/* Inicio del chat */}
+              <div>
+                <h3 className="font-semibold text-xl text-gray-800 mb-1">
+                  Iniciar una consulta
+                </h3>
+                <p>
+                  Hacé clic en <strong>Iniciar Chat</strong> para comenzar a
+                  usar el asistente virtual. Podés hacer preguntas sobre
+                  normativas, artículos o trámites específicos.
                 </p>
-              </blockquote>
+                <blockquote className="pl-4 border-l-4 border-[#3D8B37] italic bg-gray-50 p-3 rounded-r-md mt-2">
+                  <p className="text-gray-700">
+                    "¿En qué artículo se menciona el traslado docente?"
+                  </p>
+                </blockquote>
+              </div>
 
-              <p className="text-gray-600 leading-relaxed">
-                Si conocés el documento que trata el tema (por ejemplo, el
-                Estatuto Docente o el Reglamento Escolar), podés seleccionarlo
-                antes de iniciar el chat para obtener respuestas más precisas.
-                Si no estás seguro, simplemente dejá seleccionados{" "}
-                <strong>todos los documentos</strong> y el asistente buscará la
-                información por vos.
-              </p>
+              {/* Selección de documentos */}
+              <div>
+                <h3 className="font-semibold text-xl text-gray-800 mb-1">
+                  Elegir documentos
+                </h3>
+                <p>
+                  Si conocés el documento que trata el tema (por ejemplo, el
+                  Estatuto Docente o el Reglamento Escolar), podés seleccionarlo
+                  antes de iniciar el chat. Si no estás seguro, dejá
+                  seleccionados
+                  <strong> todos los documentos</strong> y el asistente buscará
+                  por vos.
+                </p>
+              </div>
 
-              <p className="text-gray-600 leading-relaxed">
-                Las respuestas incluyen referencias numeradas. Al pasar el mouse
-                por encima del número, vas a ver el artículo o fragmento
-                original del documento donde se basa la respuesta.
-              </p>
+              {/* Referencias en las respuestas */}
+              <div className="group">
+                <h3 className="font-semibold text-xl text-gray-800 mb-1">
+                  Referencias visibles
+                </h3>
+                <p>
+                  Las respuestas incluyen <strong>números de referencia</strong>{" "}
+                  <span className="relative inline-block">
+                    <span className="text-[#3D8B37] font-medium cursor-help">
+                      (1)
+                    </span>
+                    <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-white text-sm text-gray-700 rounded-lg shadow-lg border border-gray-200 hidden group-hover:block">
+                      <strong className="inline-block italic">
+                        Esto es un ejemplo de referencia
+                      </strong>
+                      Artículo 30. Se entiende por permuta el cambio de destino
+                      de común acuerdo entre dos o más miembros del personal.
+                      Para ser considerada, los aspirantes deberán reunir las
+                      siguientes condiciones...
+                    </span>
+                  </span>
+                  . Al pasar el mouse por encima, verás el artículo o fragmento
+                  original del documento donde se basa la respuesta.
+                </p>
+              </div>
 
-              <p className="text-gray-600 leading-relaxed">
-                El chatbot te guiará paso a paso de forma clara e intuitiva.
-              </p>
+              {/* Navegación simple */}
+              <div>
+                <h3 className="font-semibold text-xl text-gray-800 mb-1">
+                  Asistencia intuitiva
+                </h3>
+                <p>
+                  El chatbot te guiará paso a paso de forma clara y sencilla.
+                </p>
+              </div>
             </div>
           </section>
 
@@ -96,14 +133,36 @@ function DesktopView() {
               className="text-2xl font-bold text-gray-800 mb-4 flex items-center"
             >
               <Shield className="h-6 w-6 text-[#3D8B37] mr-3 flex-shrink-0" />
-              Información Oficial y Segura
+              Basado en Documentación Oficial
             </h2>
-            <p className="text-gray-600 leading-relaxed">
-              Todas las respuestas provienen directamente de la documentación
-              oficial del CGE. El sistema está diseñado para garantizar la
-              precisión y confiabilidad de la información proporcionada,
-              respaldada por las fuentes oficiales del Consejo.
-            </p>
+            <div className="space-y-4">
+              <p className="text-gray-700 leading-relaxed">
+                El asistente virtual accede a documentos oficiales del CGE para
+                brindar respuestas orientativas. Sin embargo, puede contener
+                imprecisiones o interpretaciones erróneas.
+              </p>
+              <div className="bg-[#3D8B37]/10 p-4 rounded-lg border border-[#3D8B37]/20">
+                <p className="text-gray-800">
+                  <strong className="text-[#216B1D] font-semibold">
+                    Importante:
+                  </strong>{" "}
+                  Toda información consultada deberá ser verificada en la
+                  normativa original vigente antes de tomar decisiones formales
+                  o administrativas.
+                </p>
+              </div>
+              <p className="text-gray-700 font-medium flex items-start">
+                <span className="inline-block w-2 h-2 bg-[#3D8B37] rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                Cada respuesta incluye su referencia documental correspondiente,
+                la cual es recomendable leer completa para una comprensión
+                precisa y contextualizada.
+              </p>
+              <p className="text-gray-700 font-medium flex items-start">
+                <span className="inline-block w-2 h-2 bg-[#3D8B37] rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                El uso del asistente no exime al usuario de verificar la fuente
+                oficial correspondiente.
+              </p>
+            </div>
           </section>
 
           {/* Botón de acción */}
@@ -209,12 +268,21 @@ function MobileView() {
               <Shield className="h-5 w-5 text-[#3D8B37]" />
             </div>
             <h2 className="text-lg font-bold text-gray-800">
-              Información Oficial
+              Basado en Documentación Oficial
             </h2>
           </div>
           <p className="text-gray-600 text-sm leading-relaxed">
-            Todas las respuestas provienen de documentación oficial del CGE,
-            garantizando precisión y confiabilidad.
+            El asistente virtual ofrece respuestas orientativas basadas en
+            documentación oficial del CGE. Sin embargo,{" "}
+            <strong>
+              toda consulta o decisión administrativa deberá basarse
+              exclusivamente en la normativa original vigente.
+            </strong>{" "}
+            El uso del asistente{" "}
+            <strong>
+              no exime al usuario de verificar la fuente oficial
+              correspondiente.
+            </strong>
           </p>
         </div>
       </div>
