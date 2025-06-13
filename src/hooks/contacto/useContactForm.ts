@@ -7,6 +7,7 @@ export interface ContactoForm {
   email: string;
   asunto: string;
   mensaje: string;
+  area: string;
 }
 
 const SERVICE_ID = process.env.NEXT_PUBLIC_SERVICE_ID || "default_service_id";
@@ -26,17 +27,17 @@ export const useContactForm = () => {
   >("idle");
 
   const form = useForm<ContactoForm>({
-    defaultValues: { nombre: "", email: "", asunto: "", mensaje: "" },
+    defaultValues: { nombre: "", email: "", asunto: "", mensaje: "", area: "" },
   });
 
   const onSubmit = async (data: ContactoForm) => {
     setButtonState("loading");
-    try {
-      const templateParams = {
+    try {      const templateParams = {
         name: data.nombre,
         email: data.email,
         subject: data.asunto,
         message: data.mensaje,
+        area: data.area,
       };
 
       const result = await emailjs.send(

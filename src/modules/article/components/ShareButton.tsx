@@ -15,7 +15,7 @@ export default function ShareButton({
       navigator
         .share({
           title,
-          text: summary || "Mira este artículo interesante",
+          text: summary || "Mira este artículo del CGE",
           url,
         })
         .catch((error) => {
@@ -37,7 +37,7 @@ export default function ShareButton({
       title="Compartir"
     >
       <Share2 className="w-4 h-4 text-emerald-800" size={18} />
-      <span className="hidden sm:inline">Compartir</span>
+      <span className="inline">Compartir</span>
     </button>
   );
 }
