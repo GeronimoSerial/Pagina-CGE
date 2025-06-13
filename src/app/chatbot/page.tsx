@@ -35,7 +35,8 @@ function DesktopView() {
               El Chat Normativo es un asistente virtual inteligente desarrollado
               por el CGE para ayudarte a encontrar y entender rápidamente la
               normativa educativa vigente. Utiliza tecnología avanzada de
-              NotebookLM para proporcionar respuestas precisas y actualizadas.
+              Inteligencia Artificial provista por Google para proporcionar
+              respuestas precisas y actualizadas.
             </p>
           </section>
 
