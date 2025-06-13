@@ -104,7 +104,7 @@ const DocumentationSection = () => {
                   .map((doc) => (
                     <Card
                       key={doc.id}
-                      className="flex flex-col h-full border border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-300 rounded-md overflow-hidden bg-white/90 backdrop-blur-sm"
+                      className="flex flex-col h-full border border-gray-200 hover:border-green-300 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 rounded-md overflow-hidden bg-white shadow-sm"
                     >
                       <CardHeader className="pb-0 pt-1.5 px-2">
                         <div className="flex justify-between items-start">

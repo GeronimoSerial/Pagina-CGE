@@ -35,7 +35,8 @@ function DesktopView() {
               El Chat Normativo es un asistente virtual inteligente desarrollado
               por el CGE para ayudarte a encontrar y entender rápidamente la
               normativa educativa vigente. Utiliza tecnología avanzada de
-              NotebookLM para proporcionar respuestas precisas y actualizadas.
+              Inteligencia Artificial provista por Google para proporcionar
+              respuestas precisas y actualizadas.
             </p>
           </section>
 
@@ -142,25 +143,25 @@ function DesktopView() {
                 imprecisiones o interpretaciones erróneas.
               </p>
               <div className="bg-[#3D8B37]/10 p-4 rounded-lg border border-[#3D8B37]/20">
+                <strong className="text-[#216B1D] font-semibold">
+                  Importante:
+                </strong>{" "}
                 <p className="text-gray-800">
-                  <strong className="text-[#216B1D] font-semibold">
-                    Importante:
-                  </strong>{" "}
+                  <span className="inline-block w-2 h-2 bg-[#3D8B37] rounded-full mt-2 mr-2 flex-shrink-0"></span>
                   Toda información consultada deberá ser verificada en la
-                  normativa  vigente antes de tomar decisiones formales
-                  o administrativas.
+                  normativa vigente antes de tomar decisiones formales o
+                  administrativas.
+                </p>
+                <p>
+                  <span className="inline-block w-2 h-2 bg-[#3D8B37] rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                  El uso del asistente no exime al usuario de verificar la
+                  fuente oficial correspondiente.
                 </p>
               </div>
               <p className="text-gray-700 font-medium flex items-start">
-                <span className="inline-block w-2 h-2 bg-[#3D8B37] rounded-full mt-2 mr-2 flex-shrink-0"></span>
                 Cada respuesta incluye su referencia documental correspondiente,
                 la cual es recomendable leer completa para una comprensión
                 precisa y contextualizada.
-              </p>
-              <p className="text-gray-700 font-medium flex items-start">
-                <span className="inline-block w-2 h-2 bg-[#3D8B37] rounded-full mt-2 mr-2 flex-shrink-0"></span>
-                El uso del asistente no exime al usuario de verificar la fuente
-                oficial correspondiente.
               </p>
             </div>
           </section>
@@ -307,7 +308,7 @@ export default function ChatBot() {
   return (
     <main className="min-h-screen bg-gray-50">
       <HeroSection
-        title="Chat Normativo CGE – 🤖"
+        title="Chat Normativo CGE"
         description="Consultá normativa educativa en segundos con el chatbot oficial del Consejo General de Educación."
       />
       <DesktopView />
