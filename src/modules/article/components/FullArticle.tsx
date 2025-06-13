@@ -19,7 +19,6 @@ import ShareButton from "./ShareButton";
 import PrintButton from "./PrintButton";
 import { ClientCarousel } from "@components/data/dynamic-client";
 import { MarkdownComponent } from "@src/modules/layout/MarkdownComponent";
-import { ENLACES_RELACIONADOS } from "@modules/article/data/constants";
 
 interface FullArticleProps {
   post: any;
@@ -37,6 +36,24 @@ export default function FullArticle({
   articulosRelacionados = [],
 }: FullArticleProps) {
   const section = normalizarTexto(sectionTitle);
+  const ENLACES_RELACIONADOS = [
+    {
+      titulo: "Gestión Educativa",
+      url: "https://ge.mec.gob.ar",
+    },
+    {
+      titulo: "Sitio oficial Ministerio de Educación",
+      url: "http://mec.gob.ar",
+    },
+    {
+      titulo: "Artículos relacionados",
+      url: `/${section}`,
+    },
+    {
+      titulo: "Documentación",
+      url: "/documentacion",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-slate-50">

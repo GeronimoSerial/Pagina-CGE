@@ -46,7 +46,7 @@ export const ENLACES_RELACIONADOS = [
   },
   {
     titulo: "Artículos relacionados",
-    url: "/articulos",
+    url: "/tramites",
   },
   {
     titulo: "Documentación",
