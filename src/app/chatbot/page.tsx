@@ -307,7 +307,7 @@ export default function ChatBot() {
   return (
     <main className="min-h-screen bg-gray-50">
       <HeroSection
-        title="Chat Normativo CGE – 🤖"
+        title="Chat Normativo CGE"
         description="Consultá normativa educativa en segundos con el chatbot oficial del Consejo General de Educación."
       />
       <DesktopView />

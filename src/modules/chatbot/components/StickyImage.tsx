@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { MessageSquare, ExternalLink } from "lucide-react";
+import { ChatbotIcon } from "@/src/styles/svg/ChatbotIcon";
 
 interface StickyImageProps {
   enlace: string;
@@ -22,7 +23,9 @@ export default function StickyImage({ enlace }: StickyImageProps) {
             <div className="relative h-[500px] sm:h-[550px] lg:h-[500px] overflow-hidden rounded-xl">
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 flex items-center justify-center">
                 <div className="text-center text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                  <MessageSquare className="h-12 w-12 mx-auto mb-4" />
+                  <div className="flex items-center justify-center mb-4">
+                    <ChatbotIcon size={42} />
+                  </div>
                   <p className="text-2xl font-semibold">Acceder al Chat</p>
                   <p className="text-lg mt-2">
                     Haz click para comenzar tu consulta
