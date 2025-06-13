@@ -86,6 +86,68 @@ const DocumentationSection = () => {
     <section id="documentacion" className="w-full py-8">
       <div className="container mx-auto px-2">
         <div className="flex flex-col min-h-[500px]">
+          {/* Últimos documentos añadidos */}
+          <div className="mb-6">
+            <div className="bg-white rounded-xl p-3 border border-gray-200 shadow-md">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="p-1 bg-gray-100 rounded-lg">
+                  <FileText className="h-3.5 w-3.5 text-gray-600" />
+                </div>
+                <h2 className="text-base font-semibold text-gray-800">
+                  Últimos documentos añadidos
+                </h2>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {documents
+                  .slice(-4)
+                  .reverse()
+                  .map((doc) => (
+                    <Card
+                      key={doc.id}
+                      className="flex flex-col h-full border border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-300 rounded-md overflow-hidden bg-white/90 backdrop-blur-sm"
+                    >
+                      <CardHeader className="pb-0 pt-1.5 px-2">
+                        <div className="flex justify-between items-start">
+                          <div className="flex items-center gap-1">
+                            {getCategoryIcon(doc.category)}
+                            <Badge
+                              variant="outline"
+                              className="text-xs font-medium capitalize px-1 py-0"
+                            >
+                              {doc.type}
+                            </Badge>
+                          </div>
+                          <span className="text-xs text-gray-500">
+                            {doc.date}
+                          </span>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="flex-grow overflow-hidden px-2 py-1.5">
+                        <CardTitle title={doc.title} className="text-xs font-semibold mb-0.5 line-clamp-2">
+                          {doc.title}
+                        </CardTitle>
+                        <CardDescription title={doc.description} className="text-gray-600 text-xs line-clamp-1">
+                          {doc.description}
+                        </CardDescription>
+                      </CardContent>
+                      <CardFooter className="pt-0 pb-1.5 px-2">
+                        <Button
+                          variant="outline"
+                          className="w-full flex items-center gap-1 hover:bg-green-800 hover:text-white transition-colors text-xs py-0.5 px-1.5"
+                          asChild
+                        >
+                          <a href={doc.downloadUrl}>
+                            <Download className="h-3 w-3" />
+                            Descargar
+                          </a>
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  ))}
+              </div>
+            </div>
+          </div>
+
           <div className="flex flex-col md:flex-row gap-3 mb-4">
             <div className="w-full max-w-2xl mx-auto rounded-2xl shadow-lg bg-white/80 backdrop-blur-sm p-6 border border-gray-100">
               <SearchInput
@@ -99,78 +161,6 @@ const DocumentationSection = () => {
                 }
                 allLabel="Todas las categorías"
               />
-            </div>
-          </div>
-          {/* Últimos documentos añadidos */}
-          <div
-            className={`mb-6 transition-all duration-700 ease-in-out transform will-change-transform ${
-              searchQuery || activeFilter !== "all"
-                ? "opacity-0 h-0 scale-95 -translate-y-4 pointer-events-none"
-                : "opacity-100 h-auto scale-100 translate-y-0"
-            }`}
-            style={{
-              transitionProperty: "all",
-              transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-              transitionDuration: "700ms",
-            }}
-          >
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border border-green-100 shadow-md transition-all duration-700">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="p-1.5 bg-green-100 rounded-lg">
-                  <FileText className="h-4 w-4 text-green-600" />
-                </div>
-                <h2 className="text-lg font-semibold text-gray-800">
-                  Últimos documentos añadidos
-                </h2>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                {documents
-                  .slice(-4)
-                  .reverse()
-                  .map((doc) => (
-                    <Card
-                      key={doc.id}
-                      className="flex flex-col h-full border border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-300 rounded-md overflow-hidden bg-white/90 backdrop-blur-sm"
-                    >
-                      <CardHeader className="pb-0 pt-2 px-3">
-                        <div className="flex justify-between items-start">
-                          <div className="flex items-center gap-1">
-                            {getCategoryIcon(doc.category)}
-                            <Badge
-                              variant="outline"
-                              className="text-xs font-medium capitalize px-1.5 py-0"
-                            >
-                              {doc.type}
-                            </Badge>
-                          </div>
-                          <span className="text-xs text-gray-500">
-                            {doc.date}
-                          </span>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="flex-grow overflow-hidden px-3 py-2">
-                        <CardTitle className="text-sm font-semibold mb-1 line-clamp-2">
-                          {doc.title}
-                        </CardTitle>
-                        <CardDescription className="text-gray-600 text-xs line-clamp-2">
-                          {doc.description}
-                        </CardDescription>
-                      </CardContent>
-                      <CardFooter className="pt-0 pb-2 px-3">
-                        <Button
-                          variant="outline"
-                          className="w-full flex items-center gap-1 hover:bg-green-50 transition-colors text-xs py-0.5 px-2"
-                          asChild
-                        >
-                          <a href={doc.downloadUrl}>
-                            <Download className="h-3 w-3" />
-                            Descargar
-                          </a>
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  ))}
-              </div>
             </div>
           </div>
 
@@ -209,7 +199,7 @@ const DocumentationSection = () => {
                     <CardFooter className="pt-1 pb-2">
                       <Button
                         variant="outline"
-                        className="w-full flex items-center gap-1 hover:bg-green-50 transition-colors text-sm py-1 px-2"
+                        className="w-full flex items-center gap-1 hover:bg-green-800 hover:text-white transition-colors text-sm py-1 px-2"
                         asChild
                       >
                         <a href={doc.downloadUrl}>
