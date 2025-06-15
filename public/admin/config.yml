@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: geronimoserial/documentos-web-cge
+  repo: geronimoserial/pagina-cge
   branch: main
 
 media_folder: "public/images"
@@ -16,7 +16,11 @@ collections:
     public_folder: "/images"
     fields:
       - { label: "Título", name: "titulo", widget: "string" }
-      - { label: "Título corto", name: "titulo_corto", widget: "string" }
+      - {
+          label: "Título corto (Para la URL)",
+          name: "titulo_corto",
+          widget: "string",
+        }
       - { label: "Fecha", name: "fecha", widget: "datetime" }
       - { label: "Resumen", name: "resumen", widget: "string" }
       - { label: "Imagen", name: "imagen", widget: "image" }
@@ -69,7 +73,7 @@ collections:
     folder: "public/content/tramites"
     create: true
     identifier_field: "titulo"
-    slug: "{{titulo_corto}}"
+    slug: "{{month}}{{titulo_corto}}"
     public_folder: "/images"
     fields:
       - { label: "Título", name: "titulo", widget: "string" }
