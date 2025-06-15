@@ -1,7 +1,9 @@
 backend:
-  name: github
-  repo: geronimoserial/pagina-cge
+  name: git-gateway
   branch: main
+  repo: geronimoserial/pagina-cge
+
+local_backend: true
 
 media_folder: "public/images"
 public_folder: "/images"
