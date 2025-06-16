@@ -2,9 +2,10 @@ import { config, fields, collection } from "@keystatic/core";
 
 export default config({
   storage: {
-    kind: "local",
+    kind: "github",
+    repo: "geronimoserial/pagina-cge",
+    branchPrefix: "isr/",
   },
-
   collections: {
     noticias: collection({
       label: "Noticias",
