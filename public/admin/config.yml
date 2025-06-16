@@ -2,6 +2,7 @@ backend:
   name: github
   repo: geronimoserial/pagina-cge
   branch: main
+  site_domain: "consejocms.netlify.app"
 
 media_folder: "public/images"
 public_folder: "/images"
