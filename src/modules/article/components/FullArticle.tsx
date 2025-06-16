@@ -90,7 +90,7 @@ export default function FullArticle({
                     </span>
                   )}
                 </div>
-                <h1 className="text-2xl md:text-4xl font-bold text-white tracking-tight leading-tight">
+                <h1 className="text-4xl md:text-4xl font-bold text-white tracking-tight leading-tight">
                   {post.titulo}
                 </h1>
               </div>
