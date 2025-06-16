@@ -39,5 +39,4 @@ core
 /.cursor
 
 public/prueba
-/out
 pnpm-lock.yaml
