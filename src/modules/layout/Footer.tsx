@@ -1,10 +1,17 @@
+"use client";
 import React from "react";
 import Link from "next/link";
 import { Separator } from "@components/ui/separator";
 import { Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const Footer = () => {
+  const pathname = usePathname();
+  const hideFooter = pathname.includes("/keystatic");
+  if (hideFooter) {
+    return null; // No renderizar el footer si estamos en Keystatic
+  }
   return (
     <footer className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] text-white py-16">
       <div className="container mx-auto px-4 md:px-6">

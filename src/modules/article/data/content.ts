@@ -9,14 +9,26 @@ function getDirectory(type: "noticias" | "tramites") {
   return path.join(process.cwd(), `/public/content/${type}`);
 }
 
+function isValidMarkdownFile(filename: string): boolean {
+  return filename.endsWith(".md") || filename.endsWith(".mdoc");
+}
+
 export async function getContentBySlug(
   type: "noticias" | "tramites",
   slug: string
 ) {
   const directory = getDirectory(type);
-  const fullPath = path.join(directory, `${slug}.md`);
-  const fileContents = fs.readFileSync(fullPath, "utf8");
+  // Intentar primero con .md, luego con .mdoc
+  let fullPath = path.join(directory, `${slug}.md`);
+  if (!fs.existsSync(fullPath)) {
+    fullPath = path.join(directory, `${slug}.mdoc`);
+  }
+  
+  if (!fs.existsSync(fullPath)) {
+    throw new Error(`No se encontró el archivo para el slug: ${slug}`);
+  }
 
+  const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
 
   return {
@@ -32,10 +44,10 @@ export function getAllContentSlugs(type: "noticias" | "tramites") {
   return filenames
     .filter((filename) => {
       const fullPath = path.join(directory, filename);
-      return fs.statSync(fullPath).isFile() && filename.endsWith(".md");
+      return fs.statSync(fullPath).isFile() && isValidMarkdownFile(filename);
     })
     .map((filename) => ({
-      id: filename.replace(/\.md$/, ""),
+      id: filename.replace(/\.(md|mdoc)$/, ""),
     }));
 }
 
@@ -57,7 +69,7 @@ export function getAllContentMetadata(
       const fileContents = fs.readFileSync(fullPath, "utf8");
       const { data } = matter(fileContents);
       fileDataCache[filename] = {
-        slug: filename.replace(/\.md$/, ""),
+        slug: filename.replace(/\.(md|mdoc)$/, ""),
         ...data,
       };
     }
@@ -65,7 +77,7 @@ export function getAllContentMetadata(
   };
 
   let filteredFilenames = filenames
-    .filter((filename) => filename.endsWith(".md"))
+    .filter((filename) => isValidMarkdownFile(filename))
     .sort((a, b) => {
       if (type === "noticias") {
         const dateA = a.split("-").slice(0, 3).join("-");
@@ -134,11 +146,11 @@ export function getAllContent(type: "noticias" | "tramites") {
   return filenames
     .filter((filename) => {
       const fullPath = path.join(directory, filename);
-      return fs.statSync(fullPath).isFile() && filename.endsWith(".md");
+      return fs.statSync(fullPath).isFile() && isValidMarkdownFile(filename);
     })
     .map((filename) => {
       if (!fileDataCache[filename]) {
-        const slug = filename.replace(/\.md$/, "");
+        const slug = filename.replace(/\.(md|mdoc)$/, "");
         const fullPath = path.join(directory, filename);
         const fileContents = fs.readFileSync(fullPath, "utf8");
         const { data, content } = matter(fileContents);
