@@ -2,13 +2,10 @@
 titulo: Licencia Art. 27
 titulo_corto: licenciaart27
 fecha: 2025-05-01T22:38:00.000Z
-resumen: Requisitos para acceder al Art. 27 del Regimen de Licencias (Licencia
-  por situaciones excepcionales no previstas, hasta 6 meses, con o sin goce de
-  haberes según el caso)
+resumen: Requisitos para acceder al Art. 27 del Regimen de Licencias (Licencia por situaciones excepcionales no previstas, hasta 6 meses, con o sin goce de haberes según el caso)
 imagen: /images/tramites.png
 subcategoria: Licencias
 ---
-
 # Instructivo para la Solicitud de Licencia – Artículo 27
 
 ## ¿Qué es la Licencia Especial?
