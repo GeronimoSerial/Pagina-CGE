@@ -45,7 +45,7 @@ export default function RootLayout({
       </Head>
       <body className={`${inter.className} antialiased`}>
         <Header />
-        {/* <ModalAvisoDesarrollo /> */}
+        <ModalAvisoDesarrollo />
 
         <div id="root">{children}</div>
         <Separator className="my-8" />
