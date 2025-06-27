@@ -21,17 +21,7 @@ export interface ImagenCarruselGenerica {
   descripcion?: string;
 }
 
-export interface ArticlesGridProps {
-  articles?: Article[];
-  showImportantBadge?: boolean;
-  basePath?: string;
-  pagination?: {
-    currentPage: number;
-    totalPages: number;
-  };
-  isLoading?: boolean;
-  isCategoryLoading?: boolean;
-}
+
 
 export interface SocialMediaProps {
   facebookUrl?: string;
@@ -64,15 +54,4 @@ export interface Supervisor {
   nombre: string;
 }
 
-export interface Article {
-  id?: string;
-  slug: string;
-  titulo: string;
-  resumen: string;
-  description?: string;
-  date?: string;
-  imagen?: string;
-  categoria?: string;
-  esImportante?: boolean;
-  subcategoria?: string;
-}
+

@@ -27,57 +27,9 @@ export function formatearFecha(fechaStr: string | Date) {
   });
 }
 
-export function normalizeArticle(item: any) {
-  return {
-    id: item.slug,
-    slug: item.slug,
-    title: item.title || item.titulo,
-    titulo: item.titulo,
-    description: item.description || item.resumen,
-    resumen: item.resumen,
-    date: item.fecha
-      ? new Date(item.fecha).toISOString()
-      : new Date().toISOString(),
-    imageUrl: item.imageUrl || item.imagen,
-    imagen: item.imagen,
-    categoria: item.categoria || item.subcategoria,
-    content: item.content,
-    esImportante: item.esImportante || false,
-    imagenes_carrusel: item.imagenes_carrusel || [],
-  };
-}
 
-export function filtrarArticulos(
-  article: any[],
-  searchTerm: string,
-  categoriaSeleccionada: string
-) {
-  return article.filter((item) => {
-    const coincideCategoria =
-      !categoriaSeleccionada || item.categoria === categoriaSeleccionada;
 
-    if (!searchTerm) {
-      return coincideCategoria;
-    }
 
-    const searchTermNormalized = normalizarTexto(searchTerm);
-    const titleNormalized = normalizarTexto(item.title || item.titulo);
-    const descriptionNormalized = normalizarTexto(
-      item.description || item.resumen
-    );
-    const contentToSearch = titleNormalized + " " + descriptionNormalized;
-
-    const searchWords = searchTermNormalized
-      .split(/\s+/)
-      .filter((word) => word.length > 0);
-
-    const coincideBusqueda = searchWords.every((word) =>
-      contentToSearch.includes(word)
-    );
-
-    return coincideCategoria && coincideBusqueda;
-  });
-}
 
 export const sortByDate = <T extends { date: string }>(
   items: T[],
