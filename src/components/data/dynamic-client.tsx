@@ -95,13 +95,4 @@ export const DocumentacionSection = dynamic(
   }
 );
 
-export const ArticlesGridClient = dynamic(
-  () =>
-    import("../../modules/article/components/ArticlesGrid").then(
-      (mod) => mod.default
-    ),
-  {
-    ssr: false,
-    loading: () => <LoadingSpinner text="Cargando artículos" />,
-  }
-);
+
