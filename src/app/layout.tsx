@@ -1,19 +1,19 @@
-import "./index.css";
-import Footer from "@modules/layout/Footer";
-import Header from "@modules/layout/Header";
-import { Lora, Inter } from "next/font/google";
-import ModalAvisoDesarrollo from "@components/ModalAvisoDesarrollo";
+import './index.css';
+import Footer from '@modules/layout/Footer';
+import Header from '@modules/layout/Header';
+import { Lora, Inter } from 'next/font/google';
+import ModalAvisoDesarrollo from '@components/ModalAvisoDesarrollo';
 
-import metadata from "./metadata";
-import Head from "next/head";
-import { Separator } from "@radix-ui/react-separator";
+import metadata from './metadata';
+import Head from 'next/head';
+import { Separator } from '@radix-ui/react-separator';
 
 export { metadata };
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 const lora = Lora({
-  subsets: ["latin"],
-  variable: "--font-lora",
+  subsets: ['latin'],
+  variable: '--font-lora',
 });
 
 export default function RootLayout({
@@ -48,7 +48,6 @@ export default function RootLayout({
         {/* <ModalAvisoDesarrollo /> */}
 
         <div id="root">{children}</div>
-        <Separator className="my-8" />
         <Footer />
       </body>
     </html>
