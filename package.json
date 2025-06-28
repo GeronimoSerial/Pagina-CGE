@@ -11,7 +11,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "types:supabase": "npx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > src/types/supabase.ts",
-    "format": "prettier --write ."  },
+    "format": "prettier --write ."
+  },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@hookform/resolvers": "^3.6.0",
@@ -60,6 +61,7 @@
     "lucide-react": "^0.394.0",
     "next": "^15.3.1",
     "next-seo": "^6.8.0",
+    "photoswipe": "^5.4.4",
     "rc-pagination": "^5.1.0",
     "react": "^18.2.0",
     "react-day-picker": "^8.10.1",
