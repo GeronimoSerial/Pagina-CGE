@@ -5,7 +5,6 @@ export interface ContactoForm {
   mensaje: string;
 }
 
-
 export interface QuickAccessItemProps {
   icon: React.ReactNode;
   title: string;
@@ -20,8 +19,6 @@ export interface ImagenCarruselGenerica {
   alt?: string;
   descripcion?: string;
 }
-
-
 
 export interface SocialMediaProps {
   facebookUrl?: string;
@@ -54,4 +51,18 @@ export interface Supervisor {
   nombre: string;
 }
 
-
+export interface Noticia {
+  id: number;
+  titulo: string;
+  resumen: string;
+  categoria: string;
+  esImportante: boolean;
+  portada: { url: string };
+  slug: string;
+  contenido: string;
+  imagen: { url: string; width: number; height: number }[];
+  publicado: boolean;
+  fecha: string;
+  metaTitle?: string;
+  metaDescription?: string;
+}
