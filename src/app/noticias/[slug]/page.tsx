@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { Calendar, Diamond, User } from 'lucide-react';
+import { Calendar, User } from 'lucide-react';
 import {
   getNoticiaBySlug,
   getNoticiaPortada,
-  getNoticias,
+  getNoticiasRelacionadas,
 } from '@/src/services/noticias';
 import { formatearFecha } from '@/src/lib/utils';
 import ReactMarkdown from 'react-markdown';
@@ -11,23 +11,18 @@ import { notFound } from 'next/navigation';
 import PhotoSwipeGallery from '@/src/components/PhotoSwipeGallery';
 import { MarkdownComponent } from '@/src/modules/layout/MarkdownComponent';
 import remarkGfm from 'remark-gfm';
-import { Separator } from '@/src/components/ui/separator';
 import { Separador } from '@/src/modules/layout/Separador';
-interface NoticiaDetalleProps {
-  params: { slug: string };
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
 }
 
-export default async function NoticiaDetalle({ params }: NoticiaDetalleProps) {
-  const noticia = await getNoticiaBySlug(params.slug);
+export default async function Page({ params }: PageProps) {
+  const awaitedParams = await params;
+  const noticia = await getNoticiaBySlug(awaitedParams.slug);
   if (!noticia) return notFound();
 
-  // Fetch all noticias for related articles (by category, excluding current)
-  const allNoticias = await getNoticias();
-  const related = allNoticias
-    .filter(
-      (n: any) => n.categoria === noticia.categoria && n.slug !== noticia.slug,
-    )
-    .slice(0, 3);
+  const related = await getNoticiasRelacionadas(noticia.categoria);
 
   const Enlaces = [
     {
@@ -39,8 +34,8 @@ export default async function NoticiaDetalle({ params }: NoticiaDetalleProps) {
       label: 'Ministerio de Educación',
     },
     {
-      href: 'https://cge.corrientes.gob.ar/',
-      label: 'CGE Corrientes',
+      href: 'https://ge.mec.gob.ar/',
+      label: 'Gestión Educativa',
     },
   ];
 
@@ -114,48 +109,92 @@ export default async function NoticiaDetalle({ params }: NoticiaDetalleProps) {
           </div>
         </main>
         {/* Sidebar (static, right) */}
-        <aside className="hidden lg:block bg-white/90 shadow border border-gray-200 sticky top-44 h-full w-72 mr-3 mb-3 transition-all duration-300 ease-in-out overflow-hidden ">
-          <div className="p-5 flex flex-col gap-8 h-full">
-            {/* Navigation */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-4 px-2 tracking-widest uppercase">
-                Enlaces Institucionales
+        <aside className="hidden overflow-hidden sticky top-24 mt-24 mr-3 mb-3 w-72 h-full border-t-2 border-b border-l border-r border-slate-200 border-t-slate-300 shadow-lg shadow-slate-200/50 transition-all duration-500 ease-out lg:block bg-white/95 backdrop-blur-sm">
+          <div className="flex flex-col h-full">
+            {/* Navigation Section */}
+            <div className="px-2 py-6">
+              <h3 className="px-4 mb-5 text-sm font-semibold tracking-[0.1em] text-black ">
+                ENLACES INSTITUCIONALES
               </h3>
-              <div className="space-y-2">
-                {Enlaces.map((enlace) => (
+
+              {/* Enhanced Navigation Links */}
+              <div className="space-y-1">
+                {Enlaces.map((enlace, index) => (
                   <Link
                     key={enlace.href}
                     href={enlace.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-colors group border border-transparent hover:border-gray-300"
+                    className="group relative flex items-center px-4 py-3.5 text-black-800 transition-all duration-300 ease-out hover:text-black-900 hover:underline"
                   >
-                    <span className="ml-1 font-medium group-hover:underline">
-                      {enlace.label}
-                    </span>
+                    {/* Left accent line that appears on hover */}
+                    <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-slate-400 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
+
+                    {/* Content container with better spacing */}
+                    <div className="flex items-center w-full ml-3">
+                      {/* Small decorative element */}
+                      <div className="w-1.5 h-1.5 bg-green-800 rounded-full mr-3 group-hover:bg-green-700 transition-colors duration-300"></div>
+                      {/* Link text */}
+                      <span className="text-sm font-medium tracking-wide group-hover:translate-x-1 transition-transform duration-300 ease-out">
+                        {enlace.label}
+                      </span>
+                    </div>
+                    {/* Subtle background on hover */}
+                    <div className="absolute inset-0 bg-slate-50 opacity-0 group-hover:opacity-60 transition-opacity duration-300 ease-out rounded-sm"></div>
                   </Link>
                 ))}
               </div>
             </div>
-            {/* Related articles in sidebar */}
+
+            {/* Single Elegant Separator */}
             {related.length > 0 && (
-              <div className="border-t border-gray-200 pt-5">
-                <h3 className="text-sm  font-semibold text-gray-700 mb-4 px-2 tracking-widest uppercase">
-                  Artículos Relacionados
+              <div className="px-6">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full">
+                      <div className="border-t border-slate-300 mb-0.5"></div>
+                      <div className="border-t border-slate-200"></div>
+                    </div>
+                  </div>
+                  <div className="relative flex justify-center">
+                    <div className="bg-white px-4">
+                      <div className="w-1 h-1 bg-slate-400 rounded-full"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Related Articles Section */}
+            {related.length > 0 && (
+              <div className="px-2 py-6 flex-1">
+                <h3 className="px-4 mb-5 text-sm font-semibold tracking-[0.1em] text-black ">
+                  ARTÍCULOS RELACIONADOS
                 </h3>
+
+                {/* Related Articles Links */}
                 <div className="space-y-2">
                   {related.map((item: any) => (
                     <Link
                       key={item.id}
                       href={`/noticias/${item.slug}`}
-                      className="block px-3 py-2 text-sm text-gray-700 hover:text-green-800 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-green-200"
+                      className="group relative block px-4 py-3 transition-all duration-300 ease-out hover:text-slate-900"
                     >
-                      <div className="font-semibold hover:underline ">
-                        {item.titulo}
+                      {/* Left accent line */}
+                      <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-slate-400 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
+
+                      {/* Content with better left margin usage */}
+                      <div className="ml-3">
+                        <div className="font-medium text-sm text-slate-800 leading-snug group-hover:text-slate-900 mb-2 group-hover:translate-x-1 transition-transform duration-300 ease-out">
+                          {item.titulo}
+                        </div>
+                        <div className="text-xs text-slate-500 leading-relaxed group-hover:text-black transition-colors duration-300 pr-2">
+                          {item.resumen.slice(0, 160)}
+                        </div>
                       </div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        {item.resumen.slice(0, 200)}
-                      </div>
+
+                      {/* Subtle background on hover */}
+                      <div className="absolute inset-0 bg-slate-50 opacity-0 group-hover:opacity-40 transition-opacity duration-300 ease-out rounded-sm"></div>
                     </Link>
                   ))}
                 </div>

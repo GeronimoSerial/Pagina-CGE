@@ -71,3 +71,15 @@ export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
     metaDescription: n.metaDescription,
   };
 }
+
+export async function getNoticiasRelacionadas(categoria: string) {
+  const res = await fetch(
+    `${API_URL}/noticias?filters[categoria][$eq]=${categoria}&pagination[limit]=2&populate=*`,
+    { next: { revalidate: 60 * 60 * 24 } },
+  );
+  if (!res.ok) {
+    throw new Error('Failed to fetch noticias relacionadas');
+  }
+  const { data } = await res.json();
+  return data;
+}
