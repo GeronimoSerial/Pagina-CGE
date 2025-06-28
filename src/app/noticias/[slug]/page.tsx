@@ -1,15 +1,5 @@
 import Link from 'next/link';
-import {
-  ArrowLeft,
-  Calendar,
-  User,
-  ChevronLeft,
-  ChevronRight,
-  Home,
-  BookOpen,
-  Settings,
-  Search,
-} from 'lucide-react';
+import { Calendar, Diamond, User } from 'lucide-react';
 import {
   getNoticiaBySlug,
   getNoticiaPortada,
@@ -21,7 +11,8 @@ import { notFound } from 'next/navigation';
 import PhotoSwipeGallery from '@/src/components/PhotoSwipeGallery';
 import { MarkdownComponent } from '@/src/modules/layout/MarkdownComponent';
 import remarkGfm from 'remark-gfm';
-
+import { Separator } from '@/src/components/ui/separator';
+import { Separador } from '@/src/modules/layout/Separador';
 interface NoticiaDetalleProps {
   params: { slug: string };
 }
@@ -112,19 +103,22 @@ export default async function NoticiaDetalle({ params }: NoticiaDetalleProps) {
                   </ReactMarkdown>
                 </div>
                 {noticia.imagen && noticia.imagen.length > 0 && (
-                  <PhotoSwipeGallery noticia={noticia} />
+                  <>
+                    <Separador titulo="Galería de imágenes" />
+
+                    <PhotoSwipeGallery noticia={noticia} />
+                  </>
                 )}
-                {/* Article footer */}
               </div>
             </article>
           </div>
         </main>
         {/* Sidebar (static, right) */}
-        <aside className="hidden lg:block bg-white/90 shadow border border-gray-200 sticky top-24 h-[calc(70vh-4rem)] w-72 transition-all duration-300 ease-in-out overflow-hidden rounded-xl">
+        <aside className="hidden lg:block bg-white/90 shadow border border-gray-200 sticky top-44 h-full w-72 mr-3 mb-3 transition-all duration-300 ease-in-out overflow-hidden ">
           <div className="p-5 flex flex-col gap-8 h-full">
             {/* Navigation */}
             <div>
-              <h3 className="text-xs font-semibold text-gray-700 mb-4 px-2 tracking-widest uppercase">
+              <h3 className="text-sm font-semibold text-gray-700 mb-4 px-2 tracking-widest uppercase">
                 Enlaces Institucionales
               </h3>
               <div className="space-y-2">
@@ -146,7 +140,7 @@ export default async function NoticiaDetalle({ params }: NoticiaDetalleProps) {
             {/* Related articles in sidebar */}
             {related.length > 0 && (
               <div className="border-t border-gray-200 pt-5">
-                <h3 className="text-xs font-semibold text-gray-700 mb-4 px-2 tracking-widest uppercase">
+                <h3 className="text-sm  font-semibold text-gray-700 mb-4 px-2 tracking-widest uppercase">
                   Artículos Relacionados
                 </h3>
                 <div className="space-y-2">
@@ -160,7 +154,7 @@ export default async function NoticiaDetalle({ params }: NoticiaDetalleProps) {
                         {item.titulo}
                       </div>
                       <div className="text-xs text-gray-500 mt-1">
-                        {item.resumen.slice(0, 50)}...
+                        {item.resumen.slice(0, 200)}
                       </div>
                     </Link>
                   ))}
