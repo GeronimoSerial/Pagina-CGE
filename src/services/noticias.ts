@@ -1,6 +1,7 @@
 import { API_URL } from '@/src/lib/config';
 import { STRAPI_URL } from '@/src/lib/config';
 import { Noticia } from '@/src/interfaces';
+import qs from 'qs';
 
 export async function getNoticias() {
   const res = await fetch(`${API_URL}/noticias?populate=*`);
@@ -31,11 +32,20 @@ export function getImagenes(noticia: Noticia) {
 export async function getNoticiasPaginadas(
   page: number = 1,
   pageSize: number = 4,
+  filters: Record<string, any> = {},
 ) {
-  const res = await fetch(
-    `${API_URL}/noticias?populate=*&sort=fecha:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
-    { next: { revalidate: 60 } },
+  const query = qs.stringify(
+    {
+      populate: '*',
+      sort: ['fecha:desc'],
+      pagination: { page, pageSize },
+      filters,
+    },
+    { encodeValuesOnly: true },
   );
+  const res = await fetch(`${API_URL}/noticias?${query}`, {
+    next: { revalidate: 60 },
+  });
   if (!res.ok) {
     throw new Error('Failed to fetch paginated noticias');
   }

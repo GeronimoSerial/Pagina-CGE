@@ -1,39 +1,35 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export function normalizarTexto(texto: unknown): string {
-  if (texto === null || texto === undefined) return "";
+  if (texto === null || texto === undefined) return '';
   return String(texto)
     .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, " ")
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
 export function formatearFecha(fechaStr: string | Date) {
-  if (!fechaStr) return "";
+  if (!fechaStr) return '';
 
   const date = new Date(fechaStr);
-  if (isNaN(date.getTime())) return "";
+  if (isNaN(date.getTime())) return '';
 
-  return date.toLocaleDateString("es-AR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
+  return date.toLocaleDateString('es-AR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
   });
 }
 
-
-
-
-
 export const sortByDate = <T extends { date: string }>(
   items: T[],
-  ascending: boolean = false
+  ascending: boolean = false,
 ): T[] => {
   const parseDate = (dateStr: string) => {
     let date = new Date(dateStr);
@@ -44,7 +40,7 @@ export const sortByDate = <T extends { date: string }>(
         date = new Date(
           Number(parts[2]),
           Number(parts[1]) - 1,
-          Number(parts[0])
+          Number(parts[0]),
         );
       }
     }
@@ -66,7 +62,7 @@ export const sortByDate = <T extends { date: string }>(
 
 export const sortByAlphabetical = <T extends { titulo: string }>(
   items: T[],
-  ascending: boolean = false
+  ascending: boolean = false,
 ): T[] => {
   const parseTitle = (title: string) => {
     const match = title.match(/(\d+)/);
@@ -77,12 +73,12 @@ export const sortByAlphabetical = <T extends { titulo: string }>(
     const titleA = parseTitle(a.titulo);
     const titleB = parseTitle(b.titulo);
 
-    if (typeof titleA === "number" && typeof titleB === "number") {
+    if (typeof titleA === 'number' && typeof titleB === 'number') {
       return ascending ? titleA - titleB : titleB - titleA;
     }
 
-    if (typeof titleA === "number") return ascending ? -1 : 1;
-    if (typeof titleB === "number") return ascending ? 1 : -1;
+    if (typeof titleA === 'number') return ascending ? -1 : 1;
+    if (typeof titleB === 'number') return ascending ? 1 : -1;
 
     return ascending
       ? titleA.localeCompare(titleB)
@@ -91,9 +87,9 @@ export const sortByAlphabetical = <T extends { titulo: string }>(
 };
 
 export const truncateText = (text: string, wordLimit: number) => {
-  const words = text.split(" ");
+  const words = text.split(' ');
   if (words.length > wordLimit) {
-    return words.slice(0, wordLimit).join(" ") + "...";
+    return words.slice(0, wordLimit).join(' ') + '...';
   }
   return text;
 };
@@ -101,10 +97,10 @@ export const truncateText = (text: string, wordLimit: number) => {
 export const filterDocuments = (
   documents: any[],
   searchTerm: string,
-  filter: string = "all"
+  filter: string = 'all',
 ) => {
   return documents.filter((doc) => {
-    const matchesFilter = filter === "all" || doc.category === filter;
+    const matchesFilter = filter === 'all' || doc.category === filter;
 
     if (!searchTerm) {
       return matchesFilter;
@@ -113,16 +109,34 @@ export const filterDocuments = (
     const searchTermNormalized = normalizarTexto(searchTerm);
     const titleNormalized = normalizarTexto(doc.title);
     const descriptionNormalized = normalizarTexto(doc.description);
-    const contentToSearch = titleNormalized + " " + descriptionNormalized;
+    const contentToSearch = titleNormalized + ' ' + descriptionNormalized;
 
     const searchWords = searchTermNormalized
       .split(/\s+/)
       .filter((word) => word.length > 0);
 
     const matchesSearch = searchWords.every((word) =>
-      contentToSearch.includes(word)
+      contentToSearch.includes(word),
     );
 
     return matchesSearch && matchesFilter;
   });
 };
+
+/**
+ * Ejecuta una función después de que haya pasado un tiempo desde la última llamada.
+ * @param func La función a ejecutar
+ * @param wait Tiempo de espera en ms
+ */
+export function debounce<T extends (...args: any[]) => void>(
+  func: T,
+  wait: number,
+) {
+  let timeout: ReturnType<typeof setTimeout>;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      func(...args);
+    }, wait);
+  };
+}

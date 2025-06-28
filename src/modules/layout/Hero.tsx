@@ -4,7 +4,7 @@ import {
   GraduationCap,
   Pencil,
   NotebookPen,
-} from "lucide-react";
+} from 'lucide-react';
 
 interface HeroSectionProps {
   title?: string;
@@ -13,7 +13,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ title, description }: HeroSectionProps) {
   return (
-    <div className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] text-white  shadow-xl hover:shadow-2xl transition-all duration-500 h-[250px] flex items-center justify-center overflow-hidden relative">
+    <div className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] text-white  shadow-xl hover:shadow-2xl transition-all duration-500 h-[230px] flex items-center justify-center overflow-hidden relative">
       <div className="absolute inset-0 flex flex-wrap justify-center items-center pointer-events-none">
         {[...Array(18)].map((_, i) => {
           const iconSize = 24;
@@ -21,11 +21,9 @@ export default function HeroSection({ title, description }: HeroSectionProps) {
           const top = `${10 + Math.floor(i / 6) * 15}%`;
           const rotate = `${-15 + (i % 7) * 5}deg`;
           const opacity = 0.2;
-
           const Icon = [BookOpen, BookText, GraduationCap, Pencil, NotebookPen][
             i % 5
           ];
-
           return (
             <div
               key={i}
