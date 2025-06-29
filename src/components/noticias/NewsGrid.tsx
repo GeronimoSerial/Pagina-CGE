@@ -15,45 +15,47 @@ interface NewsItem {
 }
 
 interface NewsGridProps {
-  noticias: NewsItem[];
+  noticiasDestacadas: NewsItem[];
+  noticiasRegulares: NewsItem[];
 }
 
-export default function NewsGrid({ noticias }: NewsGridProps) {
-  // Separar noticias destacadas de las regulares
-  const noticiasDestacadas = noticias.filter((noticia) => noticia.destacado);
-  const noticiasRegulares = noticias.filter((noticia) => !noticia.destacado);
+export default function NewsGrid({
+  noticiasDestacadas,
+  noticiasRegulares,
+}: NewsGridProps) {
   return (
     <section>
       {/* Contenido principal con fondo blanco */}
       <div className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-6">
           {/* Mensaje cuando no hay resultados */}
-          {noticias.length === 0 && (
-            <div className="text-center py-16">
-              <div className="text-slate-400 mb-4">
-                <svg
-                  className="w-16 h-16 mx-auto"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1}
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
-                </svg>
+          {noticiasDestacadas.length === 0 &&
+            noticiasRegulares.length === 0 && (
+              <div className="text-center py-16">
+                <div className="text-slate-400 mb-4">
+                  <svg
+                    className="w-16 h-16 mx-auto"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-medium text-slate-600 mb-2">
+                  No se encontraron noticias
+                </h3>
+                <p className="text-slate-500">
+                  Intenta ajustar los filtros de búsqueda para encontrar más
+                  resultados.
+                </p>
               </div>
-              <h3 className="text-xl font-medium text-slate-600 mb-2">
-                No se encontraron noticias
-              </h3>
-              <p className="text-slate-500">
-                Intenta ajustar los filtros de búsqueda para encontrar más
-                resultados.
-              </p>
-            </div>
-          )}
+            )}
           {/* Grid de noticias destacadas */}
           {noticiasDestacadas.length > 0 && (
             <div className="mb-16">
@@ -61,7 +63,7 @@ export default function NewsGrid({ noticias }: NewsGridProps) {
                 Noticias Destacadas
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {noticiasDestacadas.slice(0, 2).map((noticia) => (
+                {noticiasDestacadas.map((noticia) => (
                   <article
                     key={noticia.id}
                     className="group relative bg-white border border-slate-200 hover:border-slate-300 transition-all duration-500 ease-out hover:shadow-lg hover:shadow-slate-200/60 rounded-sm overflow-hidden"

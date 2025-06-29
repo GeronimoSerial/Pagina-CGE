@@ -69,6 +69,22 @@ export default async function NoticiasPage({
     destacado: n.esImportante || n.destacado || false,
   }));
 
+  // Separar las 2 destacadas más recientes
+  const noticiasDestacadas = noticiasMapped
+    .filter((n: { destacado: boolean }) => n.destacado)
+    .sort(
+      (a: { fecha: string }, b: { fecha: string }) =>
+        new Date(b.fecha).getTime() - new Date(a.fecha).getTime(),
+    )
+    .slice(0, 2);
+  // El resto (incluidas otras destacadas) van al grid regular
+  const idsDestacadas = new Set(
+    noticiasDestacadas.map((n: { id: string | number }) => n.id),
+  );
+  const noticiasRegulares = noticiasMapped.filter(
+    (n: { id: string | number }) => !idsDestacadas.has(n.id),
+  );
+
   return (
     <section>
       <HeroSection
@@ -88,7 +104,10 @@ export default async function NoticiasPage({
               autor: '', // Si implementas filtro por autor
             }}
           />
-          <NewsGrid noticias={noticiasMapped} />
+          <NewsGrid
+            noticiasDestacadas={noticiasDestacadas}
+            noticiasRegulares={noticiasRegulares}
+          />
           <div className="mt-8">
             <PaginacionServer
               currentPage={pagination.page}
