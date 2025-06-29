@@ -172,7 +172,7 @@ export default function NewsGrid({
                       )}
                     </div>
                     {/* Enlace de lectura */}
-                    <Link
+                    <a
                       href={`/noticias/${noticia.slug}`}
                       className="group/link inline-flex items-center gap-2 text-slate-700 hover:text-slate-900 text-sm font-medium transition-all duration-300 ease-out"
                     >
@@ -180,7 +180,7 @@ export default function NewsGrid({
                         Leer más
                       </span>
                       <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform duration-300" />
-                    </Link>
+                    </a>
                   </div>
                   {/* Línea de acento superior */}
                   <div className="absolute top-0 left-0 right-0 h-0.5 bg-slate-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left"></div>
