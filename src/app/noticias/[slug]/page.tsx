@@ -15,7 +15,7 @@ import { Separador } from '@/shared/components/Separador';
 import type { Metadata } from 'next';
 
 // Revalida la página cada 3 horas para mantener los datos actualizados.
-export const revalidate = 60 * 60 * 3;
+// export const revalidate = 60 * 60 * 3;
 
 /**
  * Genera los metadatos de la página (título, descripción, Open Graph)

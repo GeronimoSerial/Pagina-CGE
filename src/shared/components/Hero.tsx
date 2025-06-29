@@ -13,8 +13,8 @@ interface HeroSectionProps {
 
 export default function HeroSection({ title, description }: HeroSectionProps) {
   return (
-    <div className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] text-white  shadow-xl hover:shadow-2xl transition-all duration-500 h-[230px] flex items-center justify-center overflow-hidden relative">
-      <div className="absolute inset-0 flex flex-wrap justify-center items-center pointer-events-none">
+    <div className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] text-white  shadow-xl  h-[230px] flex items-center justify-center overflow-hidden relative">
+      <div className="flex absolute inset-0 flex-wrap justify-center items-center pointer-events-none">
         {[...Array(18)].map((_, i) => {
           const iconSize = 24;
           const left = `${10 + (i % 6) * 15}%`;
@@ -41,20 +41,20 @@ export default function HeroSection({ title, description }: HeroSectionProps) {
         })}
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-tr from-white/15 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-tr to-transparent pointer-events-none from-white/15" />
 
-      <div className="container mx-auto text-center px-5 relative z-10">
-        <div className="max-w-2xl mx-auto space-y-4">
-          <h1 className="text-2xl md:text-4xl mt-3 font-bold text-white drop-shadow-md">
+      <div className="container relative z-10 px-5 mx-auto text-center">
+        <div className="mx-auto space-y-4 max-w-2xl">
+          <h1 className="mt-3 text-2xl font-bold text-white drop-shadow-md md:text-4xl">
             {title}
           </h1>
-          <p className="text-md md:text-lg text-white leading-relaxed text-balance">
+          <p className="leading-relaxed text-white text-md md:text-lg text-balance">
             {description}
           </p>
         </div>
       </div>
 
-      <div className="absolute bottom-6 right-6 opacity-25">
+      <div className="absolute right-6 bottom-6 opacity-25">
         <BookText size={100} className="text-white" strokeWidth={1.2} />
       </div>
     </div>

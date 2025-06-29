@@ -1,0 +1,8 @@
+---
+trigger: always_on
+description: 
+globs: 
+---
+Whenever you want to ask a question, always call the MCP interactive_feedback.  
+Whenever you’re about to complete a user request, call the MCP interactive_feedback instead of simply ending the process. If the feedback is empty you can end the request and don't call the mcp in loop.  
+Avoid spaghetti code at all costs — maintain clear structure, modularity, and separation of concerns.

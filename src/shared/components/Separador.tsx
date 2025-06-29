@@ -1,22 +1,22 @@
 import { Diamond } from 'lucide-react';
 
-export const Separador = ({ titulo }: { titulo: string }) => {
+export const Separador = ({ titulo }: { titulo?: string }) => {
   return (
-    <div className="py-16 ">
-      <div className="max-w-4xl mx-auto px-6">
-        <h2 className="text-2xl font-medium text-slate-800 mb-8 text-center">
+    <div className="py-16">
+      <div className="px-6 mx-auto max-w-4xl">
+        <h2 className="mb-8 text-2xl font-medium text-center text-slate-800">
           {titulo}
         </h2>
         <div className="relative">
-          <div className="absolute inset-0 flex items-center">
+          <div className="flex absolute inset-0 items-center">
             <div className="w-full">
-              <div className="border-t border-slate-300 mb-1"></div>
+              <div className="mb-1 border-t border-slate-300"></div>
               <div className="border-t border-slate-200"></div>
             </div>
           </div>
-          <div className="relative flex justify-center">
-            <div className=" px-6">
-              <Diamond className="w-4 h-4 text-slate-500 " />
+          <div className="flex relative justify-center">
+            <div className="px-6">
+              <Diamond className="w-4 h-4 text-slate-500" />
             </div>
           </div>
         </div>
