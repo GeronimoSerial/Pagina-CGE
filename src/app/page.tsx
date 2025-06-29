@@ -1,8 +1,8 @@
 // src/app/noticia/[id]/page.tsx
-import HeroMain from "@/src/modules/home/components/HeroMain";
-import QuickAccess from "@modules/home/components/QuickAccess";
-import { Separator } from "@radix-ui/react-separator";
-import SocialMediaSection from "@modules/socials/SocialMediaSection";
+import HeroMain from '@/features/home/components/HeroMain';
+import QuickAccess from '@/features/home/components/QuickAccess';
+import { Separator } from '@radix-ui/react-separator';
+import SocialMediaSection from '@/features/socials/components/SocialMediaSection';
 
 export default async function PagPrincipal() {
   return (

@@ -1,15 +1,15 @@
 // Página de contacto
-import ContactForm from "@/src/modules/contact";
-import SocialMediaSection from "@modules/socials/SocialMediaSection";
-import HeroSection from "@modules/layout/Hero";
-import FAQSection from "@modules/layout/FAQSection";
-import { Separator } from "@radix-ui/react-separator";
-import { Metadata } from "next";
+import ContactForm from '@/features/contact/components';
+import SocialMediaSection from '@/features/socials/components/SocialMediaSection';
+import HeroSection from '@/shared/components/Hero';
+import FAQSection from '@/shared/components/FAQSection';
+import { Separator } from '@radix-ui/react-separator';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Contacto",
+  title: 'Contacto',
   description:
-    "Si tienes alguna consulta o sugerencia, no dudes en contactarnos. Estamos aquí para ayudarte.",
+    'Si tienes alguna consulta o sugerencia, no dudes en contactarnos. Estamos aquí para ayudarte.',
 };
 
 export default function Contacto() {

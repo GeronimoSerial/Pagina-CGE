@@ -4,14 +4,14 @@ import {
   getNoticiaBySlug,
   getNoticiaPortada,
   getNoticiasRelacionadas,
-} from '@/src/services/noticias';
-import { formatearFecha } from '@/src/lib/utils';
+} from '@/features/noticias/services/noticias';
+import { formatearFecha } from '@/shared/lib/utils';
 import ReactMarkdown from 'react-markdown';
 import { notFound } from 'next/navigation';
-import PhotoSwipeGallery from '@/src/components/PhotoSwipeGallery';
-import { MarkdownComponent } from '@/src/modules/layout/MarkdownComponent';
+import PhotoSwipeGallery from '@/shared/components/PhotoSwipeGallery';
+import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
 import remarkGfm from 'remark-gfm';
-import { Separador } from '@/src/modules/layout/Separador';
+import { Separador } from '@/shared/components/Separador';
 import type { Metadata } from 'next';
 
 export const revalidate = 60;
