@@ -44,7 +44,7 @@ export async function getNoticiasPaginadas(
     { encodeValuesOnly: true },
   );
   const res = await fetch(`${API_URL}/noticias?${query}`, {
-    next: { revalidate: 60 },
+    next: { revalidate: 300 },
   });
   if (!res.ok) {
     throw new Error('Failed to fetch paginated noticias');
@@ -56,7 +56,7 @@ export async function getNoticiasPaginadas(
 export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
   const res = await fetch(
     `${API_URL}/noticias?filters[slug][$eq]=${slug}&populate=*`,
-    { next: { revalidate: 60 } },
+    { next: { revalidate: 300 } },
   );
   if (!res.ok) {
     throw new Error('Failed to fetch noticia by slug');
@@ -85,7 +85,7 @@ export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
 export async function getNoticiasRelacionadas(categoria: string) {
   const res = await fetch(
     `${API_URL}/noticias?filters[categoria][$eq]=${categoria}&pagination[limit]=2&populate=*`,
-    { next: { revalidate: 60 * 60 * 24 } },
+    { next: { revalidate: 300 } },
   );
   if (!res.ok) {
     throw new Error('Failed to fetch noticias relacionadas');
