@@ -87,7 +87,6 @@ export default async function NoticiasPage({
 
   return (
     <section>
-      {/* {/* <div className="py-8 bg-white"> */}
       <HeroSection
         title="Noticias"
         description="Encuentra información sobre eventos, actividades y noticias institucionales."
@@ -108,15 +107,13 @@ export default async function NoticiasPage({
         noticiasDestacadas={noticiasDestacadas}
         noticiasRegulares={noticiasRegulares}
       />
-      {/* <div className="mt-8">
-            <PaginacionServer
-              currentPage={pagination.page}
-              totalItems={pagination.total}
-              pageSize={pagination.pageSize}
-            />
-          </div> */}
-      {/* </div> */}
-      {/* </div> */}
+      <div className="mt-8">
+        <PaginacionServer
+          currentPage={pagination.page}
+          totalItems={pagination.total}
+          pageSize={pagination.pageSize}
+        />
+      </div>
     </section>
   );
 }

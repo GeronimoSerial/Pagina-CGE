@@ -3,8 +3,8 @@ import HeroMain from '@/features/home/components/HeroMain';
 import QuickAccess from '@/features/home/components/QuickAccess';
 import { Separator } from '@radix-ui/react-separator';
 import SocialMediaSection from '@/features/socials/components/SocialMediaSection';
-import { Frame } from '@/features/noticias/components/LatestNews';
 import { Separador } from '@/shared/components/Separador';
+import UltimasNoticias from '@/features/noticias/components/LatestNews';
 
 export default async function PagPrincipal() {
   return (
@@ -22,7 +22,7 @@ export default async function PagPrincipal() {
         {/* <Separator className="my-8 bg-[#217A4B]/20" /> */}
         <Separador />
         <section>
-          <Frame />
+          <UltimasNoticias />
         </section>
         <Separador />
         <SocialMediaSection />

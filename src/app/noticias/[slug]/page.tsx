@@ -84,13 +84,13 @@ export default async function NoticiaPage({ params }: PageProps) {
   if (!noticia) return notFound();
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="flex flex-col min-h-screen bg-white">
       <div className="flex flex-1">
         {/* Contenido principal de la noticia */}
         <main className="flex-1 transition-all duration-300">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="px-4 py-8 mx-auto max-w-5xl sm:px-6 lg:px-8">
             {/* Breadcrumb para la navegación */}
-            <nav className="flex items-center text-sm text-gray-500 mb-6">
+            <nav className="flex items-center mb-6 text-sm text-gray-500">
               <Link href="/" className="hover:text-green-800">
                 Inicio
               </Link>
@@ -102,32 +102,32 @@ export default async function NoticiaPage({ params }: PageProps) {
               <span className="text-gray-900">{noticia.titulo}</span>
             </nav>
             {/* Artículo principal de la noticia */}
-            <article className="bg-white rounded-xl shadow-sm mb-8">
+            <article className="mb-8 bg-white rounded-xl shadow-sm">
               <div className="p-6 sm:p-8">
                 {/* Encabezado del artículo con metadatos de la noticia */}
                 <header className="mb-8">
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-4">
+                  <div className="flex flex-wrap gap-4 items-center mb-4 text-sm text-gray-500">
                     {/* Fecha de publicación */}
                     <div className="flex items-center">
-                      <Calendar className="w-4 h-4 mr-2" />
+                      <Calendar className="mr-2 w-4 h-4" />
                       <span>{formatearFecha(noticia.fecha)}</span>
                     </div>
                     {/* Autor de la noticia */}
                     <div className="flex items-center">
-                      <User className="w-4 h-4 mr-1" />
+                      <User className="mr-1 w-4 h-4" />
                       <span>Redacción CGE</span>
                     </div>
                     {/* Categoría de la noticia */}
-                    <span className="bg-green-800 text-white px-2 py-1 rounded-full text-xs">
+                    <span className="px-2 py-1 text-xs text-white bg-green-800 rounded-full">
                       {noticia.categoria}
                     </span>
                   </div>
                   {/* Título de la noticia */}
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6">
+                  <h1 className="mb-6 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
                     {noticia.titulo}
                   </h1>
                   {/* Resumen de la noticia */}
-                  <p className="text-xl text-gray-600 leading-relaxed">
+                  <p className="text-xl leading-relaxed text-gray-600">
                     {noticia.resumen}
                   </p>
                 </header>
@@ -136,11 +136,11 @@ export default async function NoticiaPage({ params }: PageProps) {
                   <img
                     src={getPortada({ noticia }) || ''}
                     alt={noticia.titulo}
-                    className="mb-8 rounded w-full object-cover max-h-96"
+                    className="object-cover mb-8 w-full max-h-96 rounded"
                   />
                 )}
                 {/* Contenido de la noticia renderizado desde Markdown */}
-                <div className="prose prose-lg max-w-none mb-8">
+                <div className="mb-8 max-w-none prose prose-lg">
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     components={MarkdownComponent}
@@ -160,7 +160,7 @@ export default async function NoticiaPage({ params }: PageProps) {
           </div>
         </main>
         {/* Barra lateral (estática, a la derecha) */}
-        <aside className="hidden overflow-hidden sticky top-24 mt-24 mr-3 mb-3 w-72 h-full border-t-2 border-b border-l border-r border-slate-200 border-t-slate-300 shadow-lg shadow-slate-200/50 transition-all duration-500 ease-out lg:block bg-white/95 backdrop-blur-sm">
+        <aside className="hidden overflow-hidden sticky top-24 mt-24 mr-3 mb-3 w-72 h-full border-t-2 border-r border-b border-l shadow-lg backdrop-blur-sm transition-all duration-500 ease-out border-slate-200 border-t-slate-300 shadow-slate-200/50 lg:block bg-white/95">
           <div className="flex flex-col h-full">
             {/* Sección de navegación: Enlaces institucionales */}
             <div className="px-2 py-6">
@@ -180,16 +180,16 @@ export default async function NoticiaPage({ params }: PageProps) {
                     {/* Línea de acento izquierda que aparece al pasar el ratón */}
                     <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-slate-400 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
                     {/* Contenedor de contenido con mejor espaciado */}
-                    <div className="flex items-center w-full ml-3">
+                    <div className="flex items-center ml-3 w-full">
                       {/* Elemento decorativo pequeño */}
                       <div className="w-1.5 h-1.5 bg-green-800 rounded-full mr-3 group-hover:bg-green-700 transition-colors duration-300"></div>
                       {/* Texto del enlace */}
-                      <span className="text-sm font-medium tracking-wide group-hover:translate-x-1 transition-transform duration-300 ease-out">
+                      <span className="text-sm font-medium tracking-wide transition-transform duration-300 ease-out group-hover:translate-x-1">
                         {enlace.label}
                       </span>
                     </div>
                     {/* Fondo sutil al pasar el ratón */}
-                    <div className="absolute inset-0 bg-slate-50 opacity-0 group-hover:opacity-60 transition-opacity duration-300 ease-out rounded-sm"></div>
+                    <div className="absolute inset-0 rounded-sm opacity-0 transition-opacity duration-300 ease-out bg-slate-50 group-hover:opacity-60"></div>
                   </Link>
                 ))}
               </div>
@@ -198,15 +198,15 @@ export default async function NoticiaPage({ params }: PageProps) {
             {Array.isArray(related) && related.length > 0 && (
               <div className="px-6">
                 <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
+                  <div className="flex absolute inset-0 items-center">
                     <div className="w-full">
                       <div className="border-t border-slate-300 mb-0.5"></div>
                       <div className="border-t border-slate-200"></div>
                     </div>
                   </div>
-                  <div className="relative flex justify-center">
-                    <div className="bg-white px-4">
-                      <div className="w-1 h-1 bg-slate-400 rounded-full"></div>
+                  <div className="flex relative justify-center">
+                    <div className="px-4 bg-white">
+                      <div className="w-1 h-1 rounded-full bg-slate-400"></div>
                     </div>
                   </div>
                 </div>
@@ -214,7 +214,7 @@ export default async function NoticiaPage({ params }: PageProps) {
             )}
             {/* Sección de artículos relacionados */}
             {Array.isArray(related) && related.length > 0 && (
-              <div className="px-2 py-6 flex-1">
+              <div className="flex-1 px-2 py-6">
                 <h3 className="px-4 mb-5 text-sm font-semibold tracking-[0.1em] text-black ">
                   ARTÍCULOS RELACIONADOS
                 </h3>
@@ -224,21 +224,21 @@ export default async function NoticiaPage({ params }: PageProps) {
                     <Link
                       key={item.id}
                       href={`/noticias/${item.slug}`}
-                      className="group relative block px-4 py-3 transition-all duration-300 ease-out hover:text-slate-900"
+                      className="block relative px-4 py-3 transition-all duration-300 ease-out group hover:text-slate-900"
                     >
                       {/* Línea de acento izquierda */}
                       <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-slate-400 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
                       {/* Contenido con mejor uso del margen izquierdo */}
                       <div className="ml-3">
-                        <div className="font-medium text-sm text-slate-800 leading-snug group-hover:text-slate-900 mb-2 group-hover:translate-x-1 transition-transform duration-300 ease-out">
+                        <div className="mb-2 text-sm font-medium leading-snug transition-transform duration-300 ease-out text-slate-800 group-hover:text-slate-900 group-hover:translate-x-1">
                           {item.titulo}
                         </div>
-                        <div className="text-xs text-slate-500 leading-relaxed group-hover:text-black transition-colors duration-300 pr-2">
+                        <div className="pr-2 text-xs leading-relaxed transition-colors duration-300 text-slate-500 group-hover:text-black">
                           {item.resumen.slice(0, 160)}
                         </div>
                       </div>
                       {/* Fondo sutil al pasar el ratón */}
-                      <div className="absolute inset-0 bg-slate-50 opacity-0 group-hover:opacity-40 transition-opacity duration-300 ease-out rounded-sm"></div>
+                      <div className="absolute inset-0 rounded-sm opacity-0 transition-opacity duration-300 ease-out bg-slate-50 group-hover:opacity-40"></div>
                     </Link>
                   ))}
                 </div>
