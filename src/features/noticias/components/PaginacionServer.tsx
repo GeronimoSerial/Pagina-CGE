@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface PaginacionServerProps {
   currentPage: number;
@@ -19,37 +20,98 @@ export default function PaginacionServer({
   const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
 
   return (
-    <nav className="flex gap-2 mt-6" aria-label="Paginación">
-      {pages.map((page) =>
-        onPageChange ? (
+    <div className="flex items-center justify-center">
+      <div className="flex items-center space-x-1 bg-white p-4 shadow-sm border border-gray-200">
+        {/* Botón Anterior */}
+        {onPageChange ? (
           <button
-            key={page}
-            onClick={() => onPageChange(page)}
-            className={`px-3 py-1 rounded border text-sm ${
-              page === currentPage
-                ? 'bg-blue-600 text-white border-blue-600'
-                : 'bg-white text-blue-600 border-blue-300 hover:bg-blue-50'
-            }`}
-            aria-current={page === currentPage ? 'page' : undefined}
-            disabled={page === currentPage}
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="flex items-center space-x-2 px-2 py-1 text-gray-600 hover:bg-gray-100 hover:shadow-sm transition-all duration-150 disabled:opacity-50 rounded text-sm"
           >
-            {page}
+            <ChevronLeft className="h-4 w-4" />
+            <span className="font-medium">Anterior</span>
           </button>
         ) : (
           <Link
-            key={page}
-            href={`/noticias?page=${page}`}
-            className={`px-3 py-1 rounded border text-sm ${
-              page === currentPage
-                ? 'bg-blue-600 text-white border-blue-600'
-                : 'bg-white text-blue-600 border-blue-300 hover:bg-blue-50'
-            }`}
-            aria-current={page === currentPage ? 'page' : undefined}
+            href={`/noticias?page=${currentPage - 1}`}
+            tabIndex={currentPage === 1 ? -1 : 0}
+            aria-disabled={currentPage === 1}
+            className="flex items-center space-x-2 px-2 py-1 text-gray-600 hover:bg-gray-100 hover:shadow-sm transition-all duration-150 disabled:opacity-50 rounded text-sm"
+            style={{
+              pointerEvents: currentPage === 1 ? 'none' : undefined,
+              opacity: currentPage === 1 ? 0.5 : 1,
+            }}
           >
-            {page}
+            <ChevronLeft className="h-4 w-4" />
+            <span className="font-medium">Anterior</span>
           </Link>
-        ),
-      )}
-    </nav>
+        )}
+
+        {/* Números de página */}
+        <div className="flex items-center mx-4">
+          {pages.map((page) =>
+            onPageChange ? (
+              <button
+                key={page}
+                onClick={() => onPageChange(page)}
+                className={`px-2 py-1 mx-0.5 font-medium transition-all duration-150 rounded text-sm ${
+                  currentPage === page
+                    ? 'bg-[#3D8B37] text-white shadow'
+                    : 'text-gray-600 hover:bg-gray-100 hover:shadow-sm'
+                }`}
+                aria-current={currentPage === page ? 'page' : undefined}
+                disabled={currentPage === page}
+              >
+                {page}
+              </button>
+            ) : (
+              <Link
+                key={page}
+                href={`/noticias?page=${page}`}
+                aria-current={currentPage === page ? 'page' : undefined}
+                className={`px-2 py-1 mx-0.5 font-medium transition-all duration-150 rounded text-sm ${
+                  currentPage === page
+                    ? 'bg-[#3D8B37] text-white shadow'
+                    : 'text-gray-600 hover:bg-gray-100 hover:shadow-sm'
+                }`}
+                style={{
+                  pointerEvents: currentPage === page ? 'none' : undefined,
+                  opacity: currentPage === page ? 0.7 : 1,
+                }}
+              >
+                {page}
+              </Link>
+            ),
+          )}
+        </div>
+
+        {/* Botón Siguiente */}
+        {onPageChange ? (
+          <button
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage === pageCount}
+            className="flex items-center space-x-2 px-2 py-1 text-gray-600 hover:bg-gray-100 hover:shadow-sm transition-all duration-150 disabled:opacity-50 rounded text-sm"
+          >
+            <span className="font-medium">Siguiente</span>
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        ) : (
+          <Link
+            href={`/noticias?page=${currentPage + 1}`}
+            tabIndex={currentPage === pageCount ? -1 : 0}
+            aria-disabled={currentPage === pageCount}
+            className="flex items-center space-x-2 px-2 py-1 text-gray-600 hover:bg-gray-100 hover:shadow-sm transition-all duration-150 disabled:opacity-50 rounded text-sm"
+            style={{
+              pointerEvents: currentPage === pageCount ? 'none' : undefined,
+              opacity: currentPage === pageCount ? 0.5 : 1,
+            }}
+          >
+            <span className="font-medium">Siguiente</span>
+            <ChevronRight className="h-4 w-4" />
+          </Link>
+        )}
+      </div>
+    </div>
   );
 }

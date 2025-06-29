@@ -263,17 +263,17 @@ const Carousel = React.forwardRef<
         >
           <div className="relative">
             {children}
-            <CarouselPrevious className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-transparent text-white/70 hover:bg-white/10 hover:text-white hover:scale-110 transition-all duration-300 ease-out z-30 border-none shadow-none" />
-            <CarouselNext className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-transparent text-white/70 hover:bg-white/10 hover:text-white hover:scale-110 transition-all duration-300 ease-out z-30 border-none shadow-none" />
+            {/* <CarouselPrevious className="hidden absolute left-4 top-1/2 z-30 w-12 h-12 text-white rounded-full border-none shadow-none transition-all duration-300 ease-out -translate-y-1/2 md:flex bg-green-900/30 hover:bg-white/10 hover:text-white hover:scale-110" /> */}
+            {/* <CarouselNext className="hidden absolute right-4 top-1/2 z-30 w-12 h-12 text-white rounded-full border-none shadow-none transition-all duration-300 ease-out -translate-y-1/2 md:flex bg-green-900/30 hover:bg-white/10 hover:text-white hover:scale-110" /> */}
           </div>
           {/* Dots */}
-          <div className="flex justify-center gap-2 mt-4 pb-2">
+          <div className="flex gap-2 justify-center pb-2 mt-4">
             {Array.from({ length: state.slideCount }).map((_, idx) => (
               <button
                 key={idx}
                 className={`w-2.5 h-2.5 rounded-full transition-all ${
                   state.current === idx
-                    ? 'bg-green-500 scale-110'
+                    ? 'bg-green-700 scale-110'
                     : 'bg-gray-300 hover:bg-gray-400'
                 }`}
                 onClick={() => api && api.scrollTo(idx)}
@@ -354,7 +354,7 @@ const CarouselPrevious = React.forwardRef<
       onClick={scrollPrev}
       {...props}
     >
-      <ArrowLeftIcon className="h-8 w-8" />
+      <ArrowLeftIcon className="w-8 h-8" />
       <span className="sr-only">Previous slide</span>
     </Button>
   );
@@ -383,7 +383,7 @@ const CarouselNext = React.forwardRef<
       onClick={scrollNext}
       {...props}
     >
-      <ArrowRightIcon className="h-8 w-8" />
+      <ArrowRightIcon className="w-8 h-8" />
       <span className="sr-only">Next slide</span>
     </Button>
   );
