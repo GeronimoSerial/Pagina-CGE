@@ -37,7 +37,10 @@ core
 /.cursor
 .cursor/rules/nextjs-rule.mdc
 /.cursor
-
+/.windsurf
+/.windsurf/rules
+.windsurf
 public/prueba
 /out
 pnpm-lock.yaml
+.windsurf/rules/
