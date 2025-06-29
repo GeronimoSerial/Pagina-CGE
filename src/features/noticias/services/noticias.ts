@@ -12,7 +12,7 @@ export async function getNoticias() {
   return data;
 }
 
-export function getNoticiaPortada({ noticia }: any) {
+export function getPortada({ noticia }: any) {
   const url = noticia.portada?.data?.url || noticia.portada?.url;
   if (!url) return null;
   return `${STRAPI_URL}${url}`;
