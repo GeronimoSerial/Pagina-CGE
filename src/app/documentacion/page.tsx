@@ -1,14 +1,14 @@
 // Documentación descargable.
-import { DocumentacionSection } from "@/src/components/data/dynamic-client";
-import HeroSection from "@modules/layout/Hero";
-import FAQSection from "@modules/layout/FAQSection";
-import { Metadata } from "next";
-import InfoBar from "@/src/modules/layout/InfoBar";
+import { DocumentacionSection } from '@/shared/data/dynamic-client';
+import HeroSection from '@/shared/components/Hero';
+import FAQSection from '@/shared/components/FAQSection';
+import { Metadata } from 'next';
+import InfoBar from '@/shared/components/InfoBar';
 
 export const metadata: Metadata = {
-  title: "Documentación",
+  title: 'Documentación',
   description:
-    "Documentación del Consejo General de Educación (CGE) en Corrientes",
+    'Documentación del Consejo General de Educación (CGE) en Corrientes',
 };
 
 export default function Documentacion() {
@@ -21,7 +21,7 @@ export default function Documentacion() {
       <InfoBar basePath="/documentacion" />
       <section>
         <div className="container mx-auto px-4 md:px-6">
-            <DocumentacionSection />
+          <DocumentacionSection />
         </div>
       </section>
       <FAQSection basePath="/documentacion" />

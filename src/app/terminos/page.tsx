@@ -1,11 +1,11 @@
 //Terminos y Condiciones de Uso del Sitio Web del Consejo General de Educación (CGE) en Corrientes
-import HeroSection from "@modules/layout/Hero";
-import { Metadata } from "next";
+import HeroSection from '@/shared/components/Hero';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Terminos y Condiciones",
+  title: 'Terminos y Condiciones',
   description:
-    "Terminos y Condiciones de Uso del Sitio Web del Consejo General de Educación (CGE) en Corrientes",
+    'Terminos y Condiciones de Uso del Sitio Web del Consejo General de Educación (CGE) en Corrientes',
 };
 
 export default function Terminos() {

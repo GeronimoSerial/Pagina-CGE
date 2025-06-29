@@ -1,8 +1,8 @@
-import HeroSection from '@/src/modules/layout/Hero';
-import NewsSearch from '@/src/components/noticias/Search';
-import NewsGrid from '@/src/components/noticias/NewsGrid';
-import PaginacionServer from '@/src/components/noticias/PaginacionServer';
-import { getNoticiasPaginadas } from '@/src/services/noticias';
+import HeroSection from '@/shared/components/Hero';
+import NewsSearch from '@/features/noticias/components/Search';
+import NewsGrid from '@/features/noticias/components/NewsGrid';
+import PaginacionServer from '@/features/noticias/components/PaginacionServer';
+import { getNoticiasPaginadas } from '@/features/noticias/services/noticias';
 import { notFound } from 'next/navigation';
 
 interface NoticiasPageProps {
