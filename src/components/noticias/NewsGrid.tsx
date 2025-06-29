@@ -3,14 +3,14 @@ import { Calendar, ArrowRight, User, Link } from 'lucide-react';
 import { getNoticiaPortada } from '@/src/services/noticias';
 
 interface NewsItem {
-  id: string;
+  id: string | number;
   slug: string;
   titulo: string;
   resumen: string;
   fecha: string;
   autor?: string;
   categoria: string;
-  portada?: string;
+  portada?: any;
   destacado?: boolean;
 }
 
@@ -22,7 +22,6 @@ export default function NewsGrid({ noticias }: NewsGridProps) {
   // Separar noticias destacadas de las regulares
   const noticiasDestacadas = noticias.filter((noticia) => noticia.destacado);
   const noticiasRegulares = noticias.filter((noticia) => !noticia.destacado);
-  console.log(noticias.map((noticia) => noticia.portada));
   return (
     <section>
       {/* Contenido principal con fondo blanco */}
@@ -55,7 +54,6 @@ export default function NewsGrid({ noticias }: NewsGridProps) {
               </p>
             </div>
           )}
-
           {/* Grid de noticias destacadas */}
           {noticiasDestacadas.length > 0 && (
             <div className="mb-16">
@@ -77,7 +75,6 @@ export default function NewsGrid({ noticias }: NewsGridProps) {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     </div>
-
                     {/* Contenido */}
                     <div className="p-8">
                       {/* Categoría */}
@@ -86,17 +83,14 @@ export default function NewsGrid({ noticias }: NewsGridProps) {
                           {noticia.categoria}
                         </span>
                       </div>
-
                       {/* Título */}
                       <h4 className="text-xl font-medium text-slate-800 mb-4 leading-tight group-hover:text-slate-900 transition-colors duration-300">
                         {noticia.titulo}
                       </h4>
-
                       {/* Resumen */}
                       <p className="text-slate-600 leading-relaxed mb-6 line-clamp-3">
                         {noticia.resumen}
                       </p>
-
                       {/* Meta información */}
                       <div className="flex items-center justify-between text-sm text-slate-500 mb-6">
                         <div className="flex items-center gap-4">
@@ -112,7 +106,6 @@ export default function NewsGrid({ noticias }: NewsGridProps) {
                           )}
                         </div>
                       </div>
-
                       {/* Enlace de lectura */}
                       <a
                         href={`/noticias/${noticia.slug}`}
@@ -124,7 +117,6 @@ export default function NewsGrid({ noticias }: NewsGridProps) {
                         <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" />
                       </a>
                     </div>
-
                     {/* Línea de acento superior */}
                     <div className="absolute top-0 left-0 right-0 h-0.5 bg-slate-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left"></div>
                   </article>
@@ -132,7 +124,6 @@ export default function NewsGrid({ noticias }: NewsGridProps) {
               </div>
             </div>
           )}
-
           {/* Grid principal de noticias */}
           {noticiasRegulares.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -149,7 +140,6 @@ export default function NewsGrid({ noticias }: NewsGridProps) {
                       className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                   </div>
-
                   {/* Contenido */}
                   <div className="p-6">
                     {/* Categoría */}
@@ -158,17 +148,14 @@ export default function NewsGrid({ noticias }: NewsGridProps) {
                         {noticia.categoria}
                       </span>
                     </div>
-
                     {/* Título */}
                     <h4 className="text-lg font-medium text-slate-800 mb-3 leading-tight group-hover:text-slate-900 transition-colors duration-300">
                       {noticia.titulo}
                     </h4>
-
                     {/* Resumen */}
                     <p className="text-slate-600 text-sm leading-relaxed mb-4 line-clamp-3">
                       {noticia.resumen}
                     </p>
-
                     {/* Meta información */}
                     <div className="flex items-center gap-3 text-xs text-slate-500 mb-4">
                       <div className="flex items-center gap-1">
@@ -182,7 +169,6 @@ export default function NewsGrid({ noticias }: NewsGridProps) {
                         </div>
                       )}
                     </div>
-
                     {/* Enlace de lectura */}
                     <Link
                       href={`/noticias/${noticia.slug}`}
@@ -194,14 +180,12 @@ export default function NewsGrid({ noticias }: NewsGridProps) {
                       <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform duration-300" />
                     </Link>
                   </div>
-
                   {/* Línea de acento superior */}
                   <div className="absolute top-0 left-0 right-0 h-0.5 bg-slate-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left"></div>
                 </article>
               ))}
             </div>
           )}
-
           {/* Separador final */}
           <div className="mt-16 relative">
             <div className="absolute inset-0 flex items-center">

@@ -1,7 +1,7 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Search, Filter, Calendar, Tag, X, ChevronDown } from 'lucide-react';
-import { debounce } from '../../lib/utils';
 
 interface SearchFilters {
   query: string;
@@ -12,43 +12,63 @@ interface SearchFilters {
 }
 
 interface NewsSearchProps {
-  onSearch: (filters: SearchFilters) => void;
   categorias?: string[];
   autores?: string[];
   placeholder?: string;
+  initialFilters?: SearchFilters;
 }
 
 export default function NewsSearch({
-  onSearch,
   categorias = [],
   autores = [],
   placeholder = 'Buscar noticias institucionales...',
-}: NewsSearchProps) {
-  const [filters, setFilters] = useState<SearchFilters>({
+  initialFilters = {
     query: '',
     categoria: '',
     fechaDesde: '',
     fechaHasta: '',
     autor: '',
-  });
-
+  },
+}: NewsSearchProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [filters, setFilters] = useState<SearchFilters>(initialFilters);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [activeFiltersCount, setActiveFiltersCount] = useState(0);
 
-  // Debounce para onSearch
-  const debouncedOnSearch = React.useRef(debounce(onSearch, 400)).current;
+  // Mantener filtros sincronizados con la URL
+  useEffect(() => {
+    setFilters(initialFilters);
+    // eslint-disable-next-line
+  }, [
+    initialFilters.query,
+    initialFilters.categoria,
+    initialFilters.fechaDesde,
+    initialFilters.fechaHasta,
+    initialFilters.autor,
+  ]);
+
+  // Actualizar la URL con los filtros
+  const updateURL = (newFilters: SearchFilters) => {
+    const params = new URLSearchParams();
+    if (newFilters.query) params.set('q', newFilters.query);
+    if (newFilters.categoria) params.set('categoria', newFilters.categoria);
+    if (newFilters.fechaDesde) params.set('desde', newFilters.fechaDesde);
+    if (newFilters.fechaHasta) params.set('hasta', newFilters.fechaHasta);
+    // if (newFilters.autor) params.set('autor', newFilters.autor);
+    params.set('page', '1'); // Resetear a la primera página en cada búsqueda
+    router.push(`?${params.toString()}`);
+  };
 
   const handleInputChange = (field: keyof SearchFilters, value: string) => {
     const newFilters = { ...filters, [field]: value };
     setFilters(newFilters);
-
     // Contar filtros activos (excluyendo query)
     const count = Object.entries(newFilters).filter(
       ([key, val]) => key !== 'query' && val.trim() !== '',
     ).length;
     setActiveFiltersCount(count);
-
-    debouncedOnSearch(newFilters);
+    updateURL(newFilters);
   };
 
   const clearFilters = () => {
@@ -61,7 +81,7 @@ export default function NewsSearch({
     };
     setFilters(clearedFilters);
     setActiveFiltersCount(0);
-    onSearch(clearedFilters);
+    updateURL(clearedFilters);
   };
 
   const clearAll = () => {
@@ -74,7 +94,7 @@ export default function NewsSearch({
     };
     setFilters(emptyFilters);
     setActiveFiltersCount(0);
-    onSearch(emptyFilters);
+    updateURL(emptyFilters);
   };
 
   const clearIndividualFilter = (field: keyof SearchFilters) => {
@@ -105,7 +125,6 @@ export default function NewsSearch({
             )}
           </div>
         </div>
-
         {/* Controles de Filtros */}
         <div className="flex items-center justify-between mb-6">
           <button
@@ -123,7 +142,6 @@ export default function NewsSearch({
               className={`w-4 h-4 transition-transform duration-300 ${showAdvanced ? 'rotate-180' : ''}`}
             />
           </button>
-
           {(activeFiltersCount > 0 || filters.query) && (
             <div className="flex items-center gap-3">
               {activeFiltersCount > 0 && (
@@ -144,7 +162,6 @@ export default function NewsSearch({
             </div>
           )}
         </div>
-
         {/* Filtros Activos Visibles */}
         {(activeFiltersCount > 0 || filters.query) && (
           <div className="mb-6 flex flex-wrap gap-2">
@@ -209,7 +226,6 @@ export default function NewsSearch({
             )}
           </div>
         )}
-
         {/* Filtros Avanzados */}
         <div
           className={`transition-all duration-500 ease-out overflow-hidden ${
@@ -239,7 +255,6 @@ export default function NewsSearch({
                   ))}
                 </select>
               </div>
-
               {/* Autor */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -258,7 +273,6 @@ export default function NewsSearch({
                   ))}
                 </select>
               </div>
-
               {/* Fecha Desde */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -274,7 +288,6 @@ export default function NewsSearch({
                   className="w-full px-3 py-2 text-slate-700 bg-slate-50 border border-slate-200 focus:border-slate-400 focus:bg-white focus:outline-none transition-all duration-300 rounded-sm"
                 />
               </div>
-
               {/* Fecha Hasta */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -293,7 +306,6 @@ export default function NewsSearch({
             </div>
           </div>
         </div>
-
         {/* Separador Elegante */}
         <div className="mt-8 relative">
           <div className="absolute inset-0 flex items-center">

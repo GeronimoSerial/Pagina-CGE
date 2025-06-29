@@ -12,32 +12,59 @@ import PhotoSwipeGallery from '@/src/components/PhotoSwipeGallery';
 import { MarkdownComponent } from '@/src/modules/layout/MarkdownComponent';
 import remarkGfm from 'remark-gfm';
 import { Separador } from '@/src/modules/layout/Separador';
+import type { Metadata } from 'next';
+
+export const revalidate = 60;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const noticia = await getNoticiaBySlug(slug);
+  if (!noticia) return {};
+  return {
+    title: noticia.titulo,
+    description: noticia.resumen || noticia.titulo,
+    openGraph: {
+      title: noticia.titulo,
+      description: noticia.resumen || noticia.titulo,
+      images: noticia.portada ? [noticia.portada] : [],
+    },
+  };
+}
+
+const ENLACES = [
+  {
+    href: 'https://www.corrientes.gob.ar/',
+    label: 'Gobierno de Corrientes',
+  },
+  {
+    href: 'https://www.mec.gob.ar/',
+    label: 'Ministerio de Educación',
+  },
+  {
+    href: 'https://ge.mec.gob.ar/',
+    label: 'Gestión Educativa',
+  },
+];
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export default async function Page({ params }: PageProps) {
-  const awaitedParams = await params;
-  const noticia = await getNoticiaBySlug(awaitedParams.slug);
+export default async function NoticiaPage({ params }: PageProps) {
+  const { slug } = await params;
+  // Fetch noticia y relacionadas en paralelo
+  const [noticia, related] = await Promise.all([
+    getNoticiaBySlug(slug),
+    (async () => {
+      const n = await getNoticiaBySlug(slug);
+      return n ? getNoticiasRelacionadas(n.categoria) : [];
+    })(),
+  ]);
   if (!noticia) return notFound();
-
-  const related = await getNoticiasRelacionadas(noticia.categoria);
-
-  const Enlaces = [
-    {
-      href: 'https://www.corrientes.gob.ar/',
-      label: 'Gobierno de Corrientes',
-    },
-    {
-      href: 'https://www.mec.gob.ar/',
-      label: 'Ministerio de Educación',
-    },
-    {
-      href: 'https://ge.mec.gob.ar/',
-      label: 'Gestión Educativa',
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -100,7 +127,6 @@ export default async function Page({ params }: PageProps) {
                 {noticia.imagen && noticia.imagen.length > 0 && (
                   <>
                     <Separador titulo="Galería de imágenes" />
-
                     <PhotoSwipeGallery noticia={noticia} />
                   </>
                 )}
@@ -116,10 +142,9 @@ export default async function Page({ params }: PageProps) {
               <h3 className="px-4 mb-5 text-sm font-semibold tracking-[0.1em] text-black ">
                 ENLACES INSTITUCIONALES
               </h3>
-
               {/* Enhanced Navigation Links */}
               <div className="space-y-1">
-                {Enlaces.map((enlace, index) => (
+                {ENLACES.map((enlace) => (
                   <Link
                     key={enlace.href}
                     href={enlace.href}
@@ -129,7 +154,6 @@ export default async function Page({ params }: PageProps) {
                   >
                     {/* Left accent line that appears on hover */}
                     <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-slate-400 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
-
                     {/* Content container with better spacing */}
                     <div className="flex items-center w-full ml-3">
                       {/* Small decorative element */}
@@ -145,9 +169,8 @@ export default async function Page({ params }: PageProps) {
                 ))}
               </div>
             </div>
-
             {/* Single Elegant Separator */}
-            {related.length > 0 && (
+            {Array.isArray(related) && related.length > 0 && (
               <div className="px-6">
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
@@ -164,14 +187,12 @@ export default async function Page({ params }: PageProps) {
                 </div>
               </div>
             )}
-
             {/* Related Articles Section */}
-            {related.length > 0 && (
+            {Array.isArray(related) && related.length > 0 && (
               <div className="px-2 py-6 flex-1">
                 <h3 className="px-4 mb-5 text-sm font-semibold tracking-[0.1em] text-black ">
                   ARTÍCULOS RELACIONADOS
                 </h3>
-
                 {/* Related Articles Links */}
                 <div className="space-y-2">
                   {related.map((item: any) => (
@@ -182,7 +203,6 @@ export default async function Page({ params }: PageProps) {
                     >
                       {/* Left accent line */}
                       <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-slate-400 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
-
                       {/* Content with better left margin usage */}
                       <div className="ml-3">
                         <div className="font-medium text-sm text-slate-800 leading-snug group-hover:text-slate-900 mb-2 group-hover:translate-x-1 transition-transform duration-300 ease-out">
@@ -192,7 +212,6 @@ export default async function Page({ params }: PageProps) {
                           {item.resumen.slice(0, 160)}
                         </div>
                       </div>
-
                       {/* Subtle background on hover */}
                       <div className="absolute inset-0 bg-slate-50 opacity-0 group-hover:opacity-40 transition-opacity duration-300 ease-out rounded-sm"></div>
                     </Link>
