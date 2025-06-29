@@ -1,12 +1,12 @@
 import './index.css';
 import Footer from '@/shared/components/Footer';
-import Header from '@/shared/components/Header';
 import { Lora, Inter } from 'next/font/google';
 import ModalAvisoDesarrollo from '@/shared/components/ModalAvisoDesarrollo';
 
 import metadata from './metadata';
 import Head from 'next/head';
 import { Separator } from '@radix-ui/react-separator';
+import Header from '@/shared/components/Header';
 
 export { metadata };
 
@@ -45,9 +45,9 @@ export default function RootLayout({
       </Head>
       <body className={`${inter.className} antialiased`}>
         <Header />
-        {/* <ModalAvisoDesarrollo /> */}
 
         <div id="root">{children}</div>
+        <Separator className="my-8 bg-[#217A4B]/20" />
         <Footer />
       </body>
     </html>
