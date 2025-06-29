@@ -1,6 +1,6 @@
 import React from 'react';
 import { Calendar, ArrowRight, User, Link } from 'lucide-react';
-import { getNoticiaPortada } from '@/features/noticias/services/noticias';
+import { getPortada } from '@/features/noticias/services/noticias';
 
 interface NewsItem {
   id: string | number;
@@ -71,7 +71,7 @@ export default function NewsGrid({
                     {/* Imagen destacada */}
                     <div className="relative overflow-hidden h-64">
                       <img
-                        src={getNoticiaPortada({ noticia }) || undefined}
+                        src={getPortada({ noticia }) || undefined}
                         alt={noticia.titulo}
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       />
@@ -137,7 +137,7 @@ export default function NewsGrid({
                   {/* Imagen */}
                   <div className="relative overflow-hidden h-48">
                     <img
-                      src={getNoticiaPortada({ noticia }) || ''}
+                      src={getPortada({ noticia }) || ''}
                       alt={noticia.titulo}
                       className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />

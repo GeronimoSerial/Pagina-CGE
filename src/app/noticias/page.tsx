@@ -101,7 +101,7 @@ export default async function NoticiasPage({
               categoria,
               fechaDesde,
               fechaHasta,
-              autor: '', // Si implementas filtro por autor
+              autor: '',
             }}
           />
           <NewsGrid
