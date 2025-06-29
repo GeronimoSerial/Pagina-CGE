@@ -1,7 +1,74 @@
 import HeroSection from '@/src/modules/layout/Hero';
-import NoticiasClient from './NoticiasClient';
+import NewsSearch from '@/src/components/noticias/Search';
+import NewsGrid from '@/src/components/noticias/NewsGrid';
+import PaginacionServer from '@/src/components/noticias/PaginacionServer';
+import { getNoticiasPaginadas } from '@/src/services/noticias';
+import { notFound } from 'next/navigation';
 
-export default function NoticiasPage() {
+interface NoticiasPageProps {
+  searchParams: Promise<{
+    q?: string;
+    categoria?: string;
+    desde?: string;
+    hasta?: string;
+    page?: string;
+  }>;
+}
+
+export default async function NoticiasPage({
+  searchParams,
+}: NoticiasPageProps) {
+  const awaitedSearchParams = await searchParams;
+  const page = Number(awaitedSearchParams.page) || 1;
+  const pageSize = 6;
+  const query = awaitedSearchParams.q || '';
+  const categoria = awaitedSearchParams.categoria || '';
+  const fechaDesde = awaitedSearchParams.desde || '';
+  const fechaHasta = awaitedSearchParams.hasta || '';
+
+  // Construir filtros para Strapi
+  const filters: any = {};
+  if (query) filters.titulo = { $containsi: query };
+  if (categoria) filters.categoria = { $eq: categoria };
+  if (fechaDesde && fechaHasta)
+    filters.fecha = { $between: [fechaDesde, fechaHasta] };
+  else if (fechaDesde) filters.fecha = { $gte: fechaDesde };
+  else if (fechaHasta) filters.fecha = { $lte: fechaHasta };
+
+  // Fetch server-side con ISR
+  let noticias = [];
+  let pagination = { page: 1, pageSize, pageCount: 1, total: 0 };
+  try {
+    const res = await getNoticiasPaginadas(page, pageSize, filters);
+    noticias = res.noticias;
+    pagination = res.pagination;
+  } catch {
+    // Si falla, mostrar notFound
+    return notFound();
+  }
+
+  // Extraer categorías únicas para el filtro
+  const categorias: string[] = Array.from(
+    new Set(
+      noticias
+        .map((n: any) => n.categoria)
+        .filter((c: any): c is string => typeof c === 'string'),
+    ),
+  );
+
+  // Mapear noticias al formato esperado por NewsGrid
+  const noticiasMapped = noticias.map((n: any) => ({
+    id: n.id,
+    slug: n.slug,
+    titulo: n.titulo,
+    resumen: n.resumen,
+    fecha: n.fecha,
+    autor: n.autor,
+    categoria: n.categoria,
+    portada: n.portada,
+    destacado: n.esImportante || n.destacado || false,
+  }));
+
   return (
     <section>
       <HeroSection
@@ -10,7 +77,25 @@ export default function NoticiasPage() {
       />
       <div className="bg-white py-8">
         <div className="max-w-7xl mx-auto px-6">
-          <NoticiasClient />
+          <NewsSearch
+            categorias={categorias}
+            placeholder="Buscar noticias institucionales..."
+            initialFilters={{
+              query,
+              categoria,
+              fechaDesde,
+              fechaHasta,
+              autor: '', // Si implementas filtro por autor
+            }}
+          />
+          <NewsGrid noticias={noticiasMapped} />
+          <div className="mt-8">
+            <PaginacionServer
+              currentPage={pagination.page}
+              totalItems={pagination.total}
+              pageSize={pagination.pageSize}
+            />
+          </div>
         </div>
       </div>
     </section>
