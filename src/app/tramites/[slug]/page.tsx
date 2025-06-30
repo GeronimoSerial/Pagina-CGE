@@ -11,9 +11,7 @@ import {
 } from '@/features/tramites/services/docs-data';
 
 interface PageProps {
-  params: {
-    slug: string;
-  };
+  params: Promise<{ slug: string }>;
 }
 
 // Generar páginas estáticas en build time
@@ -31,7 +29,7 @@ export default async function DocumentPage({ params }: PageProps) {
   const [navigationSections, article]: [NavSection[], Article | null] =
     await Promise.all([
       getTramitesNavigation(),
-      getTramiteArticleBySlug(params.slug),
+      getTramiteArticleBySlug((await params).slug),
     ]);
 
   if (!article) {
@@ -89,7 +87,7 @@ export default async function DocumentPage({ params }: PageProps) {
 
 // Generar metadatos dinámicos
 export async function generateMetadata({ params }: PageProps) {
-  const article = await getTramiteArticleBySlug(params.slug);
+  const article = await getTramiteArticleBySlug((await params).slug);
 
   if (!article) {
     return {
