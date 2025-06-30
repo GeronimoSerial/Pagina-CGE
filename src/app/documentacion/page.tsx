@@ -13,14 +13,14 @@ export const metadata: Metadata = {
 
 export default function Documentacion() {
   return (
-    <main className="bg-gray-50 min-h-screen">
+    <main className="min-h-screen bg-gray-50">
       <HeroSection
         title="Documentación"
-        description="Portal de documentación del Consejo General de Educación."
+        description="Encuentra todos los documentos, formularios y normativas necesarias para tus trámites"
       />
       <InfoBar basePath="/documentacion" />
       <section>
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="container px-4 mx-auto md:px-6">
           <DocumentacionSection />
         </div>
       </section>
