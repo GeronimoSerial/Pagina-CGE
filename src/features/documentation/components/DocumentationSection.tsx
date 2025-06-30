@@ -1,4 +1,3 @@
-//Contenedor para la sección de documentación y buscador
 'use client';
 import React, { useState } from 'react';
 import {
@@ -31,7 +30,7 @@ const DocumentationSection = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const documentsPerPage = 6;
+  const documentsPerPage = 12;
 
   const categories = ['licencias', 'formularios', 'normativas', 'guias'];
 
@@ -66,96 +65,85 @@ const DocumentationSection = () => {
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case 'licencias':
-        return <FileText className="h-5 w-5 text-green-600" />;
+        return <FileText className="w-5 h-5 text-green-600" />;
       case 'expedientes':
-        return <ClipboardList className="h-5 w-5 text-blue-600" />;
+        return <ClipboardList className="w-5 h-5 text-blue-600" />;
       case 'formularios':
-        return <FileCheck className="h-5 w-5 text-purple-600" />;
+        return <FileCheck className="w-5 h-5 text-purple-600" />;
       case 'normativas':
-        return <Scale className="h-5 w-5 text-red-600" />;
+        return <Scale className="w-5 h-5 text-red-600" />;
       case 'guias':
-        return <FileText className="h-5 w-5 text-gray-600" />;
+        return <FileText className="w-5 h-5 text-gray-600" />;
       case 'instructivos':
-        return <File className="h-5 w-5 text-amber-600" />;
+        return <File className="w-5 h-5 text-amber-600" />;
       default:
-        return <FileText className="h-5 w-5 text-gray-600" />;
+        return <FileText className="w-5 h-5 text-gray-600" />;
     }
   };
 
   return (
-    <section id="documentacion" className="w-full py-8">
-      <div className="container mx-auto px-2">
-        <div className="flex flex-col min-h-[500px]">
-          {/* Últimos documentos añadidos */}
-          <div className="mb-6">
-            <div className="bg-white rounded-xl p-3 border border-gray-200 shadow-md">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="p-1 bg-gray-100 rounded-lg">
-                  <FileText className="h-3.5 w-3.5 text-gray-600" />
-                </div>
-                <h2 className="text-base font-semibold text-gray-800">
-                  Últimos documentos añadidos
-                </h2>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {documents
-                  .slice(-4)
-                  .reverse()
-                  .map((doc) => (
-                    <Card
-                      key={doc.id}
-                      className="flex flex-col h-full border border-gray-200 hover:border-green-300 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 rounded-md overflow-hidden bg-white shadow-sm"
-                    >
-                      <CardHeader className="pb-0 pt-1.5 px-2">
-                        <div className="flex justify-between items-start">
-                          <div className="flex items-center gap-1">
-                            {getCategoryIcon(doc.category)}
-                            <Badge
-                              variant="outline"
-                              className="text-xs font-medium capitalize px-1 py-0"
-                            >
-                              {doc.type}
-                            </Badge>
-                          </div>
-                          <span className="text-xs text-gray-500">
-                            {doc.date}
-                          </span>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="flex-grow overflow-hidden px-2 py-1.5">
-                        <CardTitle
-                          title={doc.title}
-                          className="text-xs font-semibold mb-0.5 line-clamp-2"
-                        >
-                          {doc.title}
-                        </CardTitle>
-                        <CardDescription
-                          title={doc.description}
-                          className="text-gray-600 text-xs line-clamp-1"
-                        >
-                          {doc.description}
-                        </CardDescription>
-                      </CardContent>
-                      <CardFooter className="pt-0 pb-1.5 px-2">
-                        <Button
-                          variant="outline"
-                          className="w-full flex items-center gap-1 hover:bg-green-800 hover:text-white transition-colors text-xs py-0.5 px-1.5"
-                          asChild
-                        >
-                          <a href={doc.downloadUrl}>
-                            <Download className="h-3 w-3" />
-                            Descargar
-                          </a>
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  ))}
-              </div>
-            </div>
+    <section id="documentacion" className="py-8 w-full">
+      <div className="container px-4 mx-auto max-w-7xl">
+        {/* Encabezado */}
+        {/* Últimos documentos añadidos */}
+        <div className="mb-8">
+          <div className="flex items-center mb-4">
+            <div className="mr-2 w-1 h-6 bg-green-500 rounded-full"></div>
+            <h2 className="text-lg font-semibold text-gray-800">
+              Últimos documentos añadidos
+            </h2>
           </div>
 
-          <div className="flex flex-col md:flex-row gap-3 mb-4">
-            <div className="w-full max-w-2xl mx-auto rounded-2xl shadow-lg bg-white/80 backdrop-blur-sm p-6 border border-gray-100">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {documents
+              .slice(-4)
+              .reverse()
+              .map((doc) => (
+                <Card
+                  key={doc.id}
+                  className="flex overflow-hidden flex-col h-full rounded-lg border border-gray-200 transition-shadow hover:shadow-md"
+                >
+                  <CardHeader className="px-4 pt-3 pb-2">
+                    <div className="flex justify-between items-start">
+                      <div className="flex gap-2 items-center">
+                        {getCategoryIcon(doc.category)}
+                        <Badge
+                          variant="outline"
+                          className="px-2 py-0.5 text-xs font-medium capitalize"
+                        >
+                          {doc.type}
+                        </Badge>
+                      </div>
+                      <span className="text-xs text-gray-500">{doc.date}</span>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="flex-grow px-4 py-2">
+                    <CardTitle className="mb-1 text-sm font-semibold line-clamp-2">
+                      {doc.title}
+                    </CardTitle>
+                    <CardDescription className="text-xs text-gray-600 line-clamp-2">
+                      {doc.description}
+                    </CardDescription>
+                  </CardContent>
+                  <CardFooter className="px-4 py-3">
+                    <Button
+                      variant="outline"
+                      className="flex gap-2 items-center w-full text-xs"
+                      asChild
+                    >
+                      <a href={doc.downloadUrl}>
+                        <Download className="w-3 h-3" />
+                        Descargar
+                      </a>
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))}
+          </div>
+
+          {/* Sección de búsqueda */}
+          <div className="mt-10 mb-8">
+            <div className="p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
               <SearchInput
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -169,92 +157,111 @@ const DocumentationSection = () => {
               />
             </div>
           </div>
+        </div>
 
-          <div className="relative rounded-md border border-gray-200 shadow bg-white">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-3">
-              {currentDocuments.length > 0 ? (
-                currentDocuments.map((doc) => (
+        {/* Listado principal de documentos */}
+        <div className="mb-8">
+          <div className="flex items-center mb-4">
+            <div className="mr-2 w-1 h-6 bg-green-500 rounded-full"></div>
+            <h2 className="text-lg font-semibold text-gray-800">
+              {activeFilter === 'all'
+                ? 'Todos los documentos'
+                : `Documentos de ${activeFilter}`}
+            </h2>
+            <span className="ml-2 text-sm text-gray-500">
+              ({filteredDocuments.length} resultados)
+            </span>
+          </div>
+
+          {currentDocuments.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {currentDocuments.map((doc) => (
                   <Card
                     key={doc.id}
-                    className="flex flex-col h-56 border border-gray-200 hover:border-green-300 hover:shadow transition-all duration-300 rounded-md"
+                    className="flex overflow-hidden flex-col h-full rounded-lg border border-gray-200 transition-shadow hover:shadow-md"
                   >
-                    <CardHeader className="pb-1 pt-2">
+                    <CardHeader className="px-4 pt-3 pb-2">
                       <div className="flex justify-between items-start">
-                        <div className="flex items-center gap-1">
+                        <div className="flex gap-2 items-center">
                           {getCategoryIcon(doc.category)}
                           <Badge
                             variant="outline"
-                            className="text-sm font-medium capitalize px-2 py-0.5"
+                            className="px-2 py-0.5 text-xs font-medium capitalize"
                           >
                             {doc.type}
                           </Badge>
                         </div>
-                        <span className="text-sm text-gray-500">
+                        <span className="text-xs text-gray-500">
                           {doc.date}
                         </span>
                       </div>
                     </CardHeader>
-                    <CardContent className="flex-grow overflow-hidden">
-                      <CardTitle className="text-lg font-semibold mb-1 line-clamp-2">
+                    <CardContent className="flex-grow px-4 py-2">
+                      <CardTitle className="mb-1 text-sm font-semibold line-clamp-2">
                         {doc.title}
                       </CardTitle>
-                      <CardDescription className="text-gray-600 text-sm line-clamp-3">
+                      <CardDescription className="text-xs text-gray-600 line-clamp-3">
                         {doc.description}
                       </CardDescription>
                     </CardContent>
-                    <CardFooter className="pt-1 pb-2">
+                    <CardFooter className="px-4 py-3">
                       <Button
                         variant="outline"
-                        className="w-full flex items-center gap-1 hover:bg-green-800 hover:text-white transition-colors text-sm py-1 px-2"
+                        className="flex gap-2 items-center w-full text-xs"
                         asChild
                       >
                         <a href={doc.downloadUrl}>
-                          <Download className="h-3 w-3" />
+                          <Download className="w-3 h-3" />
                           Descargar
                         </a>
                       </Button>
                     </CardFooter>
                   </Card>
-                ))
-              ) : (
-                <div className="col-span-full flex items-center justify-center h-60">
-                  <div className="text-center p-4 rounded-md bg-gray-50">
-                    <FileText className="h-8 w-8 mx-auto text-gray-300 mb-2" />
-                    <h3 className="text-base font-medium text-gray-700">
-                      No se encontraron documentos
-                    </h3>
-                    <p className="text-gray-500 mt-1 max-w-xs text-sm">
-                      Intenta con otra búsqueda o selecciona otra categoría
-                    </p>
-                  </div>
+                ))}
+              </div>
+
+              {filteredDocuments.length > documentsPerPage && (
+                <div className="mt-6">
+                  <HeadlessPagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
                 </div>
               )}
-            </div>
-          </div>
-
-          {filteredDocuments.length > documentsPerPage && (
-            <div className="mt-3">
-              <HeadlessPagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-              />
+            </>
+          ) : (
+            <div className="py-12 text-center bg-gray-50 rounded-lg">
+              <FileText className="mx-auto mb-4 w-10 h-10 text-gray-300" />
+              <h3 className="text-lg font-medium text-gray-700">
+                No se encontraron documentos
+              </h3>
+              <p className="mt-2 text-sm text-gray-500">
+                Prueba con otros términos de búsqueda o selecciona una categoría
+                diferente
+              </p>
             </div>
           )}
+        </div>
 
-          <div className="text-center mt-6">
-            <p className="text-gray-500 mb-2 text-sm">
-              Próximamente más documentos y recursos estarán disponibles
-            </p>
-            <a href="/contacto">
-              <Button
-                variant="outline"
-                className="border-green-600 text-green-700 hover:bg-green-50 text-sm py-1 px-3"
-              >
-                Solicitar documentación específica
-              </Button>
-            </a>
-          </div>
+        {/* CTA final */}
+        <div className="pt-8 text-center border-t border-gray-200">
+          <h3 className="mb-3 text-lg font-medium text-gray-800">
+            ¿No encuentras lo que buscas?
+          </h3>
+          <p className="mx-auto mb-4 max-w-2xl text-gray-600">
+            Estamos constantemente actualizando nuestra base de documentos. Si
+            necesitas algo específico, no dudes en contactarnos.
+          </p>
+          <a href="/contacto">
+            <Button
+              variant="outline"
+              className="px-4 py-2 text-green-700 border-green-600 hover:bg-green-50"
+            >
+              Solicitar documentación
+            </Button>
+          </a>
         </div>
       </div>
     </section>
