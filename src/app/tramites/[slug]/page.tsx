@@ -64,7 +64,7 @@ export default async function DocumentPage({ params }: PageProps) {
                     href="/contacto"
                     className="text-green-800 underline hover:text-green-600"
                   >
-                    Comunicanos
+                    Comunícanos
                   </a>
                 </div>
                 <div className="flex space-x-4">
