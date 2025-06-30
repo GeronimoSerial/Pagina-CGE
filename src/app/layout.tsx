@@ -47,7 +47,6 @@ export default function RootLayout({
         <Header />
 
         <div id="root">{children}</div>
-        <Separator className="my-8 bg-[#217A4B]/20" />
         <Footer />
       </body>
     </html>

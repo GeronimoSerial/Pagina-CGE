@@ -4,6 +4,7 @@ import NewsGrid from '@/features/noticias/components/NewsGrid';
 import PaginacionServer from '@/features/noticias/components/PaginacionServer';
 import { getNoticiasPaginadas } from '@/features/noticias/services/noticias';
 import { notFound } from 'next/navigation';
+import { Separator } from '@/shared/ui/separator';
 
 interface NoticiasPageProps {
   searchParams: Promise<{
@@ -114,6 +115,7 @@ export default async function NoticiasPage({
           pageSize={pagination.pageSize}
         />
       </div>
+      <Separator className="my-8 bg-gray-50" />
     </section>
   );
 }
