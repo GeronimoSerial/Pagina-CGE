@@ -27,6 +27,7 @@ export default async function PagPrincipal() {
         <Separador />
         <SocialMediaSection />
         {/* <Separator className="my-8 bg-[#217A4B]/20" /> */}
+        <Separator className="my-8 bg-gray-50" />
       </main>
     </div>
   );
