@@ -8,51 +8,51 @@ import {
   Search,
   Users,
   BookOpen,
-} from "lucide-react";
-import HeroSection from "@modules/layout/Hero";
-import { Metadata } from "next";
-import { OrganigramaModal } from "@modules/institucional/modal/organigrama-modal";
-import { ClientCarousel } from "@components/data/dynamic-client";
+} from 'lucide-react';
+import HeroSection from '@/shared/components/Hero';
+import { Metadata } from 'next';
+import { OrganigramaModal } from '@/features/institucional/modal/organigrama-modal';
+import { ClientCarousel } from '@/shared/data/dynamic-client';
 
 export const metadata: Metadata = {
-  title: "Institucional",
+  title: 'Institucional',
   description:
-    "Conoce la historia, funciones y contacto del Consejo General de Educación (CGE) en Corrientes",
+    'Conoce la historia, funciones y contacto del Consejo General de Educación (CGE) en Corrientes',
 };
 
 export default function Institucional() {
   const imagenesInstitucionales = [
     {
-      src: "/carrousel/2.jpg",
-      alt: "Docentes ascendidos – Consejo General de Educación",
-      titulo: "Impulsamos el desarrollo profesional",
-      descripcion: "Acompañamos el crecimiento de nuestros docentes",
+      src: '/carrousel/2.jpg',
+      alt: 'Docentes ascendidos – Consejo General de Educación',
+      titulo: 'Impulsamos el desarrollo profesional',
+      descripcion: 'Acompañamos el crecimiento de nuestros docentes',
     },
     {
-      src: "/carrousel/4.jpg",
-      alt: "Supervisores del Consejo General de Educación",
-      titulo: "Transformando la educación con dedicación",
+      src: '/carrousel/4.jpg',
+      alt: 'Supervisores del Consejo General de Educación',
+      titulo: 'Transformando la educación con dedicación',
       descripcion:
-        "El trabajo constante es esencial para un sistema educativo más fuerte",
+        'El trabajo constante es esencial para un sistema educativo más fuerte',
     },
     {
-      src: "/carrousel/3.jpg",
-      alt: "Funcionarios",
-      titulo: "Gestión educativa al servicio de la comunidad",
-      descripcion: "Cerca de las escuelas, junto a los docentes",
+      src: '/carrousel/3.jpg',
+      alt: 'Funcionarios',
+      titulo: 'Gestión educativa al servicio de la comunidad',
+      descripcion: 'Cerca de las escuelas, junto a los docentes',
     },
     {
-      src: "/carrousel/gob.png",
-      alt: "La presidente, gobernador y ministra en escuela",
-      titulo: "Juntos por una educación de calidad",
+      src: '/carrousel/gob.png',
+      alt: 'La presidente, gobernador y ministra en escuela',
+      titulo: 'Juntos por una educación de calidad',
       descripcion:
-        "El trabajo conjunto entre autoridades impulsa el desarrollo educativo en Corrientes",
+        'El trabajo conjunto entre autoridades impulsa el desarrollo educativo en Corrientes',
     },
     {
-      src: "/images/header-noticias.webp",
-      alt: "Consejo General de Educación",
-      titulo: "Educación de calidad",
-      descripcion: "Comprometidos con el futuro de Corrientes",
+      src: '/images/header-noticias.webp',
+      alt: 'Consejo General de Educación',
+      titulo: 'Educación de calidad',
+      descripcion: 'Comprometidos con el futuro de Corrientes',
     },
   ];
 
@@ -106,7 +106,7 @@ export default function Institucional() {
             </h2>
             <p className="text-gray-600 mb-8">
               Conozca nuestra estructura organizacional y los miembros que
-              conforman nuestra institución.{" "}
+              conforman nuestra institución.{' '}
               <strong>
                 Haga clic en el botón para visualizar el organigrama completo.
               </strong>
@@ -126,23 +126,23 @@ export default function Institucional() {
               <div className="grid md:grid-cols-2 gap-6">
                 {[
                   {
-                    title: "Planificación y supervisión educativa",
-                    text: "Planifica y dirige la implementación de políticas y programas para el nivel inicial, primario y adultos. Organiza y supervisa la gestión escolar.",
+                    title: 'Planificación y supervisión educativa',
+                    text: 'Planifica y dirige la implementación de políticas y programas para el nivel inicial, primario y adultos. Organiza y supervisa la gestión escolar.',
                     icon: <Building2 className="h-5 w-5 text-[#217A4B]" />,
                   },
                   {
-                    title: "Mejoramiento del aprendizaje",
-                    text: "Brinda apoyo permanente a las escuelas y capacita a docentes en nuevos enfoques pedagógicos.",
+                    title: 'Mejoramiento del aprendizaje',
+                    text: 'Brinda apoyo permanente a las escuelas y capacita a docentes en nuevos enfoques pedagógicos.',
                     icon: <BookOpen className="h-5 w-5 text-[#217A4B]" />,
                   },
                   {
-                    title: "Inclusión y prevención del abandono",
-                    text: "Desarrolla estrategias para reducir la deserción escolar, promoviendo la lectura, bibliotecas y tecnologías didácticas.",
+                    title: 'Inclusión y prevención del abandono',
+                    text: 'Desarrolla estrategias para reducir la deserción escolar, promoviendo la lectura, bibliotecas y tecnologías didácticas.',
                     icon: <Users className="h-5 w-5 text-[#217A4B]" />,
                   },
                   {
-                    title: "Investigación y redes pedagógicas",
-                    text: "Fomenta la investigación en aulas e impulsa redes interinstitucionales que vinculan docentes, escuelas y comunidad.",
+                    title: 'Investigación y redes pedagógicas',
+                    text: 'Fomenta la investigación en aulas e impulsa redes interinstitucionales que vinculan docentes, escuelas y comunidad.',
                     icon: <Search className="h-5 w-5 text-[#217A4B]" />,
                   },
                 ].map((card, index) => (

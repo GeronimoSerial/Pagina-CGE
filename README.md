@@ -25,12 +25,18 @@ El sitio está diseñado para ser accesible, moderno y adaptable a distintos dis
 
 ## 🛠️ Tecnologías y Herramientas
 
-- **Next.js 13+** (React, SSR)
-- **TypeScript**
-- **Tailwind CSS**
-- **shadcn/ui**
-- **Markdown para contenido estático**
-- **Gray Matter** y **Remark** para procesamiento de Markdown
+- **Frontend**:
+  - **Next.js 13+** (React, SSR)
+  - **TypeScript**
+  - **Tailwind CSS**
+  - **shadcn/ui**
+  - **Markdown** para contenido estático
+  - **Gray Matter** y **Remark** para procesamiento de Markdown
+
+- **Backend**:
+  - **Strapi CMS** para la gestión de contenidos
+  - **API REST** para comunicación frontend-backend
+  - **Base de datos** para almacenamiento de contenido dinámico
 
 ## 📁 Estructura del Proyecto
 
@@ -38,14 +44,13 @@ El sitio está diseñado para ser accesible, moderno y adaptable a distintos dis
 ├── public/                  # Archivos estáticos
 │   ├── admin/              # Configuración del panel administrativo
 │   ├── carrousel/          # Imágenes del carrusel
-│   ├── content/            # Contenido en Markdown
-│   │   ├── noticias/       # Artículos de noticias
-│   │   └── tramites/       # Artículos de trámites
 │   ├── images/             # Imágenes generales
 │   └── organigrama/        # Fotos del personal
 ├── src/
 │   ├── app/                # Páginas y rutas de la aplicación
-│   │   ├── [articulo]/     # Rutas dinámicas para artículos
+│   │   ├── api/            # Rutas API para comunicación con Strapi
+│   │   ├── noticias/       # Página de noticias (generada desde Strapi)
+│   │   ├── tramites/       # Página de trámites (generada desde Strapi)
 │   │   ├── accesibilidad/  # Página de accesibilidad
 │   │   ├── contacto/       # Página de contacto
 │   │   ├── documentacion/  # Sección de documentación
@@ -54,10 +59,12 @@ El sitio está diseñado para ser accesible, moderno y adaptable a distintos dis
 │   │   ├── supervisores/   # Área de supervisores
 │   │   └── terminos/       # Términos y condiciones
 │   ├── components/         # Componentes reutilizables
+│   ├── features/           # Características y módulos específicos
 │   ├── hooks/              # Hooks personalizados
-│   ├── interfaces/         # Definiciones de tipos
+│   ├── interfaces/         # Definiciones de tipos TypeScript
 │   ├── lib/                # Utilidades y configuraciones
-│   ├── modules/            # Módulos específicos de funcionalidad
+│   ├── services/           # Servicios para comunicación con APIs
+│   ├── shared/             # Código compartido entre módulos
 │   └── styles/             # Estilos globales
 ```
 
@@ -85,7 +92,8 @@ El sitio estará disponible en `http://localhost:3000`.
 
 ## 📦 Módulos y Secciones
 
-- **[articulo]/**: Visualización de artículos y trámites
+- **noticias/**: Noticias dinámicas gestionadas a través de Strapi CMS
+- **tramites/**: Trámites y procedimientos gestionados a través de Strapi CMS
 - **accesibilidad/**: Información sobre accesibilidad web
 - **contacto/**: Formulario de contacto
 - **documentacion/**: Documentos y recursos institucionales
@@ -96,8 +104,12 @@ El sitio estará disponible en `http://localhost:3000`.
 
 ## 🔍 Funcionalidades Destacadas
 
-- Búsqueda integrada
-- Componentes UI personalizados
+- **Gestión de Contenidos**: Panel administrativo con Strapi para gestionar noticias y trámites
+- **Contenido Dinámico**: Las secciones de noticias y trámites se generan automáticamente desde el backend
+- **Búsqueda integrada**
+- **Componentes UI personalizados**
+- **Rendimiento optimizado** con generación estática y renderizado del lado del servidor
+- **Tipado fuerte** con TypeScript para mejor mantenibilidad
 - Formularios de contacto
 - Visualización de documentos
 - Interfaz adaptativa para dispositivos móviles

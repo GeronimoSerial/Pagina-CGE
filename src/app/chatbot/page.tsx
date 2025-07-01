@@ -1,17 +1,17 @@
-import HeroSection from "@/src/modules/layout/Hero";
-import Image from "next/image";
-import { MessageSquare, Shield, Sparkles, ExternalLink } from "lucide-react";
-import type { Metadata } from "next";
-import { StickyImage } from "@src/components/data/dynamic-client";
+import HeroSection from '@/shared/components/Hero';
+import Image from 'next/image';
+import { MessageSquare, Shield, Sparkles, ExternalLink } from 'lucide-react';
+import type { Metadata } from 'next';
+import { StickyImage } from '@/shared/data/dynamic-client';
 
 export const metadata: Metadata = {
-  title: "Chat Normativo",
+  title: 'Chat Normativo',
   description:
-    "Asistente virtual para consultar normativa educativa del Consejo General de Educación de Corrientes.",
+    'Asistente virtual para consultar normativa educativa del Consejo General de Educación de Corrientes.',
 };
 
 const linkChat =
-  "https://notebooklm.google.com/notebook/7a5e8e5c-60d4-4ee6-a38b-4526d3652f7b";
+  'https://notebooklm.google.com/notebook/7a5e8e5c-60d4-4ee6-a38b-4526d3652f7b';
 
 function DesktopView() {
   return (
@@ -92,7 +92,7 @@ function DesktopView() {
                   Referencias visibles
                 </h3>
                 <p>
-                  Las respuestas incluyen <strong>números de referencia</strong>{" "}
+                  Las respuestas incluyen <strong>números de referencia</strong>{' '}
                   <span className="relative inline-block">
                     <span className="text-[#3D8B37] font-medium cursor-help">
                       (1)
@@ -145,7 +145,7 @@ function DesktopView() {
               <div className="bg-[#3D8B37]/10 p-4 rounded-lg border border-[#3D8B37]/20">
                 <strong className="text-[#216B1D] font-semibold">
                   Importante:
-                </strong>{" "}
+                </strong>{' '}
                 <p className="text-gray-800">
                   <span className="inline-block w-2 h-2 bg-[#3D8B37] rounded-full mt-2 mr-2 flex-shrink-0"></span>
                   Toda información consultada deberá ser verificada en la
@@ -274,12 +274,12 @@ function MobileView() {
           </div>
           <p className="text-gray-600 text-sm leading-relaxed">
             El asistente virtual ofrece respuestas orientativas basadas en
-            documentación oficial del CGE. Sin embargo,{" "}
+            documentación oficial del CGE. Sin embargo,{' '}
             <strong>
               toda consulta o decisión administrativa deberá basarse
               exclusivamente en la normativa original vigente.
-            </strong>{" "}
-            El uso del asistente{" "}
+            </strong>{' '}
+            El uso del asistente{' '}
             <strong>
               no exime al usuario de verificar la fuente oficial
               correspondiente.
