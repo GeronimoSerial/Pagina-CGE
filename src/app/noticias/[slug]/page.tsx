@@ -162,11 +162,11 @@ export default async function NoticiaPage({ params }: PageProps) {
           </div>
         </main>
         {/* Barra lateral (estática, a la derecha) */}
-        <aside className="hidden overflow-hidden sticky top-[85px] mt-16 mr-4 mb-3 w-72 sm:h-[630px] border-t-2 border-r border-b border-l shadow-lg backdrop-blur-sm transition-all duration-500 ease-out border-slate-200 border-t-slate-300 shadow-slate-200/50 lg:block bg-white/95">
+        <aside className="hidden overflow-hidden sticky top-[85px] mt-16 mr-4 mb-3 w-72 lg:h-[530px] border-t-2 border-r border-b border-l shadow-lg backdrop-blur-sm transition-all duration-500 ease-out border-slate-200 border-t-slate-300 shadow-slate-200/50 lg:block bg-white/95">
           <div className="flex flex-col h-full">
             {/* Sección de navegación: Enlaces institucionales */}
             <div className="px-2 py-6">
-              <h3 className="px-4 mb-5 text-sm font-semibold tracking-[0.1em] text-black ">
+              <h3 className="px-4 mb-3 text-sm font-semibold tracking-[0.1em] text-black ">
                 ENLACES INSTITUCIONALES
               </h3>
               {/* Enlaces de navegación mejorados */}
@@ -177,10 +177,10 @@ export default async function NoticiaPage({ params }: PageProps) {
                     href={enlace.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group relative flex items-center px-4 py-3.5 text-black-800 transition-all duration-300 ease-out hover:text-black-900 hover:underline"
+                    className="group relative flex items-center px-4 py-3.5 text-black-800 transition-all duration-300 ease-out hover:text-green-900 hover:underline"
                   >
                     {/* Línea de acento izquierda que aparece al pasar el ratón */}
-                    <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-slate-400 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
+                    <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-green-800 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
                     {/* Contenedor de contenido con mejor espaciado */}
                     <div className="flex items-center ml-3 w-full">
                       {/* Elemento decorativo pequeño */}
@@ -216,27 +216,29 @@ export default async function NoticiaPage({ params }: PageProps) {
             )}
             {/* Sección de artículos relacionados */}
             {Array.isArray(related) && related.length > 0 && (
-              <div className="flex-1 px-2 py-6">
-                <h3 className="px-4 mb-5 text-sm font-semibold tracking-[0.1em] text-black ">
+              <div className="flex-1 px-2 py-3">
+                <h3 className="px-4 mb-2 text-sm font-semibold tracking-[0.1em] text-black ">
                   ARTÍCULOS RELACIONADOS
                 </h3>
                 {/* Enlaces a artículos relacionados */}
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {related.map((item: any) => (
                     <Link
                       key={item.id}
                       href={`/noticias/${item.slug}`}
-                      className="block relative px-4 py-3 transition-all duration-300 ease-out group hover:text-slate-900"
+                      className="block relative px-4 py-1 transition-all duration-300 ease-out group hover:text-slate-900"
                     >
                       {/* Línea de acento izquierda */}
-                      <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-slate-400 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
+                      <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-green-800 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
                       {/* Contenido con mejor uso del margen izquierdo */}
                       <div className="ml-3">
-                        <div className="mb-2 text-sm font-medium leading-snug transition-transform duration-300 ease-out text-slate-800 group-hover:text-slate-900 group-hover:translate-x-1">
+                        <div className="mb-2 text-sm font-medium leading-snug transition-transform duration-300 ease-out text-slate-800 group-hover:text-green-800 group-hover:translate-x-1">
                           {item.titulo}
                         </div>
                         <div className="pr-2 text-xs leading-relaxed transition-colors duration-300 text-slate-500 group-hover:text-black">
-                          {item.resumen.slice(0, 160)}
+                          <p title={item.resumen}>
+                            {item.resumen.slice(0, 90) + '...'}
+                          </p>
                         </div>
                       </div>
                       {/* Fondo sutil al pasar el ratón */}
