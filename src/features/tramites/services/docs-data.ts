@@ -40,7 +40,7 @@ export async function getTramitesNavigation(): Promise<NavSection[]> {
   const res = await fetch(`${API_URL}/tramites?${query}`);
   if (!res.ok) throw new Error('Error al obtener trámites');
   const { data } = await res.json();
-  console.log('[Tramites][Navegación] Datos crudos:', data);
+  // console.log('[Tramites][Navegación] Datos crudos:', data);
 
   // Agrupar por categoría
   const grouped: Record<string, NavSection> = {};
@@ -60,7 +60,7 @@ export async function getTramitesNavigation(): Promise<NavSection[]> {
     });
   });
   const nav = Object.values(grouped);
-  console.log('[Tramites][Navegación] Estructura generada:', nav);
+  // console.log('[Tramites][Navegación] Estructura generada:', nav);
   return nav;
 }
 
@@ -73,7 +73,7 @@ export async function getTramiteArticleBySlug(
   );
   if (!res.ok) throw new Error('Error al obtener trámite');
   const { data } = await res.json();
-  console.log(`[Tramites][Artículo] Datos crudos para slug "${slug}":`, data);
+  // console.log(`[Tramites][Artículo] Datos crudos para slug "${slug}":`, data);
   if (!data || data.length === 0) return null;
   const t = data[0];
   const article = {
@@ -85,10 +85,10 @@ export async function getTramiteArticleBySlug(
     lastUpdated: t.updatedAt || t.fecha,
     content: parseContenidoToSections(t.contenido),
   };
-  console.log(
-    `[Tramites][Artículo] Artículo generado para slug "${slug}":`,
-    article,
-  );
+  // console.log(
+  //   // `[Tramites][Artículo] Artículo generado para slug "${slug}":`,
+  //   article,
+  // );
   return article;
 }
 
@@ -110,6 +110,6 @@ export async function getAllTramiteSlugs(): Promise<string[]> {
   if (!res.ok) throw new Error('Error al obtener slugs');
   const { data } = await res.json();
   const slugs = data.map((t: any) => t.slug);
-  console.log('[Tramites][Slugs] Slugs obtenidos:', slugs);
+  // console.log('[Tramites][Slugs] Slugs obtenidos:', slugs);
   return slugs;
 }
