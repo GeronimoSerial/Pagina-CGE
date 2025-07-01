@@ -26,7 +26,7 @@ export default function PhotoSwipeGallery({ noticia }: PhotoSwipeGalleryProps) {
 
   return (
     <div
-      className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4 mt-4"
+      className="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3"
       id="gallery--responsive-images"
     >
       {noticia.imagen &&
@@ -39,15 +39,15 @@ export default function PhotoSwipeGallery({ noticia }: PhotoSwipeGalleryProps) {
             key={index}
             target="_blank"
             rel="noreferrer"
-            className="group block relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out"
+            className="block overflow-hidden relative rounded-lg shadow-md transition-shadow duration-300 ease-in-out group hover:shadow-xl"
           >
             <img
               src={img.url}
               alt={img.alt || 'Imagen de la noticia'}
-              className="w-full h-48 object-cover rounded-lg transform group-hover:scale-105 transition-transform duration-300 ease-in-out"
+              className="object-cover w-full h-48 rounded-lg transition-transform duration-300 ease-in-out transform group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
-              <span className="text-white text-lg font-bold">Ver Imagen</span>
+            <div className="flex absolute inset-0 justify-center items-center bg-black bg-opacity-25 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
+              <span className="text-lg font-bold text-white">Ampliar</span>
             </div>
           </a>
         ))}
