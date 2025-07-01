@@ -8,6 +8,12 @@ import {
 } from '@/features/noticias/services/noticias';
 import { notFound } from 'next/navigation';
 import { Separator } from '@/shared/ui/separator';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Noticias',
+  description: 'Noticias del Consejo General de Educación (CGE) en Corrientes',
+};
 
 interface NoticiasPageProps {
   searchParams: Promise<{
@@ -25,7 +31,7 @@ export default async function NoticiasPage({
   searchParams,
 }: NoticiasPageProps) {
   const { q, categoria, desde, hasta, page } = await searchParams;
-  const pageSize = 7;
+  const pageSize = 5;
   const pageNumber = Number(page) || 1;
 
   // Construir filtros para Strapi
@@ -48,6 +54,10 @@ export default async function NoticiasPage({
   }
 
   const { noticias, pagination } = noticiasData;
+
+  if (noticias.length === 0 && pageNumber > 1) {
+    return notFound();
+  }
 
   // Mapear noticias al formato esperado por NewsGrid
   const noticiasMapped = noticias.map((n: any) => ({
@@ -103,8 +113,9 @@ export default async function NoticiasPage({
       <div className="mt-8">
         <PaginacionServer
           currentPage={pagination.page}
-          totalItems={pagination.total}
-          pageSize={pagination.pageSize}
+          totalPages={pagination.pageCount}
+          baseUrl="/noticias"
+          searchParams={{ q, categoria, desde, hasta }}
         />
       </div>
       <Separator className="my-8 bg-gray-50" />
