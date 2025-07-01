@@ -160,7 +160,7 @@ export default async function NoticiaPage({ params }: PageProps) {
           </div>
         </main>
         {/* Barra lateral (estática, a la derecha) */}
-        <aside className="hidden overflow-hidden sticky top-24 mt-24 mr-3 mb-3 w-72 h-full border-t-2 border-r border-b border-l shadow-lg backdrop-blur-sm transition-all duration-500 ease-out border-slate-200 border-t-slate-300 shadow-slate-200/50 lg:block bg-white/95">
+        <aside className="hidden overflow-hidden sticky top-[85px] mt-16 mr-4 mb-3 w-72 sm:h-[630px] border-t-2 border-r border-b border-l shadow-lg backdrop-blur-sm transition-all duration-500 ease-out border-slate-200 border-t-slate-300 shadow-slate-200/50 lg:block bg-white/95">
           <div className="flex flex-col h-full">
             {/* Sección de navegación: Enlaces institucionales */}
             <div className="px-2 py-6">

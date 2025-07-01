@@ -5,7 +5,6 @@ import ModalAvisoDesarrollo from '@/shared/components/ModalAvisoDesarrollo';
 
 import metadata from './metadata';
 import Head from 'next/head';
-import { Separator } from '@radix-ui/react-separator';
 import Header from '@/shared/components/Header';
 
 export { metadata };
