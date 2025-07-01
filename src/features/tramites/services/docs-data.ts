@@ -1,6 +1,8 @@
 import { API_URL } from '@/shared/lib/config';
 import qs from 'qs';
 
+// --- INTERFACES ---
+
 export interface NavSection {
   id: string;
   title: string;
@@ -31,20 +33,77 @@ export interface Article {
   content: ArticleSection[];
 }
 
-// Obtiene la navegación agrupando los trámites por categoría
-export async function getTramitesNavigation(): Promise<NavSection[]> {
-  const query = qs.stringify(
-    { populate: '*', sort: ['categoria:asc', 'titulo:asc'] },
-    { encodeValuesOnly: true },
-  );
-  const res = await fetch(`${API_URL}/tramites?${query}`);
-  if (!res.ok) throw new Error('Error al obtener trámites');
-  const { data } = await res.json();
-  // console.log('[Tramites][Navegación] Datos crudos:', data);
+// --- STRAPI TYPES ---
 
-  // Agrupar por categoría
+// Type for raw data used in navigation
+interface RawTramiteNav {
+  slug: string;
+  titulo: string;
+  categoria: string | null;
+}
+
+// Type for raw data for a full article
+interface RawTramiteArticle {
+  id: string;
+  slug: string;
+  categoria: string;
+  titulo: string;
+  resumen: string;
+  updatedAt: string;
+  fecha: string;
+  contenido: string;
+}
+
+// --- API HELPER ---
+
+/**
+ * Generic fetch function for Strapi API.
+ * @param path - API path (e.g., '/tramites')
+ * @param params - Query parameters object
+ * @returns The 'data' part of the Strapi response.
+ */
+async function fetchAPI<T>(path: string, params: object = {}): Promise<T> {
+  const query = qs.stringify(params, { encodeValuesOnly: true });
+  const url = `${API_URL}${path}${query ? `?${query}` : ''}`;
+
+  try {
+    // Using Next.js fetch to enable caching and revalidation
+    const res = await fetch(url, { next: { revalidate: 60 } });
+
+    if (!res.ok) {
+      // Log the server-side error for debugging
+      console.error(`API fetch error: ${res.status} ${res.statusText} for ${url}`);
+      throw new Error(`Error al obtener datos de la API: ${res.statusText}`);
+    }
+
+    const { data } = await res.json();
+    return data;
+  } catch (error) {
+    console.error('Error en fetchAPI:', error);
+    // Re-throw a generic error to the client
+    throw new Error('No se pudieron obtener los datos del servidor.');
+  }
+}
+
+// --- SERVICE FUNCTIONS ---
+
+/**
+ * Obtiene la navegación agrupando los trámites por categoría.
+ * Optimizado para obtener solo los campos necesarios.
+ */
+export async function getTramitesNavigation(): Promise<NavSection[]> {
+  const params = {
+    fields: ['categoria', 'titulo', 'slug'],
+    sort: ['categoria:asc', 'titulo:asc'],
+    'pagination[pageSize]': 250, // Increased limit to fetch all items
+  };
+
+  const tramites: RawTramiteNav[] = await fetchAPI('/tramites', params);
+
+  if (!tramites) return [];
+
   const grouped: Record<string, NavSection> = {};
-  data.forEach((t: any) => {
+  tramites.forEach((t) => {
     const cat = t.categoria || 'Sin categoría';
     if (!grouped[cat]) {
       grouped[cat] = {
@@ -59,24 +118,28 @@ export async function getTramitesNavigation(): Promise<NavSection[]> {
       href: `/tramites/${t.slug}`,
     });
   });
-  const nav = Object.values(grouped);
-  // console.log('[Tramites][Navegación] Estructura generada:', nav);
-  return nav;
+
+  return Object.values(grouped);
 }
 
-// Obtiene un artículo/trámite por slug
+/**
+ * Obtiene un artículo/trámite por slug.
+ */
 export async function getTramiteArticleBySlug(
   slug: string,
 ): Promise<Article | null> {
-  const res = await fetch(
-    `${API_URL}/tramites?filters[slug][$eq]=${slug}&populate=*`,
-  );
-  if (!res.ok) throw new Error('Error al obtener trámite');
-  const { data } = await res.json();
-  // console.log(`[Tramites][Artículo] Datos crudos para slug "${slug}":`, data);
-  if (!data || data.length === 0) return null;
-  const t = data[0];
-  const article = {
+  const params = {
+    'filters[slug][$eq]': slug,
+    populate: '*', // We need the full content for the article
+  };
+  const tramites: RawTramiteArticle[] = await fetchAPI('/tramites', params);
+
+  if (!tramites || tramites.length === 0) {
+    return null;
+  }
+
+  const t = tramites[0];
+  return {
     id: t.id,
     slug: t.slug,
     category: t.categoria,
@@ -85,31 +148,29 @@ export async function getTramiteArticleBySlug(
     lastUpdated: t.updatedAt || t.fecha,
     content: parseContenidoToSections(t.contenido),
   };
-  // console.log(
-  //   // `[Tramites][Artículo] Artículo generado para slug "${slug}":`,
-  //   article,
-  // );
-  return article;
 }
 
-// Helper para parsear el contenido del trámite a secciones (ajustar según formato en Strapi)
-function parseContenidoToSections(contenido: string): ArticleSection[] {
-  // Si el contenido es markdown o texto plano, se puede adaptar aquí
-  // Por ahora, lo tratamos como un solo párrafo
-  return [
-    {
-      type: 'paragraph',
-      content: contenido,
-    },
-  ];
+/**
+ * Helper para parsear el contenido del trámite a secciones.
+ * Actualmente, trata el contenido como un único párrafo de Markdown.
+ */
+function parseContenidoToSections(contenido: string | null): ArticleSection[] {
+  if (!contenido) return [];
+  return [{ type: 'paragraph', content: contenido }];
 }
 
-// Helper para obtener todos los slugs (para generación estática)
+/**
+ * Helper para obtener todos los slugs (para generación estática).
+ * Optimizado para obtener solo el campo slug.
+ */
 export async function getAllTramiteSlugs(): Promise<string[]> {
-  const res = await fetch(`${API_URL}/tramites?fields[0]=slug`);
-  if (!res.ok) throw new Error('Error al obtener slugs');
-  const { data } = await res.json();
-  const slugs = data.map((t: any) => t.slug);
-  // console.log('[Tramites][Slugs] Slugs obtenidos:', slugs);
-  return slugs;
+  const params = {
+    fields: ['slug'],
+    'pagination[pageSize]': 250, // Increased limit to fetch all items
+  };
+  const tramites: { slug: string }[] = await fetchAPI('/tramites', params);
+
+  if (!tramites) return [];
+
+  return tramites.map((t) => t.slug);
 }

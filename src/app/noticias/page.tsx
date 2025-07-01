@@ -2,7 +2,10 @@ import HeroSection from '@/shared/components/Hero';
 import NewsSearch from '@/features/noticias/components/Search';
 import NewsGrid from '@/features/noticias/components/NewsGrid';
 import PaginacionServer from '@/features/noticias/components/PaginacionServer';
-import { getNoticiasPaginadas } from '@/features/noticias/services/noticias';
+import {
+  getNoticiasPaginadas,
+  getNoticiasCategorias,
+} from '@/features/noticias/services/noticias';
 import { notFound } from 'next/navigation';
 import { Separator } from '@/shared/ui/separator';
 
@@ -16,46 +19,35 @@ interface NoticiasPageProps {
   }>;
 }
 
+export const revalidate = 60;
+
 export default async function NoticiasPage({
   searchParams,
 }: NoticiasPageProps) {
-  const awaitedSearchParams = await searchParams;
-  const page = Number(awaitedSearchParams.page) || 1;
-  const pageSize = 6;
-  const query = awaitedSearchParams.q || '';
-  const categoria = awaitedSearchParams.categoria || '';
-  const fechaDesde = awaitedSearchParams.desde || '';
-  const fechaHasta = awaitedSearchParams.hasta || '';
+  const { q, categoria, desde, hasta, page } = await searchParams;
+  const pageSize = 7;
+  const pageNumber = Number(page) || 1;
 
   // Construir filtros para Strapi
   const filters: any = {};
-  if (query) filters.titulo = { $containsi: query };
+  if (q) filters.titulo = { $containsi: q };
   if (categoria) filters.categoria = { $eq: categoria };
-  if (fechaDesde && fechaHasta)
-    filters.fecha = { $between: [fechaDesde, fechaHasta] };
-  else if (fechaDesde) filters.fecha = { $gte: fechaDesde };
-  else if (fechaHasta) filters.fecha = { $lte: fechaHasta };
+  if (desde && hasta) filters.fecha = { $between: [desde, hasta] };
+  else if (desde) filters.fecha = { $gte: desde };
+  else if (hasta) filters.fecha = { $lte: hasta };
 
-  // Fetch server-side con ISR
-  let noticias = [];
-  let pagination = { page: 1, pageSize, pageCount: 1, total: 0 };
+  // Fetch de datos en paralelo para mayor eficiencia
+  let noticiasData, categorias;
   try {
-    const res = await getNoticiasPaginadas(page, pageSize, filters);
-    noticias = res.noticias;
-    pagination = res.pagination;
+    [noticiasData, categorias] = await Promise.all([
+      getNoticiasPaginadas(pageNumber, pageSize, filters),
+      getNoticiasCategorias(), // Llama a la nueva función
+    ]);
   } catch {
-    // Si falla, mostrar notFound
     return notFound();
   }
 
-  // Extraer categorías únicas para el filtro
-  const categorias: string[] = Array.from(
-    new Set(
-      noticias
-        .map((n: any) => n.categoria)
-        .filter((c: any): c is string => typeof c === 'string'),
-    ),
-  );
+  const { noticias, pagination } = noticiasData;
 
   // Mapear noticias al formato esperado por NewsGrid
   const noticiasMapped = noticias.map((n: any) => ({
@@ -78,7 +70,7 @@ export default async function NoticiasPage({
         new Date(b.fecha).getTime() - new Date(a.fecha).getTime(),
     )
     .slice(0, 2);
-  // El resto (incluidas otras destacadas) van al grid regular
+
   const idsDestacadas = new Set(
     noticiasDestacadas.map((n: { id: string | number }) => n.id),
   );
@@ -94,13 +86,13 @@ export default async function NoticiasPage({
       />
       <div className="px-6 mx-auto max-w-7xl">
         <NewsSearch
-          categorias={categorias}
+          categorias={categorias} // Pasa la lista completa de categorías
           placeholder="Buscar noticias institucionales..."
           initialFilters={{
-            query,
-            categoria,
-            fechaDesde,
-            fechaHasta,
+            q: q || '',
+            categoria: categoria || '',
+            desde: desde || '',
+            hasta: hasta || '',
           }}
         />
       </div>
