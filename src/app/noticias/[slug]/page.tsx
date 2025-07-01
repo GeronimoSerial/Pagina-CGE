@@ -4,6 +4,7 @@ import {
   getNoticiaBySlug,
   getPortada,
   getNoticiasRelacionadas,
+  getAllNoticias,
 } from '@/features/noticias/services/noticias';
 import { formatearFecha } from '@/shared/lib/utils';
 import ReactMarkdown from 'react-markdown';
@@ -14,15 +15,20 @@ import remarkGfm from 'remark-gfm';
 import { Separador } from '@/shared/components/Separador';
 import type { Metadata } from 'next';
 
-// Revalida la página cada 3 horas para mantener los datos actualizados.
-// export const revalidate = 60 * 60 * 3;
+// Revalida la página cada hora para mantener los datos actualizados (ISR).
+export const revalidate = 3600;
+
+// Pre-renderiza todas las páginas de noticias en el build time.
+export async function generateStaticParams() {
+  const noticias = await getAllNoticias();
+  return noticias.map((noticia: { slug: string }) => ({
+    slug: noticia.slug,
+  }));
+}
 
 /**
  * Genera los metadatos de la página (título, descripción, Open Graph)
  * basándose en los datos de la noticia.
- * @param {object} props - Propiedades de la función.
- * @param {Promise<{ slug: string }>} props.params - Parámetros de la ruta que contienen el slug de la noticia.
- * @returns {Promise<Metadata>} Metadatos de la página.
  */
 export async function generateMetadata({
   params,
@@ -67,21 +73,17 @@ interface PageProps {
 /**
  * Componente principal de la página de noticias individual.
  * Muestra el contenido de una noticia, enlaces relacionados y una galería de imágenes.
- * @param {PageProps} props - Propiedades del componente.
- * @returns {JSX.Element} El componente de la página de la noticia.
  */
 export default async function NoticiaPage({ params }: PageProps) {
   const { slug } = await params;
-  // Obtiene la noticia y las noticias relacionadas en paralelo para mejorar el rendimiento.
-  const [noticia, related] = await Promise.all([
-    getNoticiaBySlug(slug),
-    (async () => {
-      const n = await getNoticiaBySlug(slug);
-      return n ? getNoticiasRelacionadas(n.categoria) : [];
-    })(),
-  ]);
-  // Si la noticia no se encuentra, muestra la página 404.
-  if (!noticia) return notFound();
+  // Obtiene la noticia y las noticias relacionadas de forma eficiente.
+  const noticia = await getNoticiaBySlug(slug);
+
+  if (!noticia) {
+    return notFound();
+  }
+
+  const related = await getNoticiasRelacionadas(noticia.categoria);
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
