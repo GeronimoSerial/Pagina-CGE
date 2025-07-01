@@ -1,12 +1,12 @@
 //Pagina principal para la sección de escuelas
-import HeroSection from "@modules/layout/Hero";
-import { Metadata } from "next";
-import { EscuelasClient } from "@components/data/dynamic-client";
-import FAQSection from "@/src/modules/layout/FAQSection";
+import HeroSection from '@/shared/components/Hero';
+import { Metadata } from 'next';
+import { EscuelasClient } from '@/shared/data/dynamic-client';
+import FAQSection from '@/shared/components/FAQSection';
 
 export const metadata: Metadata = {
-  title: "Escuelas",
-  description: "Instituciones dependientes del Consejo General de Educación",
+  title: 'Escuelas',
+  description: 'Instituciones dependientes del Consejo General de Educación',
 };
 
 export default function Escuelas() {

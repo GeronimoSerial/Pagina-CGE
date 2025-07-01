@@ -1,11 +1,11 @@
 // Información detallada sobre las políticas de accesibilidad del CGE en Corrientes
-import HeroSection from "@modules/layout/Hero";
-import { Metadata } from "next";
+import HeroSection from '@/shared/components/Hero';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Accesibilidad",
+  title: 'Accesibilidad',
   description:
-    "Políticas de accesibilidad del Consejo General de Educación (CGE) en Corrientes",
+    'Políticas de accesibilidad del Consejo General de Educación (CGE) en Corrientes',
 };
 
 export default function AccesibilidadPage() {
@@ -40,22 +40,22 @@ export default function AccesibilidadPage() {
             </p>
             <ul className="list-disc pl-6 mb-6">
               <li>
-                Utilizar la tecla{" "}
+                Utilizar la tecla{' '}
                 <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300">
                   Tab
-                </kbd>{" "}
+                </kbd>{' '}
                 para navegar secuencialmente por todos los elementos
                 interactivos
               </li>
               <li>
-                Usar{" "}
+                Usar{' '}
                 <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300">
                   Shift + Tab
-                </kbd>{" "}
+                </kbd>{' '}
                 para navegar en dirección inversa
               </li>
               <li>
-                Activar enlaces y botones con la tecla{" "}
+                Activar enlaces y botones con la tecla{' '}
                 <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300">
                   Enter
                 </kbd>
@@ -65,10 +65,10 @@ export default function AccesibilidadPage() {
                 desplegables
               </li>
               <li>
-                Presionar{" "}
+                Presionar{' '}
                 <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300">
                   Esc
-                </kbd>{" "}
+                </kbd>{' '}
                 para cerrar diálogos o menús
               </li>
             </ul>
@@ -81,25 +81,25 @@ export default function AccesibilidadPage() {
                 <li>
                   <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300">
                     Alt + 1
-                  </kbd>{" "}
+                  </kbd>{' '}
                   - Ir al contenido principal
                 </li>
                 <li>
                   <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300">
                     Alt + 2
-                  </kbd>{" "}
+                  </kbd>{' '}
                   - Ir al menú de navegación
                 </li>
                 <li>
                   <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300">
                     Alt + 3
-                  </kbd>{" "}
+                  </kbd>{' '}
                   - Ir al pie de página
                 </li>
                 <li>
                   <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300">
                     Alt + S
-                  </kbd>{" "}
+                  </kbd>{' '}
                   - Ir al buscador
                 </li>
               </ul>
@@ -166,7 +166,7 @@ export default function AccesibilidadPage() {
             <p className="mb-6">
               Si encuentra alguna dificultad para acceder a nuestro contenido o
               desea reportar un problema de accesibilidad, por favor contáctenos
-              a través de nuestra{" "}
+              a través de nuestra{' '}
               <a href="/contacto" className="text-primary hover:underline">
                 sección de contacto
               </a>
