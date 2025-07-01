@@ -5,6 +5,13 @@ import { Separator } from '@radix-ui/react-separator';
 import SocialMediaSection from '@/features/socials/components/SocialMediaSection';
 import { Separador } from '@/shared/components/Separador';
 import UltimasNoticias from '@/features/noticias/components/LatestNews';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Consejo General de Educación (CGE)',
+  description:
+    'Portal Web del Consejo General de Educación (CGE) en Corrientes',
+};
 
 export default async function PagPrincipal() {
   return (
