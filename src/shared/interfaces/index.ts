@@ -52,14 +52,18 @@ export interface Supervisor {
 }
 
 export interface Noticia {
-  id: string | number;
-  slug: string;
+  id: number;
+  autor?: string;
   titulo: string;
   resumen: string;
-  fecha: string;
-  autor?: string;
   categoria: string;
-  portada?: any;
-  destacado?: boolean;
-  imagen?: string[];
+  esImportante: boolean;
+  portada: { url: string };
+  slug: string;
+  contenido: string;
+  imagen: { url: string; width: number; height: number }[];
+  publicado: boolean;
+  fecha: string;
+  metaTitle?: string;
+  metaDescription?: string;
 }
