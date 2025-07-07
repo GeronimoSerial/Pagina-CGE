@@ -44,7 +44,7 @@ export function MobileMenu({ sections, currentPageTitle }: MobileMenuProps) {
       {/* Mobile Sidebar */}
       <aside
         className={`
-          lg:hidden pt-24 bg-white border-r border-gray-200 fixed inset-y-0 left-0 z-40 w-80 transform transition-transform duration-300 ease-in-out
+          lg:hidden mt-5 pt-24 bg-white border-r border-gray-200 fixed inset-y-0 left-0 z-40 w-80 transform transition-transform duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
       >

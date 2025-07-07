@@ -4,10 +4,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Search, Filter, Calendar, Tag, X, ChevronDown } from 'lucide-react';
 
 interface SearchFilters {
-  query: string;
+  q: string;
   categoria: string;
-  fechaDesde: string;
-  fechaHasta: string;
+  desde: string;
+  hasta: string;
 }
 
 interface NewsSearchProps {
@@ -22,14 +22,14 @@ export default function NewsSearch({
   autores = [],
   placeholder = 'Buscar noticias institucionales...',
   initialFilters = {
-    query: '',
+    q: '',
     categoria: '',
-    fechaDesde: '',
-    fechaHasta: '',
+    desde: '',
+    hasta: '',
   },
 }: NewsSearchProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  //const searchParams = useSearchParams();
   const [filters, setFilters] = useState<SearchFilters>(initialFilters);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [activeFiltersCount, setActiveFiltersCount] = useState(0);
@@ -39,19 +39,19 @@ export default function NewsSearch({
     setFilters(initialFilters);
     // eslint-disable-next-line
   }, [
-    initialFilters.query,
+    initialFilters.q,
     initialFilters.categoria,
-    initialFilters.fechaDesde,
-    initialFilters.fechaHasta,
+    initialFilters.desde,
+    initialFilters.hasta,
   ]);
 
   // Actualizar la URL con los filtros
   const updateURL = (newFilters: SearchFilters) => {
     const params = new URLSearchParams();
-    if (newFilters.query) params.set('q', newFilters.query);
+    if (newFilters.q) params.set('q', newFilters.q);
     if (newFilters.categoria) params.set('categoria', newFilters.categoria);
-    if (newFilters.fechaDesde) params.set('desde', newFilters.fechaDesde);
-    if (newFilters.fechaHasta) params.set('hasta', newFilters.fechaHasta);
+    if (newFilters.desde) params.set('desde', newFilters.desde);
+    if (newFilters.hasta) params.set('hasta', newFilters.hasta);
     params.set('page', '1'); // Resetear a la primera página en cada búsqueda
     router.push(`?${params.toString()}`);
   };
@@ -59,7 +59,7 @@ export default function NewsSearch({
   const handleInputChange = (field: keyof SearchFilters, value: string) => {
     const newFilters = { ...filters, [field]: value };
     setFilters(newFilters);
-    // Contar filtros activos (excluyendo query)
+    // Contar filtros activos (excluyendo q)
     const count = Object.entries(newFilters).filter(
       ([key, val]) => key !== 'query' && val.trim() !== '',
     ).length;
@@ -69,10 +69,10 @@ export default function NewsSearch({
 
   const clearFilters = () => {
     const clearedFilters = {
-      query: filters.query, // Mantener la búsqueda de texto
+      q: filters.q, // Mantener la búsqueda de texto
       categoria: '',
-      fechaDesde: '',
-      fechaHasta: '',
+      desde: '',
+      hasta: '',
       autor: '',
     };
     setFilters(clearedFilters);
@@ -82,10 +82,10 @@ export default function NewsSearch({
 
   const clearAll = () => {
     const emptyFilters = {
-      query: '',
+      q: '',
       categoria: '',
-      fechaDesde: '',
-      fechaHasta: '',
+      desde: '',
+      hasta: '',
       autor: '',
     };
     setFilters(emptyFilters);
@@ -111,8 +111,8 @@ export default function NewsSearch({
             <input
               type="text"
               placeholder={placeholder}
-              value={filters.query}
-              onChange={(e) => handleInputChange('query', e.target.value)}
+              value={filters.q}
+              onChange={(e) => handleInputChange('q', e.target.value)}
               className="h-9 w-full pl-9 pr-10 text-sm rounded-md border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-none shadow-xs"
               autoFocus
               onFocus={(e) =>
@@ -127,7 +127,7 @@ export default function NewsSearch({
               }
             />
             <button
-              onClick={() => clearIndividualFilter('query')}
+              onClick={() => clearIndividualFilter('q')}
               className="clear-btn absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#3D8B37] transition-colors duration-200 opacity-0 focus:opacity-100"
               style={{ minWidth: 28, minHeight: 28 }}
               tabIndex={-1}
@@ -155,7 +155,7 @@ export default function NewsSearch({
                 className={`w-4 h-4 transition-transform duration-200 ${showAdvanced ? 'rotate-180' : ''}`}
               />
             </button>
-            {(activeFiltersCount > 0 || filters.query) && (
+            {(activeFiltersCount > 0 || filters.q) && (
               <button
                 onClick={clearAll}
                 className="flex gap-1 items-center h-9 px-2 rounded-md border border-slate-300 text-xs text-slate-600 hover:text-[#3D8B37] hover:border-[#3D8B37]/50 hover:bg-[#F3F4F6] transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/50 focus:outline-none min-w-[36px]"
@@ -169,20 +169,20 @@ export default function NewsSearch({
         </div>
 
         {/* Active Filters Chips */}
-        {(activeFiltersCount > 0 || filters.query) && (
+        {(activeFiltersCount > 0 || filters.q) && (
           <div className="flex flex-wrap gap-1 mt-2">
-            {filters.query && (
+            {filters.q && (
               <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-xs">
                 <Search className="w-3 h-3" />
                 <span>
                   "
-                  {filters.query.length > 20
-                    ? filters.query.substring(0, 20) + '...'
-                    : filters.query}
+                  {filters.q.length > 20
+                    ? filters.q.substring(0, 20) + '...'
+                    : filters.q}
                   "
                 </span>
                 <button
-                  onClick={() => clearIndividualFilter('query')}
+                  onClick={() => clearIndividualFilter('q')}
                   className="ml-1 text-slate-400 hover:text-[#3D8B37] transition-colors duration-200"
                   style={{ minWidth: 24, minHeight: 24 }}
                   aria-label="Limpiar búsqueda"
@@ -205,12 +205,12 @@ export default function NewsSearch({
                 </button>
               </div>
             )}
-            {filters.fechaDesde && (
+            {filters.desde && (
               <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-xs">
                 <Calendar className="w-3 h-3" />
-                <span>Desde: {filters.fechaDesde}</span>
+                <span>Desde: {filters.desde}</span>
                 <button
-                  onClick={() => clearIndividualFilter('fechaDesde')}
+                  onClick={() => clearIndividualFilter('desde')}
                   className="ml-1 text-slate-400 hover:text-[#3D8B37] transition-colors duration-200"
                   style={{ minWidth: 24, minHeight: 24 }}
                   aria-label="Limpiar fecha desde"
@@ -219,12 +219,12 @@ export default function NewsSearch({
                 </button>
               </div>
             )}
-            {filters.fechaHasta && (
+            {filters.hasta && (
               <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-xs">
                 <Calendar className="w-3 h-3" />
-                <span>Hasta: {filters.fechaHasta}</span>
+                <span>Hasta: {filters.hasta}</span>
                 <button
-                  onClick={() => clearIndividualFilter('fechaHasta')}
+                  onClick={() => clearIndividualFilter('hasta')}
                   className="ml-1 text-slate-400 hover:text-[#3D8B37] transition-colors duration-200"
                   style={{ minWidth: 24, minHeight: 24 }}
                   aria-label="Limpiar fecha hasta"
@@ -251,10 +251,8 @@ export default function NewsSearch({
                 </label>
                 <input
                   type="date"
-                  value={filters.fechaDesde}
-                  onChange={(e) =>
-                    handleInputChange('fechaDesde', e.target.value)
-                  }
+                  value={filters.desde}
+                  onChange={(e) => handleInputChange('desde', e.target.value)}
                   className="h-8 px-2 w-full text-xs rounded border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-none"
                   style={{ minHeight: 32 }}
                 />
@@ -267,10 +265,8 @@ export default function NewsSearch({
                 </label>
                 <input
                   type="date"
-                  value={filters.fechaHasta}
-                  onChange={(e) =>
-                    handleInputChange('fechaHasta', e.target.value)
-                  }
+                  value={filters.hasta}
+                  onChange={(e) => handleInputChange('hasta', e.target.value)}
                   className="h-8 px-2 w-full text-xs rounded border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-none"
                   style={{ minHeight: 32 }}
                 />
