@@ -10,6 +10,7 @@ import {
 import ReactMarkdown from 'react-markdown';
 import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
 import { Clock } from 'lucide-react';
+import Link from 'next/link';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -25,12 +26,23 @@ export async function generateStaticParams() {
 export const revalidate = 60;
 
 export default async function DocumentPage({ params }: PageProps) {
+  const slug = (await params).slug;
   const [navigationSections, article]: [NavSection[], Article | null] =
-    await Promise.all([
-      getTramitesNavigation(),
-      getTramiteArticleBySlug((await params).slug),
-    ]);
+    // await Promise.all([
+    //   getTramitesNavigation(),
+    //   getTramiteArticleBySlug((await params).slug),
+    // ]);
+    await Promise.all([getTramitesNavigation(), getTramiteArticleBySlug(slug)]);
 
+  // Aplanación de navegación
+  const flatNav = navigationSections.flatMap((section) => section.items);
+  // indice actual
+  const currentIndex = flatNav.findIndex((item) => item.id === slug);
+
+  //determinar si hay siguiente o anterior
+  const prevArticle = currentIndex > 0 ? flatNav[currentIndex - 1] : null;
+  const nextArticle =
+    currentIndex < flatNav.length - 1 ? flatNav[currentIndex + 1] : null;
   if (!article) {
     notFound();
   }
@@ -80,21 +92,42 @@ export default async function DocumentPage({ params }: PageProps) {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="mb-4 text-sm text-gray-600 sm:mb-0">
                 ¿Encontraste un error en esta página?{' '}
-                <a
+                <Link
                   href="/contacto"
                   className="text-green-800 underline hover:text-green-600"
                 >
                   Comunícanos
-                </a>
+                </Link>
               </div>
               <div className="flex space-x-4">
-                <a
-                  href="/"
-                  className="text-sm text-green-800 transition-colors hover:text-green-800"
-                >
-                  ← Anterior
-                </a>
-                <span className="text-sm text-green-800">Siguiente →</span>
+                {prevArticle ? (
+                  <Link
+                    href={prevArticle.href}
+                    className="flex items-center text-sm text-gray-800 hover:text-green-600"
+                  >
+                    <span className="text-sm text-green-800">
+                      ← {prevArticle.title}
+                    </span>
+                  </Link>
+                ) : (
+                  <span className="text-sm text-gray-400 cursor-not-allowed">
+                    ← Anterior
+                  </span>
+                )}
+                {nextArticle ? (
+                  <Link
+                    href={nextArticle.href}
+                    className="flex items-center text-sm text-gray-800 hover:text-green-600"
+                  >
+                    <span className="text-sm text-green-800">
+                      {nextArticle.title} →
+                    </span>
+                  </Link>
+                ) : (
+                  <span className="text-sm text-gray-400 cursor-not-allowed">
+                    Siguiente →
+                  </span>
+                )}
               </div>
             </div>
           </div>
