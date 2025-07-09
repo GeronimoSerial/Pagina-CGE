@@ -36,6 +36,8 @@ jobs:
         env:
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_STRAPI_URL: ${{ vars.NEXT_PUBLIC_STRAPI_URL }}
+          NEXT_PUBLIC_PUBLIC_URL: ${{ vars.NEXT_PUBLIC_PUBLIC_URL }}
+          NEXT_PUBLIC_TEMPLATE_ID: ${{ vars.NEXT_PUBLIC_TEMPLATE_ID }}
         run: npm run build
 
       - name: Upload artifacts directly to VPS
