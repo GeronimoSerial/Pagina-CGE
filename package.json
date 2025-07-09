@@ -1,7 +1,7 @@
 {
-  "name": "starter",
+  "name": "consejo-website",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
@@ -10,7 +10,6 @@
     "build-no-errors": "tsc ; vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "types:supabase": "npx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > src/types/supabase.ts",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -43,7 +42,6 @@
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "@supabase/supabase-js": "^2.45.6",
     "@tailwindcss/typography": "^0.5.16",
     "@tanstack/react-virtual": "^3.13.8",
     "@types/qs": "^6.14.0",
@@ -53,7 +51,6 @@
     "cmdk": "^1.0.0",
     "d3": "^7.9.0",
     "date-fns": "^3.6.0",
-    "emailjs-com": "^3.2.0",
     "embla-carousel-autoplay": "^8.0.0-rc22",
     "embla-carousel-react": "^8.1.5",
     "framer-motion": "^11.18.2",
@@ -88,7 +85,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/node": "^20.14.2",
+    "@types/node": "^20.19.5",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@types/react-virtualized-auto-sizer": "^1.0.8",
@@ -98,7 +95,6 @@
     "postcss": "^8.4.38",
     "prettier": "^3.6.2",
     "tailwindcss": "3.4.1",
-    "tempo-devtools": "^2.0.102",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
