@@ -46,14 +46,4 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > private_key
           chmod 600 private_key
 
-          ssh -i private_key -t -o StrictHostKeyChecking=no root@31.97.167.26 \
-            "bash -l -c '
-              cd /root/Frontend/Pagina-CGE &&
-              echo Deteniendo aplicación... &&
-              pm2 stop frontend || echo \"PM2 no estaba corriendo\" &&
-              echo Instalando dependencias... &&
-              npm i &&
-              echo Iniciando aplicación con PM2... &&
-              pm2 start frontend || pm2 start npm --name \"frontend\" -- start &&
-              echo Despliegue directo completado.
-            '"
+          ssh -i private_key -o StrictHostKeyChecking=no root@31.97.167.26 'bash /root/deploy.sh'
