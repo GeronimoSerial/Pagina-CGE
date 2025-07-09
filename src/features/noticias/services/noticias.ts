@@ -15,7 +15,7 @@ export async function getAllNoticias() {
         publicado: { $eq: true },
       },
       pagination: {
-        limit: -1, // Strapi v4: -1 para obtener todos los registros
+        limit: -1, // Strapi v5: -1 para obtener todos los registros
       },
     },
     { encodeValuesOnly: true },
@@ -90,6 +90,7 @@ export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
   const n = data[0];
   return {
     id: n.id,
+    autor: n.autor || 'Redacción CGE',
     titulo: n.titulo,
     resumen: n.resumen,
     categoria: n.categoria,
@@ -100,8 +101,8 @@ export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
     imagen: n.imagen,
     publicado: n.publicado,
     fecha: n.fecha,
-    metaTitle: n.metaTitle,
-    metaDescription: n.metaDescription,
+    metaTitle: n.metaTitle || n.titulo,
+    metaDescription: n.metaDescription || n.resumen,
   };
 }
 
@@ -133,7 +134,7 @@ export async function getNoticiasRelacionadas(categoria: string) {
   return data;
 }
 
-// --- Funciones de utilidad (sin cambios) ---
+// --- Funciones de utilidad ---
 
 export function getPortada({ noticia }: any) {
   const url = noticia.portada?.data?.url || noticia.portada?.url;

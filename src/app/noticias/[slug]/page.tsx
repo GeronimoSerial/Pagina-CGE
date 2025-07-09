@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Calendar, User } from 'lucide-react';
+import { CalendarDays, Pencil } from 'lucide-react';
 import {
   getNoticiaBySlug,
   getPortada,
@@ -15,6 +15,8 @@ import remarkGfm from 'remark-gfm';
 import { Separador } from '@/shared/components/Separador';
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale/es';
 
 // Revalida la página cada hora para mantener los datos actualizados (ISR).
 export const revalidate = 3600;
@@ -123,13 +125,17 @@ export default async function NoticiaPage({ params }: PageProps) {
                   <div className="flex flex-wrap gap-4 items-center mb-4 text-sm text-gray-500">
                     {/* Fecha de publicación */}
                     <div className="flex items-center">
-                      <Calendar className="mr-2 w-4 h-4" />
-                      <span>{formatearFecha(noticia.fecha)}</span>
+                      <CalendarDays className="mr-2 w-4 h-4" />
+                      <span className="text-xs tracking-wide">
+                        {format(new Date(noticia.fecha), 'EEE, d MMMM yyyy', {
+                          locale: es,
+                        })}
+                      </span>
                     </div>
                     {/* Autor de la noticia */}
                     <div className="flex items-center">
-                      <User className="mr-1 w-4 h-4" />
-                      <span>Redacción CGE</span>
+                      <Pencil className="mr-1 w-4 h-4" />
+                      <span>Por: {noticia.autor || 'Redacción CGE'}</span>
                     </div>
                     {/* Categoría de la noticia */}
                     <span className="px-2 py-1 text-xs text-white bg-green-800 rounded-full">

@@ -64,7 +64,7 @@ export default async function IntroduccionPage() {
                   Comunícanos
                 </a>
               </div>
-              <div className="flex space-x-4">
+              {/* <div className="flex space-x-4">
                 <a
                   href="/"
                   className="text-sm text-green-800 transition-colors hover:text-green-800"
@@ -72,7 +72,7 @@ export default async function IntroduccionPage() {
                   ← Anterior
                 </a>
                 <span className="text-sm text-green-800">Siguiente →</span>
-              </div>
+              </div> */}
             </div>
           </div>
         </footer>
