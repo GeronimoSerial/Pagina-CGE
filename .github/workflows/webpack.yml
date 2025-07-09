@@ -52,13 +52,13 @@ jobs:
             cd /root/Frontend/Pagina-CGE
 
             echo "Deteniendo aplicación..."
-            pm2 stop app || echo "PM2 no estaba corriendo"
+            /root/.nvm/versions/node/v22.17.0/bin/pm2 stop app || echo "PM2 no estaba corriendo"
 
             echo "Instalando dependencias..."
-            npm i
+            /root/.nvm/versions/node/v22.17.0/bin/npm i
 
             echo "Iniciando aplicación con PM2..."
-            pm2 start frontend || pm2 start npm --name "frontend" -- start
+            /root/.nvm/versions/node/v22.17.0/bin/pm2 start frontend || /root/.nvm/versions/node/v22.17.0/bin/pm2 start npm --name "frontend" -- start
 
             echo "Despliegue directo completado."
           EOF
