@@ -7,12 +7,12 @@ export const MarkdownComponent: Components = {
     </h1>
   ),
   h2: ({ children }) => (
-    <h2 className="text-lg font-semibold mt-6 mb-3 text-slate-800">
+    <h2 className="text-2xl font-semibold mt-6 mb-3 text-slate-800">
       {children}
     </h2>
   ),
   h3: ({ children }) => (
-    <h3 className="text-lg font-medium mt-6 mb-3 text-slate-700">{children}</h3>
+    <h3 className="text-xl font-medium mt-6 mb-3 text-slate-700">{children}</h3>
   ),
   a: ({ children, href }) => (
     <a
