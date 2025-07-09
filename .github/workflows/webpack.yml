@@ -23,11 +23,7 @@ jobs:
         run: npm ci
 
       - name: Build Next.js app
-        env:
-          NEXT_PUBLIC_API_URL: ${{ env.NEXT_PUBLIC_API_URL }}
-          NEXT_PUBLIC_STRAPI_URL: ${{ env.NEXT_PUBLIC_STRAPI_URL }}
-        run: 
-          echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL"
+        run: echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL"
           echo "NEXT_PUBLIC_STRAPI_URL=$NEXT_PUBLIC_STRAPI_URL"
           npm run build
 
