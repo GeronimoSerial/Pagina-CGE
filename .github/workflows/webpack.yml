@@ -23,6 +23,9 @@ jobs:
         run: npm i
 
       - name: Build Next.js app
+        env:
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_STRAPI_URL: ${{ vars.NEXT_PUBLIC_STRAPI_URL }}
         run: npm run build
 
       - name: Subir artefactos a VPS (temporal)
