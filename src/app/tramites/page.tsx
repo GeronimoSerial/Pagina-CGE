@@ -106,7 +106,7 @@ export async function generateMetadata() {
       url: '/tramites/introduccion',
       images: [
         {
-          url: '/og.png',
+          url: '/og.webp',
           width: 1200,
           height: 630,
           alt: 'Consejo General de Educación',
