@@ -14,6 +14,7 @@ import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
 import remarkGfm from 'remark-gfm';
 import { Separador } from '@/shared/components/Separador';
 import type { Metadata } from 'next';
+import Image from 'next/image';
 
 // Revalida la página cada hora para mantener los datos actualizados (ISR).
 export const revalidate = 3600;
@@ -146,10 +147,13 @@ export default async function NoticiaPage({ params }: PageProps) {
                 </header>
                 {/* Imagen de portada de la noticia, si existe */}
                 {noticia.portada && (
-                  <img
+                  <Image
                     src={getPortada({ noticia }) || ''}
                     alt={noticia.titulo}
                     className="object-cover mb-8 w-full max-h-96 rounded"
+                    width={1200}
+                    height={630}
+                    priority
                   />
                 )}
                 {/* Contenido de la noticia renderizado desde Markdown */}

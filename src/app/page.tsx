@@ -4,8 +4,8 @@ import QuickAccess from '@/features/home/components/QuickAccess';
 import { Separator } from '@radix-ui/react-separator';
 import SocialMediaSection from '@/features/socials/components/SocialMediaSection';
 import { Separador } from '@/shared/components/Separador';
-import UltimasNoticias from '@/features/noticias/components/LatestNews';
 import { Metadata } from 'next';
+import LatestNews from '@/features/noticias/components/LatestNews';
 
 export const metadata: Metadata = {
   title: 'Consejo General de Educación (CGE)',
@@ -29,7 +29,7 @@ export default async function PagPrincipal() {
         {/* <Separator className="my-8 bg-[#217A4B]/20" /> */}
         <Separador />
         <section>
-          <UltimasNoticias />
+          <LatestNews />
         </section>
         <Separador />
         <SocialMediaSection />

@@ -3,8 +3,8 @@ import { Separator } from '@radix-ui/react-separator';
 import { getNoticiasPaginadas } from '@/features/noticias/services/noticias';
 import { RegularNewsCard } from './RegularNewsCard';
 import { Noticia } from '@/shared/interfaces';
-
-export default async function UltimasNoticias() {
+import Link from 'next/link';
+export default async function LatestNews() {
   // News data for institutional content
   const { noticias } = await getNoticiasPaginadas(1, 6);
 
@@ -31,9 +31,12 @@ export default async function UltimasNoticias() {
               inclusión y la innovación.
             </p>
 
-            <button className="inline-flex items-center px-6 py-3 font-medium text-white bg-green-900 rounded-lg transition-colors duration-200 hover:bg-gray-800">
+            <Link
+              href="/noticias"
+              className="inline-flex items-center px-6 py-3 font-medium text-white bg-green-800 rounded-lg transition-colors duration-200 hover:bg-green-900"
+            >
               Ver todas las noticias
-            </button>
+            </Link>
           </div>
         </div>
 
