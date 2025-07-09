@@ -14,6 +14,7 @@ import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
 import remarkGfm from 'remark-gfm';
 import { Separador } from '@/shared/components/Separador';
 import type { Metadata } from 'next';
+import Image from 'next/image';
 
 // Revalida la página cada hora para mantener los datos actualizados (ISR).
 export const revalidate = 3600;
@@ -37,13 +38,24 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const noticia = await getNoticiaBySlug(slug);
-  if (!noticia) return {}; // Si no se encuentra la noticia, retorna un objeto vacío.
+  if (!noticia) return {};
+  const url = `/noticias/${slug}`;
   return {
     title: noticia.titulo,
     description: noticia.resumen || noticia.titulo,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: noticia.titulo,
       description: noticia.resumen || noticia.titulo,
+      url: url,
+      type: 'article',
+      publishedTime: noticia.fecha,
+      modifiedTime: noticia.fecha,
+      expirationTime: noticia.fecha,
+      authors: ['Consejo General de Educación'],
+      tags: [noticia.categoria],
       images: noticia.portada ? [noticia.portada] : [],
     },
   };
@@ -135,10 +147,13 @@ export default async function NoticiaPage({ params }: PageProps) {
                 </header>
                 {/* Imagen de portada de la noticia, si existe */}
                 {noticia.portada && (
-                  <img
+                  <Image
                     src={getPortada({ noticia }) || ''}
                     alt={noticia.titulo}
                     className="object-cover mb-8 w-full max-h-96 rounded"
+                    width={1200}
+                    height={630}
+                    priority
                   />
                 )}
                 {/* Contenido de la noticia renderizado desde Markdown */}

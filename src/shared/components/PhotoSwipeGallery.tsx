@@ -13,7 +13,7 @@ interface PhotoSwipeGalleryProps {
 export default function PhotoSwipeGallery({ noticia }: PhotoSwipeGalleryProps) {
   useEffect(() => {
     const lightbox = new PhotoSwipeLightBox({
-      gallery: '#gallery--responsive-images', // Updated gallery selector
+      gallery: '#gallery--responsive-images',
       children: 'a',
       pswpModule: () => import('photoswipe'),
     });

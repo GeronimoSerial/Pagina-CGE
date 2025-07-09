@@ -92,7 +92,26 @@ export async function generateMetadata() {
   }
 
   return {
-    title: `${article.title} - Documentación`,
-    description: article.description,
+    title: article.title,
+    description:
+      'Guía completa de trámites educativos para todos los agentes docentes',
+    alternates: {
+      canonical: '/tramites/introduccion',
+    },
+    openGraph: {
+      title: article.title,
+      description:
+        'Guía completa de trámites educativos para todos los agentes docentes',
+      type: 'website',
+      url: '/tramites/introduccion',
+      images: [
+        {
+          url: '/og-tramites.webp',
+          width: 1200,
+          height: 630,
+          alt: 'Consejo General de Educación',
+        },
+      ],
+    },
   };
 }

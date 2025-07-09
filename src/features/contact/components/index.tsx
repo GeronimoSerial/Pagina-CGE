@@ -131,18 +131,18 @@ export default function ContactForm() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="liquidaciones">
+                        <SelectItem value="Liquidaciones">
                           Liquidaciones
                         </SelectItem>
-                        <SelectItem value="vocalia">Vocalía</SelectItem>
-                        <SelectItem value="personalDocente">
+                        <SelectItem value="Vocalía">Vocalía</SelectItem>
+                        <SelectItem value="PersonalDocente">
                           Personal Docente
                         </SelectItem>
-                        <SelectItem value="supervision">Supervisión</SelectItem>
-                        <SelectItem value="epja">
+                        <SelectItem value="Supervisión">Supervisión</SelectItem>
+                        <SelectItem value="EPJA">
                           Educación P/ Jovenes y Adultos
                         </SelectItem>
-                        <SelectItem value="otros">Otros</SelectItem>
+                        <SelectItem value="OTROS">Otros</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

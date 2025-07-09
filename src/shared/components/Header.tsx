@@ -8,11 +8,11 @@ import { usePathname } from 'next/navigation';
 const navLinks = [
   { href: '/', label: 'Inicio' },
   { href: '/noticias', label: 'Noticias' },
-  { href: '/tramites', label: 'Trámites' },
   { href: '/documentacion', label: 'Documentación' },
-  { href: '/chatbot', label: 'Chat Normativo' },
   { href: '/escuelas', label: 'Escuelas' },
+  { href: '/chatbot', label: 'Chat Normativo' },
   { href: '/institucional', label: 'Nuestra Institución' },
+  { href: '/tramites', label: 'Trámites' },
   { href: '/contacto', label: 'Contacto' },
 ];
 

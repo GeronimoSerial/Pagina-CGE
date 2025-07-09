@@ -18,6 +18,24 @@ export const metadata: Metadata = {
   title: 'Institucional',
   description:
     'Conoce la historia, funciones y contacto del Consejo General de Educación (CGE) en Corrientes',
+  alternates: {
+    canonical: '/institucional',
+  },
+  openGraph: {
+    title: 'Institucional',
+    description:
+      'Conoce la historia, funciones y contacto del Consejo General de Educación (CGE) en Corrientes',
+    type: 'website',
+    url: '/institucional',
+    images: [
+      {
+        url: '/og.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Consejo General de Educación',
+      },
+    ],
+  },
 };
 
 export default function Institucional() {
@@ -100,7 +118,7 @@ export default function Institucional() {
               </div>
             </section>
             {/* ORGANIGRAMA/CONFORMACIÓN */}
-            <h2 className="text-2xl md:text-3xl font-semibold text-[#205C3B] mb-6 flex items-center">
+            {/* <h2 className="text-2xl md:text-3xl font-semibold text-[#205C3B] mb-6 flex items-center">
               <span className="inline-block w-2 h-10 bg-[#217A4B] mr-4 rounded-full" />
               Estructura organizacional
             </h2>
@@ -113,8 +131,8 @@ export default function Institucional() {
             </p>
             {/* <ModalWrapper /> */}
 
-            <OrganigramaModal />
-            <div className="mb-8" />
+            {/* <OrganigramaModal /> */}
+            {/* <div className="mb-8" /> */}
 
             {/* FUNCIONES */}
             <section>

@@ -48,7 +48,7 @@ export function Sidebar({ sections, onLinkClick }: SidebarProps) {
       {/* Page Navigation */}
       <nav className="mb-6 space-y-1">
         <h3 className="mb-2 text-xs font-semibold tracking-wider text-gray-900 uppercase">
-          Páginas
+          Categorías  
         </h3>
         {sections.map((section: NavSection) => {
           const isOpen = openSection === section.id;
