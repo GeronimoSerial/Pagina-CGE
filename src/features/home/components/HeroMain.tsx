@@ -37,18 +37,18 @@ const HeroMain = () => {
           className="max-w-2xl"
         >
           <h1
-            className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-4 leading-tight"
+            className="mt-16 text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-4 md:text-balance leading-tight"
             style={{ textShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)' }}
           >
             Consejo General de Educación de Corrientes
           </h1>
 
           <p
-            className="text-lg md:text-xl text-white mb-8 font-medium"
+            className="text-lg md:text-xl text-white mb-8 font-medium text-balance"
             style={{ textShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)' }}
           >
-            Gestión y acompañamiento pedagógico en la educación inicial,
-            primaria y de adultos.
+            Gestión y acompañamiento pedagógico integral en la educación
+            inicial, primaria y de adultos de nuestra provincia.
           </p>
           <Button
             asChild

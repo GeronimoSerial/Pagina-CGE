@@ -3,8 +3,8 @@ import { Separator } from '@radix-ui/react-separator';
 import { getNoticiasPaginadas } from '@/features/noticias/services/noticias';
 import { RegularNewsCard } from './RegularNewsCard';
 import { Noticia } from '@/shared/interfaces';
-
-export default async function UltimasNoticias() {
+import Link from 'next/link';
+export default async function LatestNews() {
   // News data for institutional content
   const { noticias } = await getNoticiasPaginadas(1, 6);
 
@@ -14,7 +14,7 @@ export default async function UltimasNoticias() {
         {/* Left section - Heading and Description */}
         <div className="w-full lg:w-96 lg:sticky lg:top-8 lg:self-start">
           <div className="relative mb-8">
-            <h2 className="mb-6 text-2xl font-semibold tracking-wide leading-tight text-gray-300 sm:text-4xl">
+            <h2 className="mb-6 text-2xl font-semibold tracking-wide leading-tight text-gray-300 sm:text-4xl bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
               ÚLTIMAS NOTICIAS
             </h2>
             <Separator className="bg-green-700 h-0.5" />
@@ -31,9 +31,12 @@ export default async function UltimasNoticias() {
               inclusión y la innovación.
             </p>
 
-            <button className="inline-flex items-center px-6 py-3 font-medium text-white bg-green-900 rounded-lg transition-colors duration-200 hover:bg-gray-800">
+            <Link
+              href="/noticias"
+              className="inline-flex items-center px-6 py-3 font-medium text-white bg-green-800 rounded-lg transition-colors duration-200 hover:bg-green-900"
+            >
               Ver todas las noticias
-            </button>
+            </Link>
           </div>
         </div>
 

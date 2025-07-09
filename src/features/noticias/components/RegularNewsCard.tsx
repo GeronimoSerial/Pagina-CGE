@@ -4,6 +4,7 @@ import { es } from 'date-fns/locale';
 import { ArrowRight, CalendarDays, Tag } from 'lucide-react';
 import { getPortada } from '@/features/noticias/services/noticias';
 import { Noticia } from '@/shared/interfaces';
+import Image from 'next/image';
 
 export function RegularNewsCard({ noticia }: { noticia: Noticia }) {
   return (
@@ -13,10 +14,13 @@ export function RegularNewsCard({ noticia }: { noticia: Noticia }) {
     >
       <CardContent className="p-0">
         <div className="overflow-hidden relative rounded-t-xl">
-          <img
+          <Image
             className="object-cover w-full h-48 transition-transform duration-300 sm:h-56 group-hover:scale-105"
             alt={noticia.titulo}
-            src={getPortada({ noticia }) || undefined}
+            src={getPortada({ noticia }) || ''}
+            width={1200}
+            height={630}
+            priority
           />
           <div className="absolute inset-0 transition-colors duration-300 bg-black/0 group-hover:bg-black/10" />
         </div>

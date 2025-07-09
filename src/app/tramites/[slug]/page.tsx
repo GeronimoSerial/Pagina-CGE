@@ -28,10 +28,6 @@ export const revalidate = 60;
 export default async function DocumentPage({ params }: PageProps) {
   const slug = (await params).slug;
   const [navigationSections, article]: [NavSection[], Article | null] =
-    // await Promise.all([
-    //   getTramitesNavigation(),
-    //   getTramiteArticleBySlug((await params).slug),
-    // ]);
     await Promise.all([getTramitesNavigation(), getTramiteArticleBySlug(slug)]);
 
   // Aplanación de navegación
@@ -140,15 +136,30 @@ export default async function DocumentPage({ params }: PageProps) {
 // Generar metadatos dinámicos
 export async function generateMetadata({ params }: PageProps) {
   const article = await getTramiteArticleBySlug((await params).slug);
-
+  const slug = (await params).slug;
   if (!article) {
     return {
       title: 'Página no encontrada',
     };
   }
+  const url = `/tramites/${slug}`;
 
   return {
-    title: `${article.title} - Documentación`,
+    title: article.title,
     description: article.description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: article.title,
+      description: article.description,
+      url: url,
+      type: 'article',
+      publishedTime: article.lastUpdated,
+      modifiedTime: article.lastUpdated,
+      expirationTime: article.lastUpdated,
+      authors: ['Consejo General de Educación'],
+      tags: [article.category],
+    },
   };
 }

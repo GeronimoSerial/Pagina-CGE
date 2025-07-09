@@ -10,9 +10,9 @@ export interface ContactoForm {
   area: string;
 }
 
-const SERVICE_ID = process.env.NEXT_PUBLIC_SERVICE_ID || "default_service_id";
+const SERVICE_ID = process.env.NEXT_PUBLIC_SERVICE_ID || "default_service";
 const TEMPLATE_ID =
-  process.env.NEXT_PUBLIC_TEMPLATE_ID || "default_template_id";
+  process.env.NEXT_PUBLIC_TEMPLATE_ID || "default_template";
 const PUBLIC_KEY = process.env.NEXT_PUBLIC_PUBLIC_KEY || "default_public_key";
 
 if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {

@@ -15,6 +15,7 @@ import { Separator } from '@radix-ui/react-separator';
 import { Separador } from '@/shared/components/Separador';
 import { RegularNewsCard } from './RegularNewsCard';
 import { Noticia } from '@/shared/interfaces';
+import Image from 'next/image';
 
 interface NewsGridProps {
   noticiasDestacadas: Noticia[];
@@ -38,10 +39,13 @@ export default function NewsGrid({
                     <Card className="overflow-hidden border-0 shadow-2xl">
                       <div className="grid gap-0 lg:grid-cols-2">
                         <div className="aspect-[4/3] lg:aspect-auto overflow-hidden">
-                          <img
-                            src={getPortada({ noticia }) || undefined}
+                          <Image
+                            src={getPortada({ noticia }) || ''}
                             alt={noticia.titulo}
                             className="object-cover w-full h-full transition-transform duration-500 hover:scale-105"
+                            width={1200}
+                            height={630}
+                            priority
                           />
                         </div>
                         <CardContent className="flex flex-col justify-center p-8 bg-white lg:p-12">

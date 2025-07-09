@@ -3,9 +3,38 @@ import HeroSection from '@/shared/components/Hero';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terminos y Condiciones',
+  title: 'Términos y Condiciones de Uso',
   description:
     'Terminos y Condiciones de Uso del Sitio Web del Consejo General de Educación (CGE) en Corrientes',
+  keywords: [
+    'términos y condiciones',
+    'uso del sitio',
+    'políticas de privacidad',
+    'CGE',
+    'Consejo General de Educación',
+    'Corrientes',
+    'información legal',
+  ],
+  alternates: {
+    canonical: '/terminos',
+  },
+  openGraph: {
+    title: 'Términos y Condiciones de Uso',
+    description:
+      'Información legal y condiciones de uso del sitio web del CGE Corrientes.',
+    url: '/terminos',
+    type: 'website',
+    siteName: 'Consejo General de Educación',
+    images: [
+      {
+        url: '/og.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Consejo General de Educación - Información Institucional',
+      },
+    ],
+    locale: 'es_AR',
+  },
 };
 
 export default function Terminos() {
