@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     siteName: 'Consejo General de Educación',
     images: [
       {
-        url: '/og.png',
+        url: '/og.webp',
         width: 1200,
         height: 630,
         alt: 'Consejo General de Educación - Información Institucional',
