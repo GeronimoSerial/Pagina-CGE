@@ -13,6 +13,26 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Noticias',
   description: 'Noticias del Consejo General de Educación (CGE) en Corrientes',
+  alternates: {
+    canonical: '/noticias',
+  },
+  openGraph: {
+    title: 'Noticias del CGE',
+    description:
+      'Mantente informado sobre las últimas noticias y eventos del Consejo General de Educación de Corrientes.',
+    url: '/noticias',
+    siteName: 'Consejo General de Educación',
+    images: [
+      {
+        url: '/og-noticias.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Noticias del CGE',
+      },
+    ],
+    locale: 'es_AR',
+    type: 'website',
+  },
 };
 
 interface NoticiasPageProps {

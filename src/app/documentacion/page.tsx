@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     url: '/documentacion',
     images: [
       {
-        url: '/og.webp',
+        url: '/og-documentacion.webp',
         width: 1200,
         height: 630,
         alt: 'Consejo General de Educación',
