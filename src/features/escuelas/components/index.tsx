@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback, useEffect } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { Accordion } from '@/shared/ui/accordion';
 import BuscadorEscuelas from './BuscadorEscuelas';
 import { EscuelaDetalles } from '@/shared/data/dynamic-client';
@@ -45,20 +45,6 @@ export default function EscuelasClient() {
     );
   }, [escuelas]);
 
-  // const totalMatricula2024 = useMemo(() => {
-  //   return escuelas.reduce(
-  //     (acc, escuela) => acc + Number(escuela.matricula2024 || 0),
-  //     0
-  //   );
-  // }, [escuelas]);
-
-  // const variacionMatricula = useMemo(() => {
-  //   if (totalMatricula2024 === 0) return null;
-  //   const diferencia = totalMatricula2025 - totalMatricula2024;
-  //   const porcentaje = ((diferencia / totalMatricula2024) * 100).toFixed(1);
-  //   return { diferencia, porcentaje };
-  // }, [totalMatricula2024, totalMatricula2025]);
-
   const handleSelectEscuela = useCallback((escuela: EscuelaConMail) => {
     setEscuelaSeleccionada(escuela);
   }, []);
@@ -79,19 +65,6 @@ export default function EscuelasClient() {
       </div>
     );
   }
-
-  // if (!escuelas.length) {
-  //   return (
-  //     <div className="flex items-center justify-center h-64">
-  //       <Alert className="rounded-xl border-amber-200 bg-amber-50 shadow-md w-full max-w-md">
-  //         <AlertCircle className="h-6 w-6 text-amber-500" />
-  //         <AlertDescription className="font-medium text-amber-800 ml-2">
-  //           No hay escuelas disponibles en este momento.
-  //         </AlertDescription>
-  //       </Alert>
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
@@ -256,7 +229,6 @@ export default function EscuelasClient() {
         <EscuelaDetalles
           escuela={escuelaSeleccionada}
           onClose={handleCloseDetalles}
-          correoEscuela={escuelaSeleccionada.mail || 'No disponible'}
         />
       )}
     </div>
