@@ -39,34 +39,38 @@ jobs:
             .next public package.json package-lock.json \
             root@31.97.167.26:/Frontend/Pagina-CGE-temp/
 
-      - name: Swap atómico y deploy en VPS
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: |
-          echo "$SSH_PRIVATE_KEY" > private_key
-          chmod 600 private_key
+            - name: Swap atómico y deploy en VPS
+            env:
+              SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+            run: |
+              echo "$SSH_PRIVATE_KEY" > private_key
+              chmod 600 private_key
 
-          ssh -i private_key -o StrictHostKeyChecking=no root@31.97.167.26 << 'EOF'
-            set -e
+              ssh -i private_key -o StrictHostKeyChecking=no root@31.97.167.26 << 'EOF'
+                set -e
 
-            cd /Frontend/
+                cd /Frontend/
 
-            echo "Respaldo de versión anterior..."
-            rm -rf Pagina-CGE-backup
-            mv Pagina-CGE Pagina-CGE-backup || true
+                echo "Deteniendo aplicación PM2 si está corriendo..."
+                pm2 stop app || echo "PM2 no estaba corriendo"
 
-            echo "Promoviendo carpeta temporal..."
-            mv Pagina-CGE-temp Pagina-CGE
+                echo "Respaldo de versión anterior..."
+                rm -rf Pagina-CGE-backup
+                mv Pagina-CGE Pagina-CGE-backup || true
 
-            cd Pagina-CGE
-            echo "Instalando dependencias..."
-            npm ci --omit=dev
+                echo "Promoviendo carpeta temporal..."
+                mv Pagina-CGE-temp Pagina-CGE
 
-            echo "Reiniciando aplicación..."
-            pm2 restart app || echo "Advertencia: PM2 no está corriendo"
+                cd Pagina-CGE
 
-            echo "Despliegue completado correctamente."
+                echo "Instalando dependencias..."
+                npm ci --omit=dev
 
-            # Limpieza final (si todo fue bien)
-            rm -rf ../Pagina-CGE-backup
-          EOF
+                echo "Iniciando aplicación con PM2..."
+                pm2 start frontend || pm2 start npm --name "frontend" -- start
+
+                echo "Despliegue completado correctamente."
+
+                echo "Eliminando backup anterior..."
+                rm -rf ../Pagina-CGE-backup
+              EOF
