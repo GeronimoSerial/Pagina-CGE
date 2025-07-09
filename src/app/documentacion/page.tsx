@@ -9,6 +9,24 @@ export const metadata: Metadata = {
   title: 'Documentación',
   description:
     'Documentación del Consejo General de Educación (CGE) en Corrientes',
+  alternates: {
+    canonical: '/documentacion',
+  },
+  openGraph: {
+    title: 'Documentación',
+    description:
+      'Documentación del Consejo General de Educación (CGE) en Corrientes',
+    type: 'website',
+    url: '/documentacion',
+    images: [
+      {
+        url: '/og.png',
+        width: 1200,
+        height: 630,
+        alt: 'Consejo General de Educación',
+      },
+    ],
+  },
 };
 
 export default function Documentacion() {

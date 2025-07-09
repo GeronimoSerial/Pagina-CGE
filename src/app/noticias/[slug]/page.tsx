@@ -37,13 +37,24 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const noticia = await getNoticiaBySlug(slug);
-  if (!noticia) return {}; // Si no se encuentra la noticia, retorna un objeto vacío.
+  if (!noticia) return {};
+  const url = `/noticias/${slug}`;
   return {
     title: noticia.titulo,
     description: noticia.resumen || noticia.titulo,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: noticia.titulo,
       description: noticia.resumen || noticia.titulo,
+      url: url,
+      type: 'article',
+      publishedTime: noticia.fecha,
+      modifiedTime: noticia.fecha,
+      expirationTime: noticia.fecha,
+      authors: ['Consejo General de Educación'],
+      tags: [noticia.categoria],
       images: noticia.portada ? [noticia.portada] : [],
     },
   };

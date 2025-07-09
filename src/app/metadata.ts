@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 
+const siteUrl = "https://consejo.mec.gob.ar";
+
 const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+
   title: {
     default: "Consejo General de Educación",
     template: "%s | Consejo General de Educación",
   },
   description:
-    "Sitio web oficial del Consejo General de Educación, con información institucional, recursos educativos, noticias, documentación y más.",
+    "Sitio web oficial del Consejo General de Educación.",
   keywords: [
     "educación",
     "Consejo General de Educación",
@@ -19,7 +23,7 @@ const metadata: Metadata = {
   authors: [
     {
       name: "Consejo General de Educación",
-      url: "https://consejo.geroserial.com",
+      url: siteUrl,
     },
   ],
   creator: "Consejo General de Educación de la Provincia de Corrientes",
@@ -27,11 +31,11 @@ const metadata: Metadata = {
     title: "Consejo General de Educación",
     description:
       "Información institucional, recursos educativos y servicios del Consejo General de Educación de la Provincia de Corrientes.",
-    url: "https://consejo.geroserial.com",
+    url: siteUrl,
     siteName: "Consejo General de Educación",
     images: [
       {
-        url: "https://cge.gob.ar/og.png",
+        url: "/og.png",
         width: 1200,
         height: 630,
         alt: "Consejo General de Educación - Información Institucional",
@@ -40,14 +44,25 @@ const metadata: Metadata = {
     locale: "es_AR",
     type: "website",
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   twitter: {
     card: "summary_large_image",
     title: "Consejo General de Educación",
     description:
       "Accede a la información educativa, documentación y más del Consejo General de Educación de la Provincia de Corrientes.",
     site: "@consejogeneral",
-    creator: "@consejogeneral",
-    images: ["https://cge.gob.ar/og-image.jpg"],
+    creator: "@geroserial",
+    images: ["/og.png"],
   },
   icons: {
     icon: "/favicon.ico",
