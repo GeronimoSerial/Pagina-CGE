@@ -6,6 +6,26 @@ export const metadata: Metadata = {
   title: 'Accesibilidad',
   description:
     'Políticas de accesibilidad del Consejo General de Educación (CGE) en Corrientes',
+  alternates: {
+    canonical: '/accesibilidad',
+  },
+  openGraph: {
+    title: 'Políticas de Accesibilidad del CGE',
+    description:
+      'Información detallada sobre las políticas de accesibilidad del Consejo General de Educación de Corrientes',
+    url: '/accesibilidad',
+    siteName: 'Consejo General de Educación',
+    images: [
+      {
+        url: '/og.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Políticas de Accesibilidad del CGE',
+      },
+    ],
+    locale: 'es_AR',
+    type: 'website',
+  },
 };
 
 export default function AccesibilidadPage() {
