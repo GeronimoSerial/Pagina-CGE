@@ -1,4 +1,3 @@
-// src/app/noticia/[id]/page.tsx
 import HeroMain from '@/features/home/components/HeroMain';
 import QuickAccess from '@/features/home/components/QuickAccess';
 import { Separator } from '@radix-ui/react-separator';
@@ -11,6 +10,35 @@ export const metadata: Metadata = {
   title: 'Consejo General de Educación (CGE)',
   description:
     'Portal Web del Consejo General de Educación (CGE) en Corrientes',
+  keywords: [
+    'Consejo General de Educación',
+    'CGE',
+    'Portal Web',
+    'Consejo',
+    'Escuelas',
+    'Primaria',
+    'Docente',
+  ],
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Consejo General de Educación (CGE)',
+    description:
+      'Portal Web del Consejo General de Educación (CGE) en Corrientes',
+    url: '/',
+    type: 'website',
+    siteName: 'Consejo General de Educación',
+    images: [
+      {
+        url: '/og.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Consejo General de Educación - Información Institucional',
+      },
+    ],
+    locale: 'es_AR',
+  },
 };
 
 export default async function PagPrincipal() {
