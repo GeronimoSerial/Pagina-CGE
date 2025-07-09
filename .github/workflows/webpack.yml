@@ -45,20 +45,15 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key
           chmod 600 private_key
-
-          ssh -i private_key -o StrictHostKeyChecking=no root@31.97.167.26 << 'EOF'
-            set -e
-
-            cd /root/Frontend/Pagina-CGE
-
-            echo "Deteniendo aplicación..."
-            /root/.nvm/versions/node/v22.17.0/bin/pm2 stop app || echo "PM2 no estaba corriendo"
-
-            echo "Instalando dependencias..."
-            /root/.nvm/versions/node/v22.17.0/bin/npm i
-
-            echo "Iniciando aplicación con PM2..."
-            /root/.nvm/versions/node/v22.17.0/bin/pm2 start frontend || /root/.nvm/versions/node/v22.17.0/bin/pm2 start npm --name "frontend" -- start
-
-            echo "Despliegue directo completado."
-          EOF
+        
+              ssh -i private_key -t -o StrictHostKeyChecking=no root@31.97.167.26 "bash -l -c '
+                cd /root/Frontend/Pagina-CGE &&
+                echo Deteniendo aplicación... &&
+                pm2 stop frontend || echo \"PM2 no estaba corriendo\" &&
+                echo Instalando dependencias... &&
+                npm i &&
+                echo Iniciando aplicación con PM2... &&
+                pm2 start frontend || pm2 start npm --name \"frontend\" -- start &&
+                echo Despliegue directo completado.
+              '"
+          
