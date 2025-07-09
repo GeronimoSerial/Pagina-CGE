@@ -47,8 +47,8 @@ const HeroMain = () => {
             className="text-lg md:text-xl text-white mb-8 font-medium"
             style={{ textShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)' }}
           >
-            Gestión y acompañamiento pedagógico en la educación inicial,
-            primaria y de adultos.
+            Gestión y acompañamiento pedagógico integral en la educación
+            inicial, primaria y de adultos de nuestra provincia.
           </p>
           <Button
             asChild
