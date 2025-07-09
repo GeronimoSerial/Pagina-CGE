@@ -14,6 +14,16 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Cache node modules and Next.js cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -28,7 +38,7 @@ jobs:
           NEXT_PUBLIC_STRAPI_URL: ${{ vars.NEXT_PUBLIC_STRAPI_URL }}
         run: npm run build
 
-      - name: Subir artefactos directamente al VPS
+      - name: Upload artifacts directly to VPS
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
@@ -38,8 +48,8 @@ jobs:
           rsync -az --delete -e "ssh -i private_key -o StrictHostKeyChecking=no" \
             .next public package.json package-lock.json \
             root@31.97.167.26:/root/Frontend/Pagina-CGE/
-
-      - name: Reinstalar dependencias y reiniciar app en VPS
+# deploy.sh -> por nvm en la vps impide encontrar el path
+      - name: Reinstall dependencies and restart app
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
