@@ -20,7 +20,7 @@ jobs:
           node-version: 22.17.0
 
       - name: Install dependencies
-        run: npm i
+        run: npm ci
 
       - name: Build Next.js app
         env:
@@ -28,7 +28,7 @@ jobs:
           NEXT_PUBLIC_STRAPI_URL: ${{ vars.NEXT_PUBLIC_STRAPI_URL }}
         run: npm run build
 
-      - name: Subir artefactos a VPS (temporal)
+      - name: Subir artefactos directamente al VPS
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
@@ -37,40 +37,28 @@ jobs:
 
           rsync -az --delete -e "ssh -i private_key -o StrictHostKeyChecking=no" \
             .next public package.json package-lock.json \
-            root@31.97.167.26:/Frontend/Pagina-CGE-temp/
+            root@31.97.167.26:/root/Frontend/Pagina-CGE/
 
-            - name: Swap atómico y deploy en VPS
-            env:
-              SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-            run: |
-              echo "$SSH_PRIVATE_KEY" > private_key
-              chmod 600 private_key
+      - name: Reinstalar dependencias y reiniciar app en VPS
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key
+          chmod 600 private_key
 
-              ssh -i private_key -o StrictHostKeyChecking=no root@31.97.167.26 << 'EOF'
-                set -e
+          ssh -i private_key -o StrictHostKeyChecking=no root@31.97.167.26 << 'EOF'
+            set -e
 
-                cd /Frontend/
+            cd /root/Frontend/Pagina-CGE
 
-                echo "Deteniendo aplicación PM2 si está corriendo..."
-                pm2 stop app || echo "PM2 no estaba corriendo"
+            echo "Deteniendo aplicación..."
+            pm2 stop app || echo "PM2 no estaba corriendo"
 
-                echo "Respaldo de versión anterior..."
-                rm -rf Pagina-CGE-backup
-                mv Pagina-CGE Pagina-CGE-backup || true
+            echo "Instalando dependencias..."
+            npm i
 
-                echo "Promoviendo carpeta temporal..."
-                mv Pagina-CGE-temp Pagina-CGE
+            echo "Iniciando aplicación con PM2..."
+            pm2 start frontend || pm2 start npm --name "frontend" -- start
 
-                cd Pagina-CGE
-
-                echo "Instalando dependencias..."
-                npm ci --omit=dev
-
-                echo "Iniciando aplicación con PM2..."
-                pm2 start frontend || pm2 start npm --name "frontend" -- start
-
-                echo "Despliegue completado correctamente."
-
-                echo "Eliminando backup anterior..."
-                rm -rf ../Pagina-CGE-backup
-              EOF
+            echo "Despliegue directo completado."
+          EOF
