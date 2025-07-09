@@ -47,7 +47,7 @@ jobs:
 
           rsync -az --delete -e "ssh -i private_key -o StrictHostKeyChecking=no" \
             .next public package.json package-lock.json \
-            root@${{secrets.VPS_IP}}:/root/Frontend/Pagina-CGE/
+            root@${{secrets.VPS_IP}}:/home/frontend/Pagina-CGE/
       # deploy.sh -> por nvm en la vps impide encontrar el path
       - name: Reinstall dependencies and restart app
         env:
