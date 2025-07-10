@@ -4,7 +4,7 @@ import HeroSection from '@/shared/components/Hero';
 import FAQSection from '@/shared/components/FAQSection';
 import { Metadata } from 'next';
 import InfoBar from '@/shared/components/InfoBar';
-
+import { Separator } from '@radix-ui/react-separator';
 export const metadata: Metadata = {
   title: 'Documentación',
   description:
@@ -43,6 +43,7 @@ export default function Documentacion() {
         </div>
       </section>
       <FAQSection basePath="/documentacion" />
+      <Separator className="my-8 bg-gray-50" />
     </main>
   );
 }
