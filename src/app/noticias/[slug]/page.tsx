@@ -40,6 +40,23 @@ export async function generateMetadata({
   const noticia = await getNoticiaBySlug(slug);
   if (!noticia) return {};
   const url = `/noticias/${slug}`;
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: noticia.titulo,
+    description: noticia.resumen || noticia.titulo,
+    datePublished: noticia.fecha,
+    dateModified: noticia.fecha,
+    author: {
+      '@type': 'Organization',
+      name: 'Consejo General de Educación',
+    },
+    image: noticia.portada,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': url,
+    },
+  };
   return {
     title: noticia.titulo,
     description: noticia.resumen || noticia.titulo,
@@ -57,6 +74,9 @@ export async function generateMetadata({
       authors: ['Consejo General de Educación'],
       tags: [noticia.categoria],
       images: noticia.portada ? [noticia.portada] : [],
+    },
+    other: {
+      'script:ld+json': JSON.stringify(structuredData),
     },
   };
 }
@@ -85,6 +105,11 @@ interface PageProps {
 /**
  * Componente principal de la página de noticias individual.
  * Muestra el contenido de una noticia, enlaces relacionados y una galería de imágenes.
+ *  Utiliza Server Components para la carga eficiente de datos.
+ * @param {PageProps} props - Propiedades de la página, incluyendo el slug de la noticia.
+ * @returns {JSX.Element} - Componente de la página de noticia.
+ * @throws {notFound} - Si la noticia no se encuentra, redirige a la página 404.
+ *
  */
 export default async function NoticiaPage({ params }: PageProps) {
   const { slug } = await params;
@@ -121,26 +146,21 @@ export default async function NoticiaPage({ params }: PageProps) {
                 {/* Encabezado del artículo con metadatos de la noticia */}
                 <header className="mb-8">
                   <div className="flex flex-wrap gap-4 items-center mb-4 text-sm text-gray-500">
-                    {/* Fecha de publicación */}
                     <div className="flex items-center">
                       <Calendar className="mr-2 w-4 h-4" />
                       <span>{formatearFecha(noticia.fecha)}</span>
                     </div>
-                    {/* Autor de la noticia */}
                     <div className="flex items-center">
                       <User className="mr-1 w-4 h-4" />
                       <span>Redacción CGE</span>
                     </div>
-                    {/* Categoría de la noticia */}
                     <span className="px-2 py-1 text-xs text-white bg-green-800 rounded-full">
                       {noticia.categoria}
                     </span>
                   </div>
-                  {/* Título de la noticia */}
                   <h1 className="mb-6 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
                     {noticia.titulo}
                   </h1>
-                  {/* Resumen de la noticia */}
                   <p className="text-xl leading-relaxed text-gray-600">
                     {noticia.resumen}
                   </p>
@@ -156,7 +176,6 @@ export default async function NoticiaPage({ params }: PageProps) {
                     priority
                   />
                 )}
-                {/* Contenido de la noticia renderizado desde Markdown */}
                 <div className="mb-8 max-w-none prose prose-lg">
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
