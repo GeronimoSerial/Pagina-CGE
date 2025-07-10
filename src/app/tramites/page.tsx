@@ -64,15 +64,6 @@ export default async function IntroduccionPage() {
                   Comunícanos
                 </a>
               </div>
-              {/* <div className="flex space-x-4">
-                <a
-                  href="/"
-                  className="text-sm text-green-800 transition-colors hover:text-green-800"
-                >
-                  ← Anterior
-                </a>
-                <span className="text-sm text-green-800">Siguiente →</span>
-              </div> */}
             </div>
           </div>
         </footer>
@@ -92,7 +83,7 @@ export async function generateMetadata() {
   }
 
   return {
-    title: article.title,
+    title: 'Trámites CGE',
     description:
       'Guía completa de trámites educativos para todos los agentes docentes',
     alternates: {
