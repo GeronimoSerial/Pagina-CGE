@@ -85,7 +85,14 @@ async function fetchAPI<T>(path: string, params: object = {}): Promise<T> {
   }
 }
 
-// --- SERVICE FUNCTIONS ---
+// Mapa de categorías
+const categoriaMap: Record<number, string> = {
+  1: 'Licencias especiales por salud y/o maternidad',
+  2: 'Licencias extraordinarias',
+  3: 'Justificación de inasistencias',
+  4: 'Permisos',
+  5: 'Suplentes',
+};
 
 /**
  * Obtiene la navegación agrupando los trámites por categoría.
@@ -104,7 +111,8 @@ export async function getTramitesNavigation(): Promise<NavSection[]> {
 
   const grouped: Record<string, NavSection> = {};
   tramites.forEach((t) => {
-    const cat = t.categoria || 'Sin categoría';
+    const catNumber = Number(t.categoria); // Convertimos la categoría a número
+    const cat = categoriaMap[catNumber] || 'General'; // Mapeamos el número a texto
     if (!grouped[cat]) {
       grouped[cat] = {
         id: cat.toLowerCase().replace(/\s+/g, '-'),
@@ -118,8 +126,12 @@ export async function getTramitesNavigation(): Promise<NavSection[]> {
       href: `/tramites/${t.slug}`,
     });
   });
-
-  return Object.values(grouped);
+  const sortedSections = Object.values(grouped).sort((a, b) => {
+    if (a.title === 'General') return -1; // General siempre al principio
+    if (b.title === 'General') return 1;
+    return a.title.localeCompare(b.title);
+  })
+  return sortedSections;
 }
 
 /**
@@ -139,10 +151,13 @@ export async function getTramiteArticleBySlug(
   }
 
   const t = tramites[0];
+  const catNumber = Number(t.categoria); // Convertimos la categoría a número
+  const category = categoriaMap[catNumber] || 'General'; // Mapeamos el número a texto
+
   return {
     id: t.id,
     slug: t.slug,
-    category: t.categoria,
+    category,
     title: t.titulo,
     description: t.resumen,
     lastUpdated: t.updatedAt || t.fecha,
@@ -173,4 +188,31 @@ export async function getAllTramiteSlugs(): Promise<string[]> {
   if (!tramites) return [];
 
   return tramites.map((t) => t.slug);
+}
+
+export async function getAllTramites(): Promise<any[]> {
+  const params = {
+    fields: ['id', 'slug', 'categoria', 'titulo', 'resumen', 'updatedAt', 'fecha', 'contenido'],
+    sort: ['categoria:asc', 'titulo:asc'],
+    populate: '*',
+    'pagination[pageSize]': 250, // Increased limit to fetch all items
+  };
+  const tramites: RawTramiteArticle[] = await fetchAPI('/tramites', params);
+
+  if (!tramites) return [];
+
+  return tramites.map((t) => {
+    const catNumber = Number(t.categoria); // Convertimos la categoría a número
+    const category = categoriaMap[catNumber] || 'General'; // Mapeamos el número a texto
+
+    return {
+      id: t.id,
+      slug: t.slug,
+      category,
+      title: t.titulo,
+      description: t.resumen,
+      lastUpdated: t.updatedAt || t.fecha,
+      content: t.contenido,
+    };
+  });
 }

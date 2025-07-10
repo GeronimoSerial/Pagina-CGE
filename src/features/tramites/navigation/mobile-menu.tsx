@@ -7,10 +7,9 @@ import type { NavSection } from '../services/docs-data';
 
 interface MobileMenuProps {
   sections: NavSection[];
-  currentPageTitle: string;
 }
 
-export function MobileMenu({ sections, currentPageTitle }: MobileMenuProps) {
+export function MobileMenu({ sections }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -22,9 +21,9 @@ export function MobileMenu({ sections, currentPageTitle }: MobileMenuProps) {
       <header className="sticky top-0 z-50 px-4 py-3 bg-white border-b border-gray-200 lg:hidden">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">
+            <h2 className="text-xl font-bold text-gray-900">
               Consejo General de Educación
-            </h1>
+            </h2>
             <p className="text-sm text-gray-600">Guía de Trámites</p>
           </div>
           <button
