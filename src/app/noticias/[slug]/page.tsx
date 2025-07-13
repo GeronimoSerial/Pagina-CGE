@@ -116,17 +116,18 @@ export default async function NoticiaPage({ params }: PageProps) {
   const [noticia, related] = await Promise.all([
     getNoticiaBySlug(slug),
 
-    slug ? getNoticiasRelacionadas('').catch(() => []) : Promise.resolve([]),
+    Promise.resolve([]),
   ]);
 
   if (!noticia) {
     return notFound();
   }
 
-  const relatedFinal =
-    related.length === 0
-      ? await getNoticiasRelacionadas(noticia.categoria).catch(() => [])
-      : related;
+  // Obtener noticias relacionadas de la misma categoría, excluyendo la actual
+  const relatedFinal = await getNoticiasRelacionadas(
+    noticia.categoria,
+    slug,
+  ).catch(() => []);
 
   return (
     <div className="flex flex-col min-h-screen bg-white">

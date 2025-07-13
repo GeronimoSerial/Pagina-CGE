@@ -47,7 +47,7 @@ export default function NewsClient({}: NewsClientProps) {
 
   // Ultra-aggressive debouncing for load testing
   const debouncedQ = useDebounce(q, 500); // Increased from 300ms
-  
+
   // Simplified cache key - reduce uniqueness for better cache hits
   const cacheBuster = useMemo(() => {
     // Group pages to reduce cache fragmentation
@@ -64,7 +64,7 @@ export default function NewsClient({}: NewsClientProps) {
       // Ultra-optimized request with timeout and retry-friendly headers
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
-      
+
       const noticiasRes = await fetch(
         `/api/noticias?${new URLSearchParams({
           page: String(currentPage),
@@ -77,16 +77,18 @@ export default function NewsClient({}: NewsClientProps) {
         {
           signal: controller.signal,
           headers: {
-            'Accept': 'application/json',
+            Accept: 'application/json',
             'Cache-Control': 'max-age=90', // Browser cache hint
           },
         },
       );
-      
+
       clearTimeout(timeoutId);
 
       if (!noticiasRes.ok) {
-        throw new Error(`HTTP ${noticiasRes.status}: Error al cargar las noticias`);
+        throw new Error(
+          `HTTP ${noticiasRes.status}: Error al cargar las noticias`,
+        );
       }
 
       const noticiasData = await noticiasRes.json();
@@ -144,8 +146,8 @@ export default function NewsClient({}: NewsClientProps) {
   useEffect(() => {
     if (categorias.length === 0) {
       fetch(`/api/noticias/categorias?_cache=static`)
-        .then(res => res.json())
-        .then(data => setCategorias(data.categorias || []))
+        .then((res) => res.json())
+        .then((data) => setCategorias(data.categorias || []))
         .catch(() => {}); // Silent fail for categories
     }
   }, []);
@@ -187,54 +189,38 @@ export default function NewsClient({}: NewsClientProps) {
     );
   }
 
-  if (!loading && noticias.length === 0 && destacadas.length === 0) {
-    return (
-      <div className="flex justify-center items-center py-12">
-        <div className="text-center">
-          <div className="text-gray-500 mb-2">No se encontraron noticias</div>
-          <div className="text-sm text-gray-400">
-            Prueba cambiando los filtros de búsqueda
-          </div>
+  const searchBar = (
+    <div className="px-6 mx-auto max-w-7xl">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex-1">
+          <NewsSearch
+            categorias={categorias}
+            placeholder="Buscar noticias institucionales..."
+          />
         </div>
       </div>
+    </div>
+  );
+
+  if (!loading && noticias.length === 0 && destacadas.length === 0) {
+    return (
+      <>
+        {searchBar}
+        <div className="flex justify-center items-center py-12">
+          <div className="text-center">
+            <div className="text-gray-500 mb-2">No se encontraron noticias</div>
+            <div className="text-sm text-gray-400">
+              Prueba cambiando los filtros de búsqueda
+            </div>
+          </div>
+        </div>
+      </>
     );
   }
 
   return (
     <>
-      {/* Search integrado en el client - VPS no procesa nada */}
-      <div className="px-6 mx-auto max-w-7xl">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex-1">
-            <NewsSearch
-              categorias={categorias}
-              placeholder="Buscar noticias institucionales..."
-            />
-          </div>
-          <button
-            onClick={fetchNoticias}
-            disabled={loading}
-            className="ml-4 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-md transition-colors disabled:opacity-50 flex items-center gap-2"
-            title="Actualizar noticias"
-          >
-            <svg
-              className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
-            {loading ? 'Actualizando...' : 'Actualizar'}
-          </button>
-        </div>
-      </div>
-
+      {searchBar}
       <NewsGrid noticiasDestacadas={destacadas} noticiasRegulares={noticias} />
       {totalPages > 1 && (
         <SimplePagination
