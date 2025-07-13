@@ -3,6 +3,7 @@ import HeroSection from '@/shared/components/Hero';
 import { Metadata } from 'next';
 import { EscuelasClient } from '@/shared/data/dynamic-client';
 import FAQSection from '@/shared/components/FAQSection';
+import { Separator } from '@radix-ui/react-separator';
 
 export const metadata: Metadata = {
   title: 'Escuelas',
@@ -38,6 +39,7 @@ export default function Escuelas() {
         <EscuelasClient />
       </div>
       <FAQSection basePath="/escuelas" />
+      <Separator className="my-8 bg-gray-50" />
     </main>
   );
 }
