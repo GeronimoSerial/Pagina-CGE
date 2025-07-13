@@ -1,6 +1,7 @@
-import { API_URL, STRAPI_URL } from '@/shared/lib/config';
+import { API_URL } from '@/shared/lib/config';
 import { Noticia } from '@/shared/interfaces';
 import qs from 'qs';
+import { cfImages } from '@/shared/lib/cloudflare-images';
 
 // Simplified cache strategy: Fewer unique keys = better cache hits
 function createCacheKey(page: number, pageSize: number, filters: Record<string, any>): string {
@@ -177,14 +178,15 @@ export async function getNoticiasRelacionadas(categoria: string, excludeSlug?: s
 
 export function getPortada({ noticia }: any) {
   const url = noticia.portada?.data?.url || noticia.portada?.url;
+
   if (!url) return null;
-  return `${STRAPI_URL}${url}`;
+  return cfImages(url, 1200, 'auto');
 }
 
 export function getImagenes(noticia: Noticia) {
   return (
     noticia.imagen?.map((img: any) => ({
-      url: `${STRAPI_URL}${img.url}`,
+      url: cfImages(img.url, 800, 'auto'),
       alt: img.alternativeText || '',
       width: img.width,
       height: img.height,
