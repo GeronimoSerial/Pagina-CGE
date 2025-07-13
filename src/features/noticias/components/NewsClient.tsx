@@ -97,10 +97,22 @@ export default function NewsClient({}: NewsClientProps) {
             ...(categoria && { categoria }),
             ...(desde && { desde }),
             ...(hasta && { hasta }),
+            t: String(Date.now()), // Cache busting timestamp
           }).toString()}`,
+          {
+            cache: 'no-store', // Forzar fetch fresh para ver nuevas noticias
+            headers: {
+              'Cache-Control': 'no-cache',
+            },
+          }
         ),
         categorias.length === 0
-          ? fetch('/api/noticias/categorias')
+          ? fetch(`/api/noticias/categorias?t=${Date.now()}`, {
+              cache: 'no-store',
+              headers: {
+                'Cache-Control': 'no-cache',
+              },
+            })
           : Promise.resolve(null),
       ]);
 

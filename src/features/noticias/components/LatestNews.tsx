@@ -14,7 +14,7 @@ export default function LatestNews() {
     // Fetch client-side para no cargar VPS
     const fetchNoticias = async () => {
       try {
-        const res = await fetch('/api/noticias?page=1&limit=6');
+        const res = await fetch(`/api/noticias?page=1&limit=6&t=${Date.now()}`);
         if (res.ok) {
           const data = await res.json();
           setNoticias(data.noticias.slice(0, 6));
