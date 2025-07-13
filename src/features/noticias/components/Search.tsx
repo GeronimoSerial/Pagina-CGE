@@ -1,115 +1,118 @@
 'use client';
+import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Search, Filter, Calendar, Tag, X, ChevronDown } from 'lucide-react';
 
-import { Calendar, ChevronDown, Filter, Search, Tag, X } from 'lucide-react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { useEffect, useState, useCallback } from 'react';
+interface SearchFilters {
+  q: string;
+  categoria: string;
+  desde: string;
+  hasta: string;
+}
 
 interface NewsSearchProps {
-  categorias: Array<{ id: number; nombre: string }>;
+  categorias?: string[];
+  autores?: string[];
   placeholder?: string;
+  initialFilters?: SearchFilters;
 }
 
 export default function NewsSearch({
-  categorias,
-  placeholder,
-}: NewsSearchProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const [filtros, setFiltros] = useState({
+  categorias = [],
+  autores = [],
+  placeholder = 'Buscar noticias institucionales...',
+  initialFilters = {
     q: '',
     categoria: '',
     desde: '',
     hasta: '',
-  });
-
+  },
+}: NewsSearchProps) {
+  const router = useRouter();
+  //const searchParams = useSearchParams();
+  const [filters, setFilters] = useState<SearchFilters>(initialFilters);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [activeFiltersCount, setActiveFiltersCount] = useState(0);
 
+  // Mantener filtros sincronizados con la URL
   useEffect(() => {
-    setFiltros({
-      q: searchParams.get('q') || '',
-      categoria: searchParams.get('categoria') || '',
-      desde: searchParams.get('desde') || '',
-      hasta: searchParams.get('hasta') || '',
-    });
-  }, [searchParams]);
+    setFilters(initialFilters);
+    // eslint-disable-next-line
+  }, [
+    initialFilters.q,
+    initialFilters.categoria,
+    initialFilters.desde,
+    initialFilters.hasta,
+  ]);
 
-  const handleSearch = useCallback(() => {
+  // Actualizar la URL con los filtros
+  const updateURL = (newFilters: SearchFilters) => {
     const params = new URLSearchParams();
-    if (filtros.q) params.set('q', filtros.q);
-    if (filtros.categoria) params.set('categoria', filtros.categoria);
-    if (filtros.desde) params.set('desde', filtros.desde);
-    if (filtros.hasta) params.set('hasta', filtros.hasta);
-    params.set('page', '1');
-
-    router.push(`/noticias?${params.toString()}`);
-  }, [filtros, router]);
-
-  useEffect(() => {
-    const hasFilters = filtros.categoria || filtros.desde || filtros.hasta;
-
-    if (hasFilters) {
-      const params = new URLSearchParams();
-      if (filtros.q) params.set('q', filtros.q);
-      if (filtros.categoria) params.set('categoria', filtros.categoria);
-      if (filtros.desde) params.set('desde', filtros.desde);
-      if (filtros.hasta) params.set('hasta', filtros.hasta);
-      params.set('page', '1');
-
-      router.push(`/noticias?${params.toString()}`);
-    }
-  }, [filtros.categoria, filtros.desde, filtros.hasta, router]);
-
-  const handleInputChange = (field: string, value: string) => {
-    setFiltros({ ...filtros, [field]: value });
+    if (newFilters.q) params.set('q', newFilters.q);
+    if (newFilters.categoria) params.set('categoria', newFilters.categoria);
+    if (newFilters.desde) params.set('desde', newFilters.desde);
+    if (newFilters.hasta) params.set('hasta', newFilters.hasta);
+    params.set('page', '1'); // Resetear a la primera página en cada búsqueda
+    router.push(`?${params.toString()}`);
   };
 
-  const clearIndividualFilter = (field: string) => {
-    setFiltros({ ...filtros, [field]: '' });
+  const handleInputChange = (field: keyof SearchFilters, value: string) => {
+    const newFilters = { ...filters, [field]: value };
+    setFilters(newFilters);
+    // Contar filtros activos (excluyendo q)
+    const count = Object.entries(newFilters).filter(
+      ([key, val]) => key !== 'query' && val.trim() !== '',
+    ).length;
+    setActiveFiltersCount(count);
+    updateURL(newFilters);
+  };
+
+  const clearFilters = () => {
+    const clearedFilters = {
+      q: filters.q, // Mantener la búsqueda de texto
+      categoria: '',
+      desde: '',
+      hasta: '',
+      autor: '',
+    };
+    setFilters(clearedFilters);
+    setActiveFiltersCount(0);
+    updateURL(clearedFilters);
   };
 
   const clearAll = () => {
-    setFiltros({
+    const emptyFilters = {
       q: '',
       categoria: '',
       desde: '',
       hasta: '',
-    });
-    router.push('/noticias');
+      autor: '',
+    };
+    setFilters(emptyFilters);
+    setActiveFiltersCount(0);
+    updateURL(emptyFilters);
   };
 
-  const activeFiltersCount = [
-    filtros.categoria,
-    filtros.desde,
-    filtros.hasta,
-  ].filter(Boolean).length;
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleSearch();
-    }
+  const clearIndividualFilter = (field: keyof SearchFilters) => {
+    handleInputChange(field, '');
   };
 
-  const urlQuery = searchParams.get('q') || '';
-  const hasPendingSearch = filtros.q !== urlQuery && filtros.q.length > 0;
   return (
     <div
       className="flex justify-center py-3 px-1 min-h-[60px]"
       style={{ minHeight: 60 }}
     >
       <div className="w-full max-w-[700px] p-2 rounded-lg bg-white border border-slate-200 transition-shadow duration-300 shadow-md">
+        {/* Search Row */}
         <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3">
+          {/* Search Input */}
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 w-4 h-4 text-slate-700 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
-              placeholder={
-                placeholder || 'Escribe y presiona ENTER para buscar...'
-              }
-              value={filtros.q}
-              onChange={(e) => setFiltros({ ...filtros, q: e.target.value })}
-              onKeyDown={handleKeyDown}
+              placeholder={placeholder}
+              value={filters.q}
+              onChange={(e) => handleInputChange('q', e.target.value)}
               className="h-9 w-full pl-9 pr-10 text-sm rounded-md border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-none shadow-xs"
               autoFocus
               onFocus={(e) =>
@@ -133,28 +136,8 @@ export default function NewsSearch({
               <X className="w-4 h-4" />
             </button>
           </div>
-
+          {/* Filter Controls (horizontal on desktop, below on mobile) */}
           <div className="flex flex-row md:flex-row gap-2 items-center md:ml-1">
-            <button
-              onClick={handleSearch}
-              className={`flex gap-1 items-center h-9 px-3 rounded-md text-xs font-medium transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/50 focus:outline-none min-w-[36px] ${
-                hasPendingSearch
-                  ? 'text-white bg-[#2d6b29] hover:bg-[#1f4d1c]'
-                  : 'text-white bg-[#3D8B37] hover:bg-[#2d6b29]'
-              }`}
-              style={{ minHeight: 36 }}
-              title={
-                hasPendingSearch
-                  ? 'Presiona ENTER o haz clic para buscar'
-                  : 'Buscar'
-              }
-            >
-              <Search className="w-4 h-4" />
-              <span className="hidden md:inline">Buscar</span>
-              {hasPendingSearch && (
-                <div className="ml-1 w-1.5 h-1.5 bg-white rounded-full opacity-75"></div>
-              )}
-            </button>
             <button
               onClick={() => setShowAdvanced(!showAdvanced)}
               className="flex gap-1 items-center h-9 px-3 rounded-md text-xs font-medium text-[#3D8B37] bg-[#F3F4F6] border border-[#3D8B37]/20 hover:bg-[#e5e7eb] transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/50 focus:outline-none min-w-[36px]"
@@ -172,7 +155,7 @@ export default function NewsSearch({
                 className={`w-4 h-4 transition-transform duration-200 ${showAdvanced ? 'rotate-180' : ''}`}
               />
             </button>
-            {(activeFiltersCount > 0 || filtros.q) && (
+            {(activeFiltersCount > 0 || filters.q) && (
               <button
                 onClick={clearAll}
                 className="flex gap-1 items-center h-9 px-2 rounded-md border border-slate-300 text-xs text-slate-600 hover:text-[#3D8B37] hover:border-[#3D8B37]/50 hover:bg-[#F3F4F6] transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/50 focus:outline-none min-w-[36px]"
@@ -185,16 +168,17 @@ export default function NewsSearch({
           </div>
         </div>
 
-        {(activeFiltersCount > 0 || filtros.q) && (
+        {/* Active Filters Chips */}
+        {(activeFiltersCount > 0 || filters.q) && (
           <div className="flex flex-wrap gap-1 mt-2">
-            {filtros.q && (
+            {filters.q && (
               <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-xs">
                 <Search className="w-3 h-3" />
                 <span>
                   "
-                  {filtros.q.length > 20
-                    ? filtros.q.substring(0, 20) + '...'
-                    : filtros.q}
+                  {filters.q.length > 20
+                    ? filters.q.substring(0, 20) + '...'
+                    : filters.q}
                   "
                 </span>
                 <button
@@ -207,10 +191,10 @@ export default function NewsSearch({
                 </button>
               </div>
             )}
-            {filtros.categoria && (
+            {filters.categoria && (
               <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-xs">
                 <Tag className="w-3 h-3" />
-                <span>{filtros.categoria}</span>
+                <span>{filters.categoria}</span>
                 <button
                   onClick={() => clearIndividualFilter('categoria')}
                   className="ml-1 text-slate-400 hover:text-[#3D8B37] transition-colors duration-200"
@@ -221,10 +205,10 @@ export default function NewsSearch({
                 </button>
               </div>
             )}
-            {filtros.desde && (
+            {filters.desde && (
               <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-xs">
                 <Calendar className="w-3 h-3" />
-                <span>Desde: {filtros.desde}</span>
+                <span>Desde: {filters.desde}</span>
                 <button
                   onClick={() => clearIndividualFilter('desde')}
                   className="ml-1 text-slate-400 hover:text-[#3D8B37] transition-colors duration-200"
@@ -235,10 +219,10 @@ export default function NewsSearch({
                 </button>
               </div>
             )}
-            {filtros.hasta && (
+            {filters.hasta && (
               <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-xs">
                 <Calendar className="w-3 h-3" />
-                <span>Hasta: {filtros.hasta}</span>
+                <span>Hasta: {filters.hasta}</span>
                 <button
                   onClick={() => clearIndividualFilter('hasta')}
                   className="ml-1 text-slate-400 hover:text-[#3D8B37] transition-colors duration-200"
@@ -252,12 +236,14 @@ export default function NewsSearch({
           </div>
         )}
 
+        {/* Advanced Filters Section */}
         <div
           className={`transition-all duration-300 ease-out overflow-hidden ${showAdvanced ? 'max-h-40 opacity-100 mt-3' : 'max-h-0 opacity-0 mt-0'}`}
           style={{ willChange: 'max-height' }}
         >
           <div className="border-t border-slate-200 pt-3">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+              {/* Fecha Desde */}
               <div>
                 <label className="block mb-1 text-xs font-medium text-slate-700">
                   <Calendar className="inline mr-1 w-3 h-3" />
@@ -265,13 +251,13 @@ export default function NewsSearch({
                 </label>
                 <input
                   type="date"
-                  value={filtros.desde}
+                  value={filters.desde}
                   onChange={(e) => handleInputChange('desde', e.target.value)}
                   className="h-8 px-2 w-full text-xs rounded border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-none"
                   style={{ minHeight: 32 }}
                 />
               </div>
-
+              {/* Fecha Hasta */}
               <div>
                 <label className="block mb-1 text-xs font-medium text-slate-700">
                   <Calendar className="inline mr-1 w-3 h-3" />
@@ -279,20 +265,20 @@ export default function NewsSearch({
                 </label>
                 <input
                   type="date"
-                  value={filtros.hasta}
+                  value={filters.hasta}
                   onChange={(e) => handleInputChange('hasta', e.target.value)}
                   className="h-8 px-2 w-full text-xs rounded border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-none"
                   style={{ minHeight: 32 }}
                 />
               </div>
-
+              {/* Categoría */}
               <div>
                 <label className="block mb-1 text-xs font-medium text-slate-700">
                   <Tag className="inline mr-1 w-3 h-3" />
                   Categoría
                 </label>
                 <select
-                  value={filtros.categoria}
+                  value={filters.categoria}
                   onChange={(e) =>
                     handleInputChange('categoria', e.target.value)
                   }
@@ -300,20 +286,11 @@ export default function NewsSearch({
                   style={{ minHeight: 32 }}
                 >
                   <option value="">Todas</option>
-                  {categorias
-                    .filter(
-                      (categoria, index, self) =>
-                        index ===
-                        self.findIndex((c) => c.nombre === categoria.nombre),
-                    )
-                    .map((categoria) => (
-                      <option
-                        key={`categoria-${categoria.id}-${categoria.nombre}`}
-                        value={categoria.nombre}
-                      >
-                        {categoria.nombre}
-                      </option>
-                    ))}
+                  {categorias.map((categoria) => (
+                    <option key={categoria} value={categoria}>
+                      {categoria}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
