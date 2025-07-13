@@ -14,12 +14,12 @@ export default async function TramitesLayout({
 
   return (
     <>
-      {/* Main Grid Layout */}
-      <div className="lg:grid lg:grid-cols-[300px_1fr] lg:gap-0 min-h-screen">
-        {/* Responsive Navigation */}
+      {/* Main Layout - Grid en desktop, block en móvil/tablet */}
+      <div className="block lg:grid lg:grid-cols-[300px_1fr] lg:gap-0 min-h-screen">
+        {/* Responsive Navigation - contiene tanto MobileMenu como Sidebar con visibilidad controlada por breakpoints */}
         <ResponsiveNav sections={navigationSections} />
-        {/* Renderiza el contenido de la página */}
-        <div>{children}</div>
+        {/* Contenido de la página - pt-20 para móviles para compensar el header fijo */}
+        <div className="w-full   lg:pt-0">{children}</div>
       </div>
     </>
   );
