@@ -1,62 +1,27 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import NewsGrid from './NewsGrid';
 import NewsSearch from './Search';
+import SimplePagination from './SimplePagination';
 import { Noticia } from '@/shared/interfaces';
 
-function SimplePagination({
-  currentPage,
-  totalPages,
-  onPageChange,
-}: {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}) {
-  if (totalPages <= 1) return null;
+// Hook optimizado para debouncing
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
-  const pages = Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-    const start = Math.max(1, currentPage - 2);
-    return start + i;
-  }).filter((page) => page <= totalPages);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
 
-  return (
-    <div className="flex justify-center items-center gap-2 mt-8">
-      {currentPage > 1 && (
-        <button
-          onClick={() => onPageChange(currentPage - 1)}
-          className="px-3 py-1 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
-        >
-          Anterior
-        </button>
-      )}
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
 
-      {pages.map((page) => (
-        <button
-          key={page}
-          onClick={() => onPageChange(page)}
-          className={`px-3 py-1 rounded-md transition-colors ${
-            page === currentPage
-              ? 'bg-[#3D8B37] text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
-        >
-          {page}
-        </button>
-      ))}
-
-      {currentPage < totalPages && (
-        <button
-          onClick={() => onPageChange(currentPage + 1)}
-          className="px-3 py-1 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
-        >
-          Siguiente
-        </button>
-      )}
-    </div>
-  );
+  return debouncedValue;
 }
 
 interface NewsClientProps {}
@@ -80,48 +45,42 @@ export default function NewsClient({}: NewsClientProps) {
   const desde = searchParams.get('desde') || '';
   const hasta = searchParams.get('hasta') || '';
 
+  // Debounced search for better performance
+  const debouncedQ = useDebounce(q, 300);
+  
+  // Fixed: Cache busting solo cuando cambien los parámetros reales
+  const cacheBuster = useMemo(() => {
+    return `${currentPage}-${debouncedQ}-${categoria}-${desde}-${hasta}`;
+  }, [currentPage, debouncedQ, categoria, desde, hasta]);
+
   const fetchNoticias = useCallback(async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const [noticiasRes, categoriasRes] = await Promise.all([
-        fetch(
-          `/api/noticias?${new URLSearchParams({
-            page: String(currentPage),
-            ...(q && { q }),
-            ...(categoria && { categoria }),
-            ...(desde && { desde }),
-            ...(hasta && { hasta }),
-            t: String(Date.now()),
-          }).toString()}`,
-          {
-            cache: 'no-store',
-            headers: {
-              'Cache-Control': 'no-cache',
-            },
+      // Only fetch news, categories handled separately
+      const noticiasRes = await fetch(
+        `/api/noticias?${new URLSearchParams({
+          page: String(currentPage),
+          ...(debouncedQ && { q: debouncedQ }),
+          ...(categoria && { categoria }),
+          ...(desde && { desde }),
+          ...(hasta && { hasta }),
+          _cache: cacheBuster, // Stable cache key
+        }).toString()}`,
+        {
+          // Remove conflicting cache headers - let VPS cache work
+          headers: {
+            'Accept': 'application/json',
           },
-        ),
-        categorias.length === 0
-          ? fetch(`/api/noticias/categorias?t=${Date.now()}`, {
-              cache: 'no-store',
-              headers: {
-                'Cache-Control': 'no-cache',
-              },
-            })
-          : Promise.resolve(null),
-      ]);
+        },
+      );
 
       if (!noticiasRes.ok) {
         throw new Error('Error al cargar las noticias');
       }
 
       const noticiasData = await noticiasRes.json();
-
-      if (categoriasRes && categoriasRes.ok) {
-        const categoriasData = await categoriasRes.json();
-        setCategorias(categoriasData.categorias || []);
-      }
 
       const mapeadas: Noticia[] = noticiasData.noticias.map((noticia: any) => ({
         id: noticia.id,
@@ -157,7 +116,17 @@ export default function NewsClient({}: NewsClientProps) {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, q, categoria, desde, hasta, categorias.length]);
+  }, [currentPage, debouncedQ, categoria, desde, hasta, cacheBuster]);
+
+  // Separate effect for categories to avoid unnecessary refetches
+  useEffect(() => {
+    if (categorias.length === 0) {
+      fetch(`/api/noticias/categorias?_cache=static`)
+        .then(res => res.json())
+        .then(data => setCategorias(data.categorias || []))
+        .catch(() => {}); // Silent fail for categories
+    }
+  }, []);
 
   useEffect(() => {
     fetchNoticias();
@@ -250,6 +219,7 @@ export default function NewsClient({}: NewsClientProps) {
           totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={handlePageChange}
+          loading={loading}
         />
       )}
     </>
