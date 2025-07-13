@@ -28,47 +28,32 @@ export async function getAllNoticias() {
   return data;
 }
 
- 
+/**
+ * WRAPPER para compatibilidad con página de noticias
+ * Usa la función unificada con paginación
+ */
 export async function getNoticiasPaginadas(
   page: number = 1,
   pageSize: number = 4,
   filters: Record<string, any> = {},
 ) {
-  const query = qs.stringify(
-    {
-      
-      fields: ['titulo', 'resumen', 'fecha', 'categoria', 'esImportante', 'slug', 'createdAt'],
-      populate: {
-        portada: {
-          fields: ['url', 'alternativeText']
-        },
-        imagen: {
-          fields: ['url', 'width', 'height', 'alternativeText']
-        }
-      },
-      sort: ['createdAt:desc', 'fecha:desc', 'id:desc'],
-      pagination: { page, pageSize },
-      filters: {
-        publicado: { $eq: true },
-        ...filters,
-      },
-    },
-    { encodeValuesOnly: true },
-  );
-
-  const res = await fetch(`${API_URL}/noticias?${query}`, {
-    // VPS-optimized: freshness sin sobrecargar el backend
-    next: { 
-      revalidate: 60, // 1 MINUTO - máximo freshness con efficiency para VPS
-      tags: ['noticias-collection'] 
-    },
+  return getNoticiasUnificadas({
+    limit: pageSize,
+    page,
+    filters,
+    withPagination: true
   });
+}
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch paginated noticias');
-  }
-  const { data, meta } = await res.json();
-  return { noticias: data, pagination: meta.pagination };
+/**
+ * WRAPPER para compatibilidad con home page
+ * Usa la función unificada sin paginación
+ */
+export async function getUltimasNoticias(limit: number = 6): Promise<Noticia[]> {
+  return getNoticiasUnificadas({
+    limit,
+    withPagination: false
+  });
 }
 
  
@@ -206,4 +191,68 @@ export async function getNoticiasCategorias(): Promise<Array<{ id: number; nombr
     id: index + 1,
     nombre: categoria,
   }));
+}
+
+/**
+ * Función UNIFICADA para obtener noticias - sirve para /noticias y home
+ * Reemplaza getNoticiasPaginadas y getUltimasNoticias con una sola función optimizada
+ * 
+ * @param options.limit - Número de noticias (6 para home, 5+ para /noticias)
+ * @param options.page - Página para paginación (solo /noticias)
+ * @param options.filters - Filtros de búsqueda (solo /noticias)
+ * @param options.withPagination - Si incluir metadata de paginación (solo /noticias)
+ */
+export async function getNoticiasUnificadas({
+  limit = 6,
+  page = 1,
+  filters = {},
+  withPagination = false
+}: {
+  limit?: number;
+  page?: number;
+  filters?: Record<string, any>;
+  withPagination?: boolean;
+} = {}) {
+  const query = qs.stringify(
+    {
+      fields: ['titulo', 'resumen', 'fecha', 'categoria', 'esImportante', 'slug', 'createdAt'],
+      populate: {
+        portada: {
+          fields: ['url', 'alternativeText']
+        },
+        imagen: {
+          fields: ['url', 'width', 'height', 'alternativeText']
+        }
+      },
+      sort: ['createdAt:desc', 'fecha:desc', 'id:desc'],
+      pagination: withPagination 
+        ? { page, pageSize: limit }
+        : { pageSize: limit },
+      filters: {
+        publicado: { $eq: true },
+        ...filters,
+      },
+    },
+    { encodeValuesOnly: true },
+  );
+
+  const res = await fetch(`${API_URL}/noticias?${query}`, {
+    // VPS-optimized: misma estrategia de cache para consistencia
+    next: { 
+      revalidate: 60, // 1 MINUTO - unified cache strategy
+      tags: ['noticias-collection', 'noticias-unified'] 
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch noticias');
+  }
+  
+  const { data, meta } = await res.json();
+  
+  if (withPagination) {
+    return { noticias: data || [], pagination: meta.pagination };
+  }
+  
+  return data || [];
 }

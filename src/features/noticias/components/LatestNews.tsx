@@ -1,42 +1,15 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Separator } from '@radix-ui/react-separator';
 import { RegularNewsCard } from './RegularNewsCard';
 import { Noticia } from '@/shared/interfaces';
 import Link from 'next/link';
 
-export default function LatestNews() {
-  const [noticias, setNoticias] = useState<Noticia[]>([]);
-  const [loading, setLoading] = useState(true);
+interface LatestNewsProps {
+  noticias: Noticia[]; // Required - ya no opcional, viene del SSR
+}
 
-  useEffect(() => {
-    const fetchNoticias = async () => {
-      try {
-        const res = await fetch(`/api/noticias?page=1&limit=6&t=${Date.now()}`);
-        if (res.ok) {
-          const data = await res.json();
-          setNoticias(data.noticias.slice(0, 6));
-        }
-      } catch (error) {
-        console.error('Error fetching latest news:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNoticias();
-  }, []);
-
-  if (loading) {
-    return (
-      <section className="relative px-4 py-12 mx-auto w-full max-w-7xl sm:px-6 lg:px-8 lg:py-20">
-        <div className="flex justify-center items-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#3D8B37]"></div>
-        </div>
-      </section>
-    );
-  }
+export default function LatestNews({ noticias }: LatestNewsProps) {
+  // Componente puro - no más fetch, solo renderizado
 
   return (
     <section className="relative px-4 py-12 mx-auto w-full max-w-7xl sm:px-6 lg:px-8 lg:py-20">
@@ -70,9 +43,15 @@ export default function LatestNews() {
         </div>
 
         <div className="grid flex-1 grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
-          {noticias.map((noticia: Noticia) => (
-            <RegularNewsCard key={noticia.id} noticia={noticia} />
-          ))}
+          {noticias.length > 0 ? (
+            noticias.map((noticia: Noticia) => (
+              <RegularNewsCard key={noticia.id} noticia={noticia} />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-8">
+              <p className="text-gray-500">No hay noticias disponibles</p>
+            </div>
+          )}
         </div>
       </div>
     </section>

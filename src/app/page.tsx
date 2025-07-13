@@ -5,6 +5,7 @@ import SocialMediaSection from '@/features/socials/components/SocialMediaSection
 import { Separador } from '@/shared/components/Separador';
 import { Metadata } from 'next';
 import LatestNews from '@/features/noticias/components/LatestNews';
+import { getUltimasNoticias } from '@/features/noticias/services/noticias';
 
 export const metadata: Metadata = {
   title: 'Consejo General de Educación (CGE)',
@@ -42,6 +43,9 @@ export const metadata: Metadata = {
 };
 
 export default async function PagPrincipal() {
+  // SSR: Fetch noticias en servidor usando la función unificada
+  const noticias = await getUltimasNoticias(6);
+  
   return (
     <div className="min-h-screen">
       <main>
@@ -57,7 +61,8 @@ export default async function PagPrincipal() {
         {/* <Separator className="my-8 bg-[#217A4B]/20" /> */}
         <Separador />
         <section>
-          <LatestNews />
+          {/* Pasar noticias como props - no más fetch en cliente */}
+          <LatestNews noticias={noticias} />
         </section>
         <Separador />
         <SocialMediaSection />
