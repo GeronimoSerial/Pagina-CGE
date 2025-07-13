@@ -220,7 +220,7 @@ export default function NewsClient({}: NewsClientProps) {
               placeholder="Buscar noticias institucionales..."
             />
           </div>
-          <button
+          {/* <button
             onClick={fetchNoticias}
             disabled={loading}
             className="ml-4 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-md transition-colors disabled:opacity-50 flex items-center gap-2"
@@ -240,7 +240,7 @@ export default function NewsClient({}: NewsClientProps) {
               />
             </svg>
             {loading ? 'Actualizando...' : 'Actualizar'}
-          </button>
+          </button> */}
         </div>
       </div>
 
