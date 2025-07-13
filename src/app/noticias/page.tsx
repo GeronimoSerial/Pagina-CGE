@@ -38,7 +38,6 @@ export const metadata: Metadata = {
 
 interface NoticiasPageProps {}
 
-export const revalidate = 300; // 5 minutos - balance entre performance y contenido fresco
 
 export default function NoticiasPage() {
   return (

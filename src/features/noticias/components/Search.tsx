@@ -26,7 +26,7 @@ export default function NewsSearch({
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   useEffect(() => {
-    // Solo inicializa con lo que hay en la URL al montar
+    
     setFiltros({
       q: searchParams.get('q') || '',
       categoria: searchParams.get('categoria') || '',
@@ -41,23 +41,19 @@ export default function NewsSearch({
     if (filtros.categoria) params.set('categoria', filtros.categoria);
     if (filtros.desde) params.set('desde', filtros.desde);
     if (filtros.hasta) params.set('hasta', filtros.hasta);
-    params.set('page', '1'); // siempre reiniciar a la primera página
+    params.set('page', '1');
 
     router.push(`/noticias?${params.toString()}`);
   }, [filtros, router]);
 
-  // AUTO-SEARCH REMOVIDO - Solo manual con ENTER o botón BUSCAR
-  // Esto reduce drásticamente los requests a la VPS
   
-  // Auto-search SOLO para filtros (no para texto libre)
   useEffect(() => {
-    // Solo ejecutar búsqueda automática para filtros de fecha y categoría
-    // El texto (q) requiere acción manual
-    const hasFilters = filtros.categoria || filtros.desde || filtros.hasta;
     
+    const hasFilters = filtros.categoria || filtros.desde || filtros.hasta;
+
     if (hasFilters) {
       const params = new URLSearchParams();
-      if (filtros.q) params.set('q', filtros.q); // Mantener texto actual
+      if (filtros.q) params.set('q', filtros.q);
       if (filtros.categoria) params.set('categoria', filtros.categoria);
       if (filtros.desde) params.set('desde', filtros.desde);
       if (filtros.hasta) params.set('hasta', filtros.hasta);
@@ -65,7 +61,7 @@ export default function NewsSearch({
 
       router.push(`/noticias?${params.toString()}`);
     }
-  }, [filtros.categoria, filtros.desde, filtros.hasta, router]); // NO incluir filtros.q
+  }, [filtros.categoria, filtros.desde, filtros.hasta, router]);
 
   const handleInputChange = (field: string, value: string) => {
     setFiltros({ ...filtros, [field]: value });
@@ -98,7 +94,7 @@ export default function NewsSearch({
     }
   };
 
-  // Verificar si hay texto pendiente de búsqueda (indicador sutil)
+  
   const urlQuery = searchParams.get('q') || '';
   const hasPendingSearch = filtros.q !== urlQuery && filtros.q.length > 0;
   return (
@@ -107,14 +103,16 @@ export default function NewsSearch({
       style={{ minHeight: 60 }}
     >
       <div className="w-full max-w-[700px] p-2 rounded-lg bg-white border border-slate-200 transition-shadow duration-300 shadow-md">
-        {/* Search Row */}
+        
         <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3">
-          {/* Search Input */}
+          
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 w-4 h-4 text-slate-700 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
-              placeholder={placeholder || "Escribe y presiona ENTER para buscar..."}
+              placeholder={
+                placeholder || 'Escribe y presiona ENTER para buscar...'
+              }
               value={filtros.q}
               onChange={(e) => setFiltros({ ...filtros, q: e.target.value })}
               onKeyDown={handleKeyDown}
@@ -141,17 +139,21 @@ export default function NewsSearch({
               <X className="w-4 h-4" />
             </button>
           </div>
-          {/* Filter Controls (horizontal on desktop, below on mobile) */}
+          
           <div className="flex flex-row md:flex-row gap-2 items-center md:ml-1">
             <button
               onClick={handleSearch}
               className={`flex gap-1 items-center h-9 px-3 rounded-md text-xs font-medium transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/50 focus:outline-none min-w-[36px] ${
-                hasPendingSearch 
-                  ? 'text-white bg-[#2d6b29] hover:bg-[#1f4d1c]' 
+                hasPendingSearch
+                  ? 'text-white bg-[#2d6b29] hover:bg-[#1f4d1c]'
                   : 'text-white bg-[#3D8B37] hover:bg-[#2d6b29]'
               }`}
               style={{ minHeight: 36 }}
-              title={hasPendingSearch ? "Presiona ENTER o haz clic para buscar" : "Buscar"}
+              title={
+                hasPendingSearch
+                  ? 'Presiona ENTER o haz clic para buscar'
+                  : 'Buscar'
+              }
             >
               <Search className="w-4 h-4" />
               <span className="hidden md:inline">Buscar</span>
@@ -189,7 +191,7 @@ export default function NewsSearch({
           </div>
         </div>
 
-        {/* Active Filters Chips */}
+        
         {(activeFiltersCount > 0 || filtros.q) && (
           <div className="flex flex-wrap gap-1 mt-2">
             {filtros.q && (
@@ -257,14 +259,14 @@ export default function NewsSearch({
           </div>
         )}
 
-        {/* Advanced Filters Section */}
+        
         <div
           className={`transition-all duration-300 ease-out overflow-hidden ${showAdvanced ? 'max-h-40 opacity-100 mt-3' : 'max-h-0 opacity-0 mt-0'}`}
           style={{ willChange: 'max-height' }}
         >
           <div className="border-t border-slate-200 pt-3">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-              {/* Fecha Desde */}
+              
               <div>
                 <label className="block mb-1 text-xs font-medium text-slate-700">
                   <Calendar className="inline mr-1 w-3 h-3" />
@@ -278,7 +280,7 @@ export default function NewsSearch({
                   style={{ minHeight: 32 }}
                 />
               </div>
-              {/* Fecha Hasta */}
+              
               <div>
                 <label className="block mb-1 text-xs font-medium text-slate-700">
                   <Calendar className="inline mr-1 w-3 h-3" />
@@ -292,7 +294,7 @@ export default function NewsSearch({
                   style={{ minHeight: 32 }}
                 />
               </div>
-              {/* Categoría */}
+              
               <div>
                 <label className="block mb-1 text-xs font-medium text-slate-700">
                   <Tag className="inline mr-1 w-3 h-3" />
