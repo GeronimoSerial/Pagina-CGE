@@ -57,9 +57,9 @@ export async function getNoticiasPaginadas(
   );
 
   const res = await fetch(`${API_URL}/noticias?${query}`, {
-    
+    // VPS-optimized: freshness sin sobrecargar el backend
     next: { 
-      revalidate: 300, // 5 MINUTOS - balance entre performance y freshness
+      revalidate: 60, // 1 MINUTO - máximo freshness con efficiency para VPS
       tags: ['noticias-collection'] 
     },
   });
