@@ -35,14 +35,18 @@ export async function GET(request: Request) {
         }, {
             status: 200,
             headers: {
-                // Cache optimizado para VPS - balance entre freshness y performance
-                'Cache-Control': 'public, max-age=30, stale-while-revalidate=60',
-                'X-VPS-Optimized': 'cached-service',
+                // Optimized for load testing - más agresivo cache
+                'Cache-Control': 'public, max-age=45, stale-while-revalidate=90',
+                'X-VPS-Optimized': 'load-test-ready',
+                'X-Cache-Strategy': 'server-cached',
             },
         });
     }
     catch (error) {
         console.error('Error fetching noticias:', error);
-        return NextResponse.json({ error: "Error al obtener las noticias" }, { status: 500 });
+        return NextResponse.json({ 
+            error: "Error al obtener las noticias",
+            details: process.env.NODE_ENV === 'development' ? String(error) : undefined
+        }, { status: 500 });
     }
 }
