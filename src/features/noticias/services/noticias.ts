@@ -2,11 +2,19 @@ import { API_URL, STRAPI_URL } from '@/shared/lib/config';
 import { Noticia } from '@/shared/interfaces';
 import qs from 'qs';
 
-// Cache optimization: Create consistent cache keys
+// Simplified cache strategy: Fewer unique keys = better cache hits
 function createCacheKey(page: number, pageSize: number, filters: Record<string, any>): string {
-  const filterKeys = Object.keys(filters).sort();
-  const filterStr = filterKeys.map(key => `${key}:${JSON.stringify(filters[key])}`).join('|');
-  return `noticias-${page}-${pageSize}-${Buffer.from(filterStr).toString('base64').slice(0, 10)}`;
+  // Reduce granularity for better cache efficiency under load
+  const hasFilters = Object.keys(filters).length > 0;
+  const bucket = Math.floor(page / 5); // Group pages in buckets of 5
+  
+  if (!hasFilters) {
+    return `noticias-clean-${bucket}-${pageSize}`;
+  }
+  
+  // Simple hash for filters to reduce unique keys
+  const filterHash = Object.keys(filters).sort().join('-');
+  return `noticias-filtered-${bucket}-${pageSize}-${filterHash}`;
 }
  
 export async function getAllNoticias() {
@@ -66,9 +74,9 @@ export async function getNoticiasPaginadas(
   );
 
   const res = await fetch(`${API_URL}/noticias?${query}`, {
-    // Load-test optimized: más cache para soportar alta concurrencia
+    // Ultra-aggressive cache for load testing: Priorize performance over freshness
     next: { 
-      revalidate: 45, // 45 SEGUNDOS - más cache para load testing
+      revalidate: 120, // 2 MINUTOS - máximo cache para alta concurrencia
       tags: ['noticias-collection', cacheKey] 
     },
   });

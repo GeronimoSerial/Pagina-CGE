@@ -35,10 +35,11 @@ export async function GET(request: Request) {
         }, {
             status: 200,
             headers: {
-                // Optimized for load testing - más agresivo cache
-                'Cache-Control': 'public, max-age=45, stale-while-revalidate=90',
-                'X-VPS-Optimized': 'load-test-ready',
-                'X-Cache-Strategy': 'server-cached',
+                // Ultra-aggressive browser cache for high concurrency
+                'Cache-Control': 'public, max-age=90, stale-while-revalidate=180, s-maxage=120',
+                'X-VPS-Optimized': 'ultra-cached',
+                'X-Cache-Strategy': 'aggressive-server-cached',
+                'Vary': 'Accept-Encoding', // Enable compression caching
             },
         });
     }
