@@ -28,31 +28,11 @@ export async function getEscuelas(): Promise<Escuela[]> {
   return processedEscuelas;
 }
 
-interface SupervisoresClientProps {
-  datosSimulados: Escuela[];
-}
-
-export function getSupervisoresFicticios() {
-  return Array.from({ length: 14 }, (_, i) => ({
-    id: i + 1,
-    nombre: `Supervisor/a ${i + 1}`,
-  }));
-}
-
 export function agruparEscuelasPorDepartamento(escuelas: Escuela[]) {
   const mapa: { [key: string]: Escuela[] } = {};
   escuelas.forEach((escuela) => {
     if (!mapa[escuela.departamento]) mapa[escuela.departamento] = [];
     mapa[escuela.departamento].push(escuela);
-  });
-  return mapa;
-}
-export function agruparEscuelasPorSupervisor(escuelas: Escuela[]) {
-  const mapa: { [key: number]: Escuela[] } = {};
-  escuelas.forEach((escuela) => {
-    if (escuela.supervisorID === undefined) return;
-    if (!mapa[escuela.supervisorID]) mapa[escuela.supervisorID] = [];
-    mapa[escuela.supervisorID].push(escuela);
   });
   return mapa;
 }

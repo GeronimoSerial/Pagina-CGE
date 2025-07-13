@@ -38,13 +38,6 @@ export default function EscuelasClient() {
     [escuelas],
   );
 
-  const totalMatricula2025 = useMemo(() => {
-    return escuelas.reduce(
-      (acc, escuela) => acc + Number(escuela.matricula2025 || 0),
-      0,
-    );
-  }, [escuelas]);
-
   const handleSelectEscuela = useCallback((escuela: EscuelaConMail) => {
     setEscuelaSeleccionada(escuela);
   }, []);
@@ -100,12 +93,8 @@ export default function EscuelasClient() {
               <p className="text-[10px] uppercase font-semibold text-gray-500 tracking-wider">
                 Total Escuelas
               </p>
-              <p className="text-xl font-bold text-gray-800">
-                {escuelas.length}
-              </p>
-              <p className="text-sm text-gray-500">
-                en {Object.keys(escuelasPorDepartamento).length} departamentos
-              </p>
+              <p className="text-xl font-bold text-gray-800">1131</p>
+              <p className="text-sm text-gray-500">en 25 departamentos</p>
             </div>
           </div>
           <div className="bg-white rounded-xl border border-gray-200 shadow-md p-4 flex items-center hover:shadow-lg transition-shadow">
@@ -116,9 +105,7 @@ export default function EscuelasClient() {
               <p className="text-[10px] uppercase font-semibold text-gray-500 tracking-wider">
                 Matrícula 2025
               </p>
-              <p className="text-xl font-bold text-gray-800">
-                {totalMatricula2025.toLocaleString()} alumnos
-              </p>
+              <p className="text-xl font-bold text-gray-800">128.003 alumnos</p>
               <p className="text-sm text-gray-500">
                 en la provincia de Corrientes
               </p>
@@ -141,7 +128,7 @@ export default function EscuelasClient() {
                 </div>
               </div>
               <span className="hidden md:flex bg-white text-[#2D6A27] text-sm rounded-full font-bold px-3 py-1">
-                {Object.keys(escuelasPorDepartamento).length} departamentos
+                25 departamentos
               </span>
             </div>
           </div>
