@@ -2,6 +2,12 @@ import { API_URL, STRAPI_URL } from '@/shared/lib/config';
 import { Noticia } from '@/shared/interfaces';
 import qs from 'qs';
 
+// Cache optimization: Create consistent cache keys
+function createCacheKey(page: number, pageSize: number, filters: Record<string, any>): string {
+  const filterKeys = Object.keys(filters).sort();
+  const filterStr = filterKeys.map(key => `${key}:${JSON.stringify(filters[key])}`).join('|');
+  return `noticias-${page}-${pageSize}-${Buffer.from(filterStr).toString('base64').slice(0, 10)}`;
+}
  
 export async function getAllNoticias() {
   const query = qs.stringify(
@@ -34,6 +40,9 @@ export async function getNoticiasPaginadas(
   pageSize: number = 4,
   filters: Record<string, any> = {},
 ) {
+  // Create cache tag for better cache invalidation
+  const cacheKey = createCacheKey(page, pageSize, filters);
+  
   const query = qs.stringify(
     {
       
@@ -57,10 +66,10 @@ export async function getNoticiasPaginadas(
   );
 
   const res = await fetch(`${API_URL}/noticias?${query}`, {
-    // VPS-optimized: freshness sin sobrecargar el backend
+    // Load-test optimized: más cache para soportar alta concurrencia
     next: { 
-      revalidate: 60, // 1 MINUTO - máximo freshness con efficiency para VPS
-      tags: ['noticias-collection'] 
+      revalidate: 45, // 45 SEGUNDOS - más cache para load testing
+      tags: ['noticias-collection', cacheKey] 
     },
   });
 
