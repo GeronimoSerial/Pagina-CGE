@@ -18,10 +18,8 @@ import Image from 'next/image';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
 
-// Revalida la página cada hora para mantener los datos actualizados (ISR).
-export const revalidate = 3600;
+export const revalidate = 86400;
 
-// Pre-renderiza todas las páginas de noticias en el build time.
 export async function generateStaticParams() {
   const noticias = await getAllNoticias();
   return noticias.map((noticia: { slug: string }) => ({
@@ -29,18 +27,22 @@ export async function generateStaticParams() {
   }));
 }
 
-/**
- * Genera los metadatos de la página (título, descripción, Open Graph)
- * basándose en los datos de la noticia.
- */
+const metadataCache = new Map<string, any>();
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+
+  if (metadataCache.has(slug)) {
+    return metadataCache.get(slug);
+  }
+
   const noticia = await getNoticiaBySlug(slug);
   if (!noticia) return {};
+
   const url = `/noticias/${slug}`;
   const structuredData = {
     '@context': 'https://schema.org',
@@ -59,7 +61,8 @@ export async function generateMetadata({
       '@id': url,
     },
   };
-  return {
+
+  const metadata = {
     title: noticia.titulo,
     description: noticia.resumen || noticia.titulo,
     alternates: {
@@ -81,9 +84,13 @@ export async function generateMetadata({
       'script:ld+json': JSON.stringify(structuredData),
     },
   };
+
+  metadataCache.set(slug, metadata);
+  setTimeout(() => metadataCache.delete(slug), 3600000); // 1 hora
+
+  return metadata;
 }
 
-// Lista de enlaces institucionales para la barra lateral.
 const ENLACES = [
   {
     href: 'https://www.corrientes.gob.ar/',
@@ -99,38 +106,33 @@ const ENLACES = [
   },
 ];
 
-// Define las propiedades esperadas para el componente de la página.
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-/**
- * Componente principal de la página de noticias individual.
- * Muestra el contenido de una noticia, enlaces relacionados y una galería de imágenes.
- *  Utiliza Server Components para la carga eficiente de datos.
- * @param {PageProps} props - Propiedades de la página, incluyendo el slug de la noticia.
- * @returns {JSX.Element} - Componente de la página de noticia.
- * @throws {notFound} - Si la noticia no se encuentra, redirige a la página 404.
- *
- */
 export default async function NoticiaPage({ params }: PageProps) {
   const { slug } = await params;
-  // Obtiene la noticia y las noticias relacionadas de forma eficiente.
-  const noticia = await getNoticiaBySlug(slug);
+
+  const [noticia, related] = await Promise.all([
+    getNoticiaBySlug(slug),
+
+    slug ? getNoticiasRelacionadas('').catch(() => []) : Promise.resolve([]),
+  ]);
 
   if (!noticia) {
     return notFound();
   }
 
-  const related = await getNoticiasRelacionadas(noticia.categoria);
+  const relatedFinal =
+    related.length === 0
+      ? await getNoticiasRelacionadas(noticia.categoria).catch(() => [])
+      : related;
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <div className="flex flex-1">
-        {/* Contenido principal de la noticia */}
         <main className="flex-1 transition-all duration-300">
           <div className="px-4 py-8 mx-auto max-w-5xl sm:px-6 lg:px-8">
-            {/* Breadcrumb para la navegación */}
             <nav className="flex items-center mb-6 text-sm text-gray-500">
               <Link href="/" className="hover:text-green-800">
                 Inicio
@@ -142,10 +144,9 @@ export default async function NoticiaPage({ params }: PageProps) {
               <span className="mx-2">/</span>
               <span className="text-gray-900">{noticia.titulo}</span>
             </nav>
-            {/* Artículo principal de la noticia */}
+
             <article className="mb-8 bg-white rounded-xl shadow-sm">
               <div className="p-6 sm:p-8">
-                {/* Encabezado del artículo con metadatos de la noticia */}
                 <header className="mb-8">
                   <div className="flex flex-wrap gap-4 items-center mb-4 text-sm text-gray-500">
                     <div className="flex items-center">
@@ -171,7 +172,7 @@ export default async function NoticiaPage({ params }: PageProps) {
                     {noticia.resumen}
                   </p>
                 </header>
-                {/* Imagen de portada de la noticia, si existe */}
+
                 {noticia.portada && (
                   <Image
                     src={getPortada({ noticia }) || ''}
@@ -190,7 +191,7 @@ export default async function NoticiaPage({ params }: PageProps) {
                     {noticia.contenido}
                   </ReactMarkdown>
                 </div>
-                {/* Galería de imágenes, si la noticia tiene imágenes */}
+
                 {noticia.imagen && noticia.imagen.length > 0 && (
                   <>
                     <Separador titulo="Galería de imágenes" />
@@ -201,15 +202,14 @@ export default async function NoticiaPage({ params }: PageProps) {
             </article>
           </div>
         </main>
-        {/* Barra lateral (estática, a la derecha) */}
+
         <aside className="hidden overflow-hidden sticky top-[85px] mt-16 mr-4 mb-3 w-72 lg:h-[530px] border-t-2 border-r border-b border-l shadow-lg backdrop-blur-sm transition-all duration-500 ease-out border-slate-200 border-t-slate-300 shadow-slate-200/50 lg:block bg-white/95">
           <div className="flex flex-col h-full">
-            {/* Sección de navegación: Enlaces institucionales */}
             <div className="px-2 py-6">
               <h3 className="px-4 mb-3 text-sm font-semibold tracking-[0.1em] text-black ">
                 ENLACES INSTITUCIONALES
               </h3>
-              {/* Enlaces de navegación mejorados */}
+
               <div className="space-y-1">
                 {ENLACES.map((enlace) => (
                   <Link
@@ -219,25 +219,23 @@ export default async function NoticiaPage({ params }: PageProps) {
                     rel="noopener noreferrer"
                     className="group relative flex items-center px-4 py-3.5 text-black-800 transition-all duration-300 ease-out hover:text-green-900 hover:underline"
                   >
-                    {/* Línea de acento izquierda que aparece al pasar el ratón */}
                     <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-green-800 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
-                    {/* Contenedor de contenido con mejor espaciado */}
+
                     <div className="flex items-center ml-3 w-full">
-                      {/* Elemento decorativo pequeño */}
                       <div className="w-1.5 h-1.5 bg-green-800 rounded-full mr-3 group-hover:bg-green-700 transition-colors duration-300"></div>
-                      {/* Texto del enlace */}
+
                       <span className="text-sm font-medium tracking-wide transition-transform duration-300 ease-out group-hover:translate-x-1">
                         {enlace.label}
                       </span>
                     </div>
-                    {/* Fondo sutil al pasar el ratón */}
+
                     <div className="absolute inset-0 rounded-sm opacity-0 transition-opacity duration-300 ease-out bg-slate-50 group-hover:opacity-60"></div>
                   </Link>
                 ))}
               </div>
             </div>
-            {/* Separador elegante entre secciones */}
-            {Array.isArray(related) && related.length > 0 && (
+
+            {Array.isArray(relatedFinal) && relatedFinal.length > 0 && (
               <div className="px-6">
                 <div className="relative">
                   <div className="flex absolute inset-0 items-center">
@@ -254,23 +252,22 @@ export default async function NoticiaPage({ params }: PageProps) {
                 </div>
               </div>
             )}
-            {/* Sección de artículos relacionados */}
-            {Array.isArray(related) && related.length > 0 && (
+
+            {Array.isArray(relatedFinal) && relatedFinal.length > 0 && (
               <div className="flex-1 px-2 py-3">
                 <h3 className="px-4 mb-2 text-sm font-semibold tracking-[0.1em] text-black ">
                   ARTÍCULOS RELACIONADOS
                 </h3>
-                {/* Enlaces a artículos relacionados */}
+
                 <div className="space-y-1">
-                  {related.map((item: any) => (
+                  {relatedFinal.map((item: any) => (
                     <Link
                       key={item.id}
                       href={`/noticias/${item.slug}`}
                       className="block relative px-4 py-1 transition-all duration-300 ease-out group hover:text-slate-900"
                     >
-                      {/* Línea de acento izquierda */}
                       <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-green-800 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
-                      {/* Contenido con mejor uso del margen izquierdo */}
+
                       <div className="ml-3">
                         <div className="mb-2 text-sm font-medium leading-snug transition-transform duration-300 ease-out text-slate-800 group-hover:text-green-800 group-hover:translate-x-1">
                           {item.titulo}
