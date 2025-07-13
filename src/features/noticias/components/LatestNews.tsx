@@ -1,17 +1,46 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { Separator } from '@radix-ui/react-separator';
-import { getNoticiasPaginadas } from '@/features/noticias/services/noticias';
 import { RegularNewsCard } from './RegularNewsCard';
 import { Noticia } from '@/shared/interfaces';
 import Link from 'next/link';
-export default async function LatestNews() {
-  // News data for institutional content
-  const { noticias } = await getNoticiasPaginadas(1, 6);
+
+export default function LatestNews() {
+  const [noticias, setNoticias] = useState<Noticia[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNoticias = async () => {
+      try {
+        const res = await fetch(`/api/noticias?page=1&limit=6&t=${Date.now()}`);
+        if (res.ok) {
+          const data = await res.json();
+          setNoticias(data.noticias.slice(0, 6));
+        }
+      } catch (error) {
+        console.error('Error fetching latest news:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNoticias();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="relative px-4 py-12 mx-auto w-full max-w-7xl sm:px-6 lg:px-8 lg:py-20">
+        <div className="flex justify-center items-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#3D8B37]"></div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="relative px-4 py-12 mx-auto w-full max-w-7xl sm:px-6 lg:px-8 lg:py-20">
       <div className="flex flex-col gap-8 lg:flex-row lg:gap-16">
-        {/* Left section - Heading and Description */}
         <div className="w-full lg:w-96 lg:sticky lg:top-8 lg:self-start">
           <div className="relative mb-8">
             <h2 className="mb-6 text-2xl font-semibold tracking-wide leading-tight text-gray-300 sm:text-4xl bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
@@ -40,7 +69,6 @@ export default async function LatestNews() {
           </div>
         </div>
 
-        {/* Right section - News grid */}
         <div className="grid flex-1 grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
           {noticias.map((noticia: Noticia) => (
             <RegularNewsCard key={noticia.id} noticia={noticia} />
