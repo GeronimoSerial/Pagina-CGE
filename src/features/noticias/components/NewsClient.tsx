@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import NewsGrid from './NewsGrid';
 import NewsSearch from './Search';
 import SimplePagination from './SimplePagination';
@@ -126,12 +126,18 @@ export default function NewsClient({}: NewsClientProps) {
       console.error('News fetch error:', err);
       // More specific error handling for load testing
       const error = err as Error;
+      const isRetryingRef = useRef(false);
       if (error.name === 'AbortError') {
         setError('Tiempo de espera agotado - servidor sobrecargado');
-      } else if (error.message?.includes('HTTP 5')) {
+      } else if (error.message?.includes('HTTP 5') && !isRetryingRef.current) {
+        isRetryingRef.current = true;
+        // Retry logic for server errors
+        // console.warn('Retrying fetch due to server error...');
+
         setError('Error del servidor - reintentando automáticamente...');
         // Auto-retry on server errors with exponential backoff
         setTimeout(() => {
+          isRetryingRef.current = false;
           if (!loading) fetchNoticias();
         }, 2000);
       } else {
@@ -142,6 +148,7 @@ export default function NewsClient({}: NewsClientProps) {
     }
   }, [currentPage, debouncedQ, categoria, desde, hasta, cacheBuster]);
 
+  
   // Separate effect for categories to avoid unnecessary refetches
   useEffect(() => {
     if (categorias.length === 0) {
