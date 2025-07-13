@@ -104,7 +104,7 @@ export default function NewsGrid({
           </>
         )}
       </section>
-      
+
       <section className="mb-6">
         <Separador titulo="Más noticias" />
 

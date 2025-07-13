@@ -38,7 +38,6 @@ export const metadata: Metadata = {
 
 interface NoticiasPageProps {}
 
-
 export default function NoticiasPage() {
   return (
     <section>
