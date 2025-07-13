@@ -45,12 +45,15 @@ export default function NewsClient({}: NewsClientProps) {
   const desde = searchParams.get('desde') || '';
   const hasta = searchParams.get('hasta') || '';
 
-  // Debounced search for better performance
-  const debouncedQ = useDebounce(q, 300);
+  // Ultra-aggressive debouncing for load testing
+  const debouncedQ = useDebounce(q, 500); // Increased from 300ms
   
-  // Fixed: Cache busting solo cuando cambien los parámetros reales
+  // Simplified cache key - reduce uniqueness for better cache hits
   const cacheBuster = useMemo(() => {
-    return `${currentPage}-${debouncedQ}-${categoria}-${desde}-${hasta}`;
+    // Group pages to reduce cache fragmentation
+    const pageGroup = Math.floor((currentPage - 1) / 5);
+    const hasFilters = debouncedQ || categoria || desde || hasta;
+    return hasFilters ? `filtered-${pageGroup}` : `clean-${pageGroup}`;
   }, [currentPage, debouncedQ, categoria, desde, hasta]);
 
   const fetchNoticias = useCallback(async () => {
@@ -58,7 +61,10 @@ export default function NewsClient({}: NewsClientProps) {
     setError(null);
 
     try {
-      // Only fetch news, categories handled separately
+      // Ultra-optimized request with timeout and retry-friendly headers
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
+      
       const noticiasRes = await fetch(
         `/api/noticias?${new URLSearchParams({
           page: String(currentPage),
@@ -66,18 +72,21 @@ export default function NewsClient({}: NewsClientProps) {
           ...(categoria && { categoria }),
           ...(desde && { desde }),
           ...(hasta && { hasta }),
-          _cache: cacheBuster, // Stable cache key
+          _cache: cacheBuster,
         }).toString()}`,
         {
-          // Remove conflicting cache headers - let VPS cache work
+          signal: controller.signal,
           headers: {
             'Accept': 'application/json',
+            'Cache-Control': 'max-age=90', // Browser cache hint
           },
         },
       );
+      
+      clearTimeout(timeoutId);
 
       if (!noticiasRes.ok) {
-        throw new Error('Error al cargar las noticias');
+        throw new Error(`HTTP ${noticiasRes.status}: Error al cargar las noticias`);
       }
 
       const noticiasData = await noticiasRes.json();
@@ -112,7 +121,20 @@ export default function NewsClient({}: NewsClientProps) {
       setNoticias(regulares);
       setTotalPages(noticiasData.totalPages || 1);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error desconocido');
+      console.error('News fetch error:', err);
+      // More specific error handling for load testing
+      const error = err as Error;
+      if (error.name === 'AbortError') {
+        setError('Tiempo de espera agotado - servidor sobrecargado');
+      } else if (error.message?.includes('HTTP 5')) {
+        setError('Error del servidor - reintentando automáticamente...');
+        // Auto-retry on server errors with exponential backoff
+        setTimeout(() => {
+          if (!loading) fetchNoticias();
+        }, 2000);
+      } else {
+        setError(error.message || 'Error de conexión');
+      }
     } finally {
       setLoading(false);
     }
