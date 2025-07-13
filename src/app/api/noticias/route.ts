@@ -31,8 +31,9 @@ export async function GET(request: Request) {
         }, {
             status: 200,
             headers: {
-                // Cache reducido para contenido más fresco
-                'Cache-Control': 'public, max-age=300, stale-while-revalidate=600', // 5min cache, 10min stale
+                // Cache muy agresivo para noticias frescas
+                'Cache-Control': 'public, max-age=60, stale-while-revalidate=120', // 1min cache, 2min stale
+                'X-Content-Fresh': 'true',
             },
         });
     }

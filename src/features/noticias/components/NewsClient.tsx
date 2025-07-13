@@ -6,7 +6,7 @@ import NewsGrid from './NewsGrid';
 import NewsSearch from './Search';
 import { Noticia } from '@/shared/interfaces';
 
-// Componente simple de paginación client-side (óptimo para VPS)
+
 function SimplePagination({
   currentPage,
   totalPages,
@@ -19,7 +19,7 @@ function SimplePagination({
   if (totalPages <= 1) return null;
 
   const pages = Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-    // Mostrar páginas alrededor de la actual
+    
     const start = Math.max(1, currentPage - 2);
     return start + i;
   }).filter((page) => page <= totalPages);
@@ -76,7 +76,7 @@ export default function NewsClient({}: NewsClientProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Obtener parámetros actuales de la URL
+  
   const currentPage = Number(searchParams.get('page')) || 1;
   const q = searchParams.get('q') || '';
   const categoria = searchParams.get('categoria') || '';
@@ -88,7 +88,7 @@ export default function NewsClient({}: NewsClientProps) {
     setError(null);
 
     try {
-      // Fetch both noticias and categorias in parallel para minimizar requests
+      
       const [noticiasRes, categoriasRes] = await Promise.all([
         fetch(
           `/api/noticias?${new URLSearchParams({
@@ -97,14 +97,14 @@ export default function NewsClient({}: NewsClientProps) {
             ...(categoria && { categoria }),
             ...(desde && { desde }),
             ...(hasta && { hasta }),
-            t: String(Date.now()), // Cache busting timestamp
+            t: String(Date.now()),
           }).toString()}`,
           {
-            cache: 'no-store', // Forzar fetch fresh para ver nuevas noticias
+            cache: 'no-store',
             headers: {
               'Cache-Control': 'no-cache',
             },
-          }
+          },
         ),
         categorias.length === 0
           ? fetch(`/api/noticias/categorias?t=${Date.now()}`, {
@@ -122,13 +122,13 @@ export default function NewsClient({}: NewsClientProps) {
 
       const noticiasData = await noticiasRes.json();
 
-      // Solo hacer fetch de categorías si no las tenemos
+      
       if (categoriasRes && categoriasRes.ok) {
         const categoriasData = await categoriasRes.json();
         setCategorias(categoriasData.categorias || []);
       }
 
-      // Los datos ya vienen ordenados del backend, no necesitamos reordenar
+      
       const mapeadas: Noticia[] = noticiasData.noticias.map((noticia: any) => ({
         id: noticia.id,
         autor: noticia.autor || 'Redacción CGE',
@@ -148,7 +148,7 @@ export default function NewsClient({}: NewsClientProps) {
         updatedAt: noticia.updatedAt,
       }));
 
-      // Separar destacadas y regulares (ya ordenadas)
+      
       const dest = mapeadas
         .filter((noticia) => noticia.esImportante)
         .slice(0, 3);
@@ -220,10 +220,35 @@ export default function NewsClient({}: NewsClientProps) {
     <>
       {/* Search integrado en el client - VPS no procesa nada */}
       <div className="px-6 mx-auto max-w-7xl">
-        <NewsSearch
-          categorias={categorias}
-          placeholder="Buscar noticias institucionales..."
-        />
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex-1">
+            <NewsSearch
+              categorias={categorias}
+              placeholder="Buscar noticias institucionales..."
+            />
+          </div>
+          <button
+            onClick={fetchNoticias}
+            disabled={loading}
+            className="ml-4 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-md transition-colors disabled:opacity-50 flex items-center gap-2"
+            title="Actualizar noticias"
+          >
+            <svg
+              className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+            {loading ? 'Actualizando...' : 'Actualizar'}
+          </button>
+        </div>
       </div>
 
       <NewsGrid noticiasDestacadas={destacadas} noticiasRegulares={noticias} />
