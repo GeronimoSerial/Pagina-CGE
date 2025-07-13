@@ -59,7 +59,7 @@ export async function getNoticiasPaginadas(
   const res = await fetch(`${API_URL}/noticias?${query}`, {
     
     next: { 
-      revalidate: 3600,
+      revalidate: 300, // 5 MINUTOS - balance entre performance y freshness
       tags: ['noticias-collection'] 
     },
   });
