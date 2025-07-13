@@ -31,8 +31,8 @@ export async function GET(request: Request) {
         }, {
             status: 200,
             headers: {
-                // Cache agresivo para VPS limitada
-                'Cache-Control': 'public, max-age=1800, stale-while-revalidate=3600', // 30min cache, 1h stale
+                // Cache reducido para contenido más fresco
+                'Cache-Control': 'public, max-age=300, stale-while-revalidate=600', // 5min cache, 10min stale
             },
         });
     }
