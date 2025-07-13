@@ -65,7 +65,18 @@ export default function NewsSearch({
   };
 
   const clearIndividualFilter = (field: string) => {
-    setFiltros({ ...filtros, [field]: '' });
+    const newFiltros = { ...filtros, [field]: '' };
+    setFiltros(newFiltros);
+    // Actualizar la URL quitando el filtro
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete(field);
+    // Si todos los filtros quedan vacíos, ir a /noticias limpio
+    const allEmpty = Object.entries(newFiltros).every(([, v]) => !v);
+    if (allEmpty) {
+      router.push('/noticias');
+    } else {
+      router.push(`/noticias?${params.toString()}`);
+    }
   };
 
   const clearAll = () => {

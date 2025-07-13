@@ -138,13 +138,20 @@ export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
 }
 
  
-export async function getNoticiasRelacionadas(categoria: string) {
+export async function getNoticiasRelacionadas(categoria: string, excludeSlug?: string) {
+  const filters: any = {
+    categoria: { $eq: categoria },
+    publicado: { $eq: true },
+  };
+
+  // Excluir la noticia actual si se proporciona el slug
+  if (excludeSlug) {
+    filters.slug = { $ne: excludeSlug };
+  }
+
   const query = qs.stringify(
     {
-      filters: {
-        categoria: { $eq: categoria },
-        
-      },
+      filters,
       pagination: { limit: 2 },
       fields: ['titulo', 'resumen', 'fecha', 'categoria', 'slug'],
       populate: {
@@ -167,8 +174,6 @@ export async function getNoticiasRelacionadas(categoria: string) {
   const { data } = await res.json();
   return data;
 }
-
- 
 
 export function getPortada({ noticia }: any) {
   const url = noticia.portada?.data?.url || noticia.portada?.url;
