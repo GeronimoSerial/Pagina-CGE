@@ -18,9 +18,7 @@ import Image from 'next/image';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
 
-
 export const revalidate = 86400;
-
 
 export async function generateStaticParams() {
   const noticias = await getAllNoticias();
@@ -29,9 +27,7 @@ export async function generateStaticParams() {
   }));
 }
 
-
 const metadataCache = new Map<string, any>();
-
 
 export async function generateMetadata({
   params,
@@ -40,7 +36,6 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
 
-  
   if (metadataCache.has(slug)) {
     return metadataCache.get(slug);
   }
@@ -90,13 +85,11 @@ export async function generateMetadata({
     },
   };
 
-  
   metadataCache.set(slug, metadata);
   setTimeout(() => metadataCache.delete(slug), 3600000); // 1 hora
 
   return metadata;
 }
-
 
 const ENLACES = [
   {
@@ -113,19 +106,16 @@ const ENLACES = [
   },
 ];
 
-
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-
 export default async function NoticiaPage({ params }: PageProps) {
   const { slug } = await params;
 
-  
   const [noticia, related] = await Promise.all([
     getNoticiaBySlug(slug),
-    
+
     slug ? getNoticiasRelacionadas('').catch(() => []) : Promise.resolve([]),
   ]);
 
@@ -133,7 +123,6 @@ export default async function NoticiaPage({ params }: PageProps) {
     return notFound();
   }
 
-  
   const relatedFinal =
     related.length === 0
       ? await getNoticiasRelacionadas(noticia.categoria).catch(() => [])
@@ -142,10 +131,8 @@ export default async function NoticiaPage({ params }: PageProps) {
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <div className="flex flex-1">
-        
         <main className="flex-1 transition-all duration-300">
           <div className="px-4 py-8 mx-auto max-w-5xl sm:px-6 lg:px-8">
-            
             <nav className="flex items-center mb-6 text-sm text-gray-500">
               <Link href="/" className="hover:text-green-800">
                 Inicio
@@ -157,10 +144,9 @@ export default async function NoticiaPage({ params }: PageProps) {
               <span className="mx-2">/</span>
               <span className="text-gray-900">{noticia.titulo}</span>
             </nav>
-            
+
             <article className="mb-8 bg-white rounded-xl shadow-sm">
               <div className="p-6 sm:p-8">
-                
                 <header className="mb-8">
                   <div className="flex flex-wrap gap-4 items-center mb-4 text-sm text-gray-500">
                     <div className="flex items-center">
@@ -186,7 +172,7 @@ export default async function NoticiaPage({ params }: PageProps) {
                     {noticia.resumen}
                   </p>
                 </header>
-                
+
                 {noticia.portada && (
                   <Image
                     src={getPortada({ noticia }) || ''}
@@ -205,7 +191,7 @@ export default async function NoticiaPage({ params }: PageProps) {
                     {noticia.contenido}
                   </ReactMarkdown>
                 </div>
-                
+
                 {noticia.imagen && noticia.imagen.length > 0 && (
                   <>
                     <Separador titulo="Galería de imágenes" />
@@ -216,15 +202,14 @@ export default async function NoticiaPage({ params }: PageProps) {
             </article>
           </div>
         </main>
-        
+
         <aside className="hidden overflow-hidden sticky top-[85px] mt-16 mr-4 mb-3 w-72 lg:h-[530px] border-t-2 border-r border-b border-l shadow-lg backdrop-blur-sm transition-all duration-500 ease-out border-slate-200 border-t-slate-300 shadow-slate-200/50 lg:block bg-white/95">
           <div className="flex flex-col h-full">
-            
             <div className="px-2 py-6">
               <h3 className="px-4 mb-3 text-sm font-semibold tracking-[0.1em] text-black ">
                 ENLACES INSTITUCIONALES
               </h3>
-              
+
               <div className="space-y-1">
                 {ENLACES.map((enlace) => (
                   <Link
@@ -234,24 +219,22 @@ export default async function NoticiaPage({ params }: PageProps) {
                     rel="noopener noreferrer"
                     className="group relative flex items-center px-4 py-3.5 text-black-800 transition-all duration-300 ease-out hover:text-green-900 hover:underline"
                   >
-                    
                     <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-green-800 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
-                    
+
                     <div className="flex items-center ml-3 w-full">
-                      
                       <div className="w-1.5 h-1.5 bg-green-800 rounded-full mr-3 group-hover:bg-green-700 transition-colors duration-300"></div>
-                      
+
                       <span className="text-sm font-medium tracking-wide transition-transform duration-300 ease-out group-hover:translate-x-1">
                         {enlace.label}
                       </span>
                     </div>
-                    
+
                     <div className="absolute inset-0 rounded-sm opacity-0 transition-opacity duration-300 ease-out bg-slate-50 group-hover:opacity-60"></div>
                   </Link>
                 ))}
               </div>
             </div>
-            
+
             {Array.isArray(relatedFinal) && relatedFinal.length > 0 && (
               <div className="px-6">
                 <div className="relative">
@@ -269,13 +252,13 @@ export default async function NoticiaPage({ params }: PageProps) {
                 </div>
               </div>
             )}
-            
+
             {Array.isArray(relatedFinal) && relatedFinal.length > 0 && (
               <div className="flex-1 px-2 py-3">
                 <h3 className="px-4 mb-2 text-sm font-semibold tracking-[0.1em] text-black ">
                   ARTÍCULOS RELACIONADOS
                 </h3>
-                
+
                 <div className="space-y-1">
                   {relatedFinal.map((item: any) => (
                     <Link
@@ -283,9 +266,8 @@ export default async function NoticiaPage({ params }: PageProps) {
                       href={`/noticias/${item.slug}`}
                       className="block relative px-4 py-1 transition-all duration-300 ease-out group hover:text-slate-900"
                     >
-                      
                       <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-green-800 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
-                      
+
                       <div className="ml-3">
                         <div className="mb-2 text-sm font-medium leading-snug transition-transform duration-300 ease-out text-slate-800 group-hover:text-green-800 group-hover:translate-x-1">
                           {item.titulo}

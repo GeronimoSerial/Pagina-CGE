@@ -6,7 +6,6 @@ import NewsGrid from './NewsGrid';
 import NewsSearch from './Search';
 import { Noticia } from '@/shared/interfaces';
 
-
 function SimplePagination({
   currentPage,
   totalPages,
@@ -19,7 +18,6 @@ function SimplePagination({
   if (totalPages <= 1) return null;
 
   const pages = Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-    
     const start = Math.max(1, currentPage - 2);
     return start + i;
   }).filter((page) => page <= totalPages);
@@ -76,7 +74,6 @@ export default function NewsClient({}: NewsClientProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  
   const currentPage = Number(searchParams.get('page')) || 1;
   const q = searchParams.get('q') || '';
   const categoria = searchParams.get('categoria') || '';
@@ -88,7 +85,6 @@ export default function NewsClient({}: NewsClientProps) {
     setError(null);
 
     try {
-      
       const [noticiasRes, categoriasRes] = await Promise.all([
         fetch(
           `/api/noticias?${new URLSearchParams({
@@ -122,13 +118,11 @@ export default function NewsClient({}: NewsClientProps) {
 
       const noticiasData = await noticiasRes.json();
 
-      
       if (categoriasRes && categoriasRes.ok) {
         const categoriasData = await categoriasRes.json();
         setCategorias(categoriasData.categorias || []);
       }
 
-      
       const mapeadas: Noticia[] = noticiasData.noticias.map((noticia: any) => ({
         id: noticia.id,
         autor: noticia.autor || 'Redacción CGE',
@@ -148,7 +142,6 @@ export default function NewsClient({}: NewsClientProps) {
         updatedAt: noticia.updatedAt,
       }));
 
-      
       const dest = mapeadas
         .filter((noticia) => noticia.esImportante)
         .slice(0, 3);
