@@ -45,20 +45,18 @@ export default function NewsSearch({
     router.push(`/noticias?${params.toString()}`);
   }, [filtros, router]);
 
+  // Restaurar el efecto para buscar automáticamente solo al cambiar la categoría
   useEffect(() => {
-    const hasFilters = filtros.categoria || filtros.desde || filtros.hasta;
-
-    if (hasFilters) {
+    if (filtros.categoria) {
       const params = new URLSearchParams();
       if (filtros.q) params.set('q', filtros.q);
       if (filtros.categoria) params.set('categoria', filtros.categoria);
       if (filtros.desde) params.set('desde', filtros.desde);
       if (filtros.hasta) params.set('hasta', filtros.hasta);
       params.set('page', '1');
-
       router.push(`/noticias?${params.toString()}`);
     }
-  }, [filtros.categoria, filtros.desde, filtros.hasta, router]);
+  }, [filtros.categoria, filtros.q, filtros.desde, filtros.hasta, router]);
 
   const handleInputChange = (field: string, value: string) => {
     setFiltros({ ...filtros, [field]: value });
@@ -104,6 +102,7 @@ export default function NewsSearch({
 
   const urlQuery = searchParams.get('q') || '';
   const hasPendingSearch = filtros.q !== urlQuery && filtros.q.length > 0;
+
   return (
     <div
       className="flex justify-center py-3 px-1 min-h-[60px]"
@@ -264,40 +263,38 @@ export default function NewsSearch({
         )}
 
         <div
-          className={`transition-all duration-300 ease-out overflow-hidden ${showAdvanced ? 'max-h-40 opacity-100 mt-3' : 'max-h-0 opacity-0 mt-0'}`}
+          className={`transition-all duration-300 ease-out overflow-visible ${showAdvanced ? 'max-h-[500px] opacity-100 mt-3' : 'max-h-0 opacity-0 mt-0'}`}
           style={{ willChange: 'max-height' }}
         >
           <div className="border-t border-slate-200 pt-3">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-              <div>
+            <div className="flex flex-col md:flex-row gap-2 md:gap-4 w-full">
+              <div className="flex-1 min-w-0">
                 <label className="block mb-1 text-xs font-medium text-slate-700">
                   <Calendar className="inline mr-1 w-3 h-3" />
                   Desde
                 </label>
                 <input
                   type="date"
-                  value={filtros.desde}
+                  value={filtros.desde || ''}
                   onChange={(e) => handleInputChange('desde', e.target.value)}
                   className="h-8 px-2 w-full text-xs rounded border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-none"
-                  style={{ minHeight: 32 }}
+                  style={{ minHeight: 32, maxWidth: '100%' }}
                 />
               </div>
-
-              <div>
+              <div className="flex-1 min-w-0">
                 <label className="block mb-1 text-xs font-medium text-slate-700">
                   <Calendar className="inline mr-1 w-3 h-3" />
                   Hasta
                 </label>
                 <input
                   type="date"
-                  value={filtros.hasta}
+                  value={filtros.hasta || ''}
                   onChange={(e) => handleInputChange('hasta', e.target.value)}
                   className="h-8 px-2 w-full text-xs rounded border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-none"
-                  style={{ minHeight: 32 }}
+                  style={{ minHeight: 32, maxWidth: '100%' }}
                 />
               </div>
-
-              <div>
+              <div className="flex-1 min-w-0">
                 <label className="block mb-1 text-xs font-medium text-slate-700">
                   <Tag className="inline mr-1 w-3 h-3" />
                   Categoría
@@ -308,7 +305,7 @@ export default function NewsSearch({
                     handleInputChange('categoria', e.target.value)
                   }
                   className="h-8 px-2 w-full text-xs rounded border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-none"
-                  style={{ minHeight: 32 }}
+                  style={{ minHeight: 32, maxWidth: '100%' }}
                 >
                   <option value="">Todas</option>
                   {categorias
