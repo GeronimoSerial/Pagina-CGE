@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Home, Menu, X } from 'lucide-react';
+import Link from 'next/link';
 import { Sidebar } from './sidebar';
 import type { NavSection } from '../services/docs-data';
 
@@ -18,13 +19,13 @@ export function MobileMenu({ sections }: MobileMenuProps) {
   return (
     <>
       {/* Mobile Header */}
-      <header className="sticky top-0 z-50 px-4 py-3 bg-white border-b border-gray-200 lg:hidden">
+      <header className="fixed top-0 left-0 right-0 z-50 px-4 py-4 bg-white border-b border-gray-200 lg:hidden shadow-md">
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">
+            <h2 className="text-lg font-bold text-gray-900">
               Consejo General de Educación
             </h2>
-            <p className="text-sm text-gray-600">Guía de Trámites</p>
+            <p className="text-xs text-gray-600">Guía de Trámites</p>
           </div>
           <button
             onClick={toggleMenu}
@@ -39,18 +40,37 @@ export function MobileMenu({ sections }: MobileMenuProps) {
           </button>
         </div>
       </header>
-
       {/* Mobile Sidebar */}
       <aside
         className={`
-          lg:hidden mt-5 pt-24 bg-white border-r border-gray-200 fixed inset-y-0 left-0 z-40 w-80 transform transition-transform duration-300 ease-in-out
+          lg:hidden bg-white border-r border-gray-200 fixed inset-y-0 left-0 z-40 w-80 transform transition-transform duration-300 ease-in-out overflow-y-auto
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
+        style={{ paddingTop: '80px' }}
       >
-        <Sidebar sections={sections} onLinkClick={closeMenu} />
-      </aside>
+        <div className="p-4">
+          {/* Botón para volver con label */}
+          <div className="mb-6">
+            <Link
+              href="/"
+              onClick={closeMenu}
+              className="flex items-center p-2 bg-green-50 rounded-lg text-green-700 hover:bg-green-100 transition-colors"
+            >
+              <Home className="mr-2" />
+              <span className="font-medium">Volver al inicio</span>
+            </Link>
+          </div>
 
+          {/* Utilizamos el componente Sidebar existente - con "display: block" para anular el hidden */}
+          <div className="block" style={{ display: 'block' }}>
+            <Sidebar sections={sections} onLinkClick={closeMenu} />
+          </div>
+
+          {/* No necesitamos los enlaces adicionales ya que están incluidos en el Sidebar */}
+        </div>
+      </aside>
       {/* Mobile Menu Overlay */}
+
       {isOpen && (
         <div
           className="fixed inset-0 z-30 bg-black bg-opacity-50 lg:hidden"

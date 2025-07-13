@@ -46,10 +46,7 @@ export default async function DocumentPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* <MobileMenu
-        sections={navigationSections}
-        currentPageTitle={article.category}
-      /> */}
+      {/* El MobileMenu ya se renderiza desde el ResponsiveNav en el layout */}
 
       <main className="flex-1 lg:overflow-y-auto">
         <div className="px-6 py-8 mx-auto max-w-4xl lg:px-8 lg:py-12">
