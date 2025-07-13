@@ -2,11 +2,7 @@ import { API_URL, STRAPI_URL } from '@/shared/lib/config';
 import { Noticia } from '@/shared/interfaces';
 import qs from 'qs';
 
-/**
- * Obtiene los slugs de todas las noticias publicadas.
- * Optimizado para `generateStaticParams` al solicitar solo el campo `slug`.
- * Cachea el resultado durante una hora.
- */
+ 
 export async function getAllNoticias() {
   const query = qs.stringify(
     {
@@ -15,14 +11,14 @@ export async function getAllNoticias() {
         publicado: { $eq: true },
       },
       pagination: {
-        limit: -1, // Strapi v5: -1 para obtener todos los registros
+        limit: -1,
       },
     },
     { encodeValuesOnly: true },
   );
 
   const res = await fetch(`${API_URL}/noticias?${query}`, {
-    next: { revalidate: 3600, tags: ['noticias-collection'] },
+    next: { revalidate: 7200, tags: ['noticias-collection'] },
   });
 
   if (!res.ok) {
@@ -33,52 +29,54 @@ export async function getAllNoticias() {
 }
 
 /**
- * Obtiene las noticias para una página específica, con filtros opcionales.
- * Utiliza ISR con una revalidación de 5 minutos y una etiqueta de caché.
+ * WRAPPER para compatibilidad con página de noticias
+ * Usa la función unificada con paginación
  */
 export async function getNoticiasPaginadas(
   page: number = 1,
   pageSize: number = 4,
   filters: Record<string, any> = {},
 ) {
-  const query = qs.stringify(
-    {
-      populate: '*',
-      sort: ['fecha:desc'],
-      pagination: { page, pageSize },
-      filters,
-    },
-    { encodeValuesOnly: true },
-  );
-
-  const res = await fetch(`${API_URL}/noticias?${query}`, {
-    next: { revalidate: 300, tags: ['noticias-collection'] },
+  return getNoticiasUnificadas({
+    limit: pageSize,
+    page,
+    filters,
+    withPagination: true
   });
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch paginated noticias');
-  }
-  const { data, meta } = await res.json();
-  return { noticias: data, pagination: meta.pagination };
 }
 
 /**
- * Obtiene una noticia específica por su slug.
- * Utiliza ISR con una revalidación de 1 hora y etiquetas de caché específicas.
+ * WRAPPER para compatibilidad con home page
+ * Usa la función unificada sin paginación
  */
+export async function getUltimasNoticias(limit: number = 6): Promise<Noticia[]> {
+  return getNoticiasUnificadas({
+    limit,
+    withPagination: false
+  });
+}
+
+ 
 export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
   const query = qs.stringify(
     {
       filters: {
         slug: { $eq: slug },
       },
-      populate: '*',
+      populate: {
+        portada: {
+          fields: ['url', 'alternativeText']
+        },
+        imagen: {
+          fields: ['url', 'width', 'height', 'alternativeText']
+        }
+      },
     },
     { encodeValuesOnly: true },
   );
 
   const res = await fetch(`${API_URL}/noticias?${query}`, {
-    next: { revalidate: 3600, tags: ['noticias', slug] },
+    next: { revalidate: 86400, tags: ['noticias', slug] },
   });
 
   if (!res.ok) {
@@ -101,30 +99,34 @@ export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
     imagen: n.imagen,
     publicado: n.publicado,
     fecha: n.fecha,
+    createdAt: n.createdAt,
     metaTitle: n.metaTitle || n.titulo,
     metaDescription: n.metaDescription || n.resumen,
   };
 }
 
-/**
- * Obtiene noticias relacionadas por categoría.
- * Utiliza ISR con una revalidación de 5 minutos y etiquetas de caché.
- */
+ 
 export async function getNoticiasRelacionadas(categoria: string) {
   const query = qs.stringify(
     {
       filters: {
         categoria: { $eq: categoria },
-        // Opcional: excluir la noticia actual si tienes el slug o id
+        
       },
       pagination: { limit: 2 },
-      populate: '*',
+      fields: ['titulo', 'resumen', 'fecha', 'categoria', 'slug'],
+      populate: {
+        portada: {
+          fields: ['url', 'alternativeText']
+        }
+      },
+      sort: ['createdAt:desc', 'fecha:desc'],
     },
     { encodeValuesOnly: true },
   );
 
   const res = await fetch(`${API_URL}/noticias?${query}`, {
-    next: { revalidate: 300, tags: ['noticias-collection', `category:${categoria}`] },
+    next: { revalidate: 21600, tags: ['noticias-collection', `category:${categoria}`] },
   });
 
   if (!res.ok) {
@@ -134,7 +136,7 @@ export async function getNoticiasRelacionadas(categoria: string) {
   return data;
 }
 
-// --- Funciones de utilidad ---
+ 
 
 export function getPortada({ noticia }: any) {
   const url = noticia.portada?.data?.url || noticia.portada?.url;
@@ -157,20 +159,20 @@ export function getImagenes(noticia: Noticia) {
  * Obtiene todas las categorías de noticias únicas.
  * Cachea el resultado durante una hora para un rendimiento óptimo.
  */
-export async function getNoticiasCategorias(): Promise<string[]> {
-  // Primero, obtenemos todas las noticias, pero solo el campo 'categoria'.
+export async function getNoticiasCategorias(): Promise<Array<{ id: number; nombre: string }>> {
+  
   const query = qs.stringify(
     {
       fields: ['categoria'],
       pagination: {
-        limit: -1, // Traer todas las noticias
+        limit: -1,
       },
     },
     { encodeValuesOnly: true },
   );
 
   const res = await fetch(`${API_URL}/noticias?${query}`, {
-    next: { revalidate: 3600, tags: ['noticias-collection', 'categorias'] },
+    next: { revalidate: 7200, tags: ['noticias-collection', 'categorias'] },
   });
 
   if (!res.ok) {
@@ -179,10 +181,78 @@ export async function getNoticiasCategorias(): Promise<string[]> {
 
   const { data } = await res.json();
 
-  // Usamos un Set para obtener valores únicos y luego lo convertimos a un array.
+  
   const categoriasUnicas = Array.from(
     new Set(data.map((item: any) => item.categoria).filter(Boolean)),
   );
 
-  return categoriasUnicas as string[];
+  
+  return (categoriasUnicas as string[]).map((categoria: string, index: number) => ({
+    id: index + 1,
+    nombre: categoria,
+  }));
+}
+
+/**
+ * Función UNIFICADA para obtener noticias - sirve para /noticias y home
+ * Reemplaza getNoticiasPaginadas y getUltimasNoticias con una sola función optimizada
+ * 
+ * @param options.limit - Número de noticias (6 para home, 5+ para /noticias)
+ * @param options.page - Página para paginación (solo /noticias)
+ * @param options.filters - Filtros de búsqueda (solo /noticias)
+ * @param options.withPagination - Si incluir metadata de paginación (solo /noticias)
+ */
+export async function getNoticiasUnificadas({
+  limit = 6,
+  page = 1,
+  filters = {},
+  withPagination = false
+}: {
+  limit?: number;
+  page?: number;
+  filters?: Record<string, any>;
+  withPagination?: boolean;
+} = {}) {
+  const query = qs.stringify(
+    {
+      fields: ['titulo', 'resumen', 'fecha', 'categoria', 'esImportante', 'slug', 'createdAt'],
+      populate: {
+        portada: {
+          fields: ['url', 'alternativeText']
+        },
+        imagen: {
+          fields: ['url', 'width', 'height', 'alternativeText']
+        }
+      },
+      sort: ['createdAt:desc', 'fecha:desc', 'id:desc'],
+      pagination: withPagination 
+        ? { page, pageSize: limit }
+        : { pageSize: limit },
+      filters: {
+        publicado: { $eq: true },
+        ...filters,
+      },
+    },
+    { encodeValuesOnly: true },
+  );
+
+  const res = await fetch(`${API_URL}/noticias?${query}`, {
+    // VPS-optimized: misma estrategia de cache para consistencia
+    next: { 
+      revalidate: 60, // 1 MINUTO - unified cache strategy
+      tags: ['noticias-collection', 'noticias-unified'] 
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch noticias');
+  }
+  
+  const { data, meta } = await res.json();
+  
+  if (withPagination) {
+    return { noticias: data || [], pagination: meta.pagination };
+  }
+  
+  return data || [];
 }
