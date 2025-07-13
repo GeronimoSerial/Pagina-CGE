@@ -18,8 +18,8 @@ import Image from 'next/image';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
 
-// Revalida la página cada hora para mantener los datos actualizados (ISR).
-export const revalidate = 3600;
+// Revalida cada 6 HORAS - noticias individuales no cambian frecuentemente
+export const revalidate = 21600;
 
 // Pre-renderiza todas las páginas de noticias en el build time.
 export async function generateStaticParams() {
@@ -29,9 +29,12 @@ export async function generateStaticParams() {
   }));
 }
 
+// Cache simple en memoria para metadatos (para evitar doble fetch)
+const metadataCache = new Map<string, any>();
+
 /**
  * Genera los metadatos de la página (título, descripción, Open Graph)
- * basándose en los datos de la noticia.
+ * basándose en los datos de la noticia. OPTIMIZADO con cache en memoria.
  */
 export async function generateMetadata({
   params,
@@ -39,8 +42,15 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  
+  // Verificar cache primero
+  if (metadataCache.has(slug)) {
+    return metadataCache.get(slug);
+  }
+  
   const noticia = await getNoticiaBySlug(slug);
   if (!noticia) return {};
+  
   const url = `/noticias/${slug}`;
   const structuredData = {
     '@context': 'https://schema.org',
@@ -59,7 +69,8 @@ export async function generateMetadata({
       '@id': url,
     },
   };
-  return {
+  
+  const metadata = {
     title: noticia.titulo,
     description: noticia.resumen || noticia.titulo,
     alternates: {
@@ -81,6 +92,12 @@ export async function generateMetadata({
       'script:ld+json': JSON.stringify(structuredData),
     },
   };
+  
+  // Cachear resultado por 1 hora
+  metadataCache.set(slug, metadata);
+  setTimeout(() => metadataCache.delete(slug), 3600000); // 1 hora
+  
+  return metadata;
 }
 
 // Lista de enlaces institucionales para la barra lateral.
@@ -115,14 +132,22 @@ interface PageProps {
  */
 export default async function NoticiaPage({ params }: PageProps) {
   const { slug } = await params;
-  // Obtiene la noticia y las noticias relacionadas de forma eficiente.
-  const noticia = await getNoticiaBySlug(slug);
+  
+  // OPTIMIZACIÓN: Parallel fetch para reducir tiempo de respuesta
+  const [noticia, related] = await Promise.all([
+    getNoticiaBySlug(slug),
+    // Solo buscar relacionadas si tenemos categoría (evitar error si noticia no existe)
+    slug ? getNoticiasRelacionadas('').catch(() => []) : Promise.resolve([])
+  ]);
 
   if (!noticia) {
     return notFound();
   }
 
-  const related = await getNoticiasRelacionadas(noticia.categoria);
+  // Fetch relacionadas con la categoría real solo después de confirmar que noticia existe
+  const relatedFinal = related.length === 0 ? 
+    await getNoticiasRelacionadas(noticia.categoria).catch(() => []) : 
+    related;
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
@@ -237,7 +262,7 @@ export default async function NoticiaPage({ params }: PageProps) {
               </div>
             </div>
             {/* Separador elegante entre secciones */}
-            {Array.isArray(related) && related.length > 0 && (
+            {Array.isArray(relatedFinal) && relatedFinal.length > 0 && (
               <div className="px-6">
                 <div className="relative">
                   <div className="flex absolute inset-0 items-center">
@@ -255,14 +280,14 @@ export default async function NoticiaPage({ params }: PageProps) {
               </div>
             )}
             {/* Sección de artículos relacionados */}
-            {Array.isArray(related) && related.length > 0 && (
+            {Array.isArray(relatedFinal) && relatedFinal.length > 0 && (
               <div className="flex-1 px-2 py-3">
                 <h3 className="px-4 mb-2 text-sm font-semibold tracking-[0.1em] text-black ">
                   ARTÍCULOS RELACIONADOS
                 </h3>
                 {/* Enlaces a artículos relacionados */}
                 <div className="space-y-1">
-                  {related.map((item: any) => (
+                  {relatedFinal.map((item: any) => (
                     <Link
                       key={item.id}
                       href={`/noticias/${item.slug}`}

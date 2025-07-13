@@ -22,7 +22,7 @@ export async function getAllNoticias() {
   );
 
   const res = await fetch(`${API_URL}/noticias?${query}`, {
-    next: { revalidate: 3600, tags: ['noticias-collection'] },
+    next: { revalidate: 7200, tags: ['noticias-collection'] }, // 2 horas - cambian poco
   });
 
   if (!res.ok) {
@@ -43,16 +43,32 @@ export async function getNoticiasPaginadas(
 ) {
   const query = qs.stringify(
     {
-      populate: '*',
-      sort: ['fecha:desc'],
+      // Solo campos necesarios para el listado
+      fields: ['titulo', 'resumen', 'fecha', 'categoria', 'esImportante', 'slug', 'createdAt'],
+      populate: {
+        portada: {
+          fields: ['url', 'alternativeText']
+        },
+        imagen: {
+          fields: ['url', 'width', 'height', 'alternativeText']
+        }
+      },
+      sort: ['createdAt:desc', 'fecha:desc', 'id:desc'],
       pagination: { page, pageSize },
-      filters,
+      filters: {
+        publicado: { $eq: true },
+        ...filters,
+      },
     },
     { encodeValuesOnly: true },
   );
 
   const res = await fetch(`${API_URL}/noticias?${query}`, {
-    next: { revalidate: 300, tags: ['noticias-collection'] },
+    // Cache MUCHO más agresivo para VPS de 1 núcleo
+    next: { 
+      revalidate: 3600, // 1 HORA - las noticias no cambian tan frecuente
+      tags: ['noticias-collection'] 
+    },
   });
 
   if (!res.ok) {
@@ -72,13 +88,20 @@ export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
       filters: {
         slug: { $eq: slug },
       },
-      populate: '*',
+      populate: {
+        portada: {
+          fields: ['url', 'alternativeText']
+        },
+        imagen: {
+          fields: ['url', 'width', 'height', 'alternativeText']
+        }
+      },
     },
     { encodeValuesOnly: true },
   );
 
   const res = await fetch(`${API_URL}/noticias?${query}`, {
-    next: { revalidate: 3600, tags: ['noticias', slug] },
+    next: { revalidate: 21600, tags: ['noticias', slug] }, // 6 HORAS - las noticias individuales no cambian
   });
 
   if (!res.ok) {
@@ -101,6 +124,7 @@ export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
     imagen: n.imagen,
     publicado: n.publicado,
     fecha: n.fecha,
+    createdAt: n.createdAt,
     metaTitle: n.metaTitle || n.titulo,
     metaDescription: n.metaDescription || n.resumen,
   };
@@ -118,13 +142,19 @@ export async function getNoticiasRelacionadas(categoria: string) {
         // Opcional: excluir la noticia actual si tienes el slug o id
       },
       pagination: { limit: 2 },
-      populate: '*',
+      fields: ['titulo', 'resumen', 'fecha', 'categoria', 'slug'],
+      populate: {
+        portada: {
+          fields: ['url', 'alternativeText']
+        }
+      },
+      sort: ['createdAt:desc', 'fecha:desc'],
     },
     { encodeValuesOnly: true },
   );
 
   const res = await fetch(`${API_URL}/noticias?${query}`, {
-    next: { revalidate: 300, tags: ['noticias-collection', `category:${categoria}`] },
+    next: { revalidate: 3600, tags: ['noticias-collection', `category:${categoria}`] }, // 1 HORA - relacionadas no cambian frecuente
   });
 
   if (!res.ok) {
@@ -157,7 +187,7 @@ export function getImagenes(noticia: Noticia) {
  * Obtiene todas las categorías de noticias únicas.
  * Cachea el resultado durante una hora para un rendimiento óptimo.
  */
-export async function getNoticiasCategorias(): Promise<string[]> {
+export async function getNoticiasCategorias(): Promise<Array<{ id: number; nombre: string }>> {
   // Primero, obtenemos todas las noticias, pero solo el campo 'categoria'.
   const query = qs.stringify(
     {
@@ -170,7 +200,7 @@ export async function getNoticiasCategorias(): Promise<string[]> {
   );
 
   const res = await fetch(`${API_URL}/noticias?${query}`, {
-    next: { revalidate: 3600, tags: ['noticias-collection', 'categorias'] },
+    next: { revalidate: 7200, tags: ['noticias-collection', 'categorias'] }, // 2 horas - cambian muy poco
   });
 
   if (!res.ok) {
@@ -184,5 +214,9 @@ export async function getNoticiasCategorias(): Promise<string[]> {
     new Set(data.map((item: any) => item.categoria).filter(Boolean)),
   );
 
-  return categoriasUnicas as string[];
+  // Convertir a formato { id, nombre } para compatibilidad con NewsSearch
+  return (categoriasUnicas as string[]).map((categoria: string, index: number) => ({
+    id: index + 1,
+    nombre: categoria,
+  }));
 }
