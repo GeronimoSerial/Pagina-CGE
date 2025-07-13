@@ -64,7 +64,6 @@ export interface Noticia {
   imagen: { url: string; width: number; height: number }[];
   publicado: boolean;
   fecha: string;
-  createdAt?: string;
   metaTitle?: string;
   metaDescription?: string;
 }
