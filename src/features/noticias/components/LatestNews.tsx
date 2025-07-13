@@ -1,17 +1,19 @@
 import React from 'react';
 import { Separator } from '@radix-ui/react-separator';
-import { getNoticiasPaginadas } from '@/features/noticias/services/noticias';
 import { RegularNewsCard } from './RegularNewsCard';
 import { Noticia } from '@/shared/interfaces';
 import Link from 'next/link';
-export default async function LatestNews() {
-  // News data for institutional content
-  const { noticias } = await getNoticiasPaginadas(1, 6);
+
+interface LatestNewsProps {
+  noticias: Noticia[]; // Required - ya no opcional, viene del SSR
+}
+
+export default function LatestNews({ noticias }: LatestNewsProps) {
+  // Componente puro - no más fetch, solo renderizado
 
   return (
     <section className="relative px-4 py-12 mx-auto w-full max-w-7xl sm:px-6 lg:px-8 lg:py-20">
       <div className="flex flex-col gap-8 lg:flex-row lg:gap-16">
-        {/* Left section - Heading and Description */}
         <div className="w-full lg:w-96 lg:sticky lg:top-8 lg:self-start">
           <div className="relative mb-8">
             <h2 className="mb-6 text-2xl font-semibold tracking-wide leading-tight text-gray-300 sm:text-4xl bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
@@ -40,11 +42,16 @@ export default async function LatestNews() {
           </div>
         </div>
 
-        {/* Right section - News grid */}
         <div className="grid flex-1 grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
-          {noticias.map((noticia: Noticia) => (
-            <RegularNewsCard key={noticia.id} noticia={noticia} />
-          ))}
+          {noticias.length > 0 ? (
+            noticias.map((noticia: Noticia) => (
+              <RegularNewsCard key={noticia.id} noticia={noticia} />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-8">
+              <p className="text-gray-500">No hay noticias disponibles</p>
+            </div>
+          )}
         </div>
       </div>
     </section>
