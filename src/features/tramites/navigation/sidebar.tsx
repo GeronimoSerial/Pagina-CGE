@@ -35,10 +35,10 @@ export function Sidebar({ sections, onLinkClick }: SidebarProps) {
   };
 
   return (
-    <aside className="hidden overflow-y-auto sticky top-0 h-screen bg-white border-r border-gray-200 lg:block">
-      <div className="p-6">
-        {/* Logo/Title */}
-        <div className="hidden mb-8 lg:block">
+    <div className="overflow-y-auto bg-white">
+      <div className="p-4">
+        {/* Logo/Title - Visible solo en desktop */}
+        <div className="mb-8 hidden lg:block">
           <h2 className="text-2xl font-bold text-gray-900">
             Consejo General de Educación
           </h2>
@@ -127,6 +127,6 @@ export function Sidebar({ sections, onLinkClick }: SidebarProps) {
           </div>
         </div>
       </div>
-    </aside>
+    </div>
   );
 }
