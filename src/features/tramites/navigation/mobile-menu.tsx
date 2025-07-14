@@ -49,7 +49,6 @@ export function MobileMenu({ sections }: MobileMenuProps) {
         style={{ paddingTop: '80px' }}
       >
         <div className="p-4">
-          {/* Botón para volver con label */}
           <div className="mb-6">
             <Link
               href="/"
@@ -60,13 +59,11 @@ export function MobileMenu({ sections }: MobileMenuProps) {
               <span className="font-medium">Volver al inicio</span>
             </Link>
           </div>
-
-          {/* Utilizamos el componente Sidebar existente - con "display: block" para anular el hidden */}
+      
           <div className="block" style={{ display: 'block' }}>
             <Sidebar sections={sections} onLinkClick={closeMenu} />
           </div>
 
-          {/* No necesitamos los enlaces adicionales ya que están incluidos en el Sidebar */}
         </div>
       </aside>
       {/* Mobile Menu Overlay */}
