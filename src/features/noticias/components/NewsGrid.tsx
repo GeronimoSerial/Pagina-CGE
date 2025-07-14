@@ -32,8 +32,8 @@ export default function NewsGrid({
         {noticiasDestacadas.length > 0 && (
           <>
             <Separador titulo="Destacadas" />
-            <Carousel className="mx-auto w-full max-w-7xl">
-              <CarouselContent className="-ml-6">
+            <Carousel className="mx-auto w-full overflow-x-hidden max-w-7xl">
+              <CarouselContent className="-ml-6 ">
                 {noticiasDestacadas.slice(0, 3).map((noticia) => (
                   <CarouselItem key={noticia.id} className="pl-6 basis-full">
                     <Card className="overflow-hidden border-0 shadow-2xl">
