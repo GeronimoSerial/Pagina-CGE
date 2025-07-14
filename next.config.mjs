@@ -31,16 +31,6 @@ const nextConfig = {
   async headers() {
     return [
       {
-        // Cache estático de Next.js (archivos que nunca cambian)
-        source: '/_next/static/(.*)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
         // Imágenes estáticas del public/
         source: '/images/(.*)',
         headers: [
@@ -50,7 +40,7 @@ const nextConfig = {
           },
         ],
       },
-     
+
       {
         // API routes - sin cache para ISR
         source: '/api/(.*)',
@@ -95,7 +85,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=86400, stale-while-revalidate=86400' // 1 día de cache,
+            value: 'public, max-age=86400, stale-while-revalidate=86400', // 1 día de cache,
           },
           {
             key: 'X-Cache-Type',
