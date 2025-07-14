@@ -109,32 +109,32 @@ const Header = () => {
         </div>
 
         {/* Menú Mobile */}
-        <div
-          className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-            isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
-          }`}
-        >
-          <nav className="py-2" aria-label="Navegación móvil">
-            <ul className="space-y-1">
-              {navLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className={`block px-4 py-2.5 rounded-lg text-base font-medium ${
-                      pathname === link.href
-                        ? 'bg-[#205C3B]/10 text-[#205C3B] font-semibold'
-                        : 'text-gray-800 hover:bg-gray-100 hover:text-[#205C3B]'
-                    }`}
-                    onClick={closeMenu}
-                    aria-current={pathname === link.href ? 'page' : undefined}
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
+
+        {isMenuOpen && (
+          <div className="lg:hidden border-t border-gray-200 py-2">
+            <nav>
+              <ul className="grid grid-cols-2 gap-1">
+                {navLinks.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      className={`block px-3 py-2 text-sm font-medium rounded-lg text-center ${
+                        pathname === link.href
+                          ? 'bg-[#205C3B]/10 text-[#205C3B]'
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`}
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                      }}
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );
