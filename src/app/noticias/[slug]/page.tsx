@@ -213,7 +213,7 @@ export default async function NoticiaPage({ params }: PageProps) {
 
               <div className="space-y-1">
                 {ENLACES.map((enlace) => (
-                  <Link
+                  <a
                     key={enlace.href}
                     href={enlace.href}
                     target="_blank"
@@ -231,7 +231,7 @@ export default async function NoticiaPage({ params }: PageProps) {
                     </div>
 
                     <div className="absolute inset-0 rounded-sm opacity-0 transition-opacity duration-300 ease-out bg-slate-50 group-hover:opacity-60"></div>
-                  </Link>
+                  </a>
                 ))}
               </div>
             </div>
