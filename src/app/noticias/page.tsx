@@ -1,14 +1,11 @@
 import HeroSection from '@/shared/components/Hero';
-import NewsSearch from '@/features/noticias/components/Search';
-import NewsGrid from '@/features/noticias/components/NewsGrid';
 import {
   getNoticiasPaginadas,
   getNoticiasCategorias,
 } from '@/features/noticias/services/noticias';
-import { notFound } from 'next/navigation';
 import { Separator } from '@/shared/ui/separator';
 import { Metadata } from 'next';
-import NewsClient from '@/features/noticias/components/NewsClient';
+import NewsContainer from '@/features/noticias/components/NewsContainer';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = {
@@ -36,9 +33,16 @@ export const metadata: Metadata = {
   },
 };
 
-interface NoticiasPageProps {}
+// ISR: Revalidar cada 1 hora para mantener contenido fresco automáticamente
+export const revalidate = 3600;
 
-export default function NoticiasPage() {
+export default async function NoticiasPage() {
+  // Pre-renderizar contenido inicial (SSG) - Sin API calls del usuario
+  const [initialNoticias, categorias] = await Promise.all([
+    getNoticiasPaginadas(1, 6), // Primeras 6 noticias
+    getNoticiasCategorias(),
+  ]);
+
   return (
     <section>
       <HeroSection
@@ -55,7 +59,7 @@ export default function NoticiasPage() {
           </div>
         }
       >
-        <NewsClient />
+        <NewsContainer initialData={initialNoticias} categorias={categorias} />
       </Suspense>
       <Separator className="my-8 bg-gray-50" />
     </section>

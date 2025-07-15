@@ -67,8 +67,8 @@ async function fetchAPI<T>(path: string, params: object = {}): Promise<T> {
   const url = `${API_URL}${path}${query ? `?${query}` : ''}`;
 
   try {
-    // Using Next.js fetch to enable caching and revalidation
-    const res = await fetch(url, { next: { revalidate: 60 } });
+    // Using Next.js fetch - ISR handled by page-level revalidate
+    const res = await fetch(url);
 
     if (!res.ok) {
       // Log the server-side error for debugging
