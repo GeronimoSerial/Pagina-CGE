@@ -22,10 +22,14 @@ import { es } from 'date-fns/locale/es';
 export const revalidate = 86400;
 
 export async function generateStaticParams() {
-  const noticias = await getAllNoticias();
-  return noticias.map((noticia: { slug: string }) => ({
-    slug: noticia.slug,
-  }));
+  try {
+    const noticias = await getAllNoticias();
+    return noticias.map((noticia: { slug: string }) => ({
+      slug: noticia.slug,
+    }));
+  } catch (error) {
+    console.warn('Error generating static params for noticias:', error);
+  }
 }
 
 const metadataCache = new Map<string, any>();
