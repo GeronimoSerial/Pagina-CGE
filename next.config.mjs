@@ -41,8 +41,28 @@ const nextConfig = {
         ],
       },
       {
-        // API routes - sin cache para permitir interactividad
-        source: '/api/(.*)',
+        // Todas las imágenes optimizadas por Next.js (incluye CDN) - son únicas e inmutables
+        source: '/_next/image(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // API de escuelas - archivo estático inmutable
+        source: '/api/escuelas(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // Otras API routes - sin cache para permitir interactividad
+        source: '/api/(?!escuelas)(.*)',
         headers: [
           {
             key: 'Cache-Control',
