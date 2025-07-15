@@ -32,9 +32,7 @@ export async function getAllNoticias() {
     { encodeValuesOnly: true },
   );
 
-  const res = await fetch(`${API_URL}/noticias?${query}`, {
-    next: { revalidate: 7200, tags: ['noticias-collection'] },
-  });
+  const res = await fetch(`${API_URL}/noticias?${query}`);
 
   if (!res.ok) {
     throw new Error('Failed to fetch all noticias slugs');
@@ -74,13 +72,7 @@ export async function getNoticiasPaginadas(
     { encodeValuesOnly: true },
   );
 
-  const res = await fetch(`${API_URL}/noticias?${query}`, {
-    // Ultra-aggressive cache for load testing: Priorize performance over freshness
-    next: { 
-      revalidate: 120, // 2 MINUTOS - máximo cache para alta concurrencia
-      tags: ['noticias-collection', cacheKey] 
-    },
-  });
+  const res = await fetch(`${API_URL}/noticias?${query}`);
 
   if (!res.ok) {
     throw new Error('Failed to fetch paginated noticias');
@@ -108,9 +100,7 @@ export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
     { encodeValuesOnly: true },
   );
 
-  const res = await fetch(`${API_URL}/noticias?${query}`, {
-    next: { revalidate: 86400, tags: ['noticias', slug] },
-  });
+  const res = await fetch(`${API_URL}/noticias?${query}`);
 
   if (!res.ok) {
     throw new Error('Failed to fetch noticia by slug');
@@ -165,9 +155,7 @@ export async function getNoticiasRelacionadas(categoria: string, excludeSlug?: s
     { encodeValuesOnly: true },
   );
 
-  const res = await fetch(`${API_URL}/noticias?${query}`, {
-    next: { revalidate: 21600, tags: ['noticias-collection', `category:${categoria}`] },
-  });
+  const res = await fetch(`${API_URL}/noticias?${query}`);
 
   if (!res.ok) {
     throw new Error('Failed to fetch noticias relacionadas');
@@ -210,9 +198,7 @@ export async function getNoticiasCategorias(): Promise<Array<{ id: number; nombr
     { encodeValuesOnly: true },
   );
 
-  const res = await fetch(`${API_URL}/noticias?${query}`, {
-    next: { revalidate: 7200, tags: ['noticias-collection', 'categorias'] },
-  });
+  const res = await fetch(`${API_URL}/noticias?${query}`);
 
   if (!res.ok) {
     throw new Error('Failed to fetch noticias categorias');

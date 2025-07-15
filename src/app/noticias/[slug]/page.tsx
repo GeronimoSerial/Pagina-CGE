@@ -18,6 +18,7 @@ import Image from 'next/image';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
 
+// ISR: Revalidar cada 24 horas - Contenido ya publicado cambia poco
 export const revalidate = 86400;
 
 export async function generateStaticParams() {

@@ -22,8 +22,8 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }));
 }
 
-// ISR: Revalidar cada 60 segundos DEVELOPMENT
-export const revalidate = 60;
+// ISR: Revalidar cada 7 días - Contenido de trámites es estable
+export const revalidate = 604800;
 
 export default async function DocumentPage({ params }: PageProps) {
   const slug = (await params).slug;
