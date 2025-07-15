@@ -94,11 +94,22 @@ const categoriaMap: Record<number, string> = {
   5: 'Suplentes',
 };
 
+// Cache simple para evitar llamadas duplicadas en la misma request
+let navigationCache: NavSection[] | null = null;
+let cacheTimestamp = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
+
 /**
  * Obtiene la navegación agrupando los trámites por categoría.
- * Optimizado para obtener solo los campos necesarios.
+ * Optimizado con cache para evitar llamadas duplicadas.
  */
 export async function getTramitesNavigation(): Promise<NavSection[]> {
+  // Verificar cache
+  const now = Date.now();
+  if (navigationCache && (now - cacheTimestamp) < CACHE_DURATION) {
+    return navigationCache;
+  }
+
   const params = {
     fields: ['categoria', 'titulo', 'slug'],
     sort: ['categoria:asc', 'titulo:asc'],
@@ -126,11 +137,17 @@ export async function getTramitesNavigation(): Promise<NavSection[]> {
       href: `/tramites/${t.slug}`,
     });
   });
+  
   const sortedSections = Object.values(grouped).sort((a, b) => {
     if (a.title === 'General') return -1; // General siempre al principio
     if (b.title === 'General') return 1;
     return a.title.localeCompare(b.title);
-  })
+  });
+
+  // Actualizar cache
+  navigationCache = sortedSections;
+  cacheTimestamp = now;
+
   return sortedSections;
 }
 

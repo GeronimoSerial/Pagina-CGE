@@ -5,6 +5,9 @@ import {
 } from '@/features/tramites/services/docs-data';
 import { ResponsiveNav } from '@/features/tramites/navigation/responsive-nav';
 
+// ISR: Revalidar cada 7 días - La navegación de trámites es muy estable
+export const revalidate = 604800;
+
 export default async function TramitesLayout({
   children,
 }: {
