@@ -60,16 +60,16 @@ const nextConfig = {
           },
         ],
       },
-      {
-        // Otras API routes - sin cache para permitir interactividad
-        source: '/api/(?!escuelas)(.*)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate',
-          },
-        ],
-      },
+      // {
+      //   // Otras API routes - sin cache para permitir interactividad
+      //   source: '/api/(?!escuelas)(.*)',
+      //   headers: [
+      //     {
+      //       key: 'Cache-Control',
+      //       value: 'no-cache, no-store, must-revalidate',
+      //     },
+      //   ],
+      // },
     ];
   },
 };
