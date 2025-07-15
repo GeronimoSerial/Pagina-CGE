@@ -49,7 +49,7 @@ export default function StaticNewsSection({
         </div>
       )}
 
-      {/* Categorías populares */}
+      {/* Categorías populares
       {categorias && categorias.length > 0 && (
         <div className="border-t pt-8">
           <h3 className="mb-4 text-lg font-semibold text-gray-900">
@@ -68,12 +68,7 @@ export default function StaticNewsSection({
             ))}
           </div>
         </div>
-      )}
-
-      {/* Mensaje informativo sobre actualización automática */}
-      <div className="text-center text-sm text-gray-500 pt-4">
-        Las noticias se actualizan automáticamente cada hora
-      </div>
+      )} */}
     </div>
   );
 }
