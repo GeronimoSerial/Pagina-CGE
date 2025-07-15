@@ -67,12 +67,9 @@ async function fetchAPI<T>(path: string, params: object = {}): Promise<T> {
   const url = `${API_URL}${path}${query ? `?${query}` : ''}`;
 
   try {
-    // Using Next.js fetch - ISR handled by page-level revalidate
     const res = await fetch(url);
 
     if (!res.ok) {
-      // Log the server-side error for debugging
-      console.error(`API fetch error: ${res.status} ${res.statusText} for ${url}`);
       throw new Error(`Error al obtener datos de la API: ${res.statusText}`);
     }
 
@@ -80,7 +77,6 @@ async function fetchAPI<T>(path: string, params: object = {}): Promise<T> {
     return data;
   } catch (error) {
     console.error('Error en fetchAPI:', error);
-    // Re-throw a generic error to the client
     throw new Error('No se pudieron obtener los datos del servidor.');
   }
 }
