@@ -73,6 +73,7 @@ export function Sidebar({ sections, onLinkClick }: SidebarProps) {
                         key={item.id}
                         href={item.href}
                         onClick={onLinkClick}
+                        prefetch={false}
                         className={`flex items-center text-xs rounded px-2 py-1.5 transition-colors group
                         ${currentSlug === item.id ? 'bg-green-50 text-[#3D8B37] font-semibold' : 'text-gray-600 hover:text-[#3D8B37] hover:bg-green-50'}`}
                       >

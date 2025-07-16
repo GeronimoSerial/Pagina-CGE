@@ -7,8 +7,8 @@ import ReactMarkdown from 'react-markdown';
 import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
 import { Clock } from 'lucide-react';
 
-// ISR: Revalidar cada 60 segundos DEVELOPMENT
-export const revalidate = 60;
+// ISR: Revalidar cada 7 días - Contenido de trámites es estable
+export const revalidate = 604800;
 
 export default async function IntroduccionPage() {
   const article: Article | null = await getTramiteArticleBySlug('introduccion');
