@@ -1,33 +1,41 @@
-import { API_URL } from '@/shared/lib/config';
+import { API_URL, PERFORMANCE_CONFIG, DIRECTUS_URL } from '@/shared/lib/config';
 import { Noticia } from '@/shared/interfaces';
 import qs from 'qs';
-import { cfImages } from '@/shared/lib/cloudflare-images';
+import { DirectusAssets } from '@/shared/lib/directus-assets';
 
-// Simplified cache strategy: Fewer unique keys = better cache hits
-function createCacheKey(page: number, pageSize: number, filters: Record<string, any>): string {
-  // Reduce granularity for better cache efficiency under load
-  const hasFilters = Object.keys(filters).length > 0;
-  const bucket = Math.floor(page / 5); // Group pages in buckets of 5
-  
-  if (!hasFilters) {
-    return `noticias-clean-${bucket}-${pageSize}`;
+class CategoriesCache {
+  private cache: Array<{ id: number; nombre: string }> | null = null;
+  private timestamp: number = 0;
+  private ttl: number = 1800000;
+
+  async get(): Promise<Array<{ id: number; nombre: string }> | null> {
+    if (this.cache && (Date.now() - this.timestamp) < this.ttl) {
+      return this.cache;
+    }
+    return null;
   }
-  
-  // Simple hash for filters to reduce unique keys
-  const filterHash = Object.keys(filters).sort().join('-');
-  return `noticias-filtered-${bucket}-${pageSize}-${filterHash}`;
+
+  set(data: Array<{ id: number; nombre: string }>): void {
+    this.cache = data;
+    this.timestamp = Date.now();
+  }
+
+  clear(): void {
+    this.cache = null;
+    this.timestamp = 0;
+  }
 }
- 
+
+const categoriesCache = new CategoriesCache();
+
 export async function getAllNoticias() {
   const query = qs.stringify(
     {
-      fields: ['slug'],
-      filters: {
-        publicado: { $eq: true },
+      fields: ['id', 'slug'],
+      filter: {
+        status: { _eq: 'published' },
       },
-      pagination: {
-        limit: -1,
-      },
+      limit: -1,
     },
     { encodeValuesOnly: true },
   );
@@ -41,61 +49,102 @@ export async function getAllNoticias() {
   return data;
 }
 
- 
+
 export async function getNoticiasPaginadas(
   page: number = 1,
-  pageSize: number = 4,
+  pageSize: number = PERFORMANCE_CONFIG.PAGINATION.DEFAULT_PAGE_SIZE,
   filters: Record<string, any> = {},
 ) {
-  // Create cache tag for better cache invalidation
-  const cacheKey = createCacheKey(page, pageSize, filters);
+  const directusFilters: any = {
+    status: { _eq: 'published' },
+  };
+
+  if (filters.q) {
+    directusFilters.titulo = { _icontains: filters.q };
+  }
   
+  if (filters.categoria) {
+    directusFilters.categoria = { _eq: filters.categoria };
+  }
+
+  if (filters.desde) {
+    directusFilters.fecha = { _gte: filters.desde };
+  }
+
+  if (filters.hasta) {
+    if (directusFilters.fecha) {
+      directusFilters.fecha = { _gte: filters.desde, _lte: filters.hasta };
+    } else {
+      directusFilters.fecha = { _lte: filters.hasta };
+    }
+  }
+
   const query = qs.stringify(
     {
-      
-      fields: ['titulo', 'resumen', 'fecha', 'categoria', 'esImportante', 'slug', 'createdAt'],
-      populate: {
-        portada: {
-          fields: ['url', 'alternativeText']
-        },
-        imagen: {
-          fields: ['url', 'width', 'height', 'alternativeText']
-        }
-      },
-      sort: ['createdAt:desc', 'fecha:desc', 'id:desc'],
-      pagination: { page, pageSize },
-      filters: {
-        publicado: { $eq: true },
-        ...filters,
-      },
+      fields: [
+        'id', 'titulo', 'resumen', 'fecha', 'categoria', 'esImportante', 'slug', 
+        'date_created', 'portada', 'autor', 'imagenes.directus_files_id.*'
+      ],
+      sort: ['-date_created', '-fecha', '-id'],
+      limit: Math.min(pageSize, 20),
+      offset: (page - 1) * pageSize,
+      filter: directusFilters,
+      meta: '*',
     },
     { encodeValuesOnly: true },
   );
 
-  const res = await fetch(`${API_URL}/noticias?${query}`);
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), PERFORMANCE_CONFIG.API_TIMEOUT);
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch paginated noticias');
+    const res = await fetch(`${API_URL}/noticias?${query}`, {
+      signal: controller.signal,
+      headers: {
+        'Accept': 'application/json',
+        'Cache-Control': `max-age=${PERFORMANCE_CONFIG.CACHE.DYNAMIC_MAX_AGE}`,
+        'Connection': 'keep-alive',
+      },
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: Failed to fetch paginated noticias`);
+    }
+
+    const { data, meta } = await res.json();
+    
+    const pagination = {
+      page: page,
+      pageCount: Math.ceil((meta?.total_count || 0) / pageSize),
+      pageSize: pageSize,
+      total: meta?.total_count || 0
+    };
+
+    return { noticias: data, pagination };
+
+  } catch (error) {
+    return {
+      noticias: [],
+      pagination: {
+        page: page,
+        pageCount: 0,
+        pageSize: pageSize,
+        total: 0
+      }
+    };
   }
-  const { data, meta } = await res.json();
-  return { noticias: data, pagination: meta.pagination };
 }
 
- 
+
 export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
   const query = qs.stringify(
     {
-      filters: {
-        slug: { $eq: slug },
+      filter: {
+        slug: { _eq: slug },
       },
-      populate: {
-        portada: {
-          fields: ['url', 'alternativeText']
-        },
-        imagen: {
-          fields: ['url', 'width', 'height', 'alternativeText']
-        }
-      },
+      fields: '*,imagenes.directus_files_id.*',
     },
     { encodeValuesOnly: true },
   );
@@ -119,38 +168,32 @@ export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
     portada: n.portada,
     slug: n.slug,
     contenido: n.contenido,
-    imagen: n.imagen,
-    publicado: n.publicado,
+    imagenes: n.imagenes || [],
+    status: n.status,
     fecha: n.fecha,
-    createdAt: n.createdAt,
+    date_created: n.date_created,
     metaTitle: n.metaTitle || n.titulo,
     metaDescription: n.metaDescription || n.resumen,
   };
 }
 
- 
+
 export async function getNoticiasRelacionadas(categoria: string, excludeSlug?: string) {
   const filters: any = {
-    categoria: { $eq: categoria },
-    publicado: { $eq: true },
+    categoria: { _eq: categoria },
+    status: { _eq: 'published' },
   };
 
-  // Excluir la noticia actual si se proporciona el slug
   if (excludeSlug) {
-    filters.slug = { $ne: excludeSlug };
+    filters.slug = { _neq: excludeSlug };
   }
 
   const query = qs.stringify(
     {
-      filters,
-      pagination: { limit: 2 },
-      fields: ['titulo', 'resumen', 'fecha', 'categoria', 'slug'],
-      populate: {
-        portada: {
-          fields: ['url', 'alternativeText']
-        }
-      },
-      sort: ['createdAt:desc', 'fecha:desc'],
+      filter: filters,
+      limit: 2,
+      fields: ['id', 'titulo', 'resumen', 'fecha', 'categoria', 'slug', 'portada', 'imagenes.directus_files_id.*'],
+      sort: ['-date_created', '-fecha'],
     },
     { encodeValuesOnly: true },
   );
@@ -165,34 +208,34 @@ export async function getNoticiasRelacionadas(categoria: string, excludeSlug?: s
 }
 
 export function getPortada({ noticia }: any) {
-  const url = noticia.portada?.data?.url || noticia.portada?.url;
-
-  if (!url) return null;
-  return cfImages(url, 1200, 'auto');
+  if (!noticia.portada) return null;
+  return DirectusAssets.portada(noticia.portada);
 }
 
 export function getImagenes(noticia: Noticia) {
   return (
-    noticia.imagen?.map((img: any) => ({
-      url: cfImages(img.url, 800, 'auto'),
-      alt: img.alternativeText || '',
-      width: img.width,
-      height: img.height,
+    noticia.imagenes?.map((img) => ({
+      url: DirectusAssets.contenido(img.directus_files_id.id),
+      alt: img.directus_files_id.title || img.directus_files_id.filename_download,
+      width: img.directus_files_id.width,
+      height: img.directus_files_id.height,
     })) || []
   );
 }
 
-/**
- * Obtiene todas las categorías de noticias únicas.
- * Cachea el resultado durante una hora para un rendimiento óptimo.
- */
 export async function getNoticiasCategorias(): Promise<Array<{ id: number; nombre: string }>> {
-  
+  const cached = await categoriesCache.get();
+  if (cached) {
+    return cached;
+  }
+
   const query = qs.stringify(
     {
       fields: ['categoria'],
-      pagination: {
-        limit: -1,
+      limit: -1,
+      filter: {
+        status: { _eq: 'published' },
+        categoria: { _nnull: true },
       },
     },
     { encodeValuesOnly: true },
@@ -206,14 +249,16 @@ export async function getNoticiasCategorias(): Promise<Array<{ id: number; nombr
 
   const { data } = await res.json();
 
-  
   const categoriasUnicas = Array.from(
     new Set(data.map((item: any) => item.categoria).filter(Boolean)),
   );
 
-  
-  return (categoriasUnicas as string[]).map((categoria: string, index: number) => ({
+  const result = (categoriasUnicas as string[]).map((categoria: string, index: number) => ({
     id: index + 1,
-    nombre: categoria,
+    nombre: categoria.charAt(0).toUpperCase() + categoria.slice(1),
   }));
+
+  categoriesCache.set(result);
+  
+  return result;
 }

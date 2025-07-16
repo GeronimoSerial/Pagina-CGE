@@ -1,18 +1,46 @@
 import { notFound } from 'next/navigation';
 import {
   getTramiteArticleBySlug,
+  getAllTramiteSlugs,
   Article,
 } from '@/features/tramites/services/docs-data';
 import { Clock } from 'lucide-react';
 import { PERFORMANCE_CONFIG } from '@/shared/lib/config';
 import { HTMLContent } from '@/shared/components/HTMLContent';
 
-// ISR ultra-optimizado: Revalidar cada día - Trámites son muy estáticos
-export const revalidate = 86400; // PERFORMANCE_CONFIG.REVALIDATE.TRAMITES
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
 
-export default async function IntroduccionPage() {
+// Generar páginas estáticas en build time con cache optimizado
+export async function generateStaticParams() {
+  try {
+    const slugs = await getAllTramiteSlugs();
+    // Filtrar slug 'introduccion' ya que tiene su propia página
+    return slugs
+      .filter((slug) => slug !== 'introduccion')
+      .map((slug) => ({ slug }));
+  } catch (error) {
+    console.warn('Error generating static params for tramites:', error);
+    // Fallback: generar páginas para trámites conocidos
+    return [
+      { slug: 'articulo-11' },
+      { slug: 'articulo-22' },
+      { slug: 'articulo-27' },
+      { slug: 'articulo-28' },
+      { slug: 'accidentes-laborales' },
+    ];
+  }
+}
+
+// ISR ultra-optimizado: Trámites son muy estáticos
+export const revalidate = PERFORMANCE_CONFIG.REVALIDATE.TRAMITES;
+
+export default async function DocumentPage({ params }: PageProps) {
+  const slug = (await params).slug;
+
   // Cache ultra-agresivo integrado en el servicio
-  const article = await getTramiteArticleBySlug('introduccion');
+  const article: Article | null = await getTramiteArticleBySlug(slug);
 
   if (!article) {
     notFound();
@@ -66,6 +94,14 @@ export default async function IntroduccionPage() {
                   Comunícanos
                 </a>
               </div>
+              <div className="flex space-x-4">
+                <a
+                  href="/tramites"
+                  className="flex items-center text-sm text-gray-800 hover:text-green-600"
+                >
+                  ← Volver a trámites
+                </a>
+              </div>
             </div>
           </div>
         </footer>
@@ -74,9 +110,10 @@ export default async function IntroduccionPage() {
   );
 }
 
-// Generar metadatos dinámicos
-export async function generateMetadata() {
-  const article = await getTramiteArticleBySlug('introduccion');
+// Generar metadatos dinámicos optimizado
+export async function generateMetadata({ params }: PageProps) {
+  const slug = (await params).slug;
+  const article = await getTramiteArticleBySlug(slug);
 
   if (!article) {
     return {
@@ -84,25 +121,30 @@ export async function generateMetadata() {
     };
   }
 
+  const url = `/tramites/${slug}`;
+
   return {
-    title: 'Trámites CGE',
+    title: `${article.title} - Trámites CGE`,
     description:
-      'Guía completa de trámites educativos para todos los agentes docentes',
+      article.description ||
+      `Información sobre ${article.title} - Consejo General de Educación`,
     alternates: {
-      canonical: '/tramites/introduccion',
+      canonical: url,
     },
     openGraph: {
       title: article.title,
-      description:
-        'Guía completa de trámites educativos para todos los agentes docentes',
-      type: 'website',
-      url: '/tramites/introduccion',
+      description: article.description || `Información sobre ${article.title}`,
+      url: url,
+      type: 'article',
+      publishedTime: article.lastUpdated,
+      modifiedTime: article.lastUpdated,
+      siteName: 'Consejo General de Educación',
       images: [
         {
           url: '/og-tramites.webp',
           width: 1200,
           height: 630,
-          alt: 'Consejo General de Educación',
+          alt: 'Trámites CGE',
         },
       ],
     },

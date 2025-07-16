@@ -1,31 +1,29 @@
 import { notFound } from 'next/navigation';
-import { MobileMenu } from '@/features/tramites/navigation/mobile-menu';
 import {
-  getTramitesNavigation,
   getTramiteArticleBySlug,
   getAllTramiteSlugs,
-  NavSection,
   Article,
 } from '@/features/tramites/services/docs-data';
-import ReactMarkdown from 'react-markdown';
-import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
 import { Clock } from 'lucide-react';
-import Link from 'next/link';
+import { PERFORMANCE_CONFIG } from '@/shared/lib/config';
+import { HTMLContent } from '@/shared/components/HTMLContent';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-// Generar páginas estáticas en build time
+// Generar páginas estáticas en build time con cache optimizado
 export async function generateStaticParams() {
   try {
     const slugs = await getAllTramiteSlugs();
-    return slugs.map((slug) => ({ slug }));
+    // Filtrar slug 'introduccion' ya que tiene su propia página
+    return slugs
+      .filter((slug) => slug !== 'introduccion')
+      .map((slug) => ({ slug }));
   } catch (error) {
     console.warn('Error generating static params for tramites:', error);
     // Fallback: generar páginas para trámites conocidos
     return [
-      { slug: 'introduccion' },
       { slug: 'articulo-11' },
       { slug: 'articulo-22' },
       { slug: 'articulo-27' },
@@ -35,20 +33,20 @@ export async function generateStaticParams() {
   }
 }
 
-// ISR: Revalidar cada 7 días - Contenido de trámites es estable
-export const revalidate = 604800;
+// ISR ultra-optimizado: Trámites son muy estáticos
+export const revalidate = 86400; // PERFORMANCE_CONFIG.REVALIDATE.TRAMITES
 
 export default async function DocumentPage({ params }: PageProps) {
   const slug = (await params).slug;
 
-  // Solo cargar el artículo - la navegación ya está en el layout
+  // Cache ultra-agresivo integrado en el servicio
   const article: Article | null = await getTramiteArticleBySlug(slug);
 
   if (!article) {
     notFound();
   }
 
-  const markdown = article.content?.[0]?.content || '';
+  const htmlContent = article.content?.[0]?.content || '';
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -72,14 +70,14 @@ export default async function DocumentPage({ params }: PageProps) {
             <h1 className="mb-4 text-4xl font-bold text-gray-900">
               {article.title}
             </h1>
-            <p className="text-xl text-gray-600">{article.description}</p>
+            {article.description && (
+              <p className="text-xl text-gray-600">{article.description}</p>
+            )}
           </header>
 
-          {/* Article Content */}
+          {/* Article Content - HTML sanitizado */}
           <article className="max-w-none prose prose-lg">
-            <ReactMarkdown components={MarkdownComponent}>
-              {markdown}
-            </ReactMarkdown>
+            <HTMLContent content={htmlContent} className="tramites-content" />
           </article>
         </div>
 
@@ -89,22 +87,20 @@ export default async function DocumentPage({ params }: PageProps) {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="mb-4 text-sm text-gray-600 sm:mb-0">
                 ¿Encontraste un error en esta página?{' '}
-                <Link
+                <a
                   href="/contacto"
                   className="text-green-800 underline hover:text-green-600"
                 >
                   Comunícanos
-                </Link>
+                </a>
               </div>
               <div className="flex space-x-4">
-                <Link
+                <a
                   href="/tramites"
                   className="flex items-center text-sm text-gray-800 hover:text-green-600"
                 >
-                  <span className="text-sm text-green-800">
-                    ← Volver a Trámites
-                  </span>
-                </Link>
+                  ← Volver a trámites
+                </a>
               </div>
             </div>
           </div>
@@ -114,33 +110,43 @@ export default async function DocumentPage({ params }: PageProps) {
   );
 }
 
-// Generar metadatos dinámicos
+// Generar metadatos dinámicos optimizado
 export async function generateMetadata({ params }: PageProps) {
-  const article = await getTramiteArticleBySlug((await params).slug);
   const slug = (await params).slug;
+  const article = await getTramiteArticleBySlug(slug);
+
   if (!article) {
     return {
       title: 'Página no encontrada',
     };
   }
+
   const url = `/tramites/${slug}`;
 
   return {
-    title: article.title,
-    description: article.description,
+    title: `${article.title} - Trámites CGE`,
+    description:
+      article.description ||
+      `Información sobre ${article.title} - Consejo General de Educación`,
     alternates: {
       canonical: url,
     },
     openGraph: {
       title: article.title,
-      description: article.description,
+      description: article.description || `Información sobre ${article.title}`,
       url: url,
       type: 'article',
       publishedTime: article.lastUpdated,
       modifiedTime: article.lastUpdated,
-      expirationTime: article.lastUpdated,
-      authors: ['Consejo General de Educación'],
-      tags: [article.category],
+      siteName: 'Consejo General de Educación',
+      images: [
+        {
+          url: '/og-tramites.webp',
+          width: 1200,
+          height: 630,
+          alt: 'Trámites CGE',
+        },
+      ],
     },
   };
 }

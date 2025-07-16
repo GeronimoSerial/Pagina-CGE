@@ -7,6 +7,7 @@ import { Separator } from '@/shared/ui/separator';
 import { Metadata } from 'next';
 import NewsContainer from '@/features/noticias/components/NewsContainer';
 import { Suspense } from 'react';
+import { PERFORMANCE_CONFIG } from '@/shared/lib/config';
 
 export const metadata: Metadata = {
   title: 'Noticias',
@@ -33,13 +34,11 @@ export const metadata: Metadata = {
   },
 };
 
-// ISR: Revalidar cada 1 hora para mantener contenido fresco automáticamente
 export const revalidate = 3600;
 
 export default async function NoticiasPage() {
-  // Pre-renderizar contenido inicial (SSG) - Sin API calls del usuario
   const [initialNoticias, categorias] = await Promise.all([
-    getNoticiasPaginadas(1, 6), // Primeras 6 noticias
+    getNoticiasPaginadas(1, 6),
     getNoticiasCategorias(),
   ]);
 

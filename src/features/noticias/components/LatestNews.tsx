@@ -5,7 +5,7 @@ import { Noticia } from '@/shared/interfaces';
 import Link from 'next/link';
 
 interface LatestNewsStaticProps {
-  noticias: any[];
+  noticias: Noticia[];
 }
 
 /**
@@ -13,23 +13,7 @@ interface LatestNewsStaticProps {
  * No hace API calls - Todo el contenido viene del SSG de la página principal
  */
 export default function LatestNewsStatic({ noticias }: LatestNewsStaticProps) {
-  // Convertir datos de Strapi a formato esperado
-  const noticiasFormateadas: Noticia[] = noticias
-    .slice(0, 6)
-    .map((noticia: any) => ({
-      id: noticia.id,
-      autor: noticia.autor || 'Redacción CGE',
-      titulo: noticia.titulo,
-      resumen: noticia.resumen,
-      fecha: noticia.fecha,
-      categoria: noticia.categoria,
-      esImportante: noticia.esImportante || false,
-      slug: noticia.slug,
-      portada: noticia.portada || { url: '' },
-      imagen: noticia.imagen || [],
-      contenido: noticia.contenido || noticia.resumen || '',
-      publicado: true, // Solo mostramos noticias publicadas
-    }));
+  const noticiasFormateadas = noticias.slice(0, 6);
 
   return (
     <section className="relative px-4 py-12 mx-auto w-full max-w-7xl sm:px-6 lg:px-8 lg:py-20">
@@ -66,7 +50,10 @@ export default function LatestNewsStatic({ noticias }: LatestNewsStaticProps) {
           {noticiasFormateadas.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
               {noticiasFormateadas.map((noticia) => (
-                <RegularNewsCard key={noticia.id} noticia={noticia} />
+                <RegularNewsCard
+                  key={noticia.id || noticia.slug}
+                  noticia={noticia}
+                />
               ))}
             </div>
           ) : (

@@ -1,19 +1,25 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  //  para VPS con recursos limitados
+  // Optimizaciones para VPS con recursos limitados
   serverExternalPackages: ['sharp'], // Optimizar procesamiento de imágenes
 
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'cms.geroserial.com',
+        hostname: 'devcms.geroserial.com',
+        port: '',
+        pathname: '/assets/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'devcms.geroserial.com',
         port: '',
         pathname: '/uploads/**',
       },
       {
         protocol: 'https',
-        hostname: 'cms.geroserial.com',
+        hostname: 'devcms.geroserial.com',
         port: '',
         pathname: '/cdn-cgi/image/**',
       },

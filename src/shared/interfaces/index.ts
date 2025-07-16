@@ -51,20 +51,40 @@ export interface Supervisor {
   nombre: string;
 }
 
+// Interface para archivos de Directus
+export interface DirectusFile {
+  id: string;
+  filename_download: string;
+  title: string;
+  type: string;
+  width: number;
+  height: number;
+  description?: string;
+  filesize: number;
+}
+
+// Interface para relación de imágenes en Directus
+export interface DirectusImageRelation {
+  directus_files_id: DirectusFile;
+}
+
 export interface Noticia {
   id: number;
   autor?: string;
   titulo: string;
   resumen: string;
-  categoria: string;
+  categoria: string; // Corregido: las categorías son strings en Directus
   esImportante: boolean;
-  portada: { url: string };
+  portada: string; // Cambió de { url: string } a string (UUID)
   slug: string;
   contenido: string;
-  imagen: { url: string; width: number; height: number }[];
-  publicado: boolean;
+  imagenes: DirectusImageRelation[]; // Cambió de imagen a imagenes con nueva estructura
+  status: string; // Cambió de publicado a status
   fecha: string;
-  createdAt?: string;
+  date_created?: string; // Cambió de createdAt a date_created
+  user_created?: string;
+  user_updated?: string;
+  date_updated?: string;
   metaTitle?: string;
   metaDescription?: string;
 }

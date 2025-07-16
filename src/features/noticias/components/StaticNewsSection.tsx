@@ -2,10 +2,12 @@ import Link from 'next/link';
 import NewsGrid from './NewsGrid';
 import { Button } from '@/shared/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { Noticia } from '@/shared/interfaces';
+import { separarNoticias } from '../utils/news';
 
 interface StaticNewsSectionProps {
   initialData: {
-    noticias: any[];
+    noticias: Noticia[];
     pagination: any;
   };
   categorias: Array<{ id: number; nombre: string }>;
@@ -21,19 +23,15 @@ export default function StaticNewsSection({
 }: StaticNewsSectionProps) {
   const { noticias, pagination } = initialData;
 
-  // Separar noticias destacadas de regulares
-  const noticiasDestacadas =
-    noticias.filter((noticia: any) => noticia.esImportante) || [];
-  const noticiasRegulares =
-    noticias.filter((noticia: any) => !noticia.esImportante) || [];
+  const { destacadas, regulares } = separarNoticias(noticias);
 
   return (
     <div className="space-y-8">
       {/* Noticias grid */}
       <div>
         <NewsGrid
-          noticiasDestacadas={noticiasDestacadas}
-          noticiasRegulares={noticiasRegulares}
+          noticiasDestacadas={destacadas}
+          noticiasRegulares={regulares}
         />
       </div>
 

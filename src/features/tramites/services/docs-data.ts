@@ -1,5 +1,6 @@
-import { API_URL } from '@/shared/lib/config';
+import { API_URL, PERFORMANCE_CONFIG } from '@/shared/lib/config';
 import qs from 'qs';
+import { withCache, tramitesCache } from '@/shared/lib/aggressive-cache';
 
 // --- INTERFACES ---
 
@@ -33,199 +34,330 @@ export interface Article {
   content: ArticleSection[];
 }
 
-// --- STRAPI TYPES ---
+// --- DIRECTUS TYPES ---
 
-// Type for raw data used in navigation
-interface RawTramiteNav {
-  slug: string;
+interface DirectusTramite {
+  id: number;
+  status: string;
+  date_created: string;
+  date_updated: string;
   titulo: string;
-  categoria: string | null;
-}
-
-// Type for raw data for a full article
-interface RawTramiteArticle {
-  id: string;
+  resumen: string | null;
   slug: string;
-  categoria: string;
-  titulo: string;
-  resumen: string;
-  updatedAt: string;
-  fecha: string;
   contenido: string;
+  fecha: string;
+  categoria: string;
 }
 
-// --- API HELPER ---
+// --- CACHE ULTRA-AGRESIVO PARA TRÁMITES ---
+// Los trámites cambian muy raramente, cache de 4 horas
+
+class TramitesStaticCache {
+  private navigationCache: NavSection[] | null = null;
+  private articlesCache = new Map<string, Article>();
+  private allSlugsCache: string[] | null = null;
+  private timestamp: number = 0;
+  private ttl: number = 14400000; // 4 horas en ms
+
+  isValid(): boolean {
+    return this.timestamp > 0 && (Date.now() - this.timestamp) < this.ttl;
+  }
+
+  setNavigation(data: NavSection[]): void {
+    this.navigationCache = data;
+    this.timestamp = Date.now();
+  }
+
+  getNavigation(): NavSection[] | null {
+    return this.isValid() ? this.navigationCache : null;
+  }
+
+  setArticle(slug: string, article: Article): void {
+    this.articlesCache.set(slug, article);
+    this.timestamp = Date.now();
+  }
+
+  getArticle(slug: string): Article | null {
+    return this.isValid() ? this.articlesCache.get(slug) || null : null;
+  }
+
+  setSlugs(slugs: string[]): void {
+    this.allSlugsCache = slugs;
+    this.timestamp = Date.now();
+  }
+
+  getSlugs(): string[] | null {
+    return this.isValid() ? this.allSlugsCache : null;
+  }
+
+  clear(): void {
+    this.navigationCache = null;
+    this.articlesCache.clear();
+    this.allSlugsCache = null;
+    this.timestamp = 0;
+  }
+}
+
+const staticCache = new TramitesStaticCache();
+
+// --- OPTIMIZED API HELPERS ---
 
 /**
- * Generic fetch function for Strapi API.
- * @param path - API path (e.g., '/tramites')
- * @param params - Query parameters object
- * @returns The 'data' part of the Strapi response.
+ * Fetch optimizado para Directus con timeouts agresivos
  */
-async function fetchAPI<T>(path: string, params: object = {}): Promise<T> {
+async function fetchDirectusAPI<T>(params: Record<string, any> = {}): Promise<T> {
   const query = qs.stringify(params, { encodeValuesOnly: true });
-  const url = `${API_URL}${path}${query ? `?${query}` : ''}`;
+  const url = `${API_URL}/tramites${query ? `?${query}` : ''}`;
+
+  // Timeout agresivo para trámites
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), PERFORMANCE_CONFIG.CRITICAL_API_TIMEOUT);
 
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'Accept': 'application/json',
+        'Cache-Control': `max-age=${PERFORMANCE_CONFIG.CACHE.STATIC_MAX_AGE}`,
+        'Connection': 'keep-alive',
+      },
+    });
+
+    clearTimeout(timeoutId);
 
     if (!res.ok) {
-      throw new Error(`Error al obtener datos de la API: ${res.statusText}`);
+      throw new Error(`HTTP ${res.status}: Error al obtener trámites`);
     }
 
     const { data } = await res.json();
     return data;
   } catch (error) {
-    console.error('Error en fetchAPI:', error);
-    throw new Error('No se pudieron obtener los datos del servidor.');
+    clearTimeout(timeoutId);
+    throw error;
   }
 }
 
-// Mapa de categorías
-const categoriaMap: Record<number, string> = {
-  1: 'Licencias especiales por salud y/o maternidad',
-  2: 'Licencias extraordinarias',
-  3: 'Justificación de inasistencias',
-  4: 'Permisos',
-  5: 'Suplentes',
+// --- CATEGORÍAS MEJORADAS ---
+// Basadas en los datos reales de Directus
+
+const categoriasMap: Record<string, string> = {
+  'general': 'General',
+  'licencias por salud y/o maternidad': 'Licencias por Salud y Maternidad',
+  'licencias extraordinarias': 'Licencias Extraordinarias',
+  'justificacion de inasistencias': 'Justificación de Inasistencias',
+  'permisos': 'Permisos',
+  'suplentes': 'Suplentes',
 };
 
-// Cache simple para evitar llamadas duplicadas en la misma request
-let navigationCache: NavSection[] | null = null;
-let cacheTimestamp = 0;
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
+function getCategoryDisplayName(categoria: string): string {
+  return categoriasMap[categoria.toLowerCase()] || categoria;
+}
+
+// --- FUNCTIONS ---
 
 /**
- * Obtiene la navegación agrupando los trámites por categoría.
- * Optimizado con cache para evitar llamadas duplicadas.
+ * Obtiene la navegación completa de trámites con cache ultra-agresivo
  */
 export async function getTramitesNavigation(): Promise<NavSection[]> {
-  // Verificar cache
-  const now = Date.now();
-  if (navigationCache && (now - cacheTimestamp) < CACHE_DURATION) {
-    return navigationCache;
+  // Verificar cache estático primero
+  const cached = staticCache.getNavigation();
+  if (cached) {
+    return cached;
   }
 
-  const params = {
-    fields: ['categoria', 'titulo', 'slug'],
-    sort: ['categoria:asc', 'titulo:asc'],
-    'pagination[pageSize]': 250, // Increased limit to fetch all items
-  };
+  // Cache miss - usar aggressive cache como fallback
+  return withCache(
+    tramitesCache,
+    'tramites-navigation-v2',
+    async (): Promise<NavSection[]> => {
+      const tramites: DirectusTramite[] = await fetchDirectusAPI({
+        fields: ['categoria', 'titulo', 'slug'],
+        sort: ['categoria', 'titulo'],
+        limit: -1,
+        filter: {
+          status: { _eq: 'published' }
+        }
+      });
 
-  const tramites: RawTramiteNav[] = await fetchAPI('/tramites', params);
+      if (!tramites || tramites.length === 0) {
+        return [];
+      }
 
-  if (!tramites) return [];
+      // Agrupar por categoría
+      const grouped: Record<string, NavSection> = {};
+      
+      tramites.forEach((tramite) => {
+        const categoryKey = tramite.categoria.toLowerCase();
+        const categoryDisplay = getCategoryDisplayName(tramite.categoria);
 
-  const grouped: Record<string, NavSection> = {};
-  tramites.forEach((t) => {
-    const catNumber = Number(t.categoria); // Convertimos la categoría a número
-    const cat = categoriaMap[catNumber] || 'General'; // Mapeamos el número a texto
-    if (!grouped[cat]) {
-      grouped[cat] = {
-        id: cat.toLowerCase().replace(/\s+/g, '-'),
-        title: cat,
-        items: [],
-      };
+        if (!grouped[categoryKey]) {
+          grouped[categoryKey] = {
+            id: categoryKey.replace(/\s+/g, '-'),
+            title: categoryDisplay,
+            items: [],
+          };
+        }
+
+        grouped[categoryKey].items.push({
+          id: tramite.slug,
+          title: tramite.titulo,
+          href: `/tramites/${tramite.slug}`,
+        });
+      });
+
+      // Ordenar secciones: General primero, luego alfabético
+      const sortedSections = Object.values(grouped).sort((a, b) => {
+        if (a.title === 'General') return -1;
+        if (b.title === 'General') return 1;
+        return a.title.localeCompare(b.title);
+      });
+
+      // Guardar en cache estático
+      staticCache.setNavigation(sortedSections);
+      
+      return sortedSections;
     }
-    grouped[cat].items.push({
-      id: t.slug,
-      title: t.titulo,
-      href: `/tramites/${t.slug}`,
-    });
-  });
-  
-  const sortedSections = Object.values(grouped).sort((a, b) => {
-    if (a.title === 'General') return -1; // General siempre al principio
-    if (b.title === 'General') return 1;
-    return a.title.localeCompare(b.title);
-  });
-
-  // Actualizar cache
-  navigationCache = sortedSections;
-  cacheTimestamp = now;
-
-  return sortedSections;
+  );
 }
 
 /**
- * Obtiene un artículo/trámite por slug.
+ * Obtiene un trámite por slug con cache ultra-agresivo
  */
-export async function getTramiteArticleBySlug(
-  slug: string,
-): Promise<Article | null> {
-  const params = {
-    'filters[slug][$eq]': slug,
-    populate: '*', // We need the full content for the article
-  };
-  const tramites: RawTramiteArticle[] = await fetchAPI('/tramites', params);
-
-  if (!tramites || tramites.length === 0) {
-    return null;
+export async function getTramiteArticleBySlug(slug: string): Promise<Article | null> {
+  // Verificar cache estático primero
+  const cached = staticCache.getArticle(slug);
+  if (cached) {
+    return cached;
   }
 
-  const t = tramites[0];
-  const catNumber = Number(t.categoria); // Convertimos la categoría a número
-  const category = categoriaMap[catNumber] || 'General'; // Mapeamos el número a texto
+  // Cache miss - usar aggressive cache
+  return withCache(
+    tramitesCache,
+    `tramite-article-${slug}`,
+    async (): Promise<Article | null> => {
+      const tramites: DirectusTramite[] = await fetchDirectusAPI({
+        filter: {
+          slug: { _eq: slug },
+          status: { _eq: 'published' }
+        },
+        limit: 1
+      });
 
-  return {
-    id: t.id,
-    slug: t.slug,
-    category,
-    title: t.titulo,
-    description: t.resumen,
-    lastUpdated: t.updatedAt || t.fecha,
-    content: parseContenidoToSections(t.contenido),
-  };
+      if (!tramites || tramites.length === 0) {
+        return null;
+      }
+
+      const tramite = tramites[0];
+      const categoryDisplay = getCategoryDisplayName(tramite.categoria);
+
+      const article: Article = {
+        id: tramite.id.toString(),
+        slug: tramite.slug,
+        category: categoryDisplay,
+        title: tramite.titulo,
+        description: tramite.resumen || '',
+        lastUpdated: tramite.date_updated || tramite.fecha,
+        content: parseHTMLToSections(tramite.contenido),
+      };
+
+      // Guardar en cache estático
+      staticCache.setArticle(slug, article);
+
+      return article;
+    }
+  );
 }
 
 /**
- * Helper para parsear el contenido del trámite a secciones.
- * Actualmente, trata el contenido como un único párrafo de Markdown.
- */
-function parseContenidoToSections(contenido: string | null): ArticleSection[] {
-  if (!contenido) return [];
-  return [{ type: 'paragraph', content: contenido }];
-}
-
-/**
- * Helper para obtener todos los slugs (para generación estática).
- * Optimizado para obtener solo el campo slug.
+ * Obtiene todos los slugs para generación estática
  */
 export async function getAllTramiteSlugs(): Promise<string[]> {
-  const params = {
-    fields: ['slug'],
-    'pagination[pageSize]': 250, // Increased limit to fetch all items
-  };
-  const tramites: { slug: string }[] = await fetchAPI('/tramites', params);
+  // Verificar cache estático
+  const cached = staticCache.getSlugs();
+  if (cached) {
+    return cached;
+  }
 
-  if (!tramites) return [];
+  // Cache miss
+  return withCache(
+    tramitesCache,
+    'all-tramites-slugs',
+    async (): Promise<string[]> => {
+      const tramites: DirectusTramite[] = await fetchDirectusAPI({
+        fields: ['slug'],
+        limit: -1,
+        filter: {
+          status: { _eq: 'published' }
+        }
+      });
 
-  return tramites.map((t) => t.slug);
+      if (!tramites) {
+        return [];
+      }
+
+      const slugs = tramites.map(t => t.slug);
+      
+      // Guardar en cache estático
+      staticCache.setSlugs(slugs);
+      
+      return slugs;
+    }
+  );
 }
 
-export async function getAllTramites(): Promise<any[]> {
-  const params = {
-    fields: ['id', 'slug', 'categoria', 'titulo', 'resumen', 'updatedAt', 'fecha', 'contenido'],
-    sort: ['categoria:asc', 'titulo:asc'],
-    populate: '*',
-    'pagination[pageSize]': 250, // Increased limit to fetch all items
-  };
-  const tramites: RawTramiteArticle[] = await fetchAPI('/tramites', params);
+/**
+ * Parser HTML a secciones mejorado
+ */
+function parseHTMLToSections(htmlContent: string): ArticleSection[] {
+  if (!htmlContent) {
+    return [];
+  }
 
-  if (!tramites) return [];
+  // Por ahora, tratar como un bloque HTML para mantener formato
+  // En el futuro se puede implementar un parser más sofisticado
+  return [{
+    type: 'paragraph',
+    content: htmlContent
+  }];
+}
 
-  return tramites.map((t) => {
-    const catNumber = Number(t.categoria); // Convertimos la categoría a número
-    const category = categoriaMap[catNumber] || 'General'; // Mapeamos el número a texto
+/**
+ * Obtiene todos los trámites (para funciones heredadas)
+ */
+export async function getAllTramites(): Promise<Article[]> {
+  return withCache(
+    tramitesCache,
+    'all-tramites-full',
+    async (): Promise<Article[]> => {
+      const tramites: DirectusTramite[] = await fetchDirectusAPI({
+        sort: ['categoria', 'titulo'],
+        limit: -1,
+        filter: {
+          status: { _eq: 'published' }
+        }
+      });
 
-    return {
-      id: t.id,
-      slug: t.slug,
-      category,
-      title: t.titulo,
-      description: t.resumen,
-      lastUpdated: t.updatedAt || t.fecha,
-      content: t.contenido,
-    };
-  });
+      if (!tramites) {
+        return [];
+      }
+
+      return tramites.map((tramite): Article => ({
+        id: tramite.id.toString(),
+        slug: tramite.slug,
+        category: getCategoryDisplayName(tramite.categoria),
+        title: tramite.titulo,
+        description: tramite.resumen || '',
+        lastUpdated: tramite.date_updated || tramite.fecha,
+        content: parseHTMLToSections(tramite.contenido),
+      }));
+    }
+  );
+}
+
+/**
+ * Función para limpiar cache (útil para desarrollo)
+ */
+export function clearTramitesCache(): void {
+  staticCache.clear();
+  // También limpiar aggressive cache si es necesario
 }

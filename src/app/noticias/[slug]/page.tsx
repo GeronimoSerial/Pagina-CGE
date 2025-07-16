@@ -6,20 +6,22 @@ import {
   getNoticiasRelacionadas,
   getAllNoticias,
 } from '@/features/noticias/services/noticias';
-import { formatearFecha } from '@/shared/lib/utils';
-import ReactMarkdown from 'react-markdown';
 import { notFound } from 'next/navigation';
 import PhotoSwipeGallery from '@/shared/components/PhotoSwipeGallery';
-import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
-import remarkGfm from 'remark-gfm';
+import { HTMLContent } from '@/shared/components/HTMLContent';
 import { Separador } from '@/shared/components/Separador';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
+import {
+  noticiasCache,
+  relatedCache,
+  withCache,
+} from '@/shared/lib/aggressive-cache';
+import { Noticia } from '@/shared/interfaces';
 
-// ISR: Revalidar cada 24 horas - Contenido ya publicado cambia poco
-export const revalidate = 86400;
+export const revalidate = 21600;
 
 export async function generateStaticParams() {
   try {
@@ -41,11 +43,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
 
-  if (metadataCache.has(slug)) {
-    return metadataCache.get(slug);
-  }
+  const noticia = await withCache(noticiasCache, `metadata-${slug}`, () =>
+    getNoticiaBySlug(slug),
+  );
 
-  const noticia = await getNoticiaBySlug(slug);
   if (!noticia) return {};
 
   const url = `/noticias/${slug}`;
@@ -90,9 +91,6 @@ export async function generateMetadata({
     },
   };
 
-  metadataCache.set(slug, metadata);
-  setTimeout(() => metadataCache.delete(slug), 3600000); // 1 hora
-
   return metadata;
 }
 
@@ -118,20 +116,20 @@ interface PageProps {
 export default async function NoticiaPage({ params }: PageProps) {
   const { slug } = await params;
 
-  const [noticia, related] = await Promise.all([
-    getNoticiaBySlug(slug),
-
-    Promise.resolve([]),
-  ]);
+  const noticia: Noticia | null = await withCache(
+    noticiasCache,
+    `noticia-${slug}`,
+    () => getNoticiaBySlug(slug),
+  );
 
   if (!noticia) {
     return notFound();
   }
 
-  // Obtener noticias relacionadas de la misma categoría, excluyendo la actual
-  const relatedFinal = await getNoticiasRelacionadas(
-    noticia.categoria,
-    slug,
+  const relatedFinal = await withCache(
+    relatedCache,
+    `related-${noticia.categoria}-${slug}`,
+    () => getNoticiasRelacionadas(noticia.categoria, slug),
   ).catch(() => []);
 
   return (
@@ -190,15 +188,13 @@ export default async function NoticiaPage({ params }: PageProps) {
                   />
                 )}
                 <div className="mb-8 max-w-none prose prose-lg">
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                    components={MarkdownComponent}
-                  >
-                    {noticia.contenido}
-                  </ReactMarkdown>
+                  <HTMLContent
+                    content={noticia.contenido}
+                    className="prose prose-lg max-w-none"
+                  />
                 </div>
 
-                {noticia.imagen && noticia.imagen.length > 0 && (
+                {noticia.imagenes && noticia.imagenes.length > 0 && (
                   <>
                     <Separador titulo="Galería de imágenes" />
                     <PhotoSwipeGallery noticia={noticia} />

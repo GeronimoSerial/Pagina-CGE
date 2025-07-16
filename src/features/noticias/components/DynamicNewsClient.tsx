@@ -5,6 +5,7 @@ import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import NewsGrid from './NewsGrid';
 import SimplePagination from './SimplePagination';
 import { Noticia } from '@/shared/interfaces';
+import { separarNoticias } from '../utils/news';
 
 // Hook optimizado para debouncing
 function useDebounce<T>(value: T, delay: number): T {
@@ -63,54 +64,29 @@ export default function DynamicNewsClient({
     setError(null);
 
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000);
+      // En lugar de llamar directamente al servicio, hacer fetch a la API route
+      const params = new URLSearchParams({
+        page: String(currentPage),
+        pageSize: '6', // Consistente con PERFORMANCE_CONFIG.PAGINATION.DEFAULT_PAGE_SIZE
+      });
 
-      const noticiasRes = await fetch(
-        `/api/noticias?${new URLSearchParams({
-          page: String(currentPage),
-          ...(debouncedQ && { q: debouncedQ }),
-          ...(categoria && { categoria }),
-          ...(desde && { desde }),
-          ...(hasta && { hasta }),
-          _cache: cacheBuster,
-        }).toString()}`,
-        {
-          signal: controller.signal,
-          headers: {
-            Accept: 'application/json',
-            'Cache-Control': 'max-age=90',
-          },
-        },
-      );
+      if (debouncedQ) params.set('q', debouncedQ);
+      if (categoria) params.set('categoria', categoria);
+      if (desde) params.set('desde', desde);
+      if (hasta) params.set('hasta', hasta);
 
-      clearTimeout(timeoutId);
+      const response = await fetch(`/api/noticias?${params.toString()}`);
 
-      if (!noticiasRes.ok) {
+      if (!response.ok) {
         throw new Error(
-          `HTTP ${noticiasRes.status}: Error al cargar las noticias`,
+          `HTTP ${response.status}: Error al cargar las noticias`,
         );
       }
 
-      const noticiasData = await noticiasRes.json();
-
-      const mapeadas: Noticia[] = noticiasData.noticias.map((noticia: any) => ({
-        id: noticia.id,
-        autor: noticia.autor || 'Redacción CGE',
-        titulo: noticia.titulo,
-        resumen: noticia.resumen,
-        fecha: noticia.fecha,
-        categoria: noticia.categoria,
-        esImportante: noticia.esImportante || false,
-        slug: noticia.slug,
-        portada: noticia.portada,
-        imagen: noticia.imagen,
-      }));
-
-      setNoticias(mapeadas);
-      setTotalPages(noticiasData.totalPages || 1);
+      const result = await response.json();
+      setNoticias(result.noticias);
+      setTotalPages(result.pagination.pageCount);
     } catch (error: any) {
-      console.error('Error fetching noticias:', error);
       setError(error.message || 'Error al cargar las noticias');
     } finally {
       setLoading(false);
@@ -154,9 +130,7 @@ export default function DynamicNewsClient({
     );
   }
 
-  // Separar noticias destacadas de regulares
-  const noticiasDestacadas = noticias.filter((noticia) => noticia.esImportante);
-  const noticiasRegulares = noticias.filter((noticia) => !noticia.esImportante);
+  const { destacadas, regulares } = separarNoticias(noticias);
 
   return (
     <div className="space-y-8">
@@ -173,8 +147,8 @@ export default function DynamicNewsClient({
       {noticias.length > 0 ? (
         <>
           <NewsGrid
-            noticiasDestacadas={noticiasDestacadas}
-            noticiasRegulares={noticiasRegulares}
+            noticiasDestacadas={destacadas}
+            noticiasRegulares={regulares}
           />
 
           {/* Paginación */}

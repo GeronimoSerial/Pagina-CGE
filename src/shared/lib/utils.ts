@@ -38,8 +38,8 @@ export function normalizeArticle(item: any) {
     date: item.fecha
       ? new Date(item.fecha).toISOString()
       : new Date().toISOString(),
-    imageUrl: item.imageUrl || item.imagen,
-    imagen: item.imagen,
+    imageUrl: item.imageUrl || item.imagenes,
+    imagenes: item.imagenes,
     categoria: item.categoria || item.subcategoria,
     content: item.content,
     esImportante: item.esImportante || false,
