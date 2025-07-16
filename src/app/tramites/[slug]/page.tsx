@@ -18,36 +18,40 @@ interface PageProps {
 
 // Generar páginas estáticas en build time
 export async function generateStaticParams() {
-  const slugs = await getAllTramiteSlugs();
-  return slugs.map((slug) => ({ slug }));
+  try {
+    const slugs = await getAllTramiteSlugs();
+    return slugs.map((slug) => ({ slug }));
+  } catch (error) {
+    console.warn('Error generating static params for tramites:', error);
+    // Fallback: generar páginas para trámites conocidos
+    return [
+      { slug: 'introduccion' },
+      { slug: 'articulo-11' },
+      { slug: 'articulo-22' },
+      { slug: 'articulo-27' },
+      { slug: 'articulo-28' },
+      { slug: 'accidentes-laborales' },
+    ];
+  }
 }
 
-// ISR: Revalidar cada 60 segundos DEVELOPMENT
-export const revalidate = 60;
+// ISR: Revalidar cada 7 días - Contenido de trámites es estable
+export const revalidate = 604800;
 
 export default async function DocumentPage({ params }: PageProps) {
   const slug = (await params).slug;
-  const [navigationSections, article]: [NavSection[], Article | null] =
-    await Promise.all([getTramitesNavigation(), getTramiteArticleBySlug(slug)]);
 
-  // Aplanación de navegación
-  const flatNav = navigationSections.flatMap((section) => section.items);
-  // indice actual
-  const currentIndex = flatNav.findIndex((item) => item.id === slug);
+  // Solo cargar el artículo - la navegación ya está en el layout
+  const article: Article | null = await getTramiteArticleBySlug(slug);
 
-  //determinar si hay siguiente o anterior
-  const prevArticle = currentIndex > 0 ? flatNav[currentIndex - 1] : null;
-  const nextArticle =
-    currentIndex < flatNav.length - 1 ? flatNav[currentIndex + 1] : null;
   if (!article) {
     notFound();
   }
+
   const markdown = article.content?.[0]?.content || '';
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* El MobileMenu ya se renderiza desde el ResponsiveNav en el layout */}
-
       <main className="flex-1 lg:overflow-y-auto">
         <div className="px-6 py-8 mx-auto max-w-4xl lg:px-8 lg:py-12">
           {/* Article Header */}
@@ -93,34 +97,14 @@ export default async function DocumentPage({ params }: PageProps) {
                 </Link>
               </div>
               <div className="flex space-x-4">
-                {prevArticle ? (
-                  <Link
-                    href={prevArticle.href}
-                    className="flex items-center text-sm text-gray-800 hover:text-green-600"
-                  >
-                    <span className="text-sm text-green-800">
-                      ← {prevArticle.title}
-                    </span>
-                  </Link>
-                ) : (
-                  <span className="text-sm text-gray-400 cursor-not-allowed">
-                    ← Anterior
+                <Link
+                  href="/tramites"
+                  className="flex items-center text-sm text-gray-800 hover:text-green-600"
+                >
+                  <span className="text-sm text-green-800">
+                    ← Volver a Trámites
                   </span>
-                )}
-                {nextArticle ? (
-                  <Link
-                    href={nextArticle.href}
-                    className="flex items-center text-sm text-gray-800 hover:text-green-600"
-                  >
-                    <span className="text-sm text-green-800">
-                      {nextArticle.title} →
-                    </span>
-                  </Link>
-                ) : (
-                  <span className="text-sm text-gray-400 cursor-not-allowed">
-                    Siguiente →
-                  </span>
-                )}
+                </Link>
               </div>
             </div>
           </div>

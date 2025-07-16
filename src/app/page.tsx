@@ -4,7 +4,8 @@ import { Separator } from '@radix-ui/react-separator';
 import SocialMediaSection from '@/features/socials/components/SocialMediaSection';
 import { Separador } from '@/shared/components/Separador';
 import { Metadata } from 'next';
-import LatestNews from '@/features/noticias/components/LatestNews';
+import LatestNewsStatic from '@/features/noticias/components/LatestNews';
+import { getNoticiasPaginadas } from '@/features/noticias/services/noticias';
 
 export const metadata: Metadata = {
   title: 'Consejo General de Educación (CGE)',
@@ -41,7 +42,13 @@ export const metadata: Metadata = {
   },
 };
 
+// ISR: Revalidar cada 2 horas para mantener noticias principales frescas
+export const revalidate = 7200;
+
 export default async function PagPrincipal() {
+  // Pre-renderizar últimas noticias (SSG) - Sin API calls del usuario
+  const latestNewsData = await getNoticiasPaginadas(1, 6);
+
   return (
     <div className="min-h-screen">
       <main>
@@ -57,7 +64,7 @@ export default async function PagPrincipal() {
         {/* <Separator className="my-8 bg-[#217A4B]/20" /> */}
         <Separador />
         <section>
-          <LatestNews />
+          <LatestNewsStatic noticias={latestNewsData.noticias} />
         </section>
         <Separador />
         <SocialMediaSection />

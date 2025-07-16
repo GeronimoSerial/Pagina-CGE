@@ -3,7 +3,6 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import NewsGrid from './NewsGrid';
-import NewsSearch from './Search';
 import SimplePagination from './SimplePagination';
 import { Noticia } from '@/shared/interfaces';
 
@@ -24,17 +23,21 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
-interface NewsClientProps {}
+interface DynamicNewsClientProps {
+  categorias: Array<{ id: number; nombre: string }>;
+}
 
-export default function NewsClient({}: NewsClientProps) {
+/**
+ * Componente dinámico que SOLO se activa cuando hay filtros
+ * Hace API calls únicamente para búsquedas y filtros
+ */
+export default function DynamicNewsClient({
+  categorias,
+}: DynamicNewsClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
   const [noticias, setNoticias] = useState<Noticia[]>([]);
-  const [destacadas, setDestacadas] = useState<Noticia[]>([]);
-  const [categorias, setCategorias] = useState<
-    Array<{ id: number; nombre: string }>
-  >([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -45,12 +48,11 @@ export default function NewsClient({}: NewsClientProps) {
   const desde = searchParams.get('desde') || '';
   const hasta = searchParams.get('hasta') || '';
 
-  // Ultra-aggressive debouncing for load testing
-  const debouncedQ = useDebounce(q, 500); // Increased from 300ms
+  // Debounce para búsquedas
+  const debouncedQ = useDebounce(q, 500);
 
-  // Simplified cache key - reduce uniqueness for better cache hits
+  // Cache key simplificado
   const cacheBuster = useMemo(() => {
-    // Group pages to reduce cache fragmentation
     const pageGroup = Math.floor((currentPage - 1) / 5);
     const hasFilters = debouncedQ || categoria || desde || hasta;
     return hasFilters ? `filtered-${pageGroup}` : `clean-${pageGroup}`;
@@ -61,9 +63,8 @@ export default function NewsClient({}: NewsClientProps) {
     setError(null);
 
     try {
-      // Ultra-optimized request with timeout and retry-friendly headers
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
 
       const noticiasRes = await fetch(
         `/api/noticias?${new URLSearchParams({
@@ -78,7 +79,7 @@ export default function NewsClient({}: NewsClientProps) {
           signal: controller.signal,
           headers: {
             Accept: 'application/json',
-            'Cache-Control': 'max-age=90', // Browser cache hint
+            'Cache-Control': 'max-age=90',
           },
         },
       );
@@ -98,66 +99,23 @@ export default function NewsClient({}: NewsClientProps) {
         autor: noticia.autor || 'Redacción CGE',
         titulo: noticia.titulo,
         resumen: noticia.resumen,
+        fecha: noticia.fecha,
         categoria: noticia.categoria,
         esImportante: noticia.esImportante || false,
-        portada: noticia.portada || { url: '' },
         slug: noticia.slug,
-        contenido: noticia.contenido || '',
-        imagen: noticia.imagen || [],
-        publicado: noticia.publicado || true,
-        fecha: noticia.fecha,
-        metaTitle: noticia.metaTitle || noticia.titulo,
-        metaDescription: noticia.metaDescription || noticia.resumen,
-        createdAt: noticia.createdAt,
-        updatedAt: noticia.updatedAt,
+        portada: noticia.portada,
+        imagen: noticia.imagen,
       }));
 
-      const dest = mapeadas
-        .filter((noticia) => noticia.esImportante)
-        .slice(0, 3);
-
-      const idsDests = new Set(dest.map((n) => n.id));
-      const regulares = mapeadas.filter((noticia) => !idsDests.has(noticia.id));
-
-      setDestacadas(dest);
-      setNoticias(regulares);
+      setNoticias(mapeadas);
       setTotalPages(noticiasData.totalPages || 1);
-    } catch (err) {
-      console.error('News fetch error:', err);
-      // More specific error handling for load testing
-      const error = err as Error;
-      const isRetryingRef = useRef(false);
-      if (error.name === 'AbortError') {
-        setError('Tiempo de espera agotado - servidor sobrecargado');
-      } else if (error.message?.includes('HTTP 5') && !isRetryingRef.current) {
-        isRetryingRef.current = true;
-        // Retry logic for server errors
-        // console.warn('Retrying fetch due to server error...');
-
-        setError('Error del servidor - reintentando automáticamente...');
-        // Auto-retry on server errors with exponential backoff
-        setTimeout(() => {
-          isRetryingRef.current = false;
-          if (!loading) fetchNoticias();
-        }, 2000);
-      } else {
-        setError(error.message || 'Error de conexión');
-      }
+    } catch (error: any) {
+      console.error('Error fetching noticias:', error);
+      setError(error.message || 'Error al cargar las noticias');
     } finally {
       setLoading(false);
     }
   }, [currentPage, debouncedQ, categoria, desde, hasta, cacheBuster]);
-
-  
-  // Separate effect for categories to avoid unnecessary refetches
-  useEffect(() => {
-    if (categorias.length === 0) {
-      fetch(`/api/noticias/categorias?_cache=static`)
-        .then((res) => res.json())
-        .then((data) => setCategorias(data.categorias || []))
-        .catch(() => {}); // Silent fail for categories
-    }
-  }, []);
 
   useEffect(() => {
     fetchNoticias();
@@ -174,7 +132,7 @@ export default function NewsClient({}: NewsClientProps) {
       <div className="flex justify-center items-center py-12">
         <div className="flex flex-col items-center space-y-4">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3D8B37]"></div>
-          <div className="text-gray-500">Cargando noticias...</div>
+          <div className="text-gray-500">Filtrando noticias...</div>
         </div>
       </div>
     );
@@ -196,47 +154,45 @@ export default function NewsClient({}: NewsClientProps) {
     );
   }
 
-  const searchBar = (
-    <div className="px-6 mx-auto max-w-7xl">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex-1">
-          <NewsSearch
-            categorias={categorias}
-            placeholder="Buscar noticias institucionales..."
-          />
-        </div>
-      </div>
-    </div>
-  );
-
-  if (!loading && noticias.length === 0 && destacadas.length === 0) {
-    return (
-      <>
-        {searchBar}
-        <div className="flex justify-center items-center py-12">
-          <div className="text-center">
-            <div className="text-gray-500 mb-2">No se encontraron noticias</div>
-            <div className="text-sm text-gray-400">
-              Prueba cambiando los filtros de búsqueda
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  }
+  // Separar noticias destacadas de regulares
+  const noticiasDestacadas = noticias.filter((noticia) => noticia.esImportante);
+  const noticiasRegulares = noticias.filter((noticia) => !noticia.esImportante);
 
   return (
-    <>
-      {searchBar}
-      <NewsGrid noticiasDestacadas={destacadas} noticiasRegulares={noticias} />
-      {totalPages > 1 && (
-        <SimplePagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-          loading={loading}
-        />
+    <div className="space-y-8">
+      {/* Resultados de filtros */}
+      <div className="flex items-center justify-between">
+        <div className="text-sm text-gray-600">
+          {noticias.length > 0
+            ? `${noticias.length} noticia${noticias.length !== 1 ? 's' : ''} encontrada${noticias.length !== 1 ? 's' : ''}`
+            : 'No se encontraron noticias'}
+        </div>
+      </div>
+
+      {/* Grid de noticias filtradas */}
+      {noticias.length > 0 ? (
+        <>
+          <NewsGrid
+            noticiasDestacadas={noticiasDestacadas}
+            noticiasRegulares={noticiasRegulares}
+          />
+
+          {/* Paginación */}
+          {totalPages > 1 && (
+            <SimplePagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}
+        </>
+      ) : (
+        <div className="text-center py-12">
+          <div className="text-gray-500">
+            No se encontraron noticias con los filtros aplicados.
+          </div>
+        </div>
       )}
-    </>
+    </div>
   );
 }
