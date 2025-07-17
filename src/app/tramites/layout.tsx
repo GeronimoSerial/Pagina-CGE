@@ -9,8 +9,17 @@ async function NavigationLoader() {
   const { getTramitesNavigation } = await import(
     '@/features/tramites/services/docs-data'
   );
+  const { withCache, tramitesCache } = await import(
+    '@/shared/lib/aggressive-cache'
+  );
+
   try {
-    const navigationSections = await getTramitesNavigation();
+    const navigationSections = await withCache(
+      tramitesCache,
+      'tramites-navigation',
+      getTramitesNavigation,
+    );
+
     return <ResponsiveNav sections={navigationSections} />;
   } catch (error) {
     console.error('Error loading navigation:', error);
