@@ -14,6 +14,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
+import { cfImages } from '@/shared/lib/cloudflare-images';
 import {
   noticiasCache,
   relatedCache,
@@ -61,7 +62,7 @@ export async function generateMetadata({
       '@type': 'Organization',
       name: 'Consejo General de Educación',
     },
-    image: noticia.portada,
+    image: noticia.portada ? cfImages(noticia.portada) : undefined,
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': url,
@@ -84,7 +85,7 @@ export async function generateMetadata({
       expirationTime: noticia.fecha,
       authors: ['Consejo General de Educación'],
       tags: [noticia.categoria],
-      images: noticia.portada ? [noticia.portada] : [],
+      images: noticia.portada ? [cfImages(noticia.portada)] : [],
     },
     other: {
       'script:ld+json': JSON.stringify(structuredData),

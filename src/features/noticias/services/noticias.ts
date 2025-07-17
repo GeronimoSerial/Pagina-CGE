@@ -1,7 +1,7 @@
 import { API_URL, PERFORMANCE_CONFIG } from '@/shared/lib/config';
 import { Noticia } from '@/shared/interfaces';
 import qs from 'qs';
-import { getDirectusAssetUrl } from '@/shared/lib/directus-assets';
+import { cfImages } from '@/shared/lib/cloudflare-images';
 
 class CategoriesCache {
   private cache: Array<{ id: number; nombre: string }> | null = null;
@@ -209,13 +209,13 @@ export async function getNoticiasRelacionadas(categoria: string, excludeSlug?: s
 
 export function getPortada({ noticia }: any) {
   if (!noticia.portada) return null;
-  return getDirectusAssetUrl(noticia.portada);
+  return cfImages(noticia.portada);
 }
 
 export function getImagenes(noticia: Noticia) {
   return (
     noticia.imagenes?.map((img) => ({
-      url: getDirectusAssetUrl(img.directus_files_id.id),
+      url: cfImages(img.directus_files_id.id),
       alt: img.directus_files_id.title || img.directus_files_id.filename_download,
       width: img.directus_files_id.width,
       height: img.directus_files_id.height,
