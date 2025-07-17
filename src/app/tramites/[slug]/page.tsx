@@ -7,7 +7,7 @@ import {
 import { Clock } from 'lucide-react';
 
 import { HTMLContent } from '@/shared/components/HTMLContent';
-
+import { withCache, tramitesCache } from '@/shared/lib/aggressive-cache';
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
@@ -40,7 +40,13 @@ export default async function DocumentPage({ params }: PageProps) {
   const slug = (await params).slug;
 
   // Cache ultra-agresivo integrado en el servicio
-  const article: Article | null = await getTramiteArticleBySlug(slug);
+  const article: Article | null = await withCache(
+    tramitesCache,
+    `tramite - ${slug}`,
+    async () => {
+      return await getTramiteArticleBySlug(slug);
+    },
+  );
 
   if (!article) {
     notFound();

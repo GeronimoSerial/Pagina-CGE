@@ -16,22 +16,24 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
 import { cfImages } from '@/shared/lib/cloudflare-images';
 import {
-  noticiasCache,
+  newsCache,
   relatedCache,
   withCache,
 } from '@/shared/lib/aggressive-cache';
 import { Noticia } from '@/shared/interfaces';
 
-export const revalidate = 7200;
+export const revalidate = 604800; // 7 días para contenido ya publicado
 
 export async function generateStaticParams() {
   try {
+    // Solo generar las 50 noticias más recientes en build time
     const noticias = await getAllNoticias();
-    return noticias.map((noticia: { slug: string }) => ({
+    return noticias.slice(0, 50).map((noticia: { slug: string }) => ({
       slug: noticia.slug,
     }));
   } catch (error) {
     console.warn('Error generating static params for noticias:', error);
+    return []; // Fallback a ISR on-demand
   }
 }
 
@@ -44,7 +46,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
 
-  const noticia = await withCache(noticiasCache, `metadata-${slug}`, () =>
+  const noticia = await withCache(newsCache, `metadata-${slug}`, () =>
     getNoticiaBySlug(slug),
   );
 
@@ -117,180 +119,187 @@ interface PageProps {
 export default async function NoticiaPage({ params }: PageProps) {
   const { slug } = await params;
 
-  const noticia: Noticia | null = await withCache(
-    noticiasCache,
-    `noticia-${slug}`,
-    () => getNoticiaBySlug(slug),
-  );
+  try {
+    // Usar Promise.allSettled para evitar fallos en cascada
+    const [noticiaResult, relatedResult] = await Promise.allSettled([
+      withCache(newsCache, `noticia-${slug}`, () => getNoticiaBySlug(slug)),
+      // Limitar noticias relacionadas a 2 para mejor performance
+      withCache(relatedCache, `related-${slug}`, () =>
+        getNoticiasRelacionadas('', slug, 2),
+      ),
+    ]);
 
-  if (!noticia) {
-    return notFound();
-  }
+    const noticia =
+      noticiaResult.status === 'fulfilled' ? noticiaResult.value : null;
+    const relatedFinal =
+      relatedResult.status === 'fulfilled' ? relatedResult.value : [];
 
-  const relatedFinal = await withCache(
-    relatedCache,
-    `related-${noticia.categoria}-${slug}`,
-    () => getNoticiasRelacionadas(noticia.categoria, slug),
-  ).catch(() => []);
+    if (!noticia) {
+      return notFound();
+    }
 
-  return (
-    <div className="flex flex-col min-h-screen bg-white">
-      <div className="flex flex-1">
-        <main className="flex-1 transition-all duration-300">
-          <div className="px-4 py-8 mx-auto max-w-5xl sm:px-6 lg:px-8">
-            <nav className="flex items-center mb-6 text-sm text-gray-500">
-              <Link href="/" className="hover:text-green-800">
-                Inicio
-              </Link>
-              <span className="mx-2">/</span>
-              <Link href="/noticias" className="hover:text-green-800">
-                Noticias
-              </Link>
-              <span className="mx-2">/</span>
-              <span className="text-gray-900">{noticia.titulo}</span>
-            </nav>
+    return (
+      <div className="flex flex-col min-h-screen bg-white">
+        <div className="flex flex-1">
+          <main className="flex-1 transition-all duration-300">
+            <div className="px-4 py-8 mx-auto max-w-5xl sm:px-6 lg:px-8">
+              <nav className="flex items-center mb-6 text-sm text-gray-500">
+                <Link href="/" className="hover:text-green-800">
+                  Inicio
+                </Link>
+                <span className="mx-2">/</span>
+                <Link href="/noticias" className="hover:text-green-800">
+                  Noticias
+                </Link>
+                <span className="mx-2">/</span>
+                <span className="text-gray-900">{noticia.titulo}</span>
+              </nav>
 
-            <article className="mb-8 bg-white rounded-xl shadow-sm">
-              <div className="p-6 sm:p-8">
-                <header className="mb-8">
-                  <div className="flex flex-wrap gap-4 items-center mb-4 text-sm text-gray-500">
-                    <div className="flex items-center">
-                      <CalendarDays className="mr-2 w-4 h-4" />
-                      <span className="text-xs tracking-wide">
-                        {format(new Date(noticia.fecha), 'EEE, d MMMM yyyy', {
-                          locale: es,
-                        })}
+              <article className="mb-8 bg-white rounded-xl shadow-sm">
+                <div className="p-6 sm:p-8">
+                  <header className="mb-8">
+                    <div className="flex flex-wrap gap-4 items-center mb-4 text-sm text-gray-500">
+                      <div className="flex items-center">
+                        <CalendarDays className="mr-2 w-4 h-4" />
+                        <span className="text-xs tracking-wide">
+                          {format(new Date(noticia.fecha), 'EEE, d MMMM yyyy', {
+                            locale: es,
+                          })}
+                        </span>
+                      </div>
+                      <div className="flex items-center">
+                        <Pencil className="mr-1 w-4 h-4" />
+                        <span>Por: {noticia.autor || 'Redacción CGE'}</span>
+                      </div>
+                      <span className="px-2 py-1 text-xs text-white bg-green-800 rounded-full">
+                        {noticia.categoria}
                       </span>
                     </div>
-                    <div className="flex items-center">
-                      <Pencil className="mr-1 w-4 h-4" />
-                      <span>Por: {noticia.autor || 'Redacción CGE'}</span>
-                    </div>
-                    <span className="px-2 py-1 text-xs text-white bg-green-800 rounded-full">
-                      {noticia.categoria}
-                    </span>
+                    <h1 className="mb-6 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
+                      {noticia.titulo}
+                    </h1>
+                    <p className="text-xl leading-relaxed text-gray-600">
+                      {noticia.resumen}
+                    </p>
+                  </header>
+
+                  {noticia.portada && (
+                    <Image
+                      src={getPortada({ noticia }) || ''}
+                      alt={noticia.titulo}
+                      className="object-cover mb-8 w-full max-h-96 rounded"
+                      width={1200}
+                      height={630}
+                      priority
+                    />
+                  )}
+                  <div className="mb-8 max-w-none prose prose-lg">
+                    <HTMLContent
+                      content={noticia.contenido}
+                      className="prose prose-lg max-w-none"
+                    />
                   </div>
-                  <h1 className="mb-6 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
-                    {noticia.titulo}
-                  </h1>
-                  <p className="text-xl leading-relaxed text-gray-600">
-                    {noticia.resumen}
-                  </p>
-                </header>
 
-                {noticia.portada && (
-                  <Image
-                    src={getPortada({ noticia }) || ''}
-                    alt={noticia.titulo}
-                    className="object-cover mb-8 w-full max-h-96 rounded"
-                    width={1200}
-                    height={630}
-                    priority
-                  />
-                )}
-                <div className="mb-8 max-w-none prose prose-lg">
-                  <HTMLContent
-                    content={noticia.contenido}
-                    className="prose prose-lg max-w-none"
-                  />
+                  {noticia.imagenes && noticia.imagenes.length > 0 && (
+                    <>
+                      <Separador titulo="Galería de imágenes" />
+                      <PhotoSwipeGallery noticia={noticia} />
+                    </>
+                  )}
                 </div>
-
-                {noticia.imagenes && noticia.imagenes.length > 0 && (
-                  <>
-                    <Separador titulo="Galería de imágenes" />
-                    <PhotoSwipeGallery noticia={noticia} />
-                  </>
-                )}
-              </div>
-            </article>
-          </div>
-        </main>
-
-        <aside className="hidden overflow-hidden sticky top-[85px] mt-16 mr-4 mb-3 w-72 lg:h-[530px] border-t-2 border-r border-b border-l shadow-lg backdrop-blur-sm transition-all duration-500 ease-out border-slate-200 border-t-slate-300 shadow-slate-200/50 lg:block bg-white/95">
-          <div className="flex flex-col h-full">
-            <div className="px-2 py-6">
-              <h3 className="px-4 mb-3 text-sm font-semibold tracking-[0.1em] text-black ">
-                ENLACES INSTITUCIONALES
-              </h3>
-
-              <div className="space-y-1">
-                {ENLACES.map((enlace) => (
-                  <a
-                    key={enlace.href}
-                    href={enlace.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group relative flex items-center px-4 py-3.5 text-black-800 transition-all duration-300 ease-out hover:text-green-900 hover:underline"
-                  >
-                    <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-green-800 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
-
-                    <div className="flex items-center ml-3 w-full">
-                      <div className="w-1.5 h-1.5 bg-green-800 rounded-full mr-3 group-hover:bg-green-700 transition-colors duration-300"></div>
-
-                      <span className="text-sm font-medium tracking-wide transition-transform duration-300 ease-out group-hover:translate-x-1">
-                        {enlace.label}
-                      </span>
-                    </div>
-
-                    <div className="absolute inset-0 rounded-sm opacity-0 transition-opacity duration-300 ease-out bg-slate-50 group-hover:opacity-60"></div>
-                  </a>
-                ))}
-              </div>
+              </article>
             </div>
+          </main>
 
-            {Array.isArray(relatedFinal) && relatedFinal.length > 0 && (
-              <div className="px-6">
-                <div className="relative">
-                  <div className="flex absolute inset-0 items-center">
-                    <div className="w-full">
-                      <div className="border-t border-slate-300 mb-0.5"></div>
-                      <div className="border-t border-slate-200"></div>
-                    </div>
-                  </div>
-                  <div className="flex relative justify-center">
-                    <div className="px-4 bg-white">
-                      <div className="w-1 h-1 rounded-full bg-slate-400"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {Array.isArray(relatedFinal) && relatedFinal.length > 0 && (
-              <div className="flex-1 px-2 py-3">
-                <h3 className="px-4 mb-2 text-sm font-semibold tracking-[0.1em] text-black ">
-                  ARTÍCULOS RELACIONADOS
+          <aside className="hidden overflow-hidden sticky top-[85px] mt-16 mr-4 mb-3 w-72 lg:h-[530px] border-t-2 border-r border-b border-l shadow-lg backdrop-blur-sm transition-all duration-500 ease-out border-slate-200 border-t-slate-300 shadow-slate-200/50 lg:block bg-white/95">
+            <div className="flex flex-col h-full">
+              <div className="px-2 py-6">
+                <h3 className="px-4 mb-3 text-sm font-semibold tracking-[0.1em] text-black ">
+                  ENLACES INSTITUCIONALES
                 </h3>
 
                 <div className="space-y-1">
-                  {relatedFinal.map((item: any) => (
-                    <Link
-                      key={item.id}
-                      href={`/noticias/${item.slug}`}
-                      className="block relative px-4 py-1 transition-all duration-300 ease-out group hover:text-slate-900"
+                  {ENLACES.map((enlace) => (
+                    <a
+                      key={enlace.href}
+                      href={enlace.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group relative flex items-center px-4 py-3.5 text-black-800 transition-all duration-300 ease-out hover:text-green-900 hover:underline"
                     >
                       <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-green-800 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
 
-                      <div className="ml-3">
-                        <div className="mb-2 text-sm font-medium leading-snug transition-transform duration-300 ease-out text-slate-800 group-hover:text-green-800 group-hover:translate-x-1">
-                          {item.titulo}
-                        </div>
-                        <div className="pr-2 text-xs leading-relaxed transition-colors duration-300 text-slate-500 group-hover:text-black">
-                          <p title={item.resumen}>
-                            {item.resumen.slice(0, 90) + '...'}
-                          </p>
-                        </div>
+                      <div className="flex items-center ml-3 w-full">
+                        <div className="w-1.5 h-1.5 bg-green-800 rounded-full mr-3 group-hover:bg-green-700 transition-colors duration-300"></div>
+
+                        <span className="text-sm font-medium tracking-wide transition-transform duration-300 ease-out group-hover:translate-x-1">
+                          {enlace.label}
+                        </span>
                       </div>
-                      {/* Fondo sutil al pasar el ratón */}
-                      <div className="absolute inset-0 rounded-sm opacity-0 transition-opacity duration-300 ease-out bg-slate-50 group-hover:opacity-40"></div>
-                    </Link>
+
+                      <div className="absolute inset-0 rounded-sm opacity-0 transition-opacity duration-300 ease-out bg-slate-50 group-hover:opacity-60"></div>
+                    </a>
                   ))}
                 </div>
               </div>
-            )}
-          </div>
-        </aside>
+
+              {Array.isArray(relatedFinal) && relatedFinal.length > 0 && (
+                <div className="px-6">
+                  <div className="relative">
+                    <div className="flex absolute inset-0 items-center">
+                      <div className="w-full">
+                        <div className="border-t border-slate-300 mb-0.5"></div>
+                        <div className="border-t border-slate-200"></div>
+                      </div>
+                    </div>
+                    <div className="flex relative justify-center">
+                      <div className="px-4 bg-white">
+                        <div className="w-1 h-1 rounded-full bg-slate-400"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {Array.isArray(relatedFinal) && relatedFinal.length > 0 && (
+                <div className="flex-1 px-2 py-3">
+                  <h3 className="px-4 mb-2 text-sm font-semibold tracking-[0.1em] text-black ">
+                    ARTÍCULOS RELACIONADOS
+                  </h3>
+
+                  <div className="space-y-1">
+                    {relatedFinal.map((item: any) => (
+                      <Link
+                        key={item.id}
+                        href={`/noticias/${item.slug}`}
+                        className="block relative px-4 py-1 transition-all duration-300 ease-out group hover:text-slate-900"
+                      >
+                        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-green-800 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
+
+                        <div className="ml-3">
+                          <div className="mb-2 text-sm font-medium leading-snug transition-transform duration-300 ease-out text-slate-800 group-hover:text-green-800 group-hover:translate-x-1">
+                            {item.titulo}
+                          </div>
+                          <div className="pr-2 text-xs leading-relaxed transition-colors duration-300 text-slate-500 group-hover:text-black">
+                            <p title={item.resumen}>
+                              {item.resumen.slice(0, 90) + '...'}
+                            </p>
+                          </div>
+                        </div>
+                        {/* Fondo sutil al pasar el ratón */}
+                        <div className="absolute inset-0 rounded-sm opacity-0 transition-opacity duration-300 ease-out bg-slate-50 group-hover:opacity-40"></div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </aside>
+        </div>
       </div>
-    </div>
-  );
+    );
+  } catch (error) {
+    console.error('Error in NoticiaPage:', error);
+    return notFound();
+  }
 }

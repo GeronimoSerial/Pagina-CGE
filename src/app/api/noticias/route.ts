@@ -5,43 +5,51 @@ import { PERFORMANCE_CONFIG } from '@/shared/lib/config';
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const page = Number(searchParams.get("page")) || 1;
-    const pageSize = Number(searchParams.get("pageSize")) || PERFORMANCE_CONFIG.PAGINATION.DEFAULT_PAGE_SIZE;
+    const limit = Math.min(Number(searchParams.get("limit")) || PERFORMANCE_CONFIG.PAGINATION.DEFAULT_PAGE_SIZE, PERFORMANCE_CONFIG.PAGINATION.MAX_PAGE_SIZE);
 
-    // Construir filtros para Directus
+    // Validación rápida de parámetros
+    if (page < 1 || limit < 1) {
+        return NextResponse.json({ error: "Invalid parameters" }, { status: 400 });
+    }
+
     const filters: any = {};
     
-    if (searchParams.get('q'))
-        filters.q = searchParams.get('q');
-    if (searchParams.get('categoria'))
-        filters.categoria = searchParams.get('categoria');
-    if (searchParams.get('desde'))
-        filters.desde = searchParams.get('desde');
-    if (searchParams.get('hasta'))
-        filters.hasta = searchParams.get('hasta');
+    // Construcción optimizada de filtros
+    const q = searchParams.get('q');
+    const categoria = searchParams.get('categoria');
+    const desde = searchParams.get('desde');
+    const hasta = searchParams.get('hasta');
+
+    if (q && q.length >= 2) filters.q = q;
+    if (categoria) filters.categoria = categoria;
+    if (desde) filters.desde = desde;
+    if (hasta) filters.hasta = hasta;
 
     try {
-        // Usar servicio de Directus
-        const result = await getNoticiasPaginadas(page, pageSize, filters);
+        const result = await getNoticiasPaginadas(page, limit, filters);
         
         return NextResponse.json({
             noticias: result.noticias,
-            pagination: result.pagination
+            totalPages: result.pagination?.pageCount || 1,
+            currentPage: result.pagination?.page || 1,
+            total: result.pagination?.total || 0
         }, {
             status: 200,
             headers: {
-                // Cache coordinado con configuración global
-                'Cache-Control': `public, max-age=${PERFORMANCE_CONFIG.CACHE.DYNAMIC_MAX_AGE}, stale-while-revalidate=${PERFORMANCE_CONFIG.CACHE.DYNAMIC_STALE_WHILE_REVALIDATE}`,
-                'X-VPS-Optimized': 'coordinated-cache',
-                'X-Cache-Strategy': 'performance-config',
+                // Cache más agresivo para VPS
+                'Cache-Control': `public, max-age=${PERFORMANCE_CONFIG.CACHE.DYNAMIC_MAX_AGE}, stale-while-revalidate=${PERFORMANCE_CONFIG.CACHE.DYNAMIC_STALE_WHILE_REVALIDATE}, s-maxage=${Math.floor(PERFORMANCE_CONFIG.CACHE.DYNAMIC_MAX_AGE * 0.8)}`,
+                'X-Cache-Strategy': 'vps-optimized',
                 'Vary': 'Accept-Encoding',
             },
         });
-    }
-    catch (error) {
-        console.error('Error fetching noticias:', error);
+    } catch (error) {
+        console.error('API noticias error:', error);
         return NextResponse.json({ 
             error: "Error al obtener las noticias",
-            details: process.env.NODE_ENV === 'development' ? String(error) : undefined
+            noticias: [],
+            totalPages: 1,
+            currentPage: 1,
+            total: 0
         }, { status: 500 });
     }
 }

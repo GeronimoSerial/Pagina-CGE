@@ -55,11 +55,16 @@ export async function getNoticiasPaginadas(
   pageSize: number = PERFORMANCE_CONFIG.PAGINATION.DEFAULT_PAGE_SIZE,
   filters: Record<string, any> = {},
 ) {
+  // Validación optimizada de parámetros
+  const validPage = Math.max(1, page);
+  const validPageSize = Math.min(pageSize, PERFORMANCE_CONFIG.PAGINATION.MAX_PAGE_SIZE);
+
   const directusFilters: any = {
     status: { _eq: 'published' },
   };
 
-  if (filters.q) {
+  // Construcción optimizada de filtros
+  if (filters.q && filters.q.length >= 2) {
     directusFilters.titulo = { _icontains: filters.q };
   }
   
@@ -67,27 +72,25 @@ export async function getNoticiasPaginadas(
     directusFilters.categoria = { _eq: filters.categoria };
   }
 
-  if (filters.desde) {
+  if (filters.desde && filters.hasta) {
+    directusFilters.fecha = { _between: [filters.desde, filters.hasta] };
+  } else if (filters.desde) {
     directusFilters.fecha = { _gte: filters.desde };
-  }
-
-  if (filters.hasta) {
-    if (directusFilters.fecha) {
-      directusFilters.fecha = { _gte: filters.desde, _lte: filters.hasta };
-    } else {
-      directusFilters.fecha = { _lte: filters.hasta };
-    }
+  } else if (filters.hasta) {
+    directusFilters.fecha = { _lte: filters.hasta };
   }
 
   const query = qs.stringify(
     {
+      // Campos mínimos necesarios para listados
       fields: [
         'id', 'titulo', 'resumen', 'fecha', 'categoria', 'esImportante', 'slug', 
-        'date_created', 'portada', 'autor', 'imagenes.directus_files_id.*'
+        'date_created', 'portada', 'autor'
+        // Eliminamos imagenes.directus_files_id.* para reducir payload
       ],
       sort: ['-date_created', '-fecha', '-id'],
-      limit: Math.min(pageSize, 20),
-      offset: (page - 1) * pageSize,
+      limit: validPageSize,
+      offset: (validPage - 1) * validPageSize,
       filter: directusFilters,
       meta: '*',
     },
@@ -105,6 +108,11 @@ export async function getNoticiasPaginadas(
         'Cache-Control': `max-age=${PERFORMANCE_CONFIG.CACHE.DYNAMIC_MAX_AGE}`,
         'Connection': 'keep-alive',
       },
+      // Agregar cache en el fetch
+      next: { 
+        revalidate: PERFORMANCE_CONFIG.CACHE.DYNAMIC_MAX_AGE,
+        tags: [`noticias-page-${validPage}`] 
+      }
     });
 
     clearTimeout(timeoutId);
@@ -178,7 +186,7 @@ export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
 }
 
 
-export async function getNoticiasRelacionadas(categoria: string, excludeSlug?: string) {
+export async function getNoticiasRelacionadas(categoria: string, excludeSlug?: string, limit: number = 3) {
   const filters: any = {
     categoria: { _eq: categoria },
     status: { _eq: 'published' },
@@ -190,10 +198,10 @@ export async function getNoticiasRelacionadas(categoria: string, excludeSlug?: s
 
   const query = qs.stringify(
     {
+      fields: ['id', 'titulo', 'resumen', 'fecha', 'categoria', 'slug', 'portada'],
+      sort: ['-date_created'],
+      limit: Math.min(limit, 5), // Máximo 5 noticias relacionadas
       filter: filters,
-      limit: 2,
-      fields: ['id', 'titulo', 'resumen', 'fecha', 'categoria', 'slug', 'portada', 'imagenes.directus_files_id.*'],
-      sort: ['-date_created', '-fecha'],
     },
     { encodeValuesOnly: true },
   );
