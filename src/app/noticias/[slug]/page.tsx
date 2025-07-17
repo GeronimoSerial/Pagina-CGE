@@ -6,7 +6,6 @@ import {
   getNoticiasRelacionadas,
   getAllNoticias,
 } from '@/features/noticias/services/noticias';
-import { formatearFecha } from '@/shared/lib/utils';
 import ReactMarkdown from 'react-markdown';
 import { notFound } from 'next/navigation';
 import PhotoSwipeGallery from '@/shared/components/PhotoSwipeGallery';
@@ -18,7 +17,7 @@ import Image from 'next/image';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
 import {
-  noticiasCache,
+  newsCache,
   relatedCache,
   withCache,
 } from '@/shared/lib/aggressive-cache';
@@ -30,15 +29,13 @@ export const revalidate = 2592000; // 30 días
 export async function generateStaticParams() {
   try {
     const noticias = await getAllNoticias();
-    return noticias.map((noticia: { slug: string }) => ({
+    return noticias.slice(0, 50).map((noticia: { slug: string }) => ({
       slug: noticia.slug,
     }));
   } catch (error) {
     console.warn('Error generating static params for noticias:', error);
   }
 }
-
-const metadataCache = new Map<string, any>();
 
 export async function generateMetadata({
   params,
@@ -48,7 +45,7 @@ export async function generateMetadata({
   const { slug } = await params;
 
   // Cache agresivo para metadata (reduce DB calls)
-  const noticia = await withCache(noticiasCache, `metadata-${slug}`, () =>
+  const noticia = await withCache(newsCache, `metadata-${slug}`, () =>
     getNoticiaBySlug(slug),
   );
 
@@ -124,7 +121,7 @@ export default async function NoticiaPage({ params }: PageProps) {
 
   // OPTIMIZACIÓN CRÍTICA: Cache agresivo para reducir DB calls de 628ms a <50ms
   const noticia: Noticia | null = await withCache(
-    noticiasCache,
+    newsCache,
     `noticia-${slug}`,
     () => getNoticiaBySlug(slug),
   );
