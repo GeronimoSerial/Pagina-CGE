@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { MobileMenu } from '@/features/tramites/navigation/mobile-menu';
+// import { MobileMenu } from '@/features/tramites/navigation/mobile-menu';
 import {
   getTramitesNavigation,
   getTramiteArticleBySlug,
@@ -35,8 +35,8 @@ export async function generateStaticParams() {
   }
 }
 
-// ISR: Revalidar cada 7 días - Contenido de trámites es estable
-export const revalidate = 604800;
+// ISR: Revalidar cada 30 días - Contenido de trámites es estable
+export const revalidate = 2592000; // 30 días
 
 export default async function DocumentPage({ params }: PageProps) {
   const slug = (await params).slug;

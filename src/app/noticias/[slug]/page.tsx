@@ -17,11 +17,15 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
-import { noticiasCache, relatedCache, withCache } from '@/shared/lib/aggressive-cache';
+import {
+  noticiasCache,
+  relatedCache,
+  withCache,
+} from '@/shared/lib/aggressive-cache';
 import { Noticia } from '@/shared/interfaces';
 
-// ISR reducido: Revalidar cada 6 horas (era 24) - Balance entre freshness y performance  
-export const revalidate = 21600;
+// ISR reducido: Revalidar cada 30 días api/revalidate se encarga
+export const revalidate = 2592000; // 30 días
 
 export async function generateStaticParams() {
   try {
@@ -44,12 +48,10 @@ export async function generateMetadata({
   const { slug } = await params;
 
   // Cache agresivo para metadata (reduce DB calls)
-  const noticia = await withCache(
-    noticiasCache,
-    `metadata-${slug}`,
-    () => getNoticiaBySlug(slug)
+  const noticia = await withCache(noticiasCache, `metadata-${slug}`, () =>
+    getNoticiaBySlug(slug),
   );
-  
+
   if (!noticia) return {};
 
   const url = `/noticias/${slug}`;
@@ -122,9 +124,9 @@ export default async function NoticiaPage({ params }: PageProps) {
 
   // OPTIMIZACIÓN CRÍTICA: Cache agresivo para reducir DB calls de 628ms a <50ms
   const noticia: Noticia | null = await withCache(
-    noticiasCache, 
-    `noticia-${slug}`, 
-    () => getNoticiaBySlug(slug)
+    noticiasCache,
+    `noticia-${slug}`,
+    () => getNoticiaBySlug(slug),
   );
 
   if (!noticia) {
@@ -135,7 +137,7 @@ export default async function NoticiaPage({ params }: PageProps) {
   const relatedFinal = await withCache(
     relatedCache,
     `related-${noticia.categoria}-${slug}`,
-    () => getNoticiasRelacionadas(noticia.categoria, slug)
+    () => getNoticiasRelacionadas(noticia.categoria, slug),
   ).catch(() => []);
 
   return (

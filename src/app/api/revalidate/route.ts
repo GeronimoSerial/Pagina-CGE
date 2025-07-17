@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
+import { noticiasCache, tramitesCache } from '@/shared/lib/aggressive-cache';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +13,8 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
       authHeader: authHeader ? 'Present' : 'Missing',
       userAgent,
-      body: JSON.stringify(body, null, 2)
+      body: JSON.stringify(body, null, 2),
+      headers: Object.fromEntries(request.headers.entries())
     });
 
     // Verificar token
@@ -27,6 +29,7 @@ export async function POST(request: NextRequest) {
     // Revalidar según el contenido
     switch (model) {
       case 'noticia':
+        noticiasCache.clear(); // Limpiar cache de noticias en RAM
         await revalidatePath('/');
         await revalidatePath('/noticias');
         
@@ -38,6 +41,7 @@ export async function POST(request: NextRequest) {
         break;
 
       case 'tramite':
+        tramitesCache.clear(); // Limpiar cache de trámites en RAM
         await revalidatePath('/tramites');
         
         if (entry?.slug) {
@@ -48,6 +52,8 @@ export async function POST(request: NextRequest) {
         break;
 
       default:
+        noticiasCache.clear(); 
+        tramitesCache.clear(); 
         await revalidatePath('/');
         console.log('✅ Revalidated all paths (fallback)');
     }
