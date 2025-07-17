@@ -87,9 +87,9 @@ class AggressiveCache<T> {
 }
 
 // Caches específicos para diferentes tipos de contenido
-export const noticiasCache = new AggressiveCache<any>(300000, 50); // 5 min, 50 noticias max
-export const tramitesCache = new AggressiveCache<any>(1800000, 20); // 30 min, 20 trámites max
-export const relatedCache = new AggressiveCache<any>(600000, 100); // 10 min, 100 queries relacionadas
+export const noticiasCache = new AggressiveCache<any>(86400000, 50); // 24 horas, 50 noticias max
+export const tramitesCache = new AggressiveCache<any>(2592000000, 20); // 30 días, 20 trámites max
+export const relatedCache = new AggressiveCache<any>(86400000, 100); // 24 horas, 100 queries relacionadas
 
 // Helper function para cache con fallback
 export async function withCache<T>(
