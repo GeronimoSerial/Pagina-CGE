@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import NewsGrid from './NewsGrid';
 import SimplePagination from './SimplePagination';
 import { Noticia } from '@/shared/interfaces';
@@ -67,7 +67,7 @@ export default function DynamicNewsClient({
       // En lugar de llamar directamente al servicio, hacer fetch a la API route
       const params = new URLSearchParams({
         page: String(currentPage),
-        pageSize: '6', // Consistente con PERFORMANCE_CONFIG.PAGINATION.DEFAULT_PAGE_SIZE
+        pageSize: '6', //
       });
 
       if (debouncedQ) params.set('q', debouncedQ);

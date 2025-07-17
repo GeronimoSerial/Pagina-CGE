@@ -21,7 +21,7 @@ import {
 } from '@/shared/lib/aggressive-cache';
 import { Noticia } from '@/shared/interfaces';
 
-export const revalidate = 21600;
+export const revalidate = 7200;
 
 export async function generateStaticParams() {
   try {
@@ -34,7 +34,7 @@ export async function generateStaticParams() {
   }
 }
 
-const metadataCache = new Map<string, any>();
+// const metadataCache = new Map<string, any>();
 
 export async function generateMetadata({
   params,

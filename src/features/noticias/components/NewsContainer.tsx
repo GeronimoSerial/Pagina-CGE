@@ -2,7 +2,6 @@
 
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
-import NewsGrid from './NewsGrid';
 import NewsSearch from './Search';
 import StaticNewsSection from './StaticNewsSection';
 import DynamicNewsClient from './DynamicNewsClient';

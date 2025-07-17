@@ -5,7 +5,7 @@ import {
   Article,
 } from '@/features/tramites/services/docs-data';
 import { Clock } from 'lucide-react';
-import { PERFORMANCE_CONFIG } from '@/shared/lib/config';
+
 import { HTMLContent } from '@/shared/components/HTMLContent';
 
 interface PageProps {

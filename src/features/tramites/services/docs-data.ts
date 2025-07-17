@@ -322,39 +322,6 @@ function parseHTMLToSections(htmlContent: string): ArticleSection[] {
 }
 
 /**
- * Obtiene todos los trámites (para funciones heredadas)
- */
-export async function getAllTramites(): Promise<Article[]> {
-  return withCache(
-    tramitesCache,
-    'all-tramites-full',
-    async (): Promise<Article[]> => {
-      const tramites: DirectusTramite[] = await fetchDirectusAPI({
-        sort: ['categoria', 'titulo'],
-        limit: -1,
-        filter: {
-          status: { _eq: 'published' }
-        }
-      });
-
-      if (!tramites) {
-        return [];
-      }
-
-      return tramites.map((tramite): Article => ({
-        id: tramite.id.toString(),
-        slug: tramite.slug,
-        category: getCategoryDisplayName(tramite.categoria),
-        title: tramite.titulo,
-        description: tramite.resumen || '',
-        lastUpdated: tramite.date_updated || tramite.fecha,
-        content: parseHTMLToSections(tramite.contenido),
-      }));
-    }
-  );
-}
-
-/**
  * Función para limpiar cache (útil para desarrollo)
  */
 export function clearTramitesCache(): void {

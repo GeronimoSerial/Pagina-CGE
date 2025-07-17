@@ -1,9 +1,8 @@
 import React, { ReactNode, Suspense } from 'react';
 import { ResponsiveNav } from '@/features/tramites/navigation/responsive-nav';
-import { PERFORMANCE_CONFIG } from '@/shared/lib/config';
 
 // ISR ultra-optimizado: Navegación de trámites es ultra-estática
-export const revalidate = 86400; // PERFORMANCE_CONFIG.REVALIDATE.TRAMITES_NAV
+export const revalidate = 86400; //
 
 // Componente de navegación que se carga de forma diferida
 async function NavigationLoader() {

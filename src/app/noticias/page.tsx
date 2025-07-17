@@ -7,7 +7,6 @@ import { Separator } from '@/shared/ui/separator';
 import { Metadata } from 'next';
 import NewsContainer from '@/features/noticias/components/NewsContainer';
 import { Suspense } from 'react';
-import { PERFORMANCE_CONFIG } from '@/shared/lib/config';
 
 export const metadata: Metadata = {
   title: 'Noticias',
