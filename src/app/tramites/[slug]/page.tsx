@@ -1,16 +1,14 @@
 import { notFound } from 'next/navigation';
-// import { MobileMenu } from '@/features/tramites/navigation/mobile-menu';
 import {
-  getTramitesNavigation,
   getTramiteArticleBySlug,
   getAllTramiteSlugs,
-  NavSection,
   Article,
 } from '@/features/tramites/services/docs-data';
 import ReactMarkdown from 'react-markdown';
 import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
 import { Clock } from 'lucide-react';
 import Link from 'next/link';
+import { withCache, tramitesCache } from '@/shared/lib/aggressive-cache';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -42,7 +40,12 @@ export default async function DocumentPage({ params }: PageProps) {
   const slug = (await params).slug;
 
   // Solo cargar el artículo - la navegación ya está en el layout
-  const article: Article | null = await getTramiteArticleBySlug(slug);
+  //  const article: Article | null = await getTramiteArticleBySlug(slug);
+  const article: Article | null = await withCache(
+    tramitesCache,
+    `tramite- ${slug}`,
+    async () => await getTramiteArticleBySlug(slug),
+  );
 
   if (!article) {
     notFound();
