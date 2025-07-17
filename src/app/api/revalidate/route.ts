@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
-import { noticiasCache, tramitesCache } from '@/shared/lib/aggressive-cache';
+import { noticiasCache, tramitesCache, relatedCache } from '@/shared/lib/aggressive-cache';
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
     switch (model) {
       case 'noticia':
         noticiasCache.clear(); // Limpiar cache de noticias en RAM
+        relatedCache.clear(); // Limpiar cache de noticias relacionadas
         await revalidatePath('/');
         await revalidatePath('/noticias');
         
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest) {
           await revalidatePath(`/noticias/${entry.slug}`);
         }
         
-        console.log('✅ Revalidated noticias:', entry?.slug || 'all');
+        console.log('✅ Revalidated noticias and related cache:', entry?.slug || 'all');
         break;
 
       case 'tramite':
@@ -54,6 +55,7 @@ export async function POST(request: NextRequest) {
       default:
         noticiasCache.clear(); 
         tramitesCache.clear(); 
+        relatedCache.clear(); // Limpiar cache de noticias relacionadas
         await revalidatePath('/');
         console.log('✅ Revalidated all paths (fallback)');
     }
