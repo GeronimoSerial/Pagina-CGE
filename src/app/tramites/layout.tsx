@@ -20,7 +20,7 @@ async function NavigationLoader() {
 
 export default function TramitesLayout({ children }: { children: ReactNode }) {
   return (
-    <>
+    <div className="min-h-screen bg-gray-50">
       {/* Main Layout - Grid en desktop, block en móvil/tablet */}
       <div className="block lg:grid lg:grid-cols-[300px_1fr] lg:gap-0 min-h-screen">
         {/* Responsive Navigation - con Suspense para manejo de carga */}
@@ -30,6 +30,6 @@ export default function TramitesLayout({ children }: { children: ReactNode }) {
         {/* Contenido de la página -  */}
         <div className="w-full lg:pt-0">{children}</div>
       </div>
-    </>
+    </div>
   );
 }
