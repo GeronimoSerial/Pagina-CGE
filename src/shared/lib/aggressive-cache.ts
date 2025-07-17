@@ -14,22 +14,23 @@ class AggressiveCache<T> {
   private ttl: number;
   private maxSize: number;
 
-  constructor(ttlMs: number = 300000, maxSize: number = 100) { // 5 min default
+  constructor(ttlMs: number = 300000, maxSize: number = 100) {
+    // 5 min default
     this.ttl = ttlMs;
     this.maxSize = maxSize;
   }
 
   get(key: string): T | null {
     const entry = this.cache.get(key);
-    
+
     if (!entry) return null;
-    
+
     // Verificar TTL
     if (Date.now() - entry.timestamp > this.ttl) {
       this.cache.delete(key);
       return null;
     }
-    
+
     // Incrementar hits para LRU
     entry.hits++;
     return entry.data;
@@ -44,7 +45,7 @@ class AggressiveCache<T> {
     this.cache.set(key, {
       data,
       timestamp: Date.now(),
-      hits: 1
+      hits: 1,
     });
   }
 
@@ -69,33 +70,33 @@ class AggressiveCache<T> {
   }
 
   getStats() {
-    const entries: Array<{key: string, hits: number, age: number}> = [];
+    const entries: Array<{ key: string; hits: number; age: number }> = [];
     this.cache.forEach((entry, key) => {
       entries.push({
         key,
         hits: entry.hits,
-        age: Date.now() - entry.timestamp
+        age: Date.now() - entry.timestamp,
       });
     });
 
     return {
       size: this.cache.size,
       maxSize: this.maxSize,
-      entries
+      entries,
     };
   }
 }
 
 // Caches específicos para diferentes tipos de contenido
-export const noticiasCache = new AggressiveCache<any>(86400000, 50); // 24 horas, 50 noticias max
+export const newsCache = new AggressiveCache<any>(86400000, 50); // 24 horas, 50 noticias max
 export const tramitesCache = new AggressiveCache<any>(2592000000, 20); // 30 días, 20 trámites max
 export const relatedCache = new AggressiveCache<any>(86400000, 100); // 24 horas, 100 queries relacionadas
-
+export const newsGridCache = new AggressiveCache<any>(86400000, 50); // 24 horas, 50 noticias max
 // Helper function para cache con fallback
 export async function withCache<T>(
   cache: AggressiveCache<T>,
   key: string,
-  fetchFn: () => Promise<T>
+  fetchFn: () => Promise<T>,
 ): Promise<T> {
   // Intentar cache primero
   const cached = cache.get(key);
