@@ -6,12 +6,18 @@ import {
 import ReactMarkdown from 'react-markdown';
 import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
 import { Clock } from 'lucide-react';
+import { tramitesCache, withCache } from '@/shared/lib/aggressive-cache';
 
-// ISR: Revalidar cada 7 días - Contenido de trámites es estable
-export const revalidate = 604800;
+// ISR optimizado: Revalidar cada día (era 7 días) - Trámites cambian ocasionalmente
+export const revalidate = 86400;
 
 export default async function IntroduccionPage() {
-  const article: Article | null = await getTramiteArticleBySlug('introduccion');
+  // OPTIMIZACIÓN CRÍTICA: Cache agresivo para reducir DB calls de 588ms a <50ms
+  const article = await withCache(
+    tramitesCache,
+    'tramite-introduccion',
+    async (): Promise<Article | null> => getTramiteArticleBySlug('introduccion')
+  );
 
   if (!article) {
     notFound();
