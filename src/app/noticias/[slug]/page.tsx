@@ -1,12 +1,6 @@
 import Link from 'next/link';
 import { CalendarDays, Pencil } from 'lucide-react';
 import {
-  getNoticiaBySlug,
-  getPortada,
-  getNoticiasRelacionadas,
-  getAllNoticias,
-} from '@/features/noticias/services/noticias';
-import {
   getAllNoticiasDirectus,
   getPortadaDirectus,
   getNoticiasRelacionadasDirectus,
@@ -34,12 +28,17 @@ export const revalidate = 2592000; // 30 días
 
 export async function generateStaticParams() {
   try {
-    const noticias = await getAllNoticias();
-    return noticias.slice(0, 50).map((noticia: { slug: string }) => ({
-      slug: noticia.slug,
-    }));
+    const noticias = await getAllNoticiasDirectus();
+    return noticias
+      .filter(
+        (noticia) =>
+          typeof noticia.slug === 'string' && noticia.slug.length > 0,
+      )
+      .slice(0, 50)
+      .map((noticia) => ({ slug: noticia.slug }));
   } catch (error) {
     console.warn('Error generating static params for noticias:', error);
+    return [];
   }
 }
 
@@ -52,7 +51,7 @@ export async function generateMetadata({
 
   // Cache agresivo para metadata (reduce DB calls)
   const noticia = await withCache(newsCache, `metadata-${slug}`, () =>
-    getNoticiaBySlug(slug),
+    getNoticiaBySlugDirectus(slug),
   );
 
   if (!noticia) return {};
@@ -126,10 +125,15 @@ export default async function NoticiaPage({ params }: PageProps) {
   const { slug } = await params;
 
   // OPTIMIZACIÓN CRÍTICA: Cache agresivo para reducir DB calls de 628ms a <50ms
+  // const noticia: Noticia | null = await withCache(
+  //   newsCache,
+  //   `noticia-${slug}`,
+  //   () => getNoticiaBySlug(slug),
+  // );
   const noticia: Noticia | null = await withCache(
     newsCache,
-    `noticia-${slug}`,
-    () => getNoticiaBySlug(slug),
+    `noticia-directus-${slug}`,
+    () => getNoticiaBySlugDirectus(slug),
   );
 
   if (!noticia) {
@@ -140,7 +144,7 @@ export default async function NoticiaPage({ params }: PageProps) {
   const relatedFinal = await withCache(
     relatedCache,
     `related-${noticia.categoria}-${slug}`,
-    () => getNoticiasRelacionadas(noticia.categoria, slug),
+    () => getNoticiasRelacionadasDirectus(noticia.categoria, slug),
   ).catch(() => []);
 
   return (
@@ -190,7 +194,7 @@ export default async function NoticiaPage({ params }: PageProps) {
 
                 {noticia.portada && (
                   <Image
-                    src={getPortada({ noticia }) || ''}
+                    src={getPortadaDirectus({ noticia }) || ''}
                     alt={noticia.titulo}
                     className="object-cover mb-8 w-full max-h-96 rounded"
                     width={1200}

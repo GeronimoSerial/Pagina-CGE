@@ -3,6 +3,10 @@ import {
   getNoticiasPaginadas,
   getNoticiasCategorias,
 } from '@/features/noticias/services/noticias';
+import {
+  getNoticiasCategoriasDirectus,
+  getNoticiasPaginadasDirectus,
+} from '@/features/noticias/services/noticias-directus';
 import { Separator } from '@/shared/ui/separator';
 import { Metadata } from 'next';
 import NewsContainer from '@/features/noticias/components/NewsContainer';
@@ -39,8 +43,8 @@ export const revalidate = 2592000;
 export default async function NoticiasPage() {
   // Pre-renderizar contenido inicial (SSG) - Sin API calls del usuario
   const [initialNoticias, categorias] = await Promise.all([
-    getNoticiasPaginadas(1, 6), // Primeras 6 noticias
-    getNoticiasCategorias(),
+    getNoticiasPaginadasDirectus(1, 6), // Primeras 6 noticias
+    getNoticiasCategoriasDirectus(),
   ]);
 
   return (

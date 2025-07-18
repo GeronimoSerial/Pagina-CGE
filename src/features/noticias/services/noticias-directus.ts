@@ -11,6 +11,7 @@ export async function getAllNoticiasDirectus() {
       limit: -1,
     })
   );
+
   return noticias;
 }
 
