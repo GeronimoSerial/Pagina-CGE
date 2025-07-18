@@ -62,6 +62,7 @@ export interface Noticia {
   slug: string;
   contenido: string;
   imagen: { url: string; width: number; height: number }[];
+  imagenes?: any[]; // Array de objetos con estructura directus_files_id
   publicado: boolean;
   fecha: string;
   createdAt?: string;

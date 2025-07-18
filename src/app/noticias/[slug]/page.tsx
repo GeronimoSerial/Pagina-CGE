@@ -6,6 +6,12 @@ import {
   getNoticiasRelacionadas,
   getAllNoticias,
 } from '@/features/noticias/services/noticias';
+import {
+  getAllNoticiasDirectus,
+  getPortadaDirectus,
+  getNoticiasRelacionadasDirectus,
+  getNoticiaBySlugDirectus,
+} from '@/features/noticias/services/noticias-directus';
 import ReactMarkdown from 'react-markdown';
 import { notFound } from 'next/navigation';
 import PhotoSwipeGallery from '@/shared/components/PhotoSwipeGallery';

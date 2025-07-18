@@ -3,6 +3,8 @@ export const API_URL =
 export const STRAPI_URL =
   process.env.NEXT_PUBLIC_STRAPI_URL || '';
 
+  export const DIRECTUS_URL =
+  process.env.NEXT_PUBLIC_DIRECTUS_URL || 'http://localhost:8055';
 // Configuración de performance optimizada para pruebas de carga
 export const PERFORMANCE_CONFIG = {
   // Timeouts más agresivos para evitar acumulación

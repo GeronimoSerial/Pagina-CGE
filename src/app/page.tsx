@@ -47,7 +47,7 @@ export const revalidate = 3600; // Cambiado de 7200 a 3600 segundos
 
 export default async function PagPrincipal() {
   let latestNewsData;
-  
+
   try {
     // Pre-renderizar menos noticias para acelerar el home
     latestNewsData = await getNoticiasPaginadas(1, 4); // Reducido de 6 a 4
@@ -56,7 +56,7 @@ export default async function PagPrincipal() {
     // Fallback para evitar que el home falle completamente
     latestNewsData = {
       noticias: [],
-      pagination: { page: 1, pageCount: 0, pageSize: 4, total: 0 }
+      pagination: { page: 1, pageCount: 0, pageSize: 4, total: 0 },
     };
   }
 

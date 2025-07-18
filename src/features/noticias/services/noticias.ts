@@ -2,6 +2,8 @@ import { API_URL, PERFORMANCE_CONFIG } from '@/shared/lib/config';
 import { Noticia } from '@/shared/interfaces';
 import qs from 'qs';
 import { cfImages } from '@/shared/lib/cloudflare-images';
+import directus from '@/shared/lib/directus';
+import { readItems } from '@directus/sdk';
 
 // Cache strategy optimizado para pruebas de carga
 function createCacheKey(page: number, pageSize: number, filters: Record<string, any>): string {
@@ -40,7 +42,6 @@ export async function getAllNoticias() {
   const { data } = await res.json();
   return data;
 }
-
 
 export async function getNoticiasPaginadas(
   page: number = 1,
