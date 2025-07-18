@@ -95,6 +95,13 @@ let navigationCache: NavSection[] | null = null;
 let cacheTimestamp = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
 
+// Función para limpiar el cache local (llamada desde el webhook)
+export function clearNavigationCache() {
+  navigationCache = null;
+  cacheTimestamp = 0;
+  console.log('🧹 Local navigation cache cleared');
+}
+
 /**
  * Obtiene la navegación agrupando los trámites por categoría.
  * Optimizado con cache para evitar llamadas duplicadas.
@@ -102,9 +109,12 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
 export async function getTramitesNavigation(): Promise<NavSection[]> {
   // Verificar cache
   const now = Date.now();
-  if (navigationCache && (now - cacheTimestamp) < CACHE_DURATION) {
+  if (navigationCache && now - cacheTimestamp < CACHE_DURATION) {
+    console.log('📋 Using cached navigation data');
     return navigationCache;
   }
+
+  console.log('🔄 Fetching fresh navigation data from API');
 
   const params = {
     fields: ['categoria', 'titulo', 'slug'],
@@ -133,7 +143,7 @@ export async function getTramitesNavigation(): Promise<NavSection[]> {
       href: `/tramites/${t.slug}`,
     });
   });
-  
+
   const sortedSections = Object.values(grouped).sort((a, b) => {
     if (a.title === 'General') return -1; // General siempre al principio
     if (b.title === 'General') return 1;
@@ -144,6 +154,11 @@ export async function getTramitesNavigation(): Promise<NavSection[]> {
   navigationCache = sortedSections;
   cacheTimestamp = now;
 
+  console.log(
+    '✅ Navigation cache updated with',
+    sortedSections.length,
+    'sections',
+  );
   return sortedSections;
 }
 
@@ -205,7 +220,16 @@ export async function getAllTramiteSlugs(): Promise<string[]> {
 
 export async function getAllTramites(): Promise<any[]> {
   const params = {
-    fields: ['id', 'slug', 'categoria', 'titulo', 'resumen', 'updatedAt', 'fecha', 'contenido'],
+    fields: [
+      'id',
+      'slug',
+      'categoria',
+      'titulo',
+      'resumen',
+      'updatedAt',
+      'fecha',
+      'contenido',
+    ],
     sort: ['categoria:asc', 'titulo:asc'],
     populate: '*',
     'pagination[pageSize]': 250, // Increased limit to fetch all items

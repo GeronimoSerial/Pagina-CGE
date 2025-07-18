@@ -89,7 +89,7 @@ class AggressiveCache<T> {
 
 // Caches específicos para diferentes tipos de contenido
 export const newsCache = new AggressiveCache<any>(86400000, 50); // 24 horas, 50 noticias max
-export const tramitesCache = new AggressiveCache<any>(2592000000, 20); // 30 días, 20 trámites max
+export const tramitesCache = new AggressiveCache<any>(2592000000, 20); // 30 días, 20 trámites max - webhook actualiza inmediatamente
 export const relatedCache = new AggressiveCache<any>(86400000, 100); // 24 horas, 100 queries relacionadas
 export const newsGridCache = new AggressiveCache<any>(86400000, 50); // 24 horas, 50 noticias max
 // Helper function para cache con fallback
