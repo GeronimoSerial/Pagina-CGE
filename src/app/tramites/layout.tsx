@@ -1,8 +1,8 @@
 import React, { ReactNode, Suspense } from 'react';
 import { ResponsiveNav } from '@/features/tramites/navigation/responsive-nav';
 
-// ISR: Revalidar cada 7 días - La navegación de trámites es muy estable
-export const revalidate = 604800;
+// ISR: Revalidar cada 30 días - Contenido muy estático, webhook actualiza inmediatamente
+export const revalidate = 2592000; // 30 días
 
 // Componente de navegación que se carga de forma diferida
 async function NavigationLoader() {
