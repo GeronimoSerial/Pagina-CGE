@@ -51,13 +51,18 @@ export async function POST(request: NextRequest) {
       case 'tramite':
         tramitesCache.clear(); // Limpiar cache de trámites en RAM
         revalidatePath('/tramites');
+        revalidatePath('/tramites', 'layout'); // Revalidar layout para actualizar sidebar
         //revalidateTag('tramites');
 
         if (entry?.slug) {
           revalidatePath(`/tramites/${entry.slug}`);
+          revalidatePath(`/tramites/${entry.slug}`, 'layout'); // Revalidar layout específico
         }
 
-        console.log('✅ Revalidated tramites:', entry?.slug || 'all');
+        console.log(
+          '✅ Revalidated tramites and layout:',
+          entry?.slug || 'all',
+        );
         break;
 
       default:
