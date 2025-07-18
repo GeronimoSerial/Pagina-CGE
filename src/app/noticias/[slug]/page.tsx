@@ -202,16 +202,8 @@ export default async function NoticiaPage({ params }: PageProps) {
                     priority
                   />
                 )}
-                <div className="mb-8 max-w-none prose prose-lg">
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                    components={MarkdownComponent}
-                  >
-                    {noticia.contenido}
-                  </ReactMarkdown>
-                </div>
-
-                {noticia.imagen && noticia.imagen.length > 0 && (
+                <div dangerouslySetInnerHTML={{ __html: noticia.contenido }} />
+                {noticia.imagenes && noticia.imagenes.length > 0 && (
                   <>
                     <Separador titulo="Galería de imágenes" />
                     <PhotoSwipeGallery noticia={noticia} />
@@ -281,7 +273,7 @@ export default async function NoticiaPage({ params }: PageProps) {
                 <div className="space-y-1">
                   {relatedFinal.map((item: any) => (
                     <Link
-                      key={item.id}
+                      key={item.slug}
                       href={`/noticias/${item.slug}`}
                       className="block relative px-4 py-1 transition-all duration-300 ease-out group hover:text-slate-900"
                     >

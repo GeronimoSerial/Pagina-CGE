@@ -17,6 +17,12 @@ const nextConfig = {
         port: '',
         pathname: '/cdn-cgi/image/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'devcms.geroserial.com',
+        port: '',
+        pathname: '/assets/**',
+      },
     ],
     // Optimizaciones de imágenes sincronizadas con ISR
     formats: ['image/webp', 'image/avif'], // Formatos modernos prioritarios

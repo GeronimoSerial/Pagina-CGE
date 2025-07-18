@@ -1,10 +1,11 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import NewsGrid from './NewsGrid';
 import SimplePagination from './SimplePagination';
 import { Noticia } from '@/shared/interfaces';
+import { getNoticiasPaginadasDirectus } from '../services/noticias-directus';
 
 // Hook optimizado para debouncing
 function useDebounce<T>(value: T, delay: number): T {
@@ -51,80 +52,32 @@ export default function DynamicNewsClient({
   // Debounce para búsquedas
   const debouncedQ = useDebounce(q, 500);
 
-  // Cache key simplificado
-  const cacheBuster = useMemo(() => {
-    const pageGroup = Math.floor((currentPage - 1) / 5);
-    const hasFilters = debouncedQ || categoria || desde || hasta;
-    return hasFilters ? `filtered-${pageGroup}` : `clean-${pageGroup}`;
-  }, [currentPage, debouncedQ, categoria, desde, hasta]);
-
   const fetchNoticias = useCallback(async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000);
+      const filters: Record<string, any> = {};
+      if (debouncedQ) filters.titulo = { _icontains: debouncedQ };
+      if (categoria) filters.categoria = { _eq: categoria };
+      if (desde) filters.fecha = { ...filters.fecha, _gte: desde };
+      if (hasta) filters.fecha = { ...filters.fecha, _lte: hasta };
 
-      // OPTIMIZACIÓN: Cliente directo a Strapi (eliminar doble hop)
-      const params = new URLSearchParams({
-        'pagination[page]': String(currentPage),
-        'pagination[pageSize]': '6',
-        'sort[0]': 'createdAt:desc',
-        'sort[1]': 'fecha:desc',
-        'populate[portada][fields][0]': 'url',
-        'populate[portada][fields][1]': 'alternativeText',
-        'filters[publicado][$eq]': 'true',
-        ...(debouncedQ && { 'filters[titulo][$containsi]': debouncedQ }),
-        ...(categoria && { 'filters[categoria][$eq]': categoria }),
-        ...(desde && { 'filters[fecha][$gte]': desde }),
-        ...(hasta && { 'filters[fecha][$lte]': hasta }),
-      });
-
-      const noticiasRes = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/noticias?${params.toString()}`,
-        {
-          signal: controller.signal,
-          headers: {
-            Accept: 'application/json',
-            'Cache-Control': 'max-age=90',
-          },
-        },
+      const noticiasData = await getNoticiasPaginadasDirectus(
+        currentPage,
+        6,
+        filters,
       );
 
-      clearTimeout(timeoutId);
-
-      if (!noticiasRes.ok) {
-        throw new Error(
-          `HTTP ${noticiasRes.status}: Error al cargar las noticias`,
-        );
-      }
-
-      const noticiasData = await noticiasRes.json();
-
-      // Parsear respuesta directa de Strapi (no de Next.js API)
-      const mapeadas: Noticia[] = noticiasData.data.map((noticia: any) => ({
-        id: noticia.id,
-        autor: noticia.autor || 'Redacción CGE',
-        titulo: noticia.titulo,
-        resumen: noticia.resumen,
-        fecha: noticia.fecha,
-        categoria: noticia.categoria,
-        esImportante: noticia.esImportante || false,
-        slug: noticia.slug,
-        portada: noticia.portada,
-        imagen: noticia.imagen,
-      }));
-
-      setNoticias(mapeadas);
-      setTotalPages(noticiasData.meta?.pagination?.pageCount || 1);
+      setNoticias(noticiasData.noticias as Noticia[]);
+      setTotalPages(noticiasData.pagination.pageCount || 1);
     } catch (error: any) {
       console.error('Error fetching noticias:', error);
       setError(error.message || 'Error al cargar las noticias');
     } finally {
       setLoading(false);
     }
-  }, [currentPage, debouncedQ, categoria, desde, hasta, cacheBuster]);
+  }, [currentPage, debouncedQ, categoria, desde, hasta]);
 
   useEffect(() => {
     fetchNoticias();

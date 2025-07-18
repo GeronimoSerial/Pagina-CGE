@@ -2,7 +2,7 @@ import React from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { ArrowRight, User, CalendarDays, Tag } from 'lucide-react';
-import { getPortada } from '@/features/noticias/services/noticias';
+import { getPortadaDirectus } from '@/features/noticias/services/noticias-directus';
 import { Card, CardContent } from '@/shared/ui/card';
 import {
   Carousel,
@@ -35,12 +35,12 @@ export default function NewsGrid({
             <Carousel className="mx-auto w-full overflow-x-hidden max-w-7xl">
               <CarouselContent className="-ml-6 ">
                 {noticiasDestacadas.slice(0, 3).map((noticia) => (
-                  <CarouselItem key={noticia.id} className="pl-6 basis-full">
+                  <CarouselItem key={noticia.slug} className="pl-6 basis-full">
                     <Card className="overflow-hidden border-0 shadow-2xl">
                       <div className="grid gap-0 lg:grid-cols-2">
                         <div className="aspect-[4/3] lg:aspect-auto overflow-hidden">
                           <Image
-                            src={getPortada({ noticia }) || ''}
+                            src={getPortadaDirectus({ noticia }) || ''}
                             alt={noticia.titulo}
                             className="object-cover w-full h-full transition-transform duration-500 hover:scale-105"
                             width={1200}
