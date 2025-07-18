@@ -60,8 +60,8 @@ export default function DynamicNewsClient({
       const filters: Record<string, any> = {};
       if (debouncedQ) filters.titulo = { _icontains: debouncedQ };
       if (categoria) filters.categoria = { _eq: categoria };
-      if (desde) filters.fecha = { ...filters.fecha, _gte: desde };
-      if (hasta) filters.fecha = { ...filters.fecha, _lte: hasta };
+      if (desde) filters.fecha = { ...filters.fecha, _gte: `${desde}T00:00:00` };
+      if (hasta) filters.fecha = { ...filters.fecha, _lte: `${hasta}T23:59:59` };
 
       const noticiasData = await getNoticiasPaginadasDirectus(
         currentPage,
