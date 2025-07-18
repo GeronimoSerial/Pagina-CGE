@@ -6,12 +6,10 @@ import {
   getNoticiasRelacionadasDirectus,
   getNoticiaBySlugDirectus,
 } from '@/features/noticias/services/noticias-directus';
-import ReactMarkdown from 'react-markdown';
 import { notFound } from 'next/navigation';
 import PhotoSwipeGallery from '@/shared/components/PhotoSwipeGallery';
-import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
-import remarkGfm from 'remark-gfm';
 import { Separador } from '@/shared/components/Separador';
+import { HTMLContent } from '@/features/noticias/components/HTMLContent';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { format } from 'date-fns';
@@ -202,7 +200,10 @@ export default async function NoticiaPage({ params }: PageProps) {
                     priority
                   />
                 )}
-                <div dangerouslySetInnerHTML={{ __html: noticia.contenido }} />
+                <HTMLContent
+                  content={noticia.contenido}
+                  className="mb-8 max-w-none prose prose-lg"
+                />
                 {noticia.imagenes && noticia.imagenes.length > 0 && (
                   <>
                     <Separador titulo="Galería de imágenes" />
