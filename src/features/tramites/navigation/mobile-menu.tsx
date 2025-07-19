@@ -59,11 +59,10 @@ export function MobileMenu({ sections }: MobileMenuProps) {
               <span className="font-medium">Volver al inicio</span>
             </Link>
           </div>
-      
+
           <div className="block" style={{ display: 'block' }}>
             <Sidebar sections={sections} onLinkClick={closeMenu} />
           </div>
-
         </div>
       </aside>
       {/* Mobile Menu Overlay */}

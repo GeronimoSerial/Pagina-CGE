@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import emailjs from "@emailjs/browser";
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import emailjs from '@emailjs/browser';
 
 export interface ContactoForm {
   nombre: string;
@@ -10,29 +10,29 @@ export interface ContactoForm {
   area: string;
 }
 
-const SERVICE_ID = process.env.NEXT_PUBLIC_SERVICE_ID || "default_service";
-const TEMPLATE_ID =
-  process.env.NEXT_PUBLIC_TEMPLATE_ID || "default_template";
-const PUBLIC_KEY = process.env.NEXT_PUBLIC_PUBLIC_KEY || "default_public_key";
+const SERVICE_ID = process.env.NEXT_PUBLIC_SERVICE_ID || 'default_service';
+const TEMPLATE_ID = process.env.NEXT_PUBLIC_TEMPLATE_ID || 'default_template';
+const PUBLIC_KEY = process.env.NEXT_PUBLIC_PUBLIC_KEY || 'default_public_key';
 
 if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
-  throw new Error("Missing required environment variables for EmailJS.");
+  throw new Error('Missing required environment variables for EmailJS.');
 }
 
 export const useContactForm = () => {
   const [enviado, setEnviado] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [buttonState, setButtonState] = useState<
-    "idle" | "loading" | "success"
-  >("idle");
+    'idle' | 'loading' | 'success'
+  >('idle');
 
   const form = useForm<ContactoForm>({
-    defaultValues: { nombre: "", email: "", asunto: "", mensaje: "", area: "" },
+    defaultValues: { nombre: '', email: '', asunto: '', mensaje: '', area: '' },
   });
 
   const onSubmit = async (data: ContactoForm) => {
-    setButtonState("loading");
-    try {      const templateParams = {
+    setButtonState('loading');
+    try {
+      const templateParams = {
         name: data.nombre,
         email: data.email,
         subject: data.asunto,
@@ -44,23 +44,23 @@ export const useContactForm = () => {
         SERVICE_ID,
         TEMPLATE_ID,
         templateParams,
-        PUBLIC_KEY
+        PUBLIC_KEY,
       );
 
-      if (result.text === "OK") {
+      if (result.text === 'OK') {
         setEnviado(true);
         setError(null);
         form.reset();
-        setButtonState("success");
+        setButtonState('success');
         setTimeout(() => {
-          setButtonState("idle");
+          setButtonState('idle');
           setEnviado(false);
         }, 5000);
       }
     } catch (error) {
-      console.log("Error al enviar el mensaje:", error);
-      setError("Hubo un error al enviar el mensaje");
-      setButtonState("idle");
+      console.log('Error al enviar el mensaje:', error);
+      setError('Hubo un error al enviar el mensaje');
+      setButtonState('idle');
     }
   };
 

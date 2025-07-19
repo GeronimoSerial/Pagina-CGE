@@ -1,8 +1,6 @@
 import { API_URL } from '@/shared/lib/config';
 import qs from 'qs';
 
- 
-
 export interface NavSection {
   id: string;
   title: string;
@@ -33,16 +31,12 @@ export interface Article {
   content: ArticleSection[];
 }
 
- 
-
- 
 interface RawTramiteNav {
   slug: string;
   titulo: string;
   categoria: string | null;
 }
 
- 
 interface RawTramiteArticle {
   id: string;
   slug: string;
@@ -54,10 +48,6 @@ interface RawTramiteArticle {
   contenido: string;
 }
 
- 
-
- 
- 
 async function fetchAPI<T>(path: string, params: object = {}): Promise<T> {
   const query = qs.stringify(params, { encodeValuesOnly: true });
   const url = `${API_URL}${path}${query ? `?${query}` : ''}`;
@@ -77,7 +67,6 @@ async function fetchAPI<T>(path: string, params: object = {}): Promise<T> {
   }
 }
 
- 
 const categoriaMap: Record<number, string> = {
   1: 'Licencias especiales por salud y/o maternidad',
   2: 'Licencias extraordinarias',
@@ -86,22 +75,17 @@ const categoriaMap: Record<number, string> = {
   5: 'Suplentes',
 };
 
- 
 let navigationCache: NavSection[] | null = null;
 let cacheTimestamp = 0;
 const CACHE_DURATION = 5 * 60 * 1000;
 
- 
 export function clearNavigationCache() {
   navigationCache = null;
   cacheTimestamp = 0;
   console.log('🧹 Local navigation cache cleared');
 }
 
- 
- 
 export async function getTramitesNavigation(): Promise<NavSection[]> {
-  
   const now = Date.now();
   if (navigationCache && now - cacheTimestamp < CACHE_DURATION) {
     console.log('📋 Using cached navigation data');
@@ -144,7 +128,6 @@ export async function getTramitesNavigation(): Promise<NavSection[]> {
     return a.title.localeCompare(b.title);
   });
 
-  
   navigationCache = sortedSections;
   cacheTimestamp = now;
 
@@ -156,8 +139,6 @@ export async function getTramitesNavigation(): Promise<NavSection[]> {
   return sortedSections;
 }
 
- 
- 
 export async function getTramiteArticleBySlug(
   slug: string,
 ): Promise<Article | null> {
@@ -186,15 +167,11 @@ export async function getTramiteArticleBySlug(
   };
 }
 
- 
- 
 function parseContenidoToSections(contenido: string | null): ArticleSection[] {
   if (!contenido) return [];
   return [{ type: 'paragraph', content: contenido }];
 }
 
- 
- 
 export async function getAllTramiteSlugs(): Promise<string[]> {
   const params = {
     fields: ['slug'],

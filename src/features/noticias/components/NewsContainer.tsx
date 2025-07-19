@@ -15,7 +15,6 @@ interface NewsContainerProps {
   categorias: Array<{ id: number; nombre: string }>;
 }
 
-
 export default function NewsContainer({
   initialData,
   categorias,

@@ -1,4 +1,3 @@
-
 import type { Escuela } from '@/shared/interfaces';
 
 export async function getEscuelas(): Promise<Escuela[]> {
