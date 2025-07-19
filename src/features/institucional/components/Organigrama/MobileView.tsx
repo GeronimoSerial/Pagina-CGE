@@ -16,7 +16,6 @@ interface MobileViewProps {
 }
 
 export const MobileView = ({ members, onViewDetails }: MobileViewProps) => {
-  // Agrupar por tipos
   const presidente = members.find((m) => m.position === 'Presidente');
   const secretaria = members.find((m) => m.position === 'Secretaria General');
   const vocalesEstatales = members.filter((m) => m.department === 'Estatal');

@@ -1,23 +1,20 @@
-import { API_URL } from '@/shared/lib/config';
+import { API_URL, PERFORMANCE_CONFIG } from '@/shared/lib/config';
 import { Noticia } from '@/shared/interfaces';
 import qs from 'qs';
 import { cfImages } from '@/shared/lib/cloudflare-images';
 
-// Simplified cache strategy: Fewer unique keys = better cache hits
 function createCacheKey(page: number, pageSize: number, filters: Record<string, any>): string {
-  // Reduce granularity for better cache efficiency under load
   const hasFilters = Object.keys(filters).length > 0;
-  const bucket = Math.floor(page / 5); // Group pages in buckets of 5
-  
+  const bucket = Math.floor(page / 3);
+
   if (!hasFilters) {
     return `noticias-clean-${bucket}-${pageSize}`;
   }
-  
-  // Simple hash for filters to reduce unique keys
+
   const filterHash = Object.keys(filters).sort().join('-');
   return `noticias-filtered-${bucket}-${pageSize}-${filterHash}`;
 }
- 
+
 export async function getAllNoticias() {
   const query = qs.stringify(
     {
@@ -41,18 +38,16 @@ export async function getAllNoticias() {
   return data;
 }
 
- 
+
 export async function getNoticiasPaginadas(
   page: number = 1,
   pageSize: number = 4,
   filters: Record<string, any> = {},
 ) {
-  // Create cache tag for better cache invalidation
   const cacheKey = createCacheKey(page, pageSize, filters);
-  
+
   const query = qs.stringify(
     {
-      
       fields: ['titulo', 'resumen', 'fecha', 'categoria', 'esImportante', 'slug', 'createdAt'],
       populate: {
         portada: {
@@ -63,7 +58,7 @@ export async function getNoticiasPaginadas(
         }
       },
       sort: ['createdAt:desc', 'fecha:desc', 'id:desc'],
-      pagination: { page, pageSize },
+      pagination: { page, pageSize: Math.min(pageSize, 20) },
       filters: {
         publicado: { $eq: true },
         ...filters,
@@ -72,16 +67,45 @@ export async function getNoticiasPaginadas(
     { encodeValuesOnly: true },
   );
 
-  const res = await fetch(`${API_URL}/noticias?${query}`);
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), PERFORMANCE_CONFIG.API_TIMEOUT);
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch paginated noticias');
+    const res = await fetch(`${API_URL}/noticias?${query}`, {
+      signal: controller.signal,
+      headers: {
+        'Accept': 'application/json',
+        'Cache-Control': `max-age=${PERFORMANCE_CONFIG.CACHE.DYNAMIC_MAX_AGE}`,
+        'Connection': 'keep-alive',
+      },
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      console.error(`API Error: ${res.status} ${res.statusText} for ${API_URL}/noticias`);
+      throw new Error(`HTTP ${res.status}: Failed to fetch paginated noticias`);
+    }
+
+    const { data, meta } = await res.json();
+    return { noticias: data, pagination: meta.pagination };
+
+  } catch (error) {
+    console.error('Error in getNoticiasPaginadas:', error);
+
+    return {
+      noticias: [],
+      pagination: {
+        page: page,
+        pageCount: 0,
+        pageSize: pageSize,
+        total: 0
+      }
+    };
   }
-  const { data, meta } = await res.json();
-  return { noticias: data, pagination: meta.pagination };
 }
 
- 
+
 export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
   const query = qs.stringify(
     {
@@ -128,14 +152,13 @@ export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
   };
 }
 
- 
+
 export async function getNoticiasRelacionadas(categoria: string, excludeSlug?: string) {
   const filters: any = {
     categoria: { $eq: categoria },
     publicado: { $eq: true },
   };
 
-  // Excluir la noticia actual si se proporciona el slug
   if (excludeSlug) {
     filters.slug = { $ne: excludeSlug };
   }
@@ -182,12 +205,9 @@ export function getImagenes(noticia: Noticia) {
   );
 }
 
-/**
- * Obtiene todas las categorías de noticias únicas.
- * Cachea el resultado durante una hora para un rendimiento óptimo.
- */
+
 export async function getNoticiasCategorias(): Promise<Array<{ id: number; nombre: string }>> {
-  
+
   const query = qs.stringify(
     {
       fields: ['categoria'],
@@ -206,12 +226,12 @@ export async function getNoticiasCategorias(): Promise<Array<{ id: number; nombr
 
   const { data } = await res.json();
 
-  
+
   const categoriasUnicas = Array.from(
     new Set(data.map((item: any) => item.categoria).filter(Boolean)),
   );
 
-  
+
   return (categoriasUnicas as string[]).map((categoria: string, index: number) => ({
     id: index + 1,
     nombre: categoria,

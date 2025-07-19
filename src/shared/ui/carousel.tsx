@@ -155,7 +155,6 @@ const Carousel = React.forwardRef<
       [scrollPrev, scrollNext],
     );
 
-    // Inicialización y limpieza de MediaQuery
     React.useEffect(() => {
       const mediaQuery = window.matchMedia(MOBILE_BREAKPOINT);
       handleMobileChange(mediaQuery);
@@ -163,7 +162,6 @@ const Carousel = React.forwardRef<
       return () => mediaQuery.removeEventListener('change', handleMobileChange);
     }, [handleMobileChange]);
 
-    // Inicialización y limpieza de visibilidad
     React.useEffect(() => {
       document.addEventListener('visibilitychange', handleVisibilityChange);
       return () =>
@@ -173,7 +171,6 @@ const Carousel = React.forwardRef<
         );
     }, [handleVisibilityChange]);
 
-    // Inicialización del carrusel
     React.useEffect(() => {
       if (!api) return;
 
@@ -190,7 +187,6 @@ const Carousel = React.forwardRef<
       };
     }, [api, handleSelect]);
 
-    // Manejo del autoplay
     React.useEffect(() => {
       if (
         !api ||
@@ -219,7 +215,6 @@ const Carousel = React.forwardRef<
       state.isMobile,
     ]);
 
-    // Sincronización del API
     React.useEffect(() => {
       if (!api || !setApi) return;
       setApi(api);
@@ -261,11 +256,7 @@ const Carousel = React.forwardRef<
           onMouseLeave={handleMouseLeave}
           {...props}
         >
-          <div className="relative">
-            {children}
-            {/* <CarouselPrevious className="hidden absolute left-4 top-1/2 z-30 w-12 h-12 text-white rounded-full border-none shadow-none transition-all duration-300 ease-out -translate-y-1/2 md:flex bg-green-900/30 hover:bg-white/10 hover:text-white hover:scale-110" /> */}
-            {/* <CarouselNext className="hidden absolute right-4 top-1/2 z-30 w-12 h-12 text-white rounded-full border-none shadow-none transition-all duration-300 ease-out -translate-y-1/2 md:flex bg-green-900/30 hover:bg-white/10 hover:text-white hover:scale-110" /> */}
-          </div>
+          <div className="relative">{children}</div>
           {/* Dots */}
           <div className="flex gap-2 justify-center pb-2 mt-4">
             {Array.from({ length: state.slideCount }).map((_, idx) => (

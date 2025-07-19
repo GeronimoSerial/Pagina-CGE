@@ -1,29 +1,25 @@
 import { notFound } from 'next/navigation';
-import { MobileMenu } from '@/features/tramites/navigation/mobile-menu';
 import {
-  getTramitesNavigation,
   getTramiteArticleBySlug,
   getAllTramiteSlugs,
-  NavSection,
   Article,
 } from '@/features/tramites/services/docs-data';
 import ReactMarkdown from 'react-markdown';
 import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
 import { Clock } from 'lucide-react';
 import Link from 'next/link';
+import { withCache, tramitesCache } from '@/shared/lib/aggressive-cache';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-// Generar páginas estáticas en build time
 export async function generateStaticParams() {
   try {
     const slugs = await getAllTramiteSlugs();
     return slugs.map((slug) => ({ slug }));
   } catch (error) {
     console.warn('Error generating static params for tramites:', error);
-    // Fallback: generar páginas para trámites conocidos
     return [
       { slug: 'introduccion' },
       { slug: 'articulo-11' },
@@ -35,14 +31,16 @@ export async function generateStaticParams() {
   }
 }
 
-// ISR: Revalidar cada 7 días - Contenido de trámites es estable
-export const revalidate = 604800;
+export const revalidate = 2592000; // 30 días
 
 export default async function DocumentPage({ params }: PageProps) {
   const slug = (await params).slug;
 
-  // Solo cargar el artículo - la navegación ya está en el layout
-  const article: Article | null = await getTramiteArticleBySlug(slug);
+  const article: Article | null = await withCache(
+    tramitesCache,
+    `tramite-${slug}`,
+    async () => await getTramiteArticleBySlug(slug),
+  );
 
   if (!article) {
     notFound();
@@ -114,7 +112,6 @@ export default async function DocumentPage({ params }: PageProps) {
   );
 }
 
-// Generar metadatos dinámicos
 export async function generateMetadata({ params }: PageProps) {
   const article = await getTramiteArticleBySlug((await params).slug);
   const slug = (await params).slug;

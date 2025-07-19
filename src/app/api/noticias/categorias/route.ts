@@ -10,7 +10,6 @@ export async function GET() {
         }, {
             status: 200,
             headers: {
-                // Cache agresivo para categorías ya que cambian poco
                 'Cache-Control': 'public, max-age=21600, stale-while-revalidate=7200, s-maxage=3600',
                 'X-Cache-Strategy': 'categorias-cached',
                 'Vary': 'Accept-Encoding',

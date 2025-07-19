@@ -1,4 +1,3 @@
-// Buscador de escuelas, implementación estética.
 import React, { useState, useCallback, useEffect } from 'react';
 import type { Escuela } from '@/shared/interfaces';
 import { buscarEscuelasAvanzado } from '../utils/searchUtils';

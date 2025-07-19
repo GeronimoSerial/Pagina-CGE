@@ -6,7 +6,6 @@ import {
   getNoticiasRelacionadas,
   getAllNoticias,
 } from '@/features/noticias/services/noticias';
-import { formatearFecha } from '@/shared/lib/utils';
 import ReactMarkdown from 'react-markdown';
 import { notFound } from 'next/navigation';
 import PhotoSwipeGallery from '@/shared/components/PhotoSwipeGallery';
@@ -17,22 +16,25 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale/es';
+import {
+  newsCache,
+  relatedCache,
+  withCache,
+} from '@/shared/lib/aggressive-cache';
+import { Noticia } from '@/shared/interfaces';
 
-// ISR: Revalidar cada 24 horas - Contenido ya publicado cambia poco
-export const revalidate = 86400;
+export const revalidate = 2592000; // 30 días
 
 export async function generateStaticParams() {
   try {
     const noticias = await getAllNoticias();
-    return noticias.map((noticia: { slug: string }) => ({
+    return noticias.slice(0, 50).map((noticia: { slug: string }) => ({
       slug: noticia.slug,
     }));
   } catch (error) {
     console.warn('Error generating static params for noticias:', error);
   }
 }
-
-const metadataCache = new Map<string, any>();
 
 export async function generateMetadata({
   params,
@@ -41,11 +43,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
 
-  if (metadataCache.has(slug)) {
-    return metadataCache.get(slug);
-  }
+  const noticia = await withCache(newsCache, `metadata-${slug}`, () =>
+    getNoticiaBySlug(slug),
+  );
 
-  const noticia = await getNoticiaBySlug(slug);
   if (!noticia) return {};
 
   const url = `/noticias/${slug}`;
@@ -90,9 +91,6 @@ export async function generateMetadata({
     },
   };
 
-  metadataCache.set(slug, metadata);
-  setTimeout(() => metadataCache.delete(slug), 3600000); // 1 hora
-
   return metadata;
 }
 
@@ -118,20 +116,20 @@ interface PageProps {
 export default async function NoticiaPage({ params }: PageProps) {
   const { slug } = await params;
 
-  const [noticia, related] = await Promise.all([
-    getNoticiaBySlug(slug),
-
-    Promise.resolve([]),
-  ]);
+  const noticia: Noticia | null = await withCache(
+    newsCache,
+    `noticia-${slug}`,
+    () => getNoticiaBySlug(slug),
+  );
 
   if (!noticia) {
     return notFound();
   }
 
-  // Obtener noticias relacionadas de la misma categoría, excluyendo la actual
-  const relatedFinal = await getNoticiasRelacionadas(
-    noticia.categoria,
-    slug,
+  const relatedFinal = await withCache(
+    relatedCache,
+    `related-${noticia.categoria}-${slug}`,
+    () => getNoticiasRelacionadas(noticia.categoria, slug),
   ).catch(() => []);
 
   return (

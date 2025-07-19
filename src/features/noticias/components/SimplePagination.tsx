@@ -17,7 +17,6 @@ const SimplePagination = memo(function SimplePagination({
 }: SimplePaginationProps) {
   if (totalPages <= 1) return null;
 
-  // Optimización: Calcular páginas visibles de manera más eficiente
   const getVisiblePages = () => {
     const maxVisible = 5;
     const delta = Math.floor(maxVisible / 2);
@@ -25,7 +24,6 @@ const SimplePagination = memo(function SimplePagination({
     let start = Math.max(1, currentPage - delta);
     let end = Math.min(totalPages, start + maxVisible - 1);
     
-    // Ajustar start si end está al límite
     if (end - start + 1 < maxVisible) {
       start = Math.max(1, end - maxVisible + 1);
     }
@@ -45,7 +43,6 @@ const SimplePagination = memo(function SimplePagination({
       role="navigation" 
       aria-label="Paginación de noticias"
     >
-      {/* Botón Anterior */}
       <Button
         variant="outline"
         size="sm"
