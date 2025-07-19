@@ -11,29 +11,26 @@ export async function GET() {
   try {
     const metrics = loadMonitor.getMetrics();
 
-    // Estado de circuit breakers
     const circuitBreakers = {
       'noticias-api': apiCircuitBreaker.getStatus('noticias-api-1-4-0'),
       'noticias-api-filtered':
         apiCircuitBreaker.getStatus('noticias-api-1-4-1'),
     };
 
-    // NUEVO: Estado de caches agresivos
     const cacheStats = {
       noticias: newsCache.getStats(),
       tramites: tramitesCache.getStats(),
       related: relatedCache.getStats(),
     };
 
-    // Información del sistema (si está disponible)
     let systemInfo = {};
     if (typeof process !== 'undefined' && process.memoryUsage) {
       const memUsage = process.memoryUsage();
       systemInfo = {
         memory: {
-          heapUsed: Math.round((memUsage.heapUsed / 1024 / 1024) * 100) / 100, // MB
-          heapTotal: Math.round((memUsage.heapTotal / 1024 / 1024) * 100) / 100, // MB
-          external: Math.round((memUsage.external / 1024 / 1024) * 100) / 100, // MB
+          heapUsed: Math.round((memUsage.heapUsed / 1024 / 1024) * 100) / 100,
+          heapTotal: Math.round((memUsage.heapTotal / 1024 / 1024) * 100) / 100,
+          external: Math.round((memUsage.external / 1024 / 1024) * 100) / 100,
         },
         uptime: process.uptime(),
       };
@@ -47,7 +44,7 @@ export async function GET() {
           summary: loadMonitor.getLoadReport(),
           metrics: metrics,
           circuitBreakers: circuitBreakers,
-          caches: cacheStats, // Nuevas métricas de cache
+          caches: cacheStats, 
           system: systemInfo,
         },
       },
@@ -77,12 +74,10 @@ export async function GET() {
   }
 }
 
-// Endpoint para reset de métricas (útil entre pruebas)
 export async function DELETE() {
   try {
     loadMonitor.reset();
 
-    // NUEVO: Reset también los caches agresivos
     newsCache.clear();
     tramitesCache.clear();
     relatedCache.clear();

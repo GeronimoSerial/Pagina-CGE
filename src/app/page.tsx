@@ -42,18 +42,15 @@ export const metadata: Metadata = {
   },
 };
 
-// ISR más agresivo: Revalidar cada hora para reducir carga en Strapi
-export const revalidate = 3600; // Cambiado de 7200 a 3600 segundos
+export const revalidate = 3600; 
 
 export default async function PagPrincipal() {
   let latestNewsData;
   
   try {
-    // Pre-renderizar menos noticias para acelerar el home
-    latestNewsData = await getNoticiasPaginadas(1, 4); // Reducido de 6 a 4
+    latestNewsData = await getNoticiasPaginadas(1, 4); 
   } catch (error) {
     console.error('Error loading home page news:', error);
-    // Fallback para evitar que el home falle completamente
     latestNewsData = {
       noticias: [],
       pagination: { page: 1, pageCount: 0, pageSize: 4, total: 0 }

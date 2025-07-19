@@ -1,9 +1,7 @@
-//REVISAR
-// import escuelas from "../data/escuelas.json";
+
 import type { Escuela } from '@/shared/interfaces';
 
 export async function getEscuelas(): Promise<Escuela[]> {
-  // Importación dinámica para que solo se cargue cuando se llama a la función
   const escuelas: any[] = (
     await import('@/features/escuelas/data/escuelas.json')
   ).default;

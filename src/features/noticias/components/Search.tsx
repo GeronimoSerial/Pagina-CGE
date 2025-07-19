@@ -45,7 +45,6 @@ export default function NewsSearch({
     router.push(`/noticias?${params.toString()}`);
   }, [filtros, router]);
 
-  // Restaurar el efecto para buscar automáticamente solo al cambiar la categoría
   useEffect(() => {
     if (filtros.categoria) {
       const params = new URLSearchParams();
@@ -65,10 +64,8 @@ export default function NewsSearch({
   const clearIndividualFilter = (field: string) => {
     const newFiltros = { ...filtros, [field]: '' };
     setFiltros(newFiltros);
-    // Actualizar la URL quitando el filtro
     const params = new URLSearchParams(searchParams.toString());
     params.delete(field);
-    // Si todos los filtros quedan vacíos, ir a /noticias limpio
     const allEmpty = Object.entries(newFiltros).every(([, v]) => !v);
     if (allEmpty) {
       router.push('/noticias');

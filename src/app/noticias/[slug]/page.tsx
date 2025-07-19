@@ -23,7 +23,6 @@ import {
 } from '@/shared/lib/aggressive-cache';
 import { Noticia } from '@/shared/interfaces';
 
-// ISR reducido: Revalidar cada 30 días api/revalidate se encarga
 export const revalidate = 2592000; // 30 días
 
 export async function generateStaticParams() {
@@ -44,7 +43,6 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
 
-  // Cache agresivo para metadata (reduce DB calls)
   const noticia = await withCache(newsCache, `metadata-${slug}`, () =>
     getNoticiaBySlug(slug),
   );
@@ -93,7 +91,6 @@ export async function generateMetadata({
     },
   };
 
-  // No necesitamos cache manual, usamos el aggressive cache
   return metadata;
 }
 
@@ -119,7 +116,6 @@ interface PageProps {
 export default async function NoticiaPage({ params }: PageProps) {
   const { slug } = await params;
 
-  // OPTIMIZACIÓN CRÍTICA: Cache agresivo para reducir DB calls de 628ms a <50ms
   const noticia: Noticia | null = await withCache(
     newsCache,
     `noticia-${slug}`,
@@ -130,7 +126,6 @@ export default async function NoticiaPage({ params }: PageProps) {
     return notFound();
   }
 
-  // Lazy loading de noticias relacionadas con cache separado
   const relatedFinal = await withCache(
     relatedCache,
     `related-${noticia.categoria}-${slug}`,

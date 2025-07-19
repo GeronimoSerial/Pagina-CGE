@@ -1,4 +1,4 @@
-//Buscador de Escuelas Avanzado con implementacion de sistema de puntos, a modo de prueba no final.
+
 import type { Escuela } from '@/shared/interfaces';
 import { normalizarTexto } from '@/shared/lib/utils';
 export interface SearchIndex {
@@ -102,7 +102,7 @@ export function filtrarEscuelas(
   escuelasFiltradas.forEach((escuela, idx) => {
     let puntuacion = 0;
 
-    // Coincidencia exacta del nombre completo (máxima prioridad)
+    
     if (
       escuela.nombre &&
       normalizarTexto(escuela.nombre) === terminoNormalizado
@@ -110,7 +110,7 @@ export function filtrarEscuelas(
       puntuacion += 5000;
     }
 
-    // Coincidencia exacta de CUE (alta prioridad)
+    
     if (
       esPosibleCUE &&
       escuela.cue &&
@@ -119,7 +119,7 @@ export function filtrarEscuelas(
       puntuacion += 4000;
     }
 
-    // El nombre contiene el término completo (alta prioridad)
+    
     if (
       escuela.nombre &&
       normalizarTexto(escuela.nombre).includes(terminoNormalizado)
@@ -127,7 +127,7 @@ export function filtrarEscuelas(
       puntuacion += 3000;
     }
 
-    // El director contiene el término completo
+    
     if (
       escuela.director &&
       normalizarTexto(escuela.director).includes(terminoNormalizado)
@@ -135,7 +135,7 @@ export function filtrarEscuelas(
       puntuacion += 2000;
     }
 
-    // La localidad contiene el término completo
+    
     if (
       escuela.localidad &&
       normalizarTexto(escuela.localidad).includes(terminoNormalizado)
@@ -143,15 +143,15 @@ export function filtrarEscuelas(
       puntuacion += 1500;
     }
 
-    // Si hay puntuación, la guardamos
+    
     if (puntuacion > 0) {
       puntuaciones.set(idx, puntuacion);
     }
   });
 
-  // Si encontramos coincidencias exactas, no hacemos búsqueda por términos individuales
+  
   if (puntuaciones.size === 0) {
-    // Dividir el término en palabras individuales para búsqueda
+    
     const terminosBusqueda = terminoNormalizado
       .split(/\s+/)
       .filter((term) => term.length > 2);
@@ -160,7 +160,7 @@ export function filtrarEscuelas(
       let puntuacion = 0;
       let terminosEncontrados = 0;
 
-      // Verificar si todos los términos están presentes en algún campo
+      
       const cumpleTodosLosTerminos = terminosBusqueda.every((termino) => {
         const estaEnNombre = escuela.nombre
           ? normalizarTexto(escuela.nombre).includes(termino)
@@ -182,9 +182,9 @@ export function filtrarEscuelas(
         puntuacion += 500;
       }
 
-      // Asignar puntos por cada término encontrado en cada campo
+      
       terminosBusqueda.forEach((termino) => {
-        // Buscar en nombre (campo más importante)
+        
         if (
           escuela.nombre &&
           normalizarTexto(escuela.nombre).includes(termino)
@@ -193,7 +193,7 @@ export function filtrarEscuelas(
           terminosEncontrados++;
         }
 
-        // Buscar en director
+        
         if (
           escuela.director &&
           normalizarTexto(escuela.director).includes(termino)
@@ -202,13 +202,13 @@ export function filtrarEscuelas(
           terminosEncontrados++;
         }
 
-        // Buscar en CUE
+        
         if (escuela.cue && String(escuela.cue).includes(termino)) {
           puntuacion += 40;
           terminosEncontrados++;
         }
 
-        // Buscar en localidad
+        
         if (
           escuela.localidad &&
           normalizarTexto(escuela.localidad).includes(termino)
@@ -218,25 +218,25 @@ export function filtrarEscuelas(
         }
       });
 
-      // Bonificación por porcentaje de términos encontrados
+      
       if (terminosBusqueda.length > 0) {
         const porcentajeEncontrado =
-          terminosEncontrados / (terminosBusqueda.length * 4); // 4 campos
+          terminosEncontrados / (terminosBusqueda.length * 4);
         puntuacion += Math.round(porcentajeEncontrado * 100);
       }
 
-      // Si hay puntuación, la guardamos
+      
       if (puntuacion > 0) {
         puntuaciones.set(idx, puntuacion);
       }
     });
   }
 
-  // Convertir los resultados y ordenar por puntuación
-  const limite = opciones.limite || 20; // Default a 20 resultados si no se especifica
+  
+  const limite = opciones.limite || 20;
 
   return Array.from(puntuaciones.entries())
-    .sort((a, b) => b[1] - a[1]) // Ordenar por puntuación descendente
+    .sort((a, b) => b[1] - a[1])
     .map(([idx]) => escuelasFiltradas[idx])
     .slice(0, limite);
 }
@@ -308,7 +308,7 @@ export function buscarEscuelasAvanzado(
     const tipoEscuelaNormalizado = normalizarTexto(escuela.tipoEscuela);
 
     if (numeroEscuela) {
-      // Intentar extraer el número de la escuela del nombre
+      
       const escuelaNumeroMatch = nombreNormalizado.match(
         /escuela\s*(?:n[°º.]?)?\s*(\d+)/i,
       );

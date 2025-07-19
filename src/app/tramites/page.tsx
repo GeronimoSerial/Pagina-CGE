@@ -8,11 +8,9 @@ import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
 import { Clock } from 'lucide-react';
 import { tramitesCache, withCache } from '@/shared/lib/aggressive-cache';
 
-// ISR optimizado: Revalidar cada 30 días api/revalidate se encarga
 export const revalidate = 2592000; // 30 días
 
 export default async function IntroduccionPage() {
-  // OPTIMIZACIÓN CRÍTICA: Cache agresivo para reducir DB calls de 588ms a <50ms
   const article = await withCache(
     tramitesCache,
     'tramite-introduccion',
@@ -79,7 +77,6 @@ export default async function IntroduccionPage() {
   );
 }
 
-// Generar metadatos dinámicos
 export async function generateMetadata() {
   const article = await getTramiteArticleBySlug('introduccion');
 

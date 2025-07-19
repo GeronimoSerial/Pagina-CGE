@@ -1,7 +1,4 @@
-/**
- * Circuit Breaker para APIs críticas
- * Previene fallas en cascada durante picos de carga
- */
+ 
 
 interface CircuitBreakerState {
     failures: number;

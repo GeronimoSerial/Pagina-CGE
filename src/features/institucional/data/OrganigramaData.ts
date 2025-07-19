@@ -1,4 +1,3 @@
-// Definición de la estructura de datos para los miembros del organigrama
 export type MemberInfo = {
   id: string
   name: string
@@ -12,7 +11,6 @@ export type MemberInfo = {
   children?: MemberInfo[]
 }
 
-// Datos de los miembros
 export const members: MemberInfo[] = [
   {
     id: "presidente",

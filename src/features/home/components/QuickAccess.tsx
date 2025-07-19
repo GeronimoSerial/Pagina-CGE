@@ -1,4 +1,3 @@
-// import React from "react";
 import { Card, CardContent } from '@/shared/ui/card';
 import { FileText, School, BookOpen, BotMessageSquare } from 'lucide-react';
 import { QuickAccessItemProps } from '@/shared/interfaces';
