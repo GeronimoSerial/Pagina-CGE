@@ -3,17 +3,14 @@ import { Noticia } from '@/shared/interfaces';
 import qs from 'qs';
 import { cfImages } from '@/shared/lib/cloudflare-images';
 
-// Cache strategy optimizado para pruebas de carga
 function createCacheKey(page: number, pageSize: number, filters: Record<string, any>): string {
-  // Reducir granularidad para mejor hit rate durante carga alta
   const hasFilters = Object.keys(filters).length > 0;
-  const bucket = Math.floor(page / 3); // Buckets más pequeños para mejor distribución
+  const bucket = Math.floor(page / 3);
 
   if (!hasFilters) {
     return `noticias-clean-${bucket}-${pageSize}`;
   }
 
-  // Hash simplificado para filtros
   const filterHash = Object.keys(filters).sort().join('-');
   return `noticias-filtered-${bucket}-${pageSize}-${filterHash}`;
 }
@@ -47,7 +44,6 @@ export async function getNoticiasPaginadas(
   pageSize: number = 4,
   filters: Record<string, any> = {},
 ) {
-  // Cache key optimizado para mejor hit rate
   const cacheKey = createCacheKey(page, pageSize, filters);
 
   const query = qs.stringify(
@@ -62,7 +58,7 @@ export async function getNoticiasPaginadas(
         }
       },
       sort: ['createdAt:desc', 'fecha:desc', 'id:desc'],
-      pagination: { page, pageSize: Math.min(pageSize, 20) }, // Límite reducido para VPS
+      pagination: { page, pageSize: Math.min(pageSize, 20) },
       filters: {
         publicado: { $eq: true },
         ...filters,
@@ -72,7 +68,6 @@ export async function getNoticiasPaginadas(
   );
 
   try {
-    // Timeout más agresivo para evitar acumulación de requests
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), PERFORMANCE_CONFIG.API_TIMEOUT);
 
@@ -81,14 +76,13 @@ export async function getNoticiasPaginadas(
       headers: {
         'Accept': 'application/json',
         'Cache-Control': `max-age=${PERFORMANCE_CONFIG.CACHE.DYNAMIC_MAX_AGE}`,
-        'Connection': 'keep-alive', // Reutilizar conexiones
+        'Connection': 'keep-alive',
       },
     });
 
     clearTimeout(timeoutId);
 
     if (!res.ok) {
-      // Log error específico para debugging
       console.error(`API Error: ${res.status} ${res.statusText} for ${API_URL}/noticias`);
       throw new Error(`HTTP ${res.status}: Failed to fetch paginated noticias`);
     }
@@ -99,7 +93,6 @@ export async function getNoticiasPaginadas(
   } catch (error) {
     console.error('Error in getNoticiasPaginadas:', error);
 
-    // Fallback robusto con datos mínimos
     return {
       noticias: [],
       pagination: {
@@ -166,7 +159,6 @@ export async function getNoticiasRelacionadas(categoria: string, excludeSlug?: s
     publicado: { $eq: true },
   };
 
-  // Excluir la noticia actual si se proporciona el slug
   if (excludeSlug) {
     filters.slug = { $ne: excludeSlug };
   }
@@ -213,10 +205,7 @@ export function getImagenes(noticia: Noticia) {
   );
 }
 
-/**
- * Obtiene todas las categorías de noticias únicas.
- * Cachea el resultado durante una hora para un rendimiento óptimo.
- */
+
 export async function getNoticiasCategorias(): Promise<Array<{ id: number; nombre: string }>> {
 
   const query = qs.stringify(

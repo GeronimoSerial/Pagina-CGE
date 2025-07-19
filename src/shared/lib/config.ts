@@ -3,36 +3,36 @@ export const API_URL =
 export const STRAPI_URL =
   process.env.NEXT_PUBLIC_STRAPI_URL || '';
 
-// Configuración de performance optimizada para pruebas de carga
+ 
 export const PERFORMANCE_CONFIG = {
-  // Timeouts más agresivos para evitar acumulación
-  API_TIMEOUT: 5000, // Reducido de 8-10s a 5s
-  CRITICAL_API_TIMEOUT: 3000, // Para endpoints críticos como /api/noticias
+  
+  API_TIMEOUT: 5000,
+  CRITICAL_API_TIMEOUT: 3000,
 
-  // Cache settings optimizados
+  
   CACHE: {
-    // Cache más largo para datos estáticos
-    STATIC_MAX_AGE: 300, // 5 minutos
-    STATIC_STALE_WHILE_REVALIDATE: 600, // 10 minutos
+    
+    STATIC_MAX_AGE: 300,
+    STATIC_STALE_WHILE_REVALIDATE: 600,
 
-    // Cache más conservador para APIs dinámicas
-    DYNAMIC_MAX_AGE: 30, // 30 segundos
-    DYNAMIC_STALE_WHILE_REVALIDATE: 60, // 1 minuto
+    
+    DYNAMIC_MAX_AGE: 30,
+    DYNAMIC_STALE_WHILE_REVALIDATE: 60,
 
-    // Cache de error para evitar martilleo
-    ERROR_CACHE: 15, // 15 segundos de cache en errores
+    
+    ERROR_CACHE: 15,
   },
 
-  // Circuit breaker settings
+  
   CIRCUIT_BREAKER: {
-    FAILURE_THRESHOLD: 3, // Fallos antes de abrir circuito
-    RECOVERY_TIMEOUT: 30000, // 30s antes de intentar recovery
-    SUCCESS_THRESHOLD: 2, // Éxitos para cerrar circuito
+    FAILURE_THRESHOLD: 3,
+    RECOVERY_TIMEOUT: 30000,
+    SUCCESS_THRESHOLD: 2,
   },
 
-  // Rate limiting más agresivo
+  
   RATE_LIMITS: {
-    PER_IP_PER_MINUTE: 15, // Reducido de 20 a 15
-    BURST_ALLOWANCE: 5, // Máximo burst permitido
+    PER_IP_PER_MINUTE: 15,
+    BURST_ALLOWANCE: 5,
   }
 };

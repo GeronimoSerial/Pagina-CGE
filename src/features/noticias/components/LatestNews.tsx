@@ -8,12 +8,7 @@ interface LatestNewsStaticProps {
   noticias: any[];
 }
 
-/**
- * Componente estático que muestra las últimas noticias pre-renderizadas
- * No hace API calls - Todo el contenido viene del SSG de la página principal
- */
 export default function LatestNewsStatic({ noticias }: LatestNewsStaticProps) {
-  // Convertir datos de Strapi a formato esperado
   const noticiasFormateadas: Noticia[] = noticias
     .slice(0, 6)
     .map((noticia: any) => ({
@@ -28,7 +23,7 @@ export default function LatestNewsStatic({ noticias }: LatestNewsStaticProps) {
       portada: noticia.portada || { url: '' },
       imagen: noticia.imagen || [],
       contenido: noticia.contenido || noticia.resumen || '',
-      publicado: true, // Solo mostramos noticias publicadas
+      publicado: true,  
     }));
 
   return (

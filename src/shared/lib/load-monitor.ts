@@ -1,7 +1,4 @@
-/**
- * Sistema de monitoreo simplificado para pruebas de carga
- * Captura métricas clave durante picos de tráfico
- */
+ 
 
 interface MetricSnapshot {
     timestamp: number;
@@ -108,7 +105,6 @@ class LoadTestMonitor {
     }
 }
 
-// Instancia global del monitor
 export const loadMonitor = new LoadTestMonitor();
 
 // Middleware helper para Next.js

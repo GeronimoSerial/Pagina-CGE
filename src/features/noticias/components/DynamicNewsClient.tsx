@@ -6,7 +6,6 @@ import NewsGrid from './NewsGrid';
 import SimplePagination from './SimplePagination';
 import { Noticia } from '@/shared/interfaces';
 
-// Hook optimizado para debouncing
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
@@ -27,10 +26,7 @@ interface DynamicNewsClientProps {
   categorias: Array<{ id: number; nombre: string }>;
 }
 
-/**
- * Componente dinámico que SOLO se activa cuando hay filtros
- * Hace API calls únicamente para búsquedas y filtros
- */
+
 export default function DynamicNewsClient({
   categorias,
 }: DynamicNewsClientProps) {
@@ -48,10 +44,8 @@ export default function DynamicNewsClient({
   const desde = searchParams.get('desde') || '';
   const hasta = searchParams.get('hasta') || '';
 
-  // Debounce para búsquedas
   const debouncedQ = useDebounce(q, 500);
 
-  // Cache key simplificado
   const cacheBuster = useMemo(() => {
     const pageGroup = Math.floor((currentPage - 1) / 5);
     const hasFilters = debouncedQ || categoria || desde || hasta;
@@ -66,7 +60,6 @@ export default function DynamicNewsClient({
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-      // OPTIMIZACIÓN: Cliente directo a Strapi (eliminar doble hop)
       const params = new URLSearchParams({
         'pagination[page]': String(currentPage),
         'pagination[pageSize]': '6',
@@ -102,7 +95,6 @@ export default function DynamicNewsClient({
 
       const noticiasData = await noticiasRes.json();
 
-      // Parsear respuesta directa de Strapi (no de Next.js API)
       const mapeadas: Noticia[] = noticiasData.data.map((noticia: any) => ({
         id: noticia.id,
         autor: noticia.autor || 'Redacción CGE',
@@ -163,13 +155,11 @@ export default function DynamicNewsClient({
     );
   }
 
-  // Separar noticias destacadas de regulares
   const noticiasDestacadas = noticias.filter((noticia) => noticia.esImportante);
   const noticiasRegulares = noticias.filter((noticia) => !noticia.esImportante);
 
   return (
     <div className="space-y-8">
-      {/* Resultados de filtros */}
       <div className="flex items-center justify-between">
         <div className="text-sm text-gray-600">
           {noticias.length > 0

@@ -9,7 +9,6 @@ import { clearNavigationCache } from '@/features/tramites/services/docs-data';
 
 export async function POST(request: NextRequest) {
   try {
-    // Log detallado para debugging
     const authHeader = request.headers.get('authorization');
     const userAgent = request.headers.get('user-agent');
     const body = await request.json();
@@ -22,7 +21,6 @@ export async function POST(request: NextRequest) {
       headers: Object.fromEntries(request.headers.entries()),
     });
 
-    // Verificar token
     const expectedToken = process.env.REVALIDATE_SECRET_TOKEN;
     if (!expectedToken || authHeader !== `Bearer ${expectedToken}`) {
       console.log('❌ Unauthorized webhook attempt');
@@ -31,11 +29,10 @@ export async function POST(request: NextRequest) {
 
     const { model, entry } = body;
 
-    // Revalidar según el contenido
     switch (model) {
       case 'noticia':
-        newsCache.clear(); // Limpiar cache de noticias en RAM
-        relatedCache.clear(); // Limpiar cache de noticias relacionadas
+        newsCache.clear(); 
+        relatedCache.clear(); 
         revalidatePath('/');
         revalidatePath('/noticias');
 
@@ -52,18 +49,16 @@ export async function POST(request: NextRequest) {
       case 'tramite':
         console.log('🔄 Processing tramite webhook...');
 
-        // Limpiar TODOS los caches relacionados con trámites
         try {
-          tramitesCache.clear(); // Cache en memoria (30 días)
+          tramitesCache.clear();
           console.log('✅ Memory cache cleared');
 
-          clearNavigationCache(); // Cache local (5 minutos)
+          clearNavigationCache();
           console.log('✅ Local navigation cache cleared');
         } catch (error) {
           console.error('❌ Error clearing caches:', error);
         }
 
-        // Revalidar paths con layout para forzar regeneración del sidebar
         try {
           revalidatePath('/tramites');
           console.log('✅ Revalidated /tramites');
@@ -80,7 +75,7 @@ export async function POST(request: NextRequest) {
           }
         } catch (error) {
           console.error('❌ Error revalidating paths:', error);
-          throw error; // Re-throw to ensure webhook fails if revalidation fails
+          throw error;
         }
 
         console.log(
@@ -96,11 +91,11 @@ export async function POST(request: NextRequest) {
           newsCache.clear();
           tramitesCache.clear();
           relatedCache.clear();
-          clearNavigationCache(); // Limpiar también cache local de navegación
+          clearNavigationCache();  
           console.log('✅ All caches cleared');
 
           revalidatePath('/');
-          revalidatePath('/tramites', 'layout'); // Asegurar que el layout se revalide
+          revalidatePath('/tramites', 'layout'); 
           console.log('✅ All paths revalidated');
         } catch (error) {
           console.error('❌ Error in fallback revalidation:', error);

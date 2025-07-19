@@ -14,7 +14,6 @@ export const cfImages = (url: string, width: number = 800, format: string = 'aut
         return `${STRAPI_URL}/cdn-cgi/image/width=${width},format=${format}${url}`;
     }
     
-    // Para cualquier otro caso, devolver la URL original
     return url;
 };
 
