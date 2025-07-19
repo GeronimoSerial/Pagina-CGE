@@ -19,7 +19,7 @@ class LoadTestMonitor {
     startRequest(): string {
         this.activeRequests++;
         this.totalRequests++;
-        const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
         return requestId;
     }
 
