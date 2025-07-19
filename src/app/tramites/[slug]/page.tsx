@@ -38,7 +38,7 @@ export default async function DocumentPage({ params }: PageProps) {
 
   const article: Article | null = await withCache(
     tramitesCache,
-    `tramite- ${slug}`,
+    `tramite-${slug}`,
     async () => await getTramiteArticleBySlug(slug),
   );
 

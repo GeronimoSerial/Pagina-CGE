@@ -1,7 +1,7 @@
 export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || '';
+  process.env.NEXT_PUBLIC_API_URL || 'https://devcms.geroserial.com/api';
 export const STRAPI_URL =
-  process.env.NEXT_PUBLIC_STRAPI_URL || '';
+  process.env.NEXT_PUBLIC_STRAPI_URL || 'https://devcms.geroserial.com';
 
  
 export const PERFORMANCE_CONFIG = {

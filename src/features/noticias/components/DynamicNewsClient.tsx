@@ -1,10 +1,11 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import NewsGrid from './NewsGrid';
 import SimplePagination from './SimplePagination';
 import { Noticia } from '@/shared/interfaces';
+import { STRAPI_URL } from '@/shared/lib/config';
 
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -25,7 +26,6 @@ function useDebounce<T>(value: T, delay: number): T {
 interface DynamicNewsClientProps {
   categorias: Array<{ id: number; nombre: string }>;
 }
-
 
 export default function DynamicNewsClient({
   categorias,
@@ -75,7 +75,7 @@ export default function DynamicNewsClient({
       });
 
       const noticiasRes = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/noticias?${params.toString()}`,
+        `${STRAPI_URL}/api/noticias?${params.toString()}`,
         {
           signal: controller.signal,
           headers: {
