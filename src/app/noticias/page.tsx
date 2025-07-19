@@ -33,8 +33,8 @@ export const metadata: Metadata = {
   },
 };
 
-// ISR: Revalidar cada 1 hora para mantener contenido fresco automáticamente
-export const revalidate = 3600;
+// ISR: Revalidar cada 30 días  api/revalidate se encarga
+export const revalidate = 2592000;
 
 export default async function NoticiasPage() {
   // Pre-renderizar contenido inicial (SSG) - Sin API calls del usuario

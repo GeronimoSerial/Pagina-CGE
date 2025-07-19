@@ -42,12 +42,20 @@ export const metadata: Metadata = {
   },
 };
 
-// ISR: Revalidar cada 2 horas para mantener noticias principales frescas
-export const revalidate = 7200;
+export const revalidate = 3600; 
 
 export default async function PagPrincipal() {
-  // Pre-renderizar últimas noticias (SSG) - Sin API calls del usuario
-  const latestNewsData = await getNoticiasPaginadas(1, 6);
+  let latestNewsData;
+  
+  try {
+    latestNewsData = await getNoticiasPaginadas(1, 4); 
+  } catch (error) {
+    console.error('Error loading home page news:', error);
+    latestNewsData = {
+      noticias: [],
+      pagination: { page: 1, pageCount: 0, pageSize: 4, total: 0 }
+    };
+  }
 
   return (
     <div className="min-h-screen">

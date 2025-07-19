@@ -1,21 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
+import {
+  newsCache,
+  tramitesCache,
+  relatedCache,
+} from '@/shared/lib/aggressive-cache';
+import { clearNavigationCache } from '@/features/tramites/services/docs-data';
 
 export async function POST(request: NextRequest) {
   try {
-    // Log detallado para debugging
     const authHeader = request.headers.get('authorization');
     const userAgent = request.headers.get('user-agent');
     const body = await request.json();
-    
+
     console.log('🔔 Webhook received:', {
       timestamp: new Date().toISOString(),
       authHeader: authHeader ? 'Present' : 'Missing',
       userAgent,
-      body: JSON.stringify(body, null, 2)
+      body: JSON.stringify(body, null, 2),
+      headers: Object.fromEntries(request.headers.entries()),
     });
 
-    // Verificar token
     const expectedToken = process.env.REVALIDATE_SECRET_TOKEN;
     if (!expectedToken || authHeader !== `Bearer ${expectedToken}`) {
       console.log('❌ Unauthorized webhook attempt');
@@ -24,47 +29,97 @@ export async function POST(request: NextRequest) {
 
     const { model, entry } = body;
 
-    // Revalidar según el contenido
     switch (model) {
       case 'noticia':
-        await revalidatePath('/');
-        await revalidatePath('/noticias');
-        
+        newsCache.clear(); 
+        relatedCache.clear(); 
+        revalidatePath('/');
+        revalidatePath('/noticias');
+
         if (entry?.slug) {
-          await revalidatePath(`/noticias/${entry.slug}`);
+          revalidatePath(`/noticias/${entry.slug}`);
         }
-        
-        console.log('✅ Revalidated noticias:', entry?.slug || 'all');
+
+        console.log(
+          '✅ Revalidated noticias and related cache:',
+          entry?.slug || 'all',
+        );
         break;
 
       case 'tramite':
-        await revalidatePath('/tramites');
-        
-        if (entry?.slug) {
-          await revalidatePath(`/tramites/${entry.slug}`);
+        console.log('🔄 Processing tramite webhook...');
+
+        try {
+          tramitesCache.clear();
+          console.log('✅ Memory cache cleared');
+
+          clearNavigationCache();
+          console.log('✅ Local navigation cache cleared');
+        } catch (error) {
+          console.error('❌ Error clearing caches:', error);
         }
-        
-        console.log('✅ Revalidated tramites:', entry?.slug || 'all');
+
+        try {
+          revalidatePath('/tramites');
+          console.log('✅ Revalidated /tramites');
+
+          revalidatePath('/tramites', 'layout');
+          console.log('✅ Revalidated /tramites layout');
+
+          if (entry?.slug) {
+            revalidatePath(`/tramites/${entry.slug}`);
+            console.log(`✅ Revalidated /tramites/${entry.slug}`);
+
+            revalidatePath(`/tramites/${entry.slug}`, 'layout');
+            console.log(`✅ Revalidated /tramites/${entry.slug} layout`);
+          }
+        } catch (error) {
+          console.error('❌ Error revalidating paths:', error);
+          throw error;
+        }
+
+        console.log(
+          '✅ Tramite webhook completed successfully:',
+          entry?.slug || 'all',
+        );
         break;
 
       default:
-        await revalidatePath('/');
-        console.log('✅ Revalidated all paths (fallback)');
+        console.log('🔄 Processing unknown model webhook (fallback)...');
+
+        try {
+          newsCache.clear();
+          tramitesCache.clear();
+          relatedCache.clear();
+          clearNavigationCache();  
+          console.log('✅ All caches cleared');
+
+          revalidatePath('/');
+          revalidatePath('/tramites', 'layout'); 
+          console.log('✅ All paths revalidated');
+        } catch (error) {
+          console.error('❌ Error in fallback revalidation:', error);
+          throw error;
+        }
+
+        console.log('✅ Fallback webhook completed successfully');
     }
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
-      revalidated: true, 
+      revalidated: true,
       model,
       entry: entry?.slug,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-
   } catch (error) {
     console.error('❌ Webhook error:', error);
-    return NextResponse.json({ 
-      error: 'Internal Server Error',
-      message: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Internal Server Error',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 },
+    );
   }
 }

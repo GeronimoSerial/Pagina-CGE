@@ -1,16 +1,23 @@
 import React, { ReactNode, Suspense } from 'react';
 import { ResponsiveNav } from '@/features/tramites/navigation/responsive-nav';
 
-// ISR: Revalidar cada 7 días - La navegación de trámites es muy estable
-export const revalidate = 604800;
+export const revalidate = 2592000; // 30 días
 
-// Componente de navegación que se carga de forma diferida
 async function NavigationLoader() {
   const { getTramitesNavigation } = await import(
     '@/features/tramites/services/docs-data'
   );
+  const { withCache, tramitesCache } = await import(
+    '@/shared/lib/aggressive-cache'
+  );
+
   try {
-    const navigationSections = await getTramitesNavigation();
+    const navigationSections = await withCache(
+      tramitesCache,
+      'tramites-navigation',
+      getTramitesNavigation,
+    );
+
     return <ResponsiveNav sections={navigationSections} />;
   } catch (error) {
     console.error('Error loading navigation:', error);

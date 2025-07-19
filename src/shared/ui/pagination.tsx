@@ -95,7 +95,6 @@ const Pagination = ({
       itemRender={itemRender}
       locale={localeES}
       showLessItems
-      // locale={localeES}
       className={cn(
         'flex items-center gap-2',
         '[&>li]:list-none [&>li]:m-0',

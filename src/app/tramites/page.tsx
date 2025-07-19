@@ -6,12 +6,17 @@ import {
 import ReactMarkdown from 'react-markdown';
 import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
 import { Clock } from 'lucide-react';
+import { tramitesCache, withCache } from '@/shared/lib/aggressive-cache';
 
-// ISR: Revalidar cada 7 días - Contenido de trámites es estable
-export const revalidate = 604800;
+export const revalidate = 2592000; // 30 días
 
 export default async function IntroduccionPage() {
-  const article: Article | null = await getTramiteArticleBySlug('introduccion');
+  const article = await withCache(
+    tramitesCache,
+    'tramite-introduccion',
+    async (): Promise<Article | null> =>
+      getTramiteArticleBySlug('introduccion'),
+  );
 
   if (!article) {
     notFound();
@@ -72,7 +77,6 @@ export default async function IntroduccionPage() {
   );
 }
 
-// Generar metadatos dinámicos
 export async function generateMetadata() {
   const article = await getTramiteArticleBySlug('introduccion');
 
