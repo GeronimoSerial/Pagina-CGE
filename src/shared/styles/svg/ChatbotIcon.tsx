@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export const ChatbotIcon = ({ size = 24 }: { size?: number }) => {
   return (

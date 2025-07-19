@@ -44,7 +44,7 @@ export async function GET() {
           summary: loadMonitor.getLoadReport(),
           metrics: metrics,
           circuitBreakers: circuitBreakers,
-          caches: cacheStats, 
+          caches: cacheStats,
           system: systemInfo,
         },
       },

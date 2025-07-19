@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from "react";
-import { Search } from "lucide-react";
+import React, { useRef, useEffect } from 'react';
+import { Search } from 'lucide-react';
 
 interface SearchInputProps {
   value: string;
@@ -18,22 +18,22 @@ const SearchInput: React.FC<SearchInputProps> = ({
   placeholder,
   className,
   categories = [],
-  selectedCategory = "",
+  selectedCategory = '',
   onCategoryChange,
-  allLabel = "Todas",
+  allLabel = 'Todas',
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.altKey && (e.key === "s" || e.key === "S")) {
+      if (e.altKey && (e.key === 's' || e.key === 'S')) {
         e.preventDefault();
         inputRef.current?.focus();
       }
     };
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
 
@@ -44,11 +44,11 @@ const SearchInput: React.FC<SearchInputProps> = ({
         <input
           ref={inputRef}
           type="search"
-          placeholder={placeholder || "Buscar..."}
+          placeholder={placeholder || 'Buscar...'}
           className={`w-full pl-10 bg-white border-2 border-gray-300 rounded-xl py-2.5 px-4 
             focus:outline-none focus:ring-2 focus:ring-[#3D8B37]/30 focus:border-[#3D8B37] 
             transition-all duration-200 ease-in-out text-sm placeholder:text-gray-500 
-            hover:border-[#3D8B37] shadow-sm ${className || ""}`}
+            hover:border-[#3D8B37] shadow-sm ${className || ''}`}
           value={value}
           onChange={onChange}
         />
@@ -60,10 +60,10 @@ const SearchInput: React.FC<SearchInputProps> = ({
             className={`px-4 py-2 text-sm rounded-xl transition-all duration-200 border
               ${
                 !selectedCategory
-                  ? "bg-[#216B1D] hover:bg-[#195016] text-white border-transparent font-medium shadow-md"
-                  : "text-gray-700 border-gray-200 bg-white hover:border-[#3D8B37] hover:text-[#3D8B37] hover:bg-[#3D8B37]/10 shadow-sm"
+                  ? 'bg-[#216B1D] hover:bg-[#195016] text-white border-transparent font-medium shadow-md'
+                  : 'text-gray-700 border-gray-200 bg-white hover:border-[#3D8B37] hover:text-[#3D8B37] hover:bg-[#3D8B37]/10 shadow-sm'
               }`}
-            onClick={() => onCategoryChange("")}
+            onClick={() => onCategoryChange('')}
           >
             {allLabel}
           </button>
@@ -73,8 +73,8 @@ const SearchInput: React.FC<SearchInputProps> = ({
               className={`px-4 py-2 text-sm rounded-xl transition-all duration-200 border
                 ${
                   selectedCategory === cat
-                    ? "bg-[#205C3B] border-transparent text-white font-medium shadow-md hover:bg-[#194931]"
-                    : "text-gray-800 border-gray-200 bg-white hover:border-[#205C3B] hover:text-[#205C3B] hover:bg-[#205C3B]/10 shadow-sm"
+                    ? 'bg-[#205C3B] border-transparent text-white font-medium shadow-md hover:bg-[#194931]'
+                    : 'text-gray-800 border-gray-200 bg-white hover:border-[#205C3B] hover:text-[#205C3B] hover:bg-[#205C3B]/10 shadow-sm'
                 }`}
               onClick={() => onCategoryChange(cat)}
             >

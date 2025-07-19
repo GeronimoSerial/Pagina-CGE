@@ -1,4 +1,3 @@
-
 import { Loader2, SearchIcon, Building2 } from 'lucide-react';
 import React, { Suspense } from 'react';
 import { AccordionContent, AccordionItem } from '@/shared/ui/accordion';

@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  serverExternalPackages: ['sharp'], 
+  serverExternalPackages: ['sharp'],
 
   images: {
     remotePatterns: [
@@ -19,10 +19,10 @@ const nextConfig = {
     ],
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 7200,
-    dangerouslyAllowSVG: false, 
+    dangerouslyAllowSVG: false,
   },
 
-  compress: true, 
+  compress: true,
 
   async headers() {
     return [

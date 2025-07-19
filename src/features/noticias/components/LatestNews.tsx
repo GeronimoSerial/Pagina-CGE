@@ -23,7 +23,7 @@ export default function LatestNewsStatic({ noticias }: LatestNewsStaticProps) {
       portada: noticia.portada || { url: '' },
       imagen: noticia.imagen || [],
       contenido: noticia.contenido || noticia.resumen || '',
-      publicado: true,  
+      publicado: true,
     }));
 
   return (

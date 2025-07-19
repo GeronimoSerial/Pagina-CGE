@@ -20,14 +20,14 @@ const SimplePagination = memo(function SimplePagination({
   const getVisiblePages = () => {
     const maxVisible = 5;
     const delta = Math.floor(maxVisible / 2);
-    
+
     let start = Math.max(1, currentPage - delta);
     let end = Math.min(totalPages, start + maxVisible - 1);
-    
+
     if (end - start + 1 < maxVisible) {
       start = Math.max(1, end - maxVisible + 1);
     }
-    
+
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   };
 
@@ -35,12 +35,13 @@ const SimplePagination = memo(function SimplePagination({
   const showFirstPage = visiblePages[0] > 1;
   const showLastPage = visiblePages[visiblePages.length - 1] < totalPages;
   const showFirstEllipsis = visiblePages[0] > 2;
-  const showLastEllipsis = visiblePages[visiblePages.length - 1] < totalPages - 1;
+  const showLastEllipsis =
+    visiblePages[visiblePages.length - 1] < totalPages - 1;
 
   return (
-    <nav 
-      className="flex justify-center items-center gap-1 mt-8" 
-      role="navigation" 
+    <nav
+      className="flex justify-center items-center gap-1 mt-8"
+      role="navigation"
       aria-label="Paginación de noticias"
     >
       <Button
@@ -59,13 +60,13 @@ const SimplePagination = memo(function SimplePagination({
       {showFirstPage && (
         <>
           <Button
-            variant={1 === currentPage ? "default" : "outline"}
+            variant={1 === currentPage ? 'default' : 'outline'}
             size="sm"
             onClick={() => onPageChange(1)}
             disabled={loading}
             className="px-3 py-2 min-w-[40px]"
             aria-label="Ir a página 1"
-            aria-current={1 === currentPage ? "page" : undefined}
+            aria-current={1 === currentPage ? 'page' : undefined}
           >
             1
           </Button>
@@ -81,13 +82,13 @@ const SimplePagination = memo(function SimplePagination({
       {visiblePages.map((page) => (
         <Button
           key={page}
-          variant={page === currentPage ? "default" : "outline"}
+          variant={page === currentPage ? 'default' : 'outline'}
           size="sm"
           onClick={() => onPageChange(page)}
           disabled={loading}
           className="px-3 py-2 min-w-[40px]"
           aria-label={`Ir a página ${page}`}
-          aria-current={page === currentPage ? "page" : undefined}
+          aria-current={page === currentPage ? 'page' : undefined}
         >
           {page}
         </Button>
@@ -102,13 +103,13 @@ const SimplePagination = memo(function SimplePagination({
             </span>
           )}
           <Button
-            variant={totalPages === currentPage ? "default" : "outline"}
+            variant={totalPages === currentPage ? 'default' : 'outline'}
             size="sm"
             onClick={() => onPageChange(totalPages)}
             disabled={loading}
             className="px-3 py-2 min-w-[40px]"
             aria-label={`Ir a página ${totalPages}`}
-            aria-current={totalPages === currentPage ? "page" : undefined}
+            aria-current={totalPages === currentPage ? 'page' : undefined}
           >
             {totalPages}
           </Button>

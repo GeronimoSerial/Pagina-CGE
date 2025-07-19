@@ -42,18 +42,18 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 3600; 
+export const revalidate = 3600;
 
 export default async function PagPrincipal() {
   let latestNewsData;
-  
+
   try {
-    latestNewsData = await getNoticiasPaginadas(1, 4); 
+    latestNewsData = await getNoticiasPaginadas(1, 4);
   } catch (error) {
     console.error('Error loading home page news:', error);
     latestNewsData = {
       noticias: [],
-      pagination: { page: 1, pageCount: 0, pageSize: 4, total: 0 }
+      pagination: { page: 1, pageCount: 0, pageSize: 4, total: 0 },
     };
   }
 

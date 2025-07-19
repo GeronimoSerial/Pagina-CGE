@@ -3,7 +3,11 @@ import { Noticia } from '@/shared/interfaces';
 import qs from 'qs';
 import { cfImages } from '@/shared/lib/cloudflare-images';
 
-function createCacheKey(page: number, pageSize: number, filters: Record<string, any>): string {
+function createCacheKey(
+  page: number,
+  pageSize: number,
+  filters: Record<string, any>,
+): string {
   const hasFilters = Object.keys(filters).length > 0;
   const bucket = Math.floor(page / 3);
 
@@ -38,7 +42,6 @@ export async function getAllNoticias() {
   return data;
 }
 
-
 export async function getNoticiasPaginadas(
   page: number = 1,
   pageSize: number = 4,
@@ -48,14 +51,22 @@ export async function getNoticiasPaginadas(
 
   const query = qs.stringify(
     {
-      fields: ['titulo', 'resumen', 'fecha', 'categoria', 'esImportante', 'slug', 'createdAt'],
+      fields: [
+        'titulo',
+        'resumen',
+        'fecha',
+        'categoria',
+        'esImportante',
+        'slug',
+        'createdAt',
+      ],
       populate: {
         portada: {
-          fields: ['url', 'alternativeText']
+          fields: ['url', 'alternativeText'],
         },
         imagen: {
-          fields: ['url', 'width', 'height', 'alternativeText']
-        }
+          fields: ['url', 'width', 'height', 'alternativeText'],
+        },
       },
       sort: ['createdAt:desc', 'fecha:desc', 'id:desc'],
       pagination: { page, pageSize: Math.min(pageSize, 20) },
@@ -69,27 +80,31 @@ export async function getNoticiasPaginadas(
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), PERFORMANCE_CONFIG.API_TIMEOUT);
+    const timeoutId = setTimeout(
+      () => controller.abort(),
+      PERFORMANCE_CONFIG.API_TIMEOUT,
+    );
 
     const res = await fetch(`${API_URL}/noticias?${query}`, {
       signal: controller.signal,
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Cache-Control': `max-age=${PERFORMANCE_CONFIG.CACHE.DYNAMIC_MAX_AGE}`,
-        'Connection': 'keep-alive',
+        Connection: 'keep-alive',
       },
     });
 
     clearTimeout(timeoutId);
 
     if (!res.ok) {
-      console.error(`API Error: ${res.status} ${res.statusText} for ${API_URL}/noticias`);
+      console.error(
+        `API Error: ${res.status} ${res.statusText} for ${API_URL}/noticias`,
+      );
       throw new Error(`HTTP ${res.status}: Failed to fetch paginated noticias`);
     }
 
     const { data, meta } = await res.json();
     return { noticias: data, pagination: meta.pagination };
-
   } catch (error) {
     console.error('Error in getNoticiasPaginadas:', error);
 
@@ -99,12 +114,11 @@ export async function getNoticiasPaginadas(
         page: page,
         pageCount: 0,
         pageSize: pageSize,
-        total: 0
-      }
+        total: 0,
+      },
     };
   }
 }
-
 
 export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
   const query = qs.stringify(
@@ -114,11 +128,11 @@ export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
       },
       populate: {
         portada: {
-          fields: ['url', 'alternativeText']
+          fields: ['url', 'alternativeText'],
         },
         imagen: {
-          fields: ['url', 'width', 'height', 'alternativeText']
-        }
+          fields: ['url', 'width', 'height', 'alternativeText'],
+        },
       },
     },
     { encodeValuesOnly: true },
@@ -152,8 +166,10 @@ export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
   };
 }
 
-
-export async function getNoticiasRelacionadas(categoria: string, excludeSlug?: string) {
+export async function getNoticiasRelacionadas(
+  categoria: string,
+  excludeSlug?: string,
+) {
   const filters: any = {
     categoria: { $eq: categoria },
     publicado: { $eq: true },
@@ -170,8 +186,8 @@ export async function getNoticiasRelacionadas(categoria: string, excludeSlug?: s
       fields: ['titulo', 'resumen', 'fecha', 'categoria', 'slug'],
       populate: {
         portada: {
-          fields: ['url', 'alternativeText']
-        }
+          fields: ['url', 'alternativeText'],
+        },
       },
       sort: ['createdAt:desc', 'fecha:desc'],
     },
@@ -205,9 +221,9 @@ export function getImagenes(noticia: Noticia) {
   );
 }
 
-
-export async function getNoticiasCategorias(): Promise<Array<{ id: number; nombre: string }>> {
-
+export async function getNoticiasCategorias(): Promise<
+  Array<{ id: number; nombre: string }>
+> {
   const query = qs.stringify(
     {
       fields: ['categoria'],
@@ -226,14 +242,14 @@ export async function getNoticiasCategorias(): Promise<Array<{ id: number; nombr
 
   const { data } = await res.json();
 
-
   const categoriasUnicas = Array.from(
     new Set(data.map((item: any) => item.categoria).filter(Boolean)),
   );
 
-
-  return (categoriasUnicas as string[]).map((categoria: string, index: number) => ({
-    id: index + 1,
-    nombre: categoria,
-  }));
+  return (categoriasUnicas as string[]).map(
+    (categoria: string, index: number) => ({
+      id: index + 1,
+      nombre: categoria,
+    }),
+  );
 }

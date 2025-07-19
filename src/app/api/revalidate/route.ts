@@ -31,8 +31,8 @@ export async function POST(request: NextRequest) {
 
     switch (model) {
       case 'noticia':
-        newsCache.clear(); 
-        relatedCache.clear(); 
+        newsCache.clear();
+        relatedCache.clear();
         revalidatePath('/');
         revalidatePath('/noticias');
 
@@ -91,11 +91,11 @@ export async function POST(request: NextRequest) {
           newsCache.clear();
           tramitesCache.clear();
           relatedCache.clear();
-          clearNavigationCache();  
+          clearNavigationCache();
           console.log('✅ All caches cleared');
 
           revalidatePath('/');
-          revalidatePath('/tramites', 'layout'); 
+          revalidatePath('/tramites', 'layout');
           console.log('✅ All paths revalidated');
         } catch (error) {
           console.error('❌ Error in fallback revalidation:', error);

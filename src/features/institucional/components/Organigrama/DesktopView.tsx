@@ -1,8 +1,8 @@
-import { Building2, Briefcase } from "lucide-react";
-import { Tree, TreeNode } from "react-organizational-chart";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { MemberInfo } from "../MemberDetails";
-import { NodeContent } from "../NodeContent";
+import { Building2, Briefcase } from 'lucide-react';
+import { Tree, TreeNode } from 'react-organizational-chart';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
+import { MemberInfo } from '../MemberDetails';
+import { NodeContent } from '../NodeContent';
 
 interface OrganizationChartProps {
   members: MemberInfo[];
@@ -17,10 +17,10 @@ export const OrganizationChart = ({
   members,
   onViewDetails,
 }: OrganizationChartProps) => {
-  const presidente = members.find((m) => m.position === "Presidente");
-  const secretaria = members.find((m) => m.position === "Secretaria General");
-  const vocalesEstatales = members.filter((m) => m.department === "Estatal");
-  const vocalesGremiales = members.filter((m) => m.department === "Gremial");
+  const presidente = members.find((m) => m.position === 'Presidente');
+  const secretaria = members.find((m) => m.position === 'Secretaria General');
+  const vocalesEstatales = members.filter((m) => m.department === 'Estatal');
+  const vocalesGremiales = members.filter((m) => m.department === 'Gremial');
 
   return (
     <div className="w-full h-full overflow-hidden bg-gradient-to-br from-green-50 via-slate-50 to-white rounded-xl shadow-lg border border-gray-200 p-1">

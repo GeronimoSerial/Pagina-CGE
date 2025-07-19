@@ -1,4 +1,3 @@
-
 import type { Escuela } from '@/shared/interfaces';
 import { normalizarTexto } from '@/shared/lib/utils';
 export interface SearchIndex {
@@ -102,7 +101,6 @@ export function filtrarEscuelas(
   escuelasFiltradas.forEach((escuela, idx) => {
     let puntuacion = 0;
 
-    
     if (
       escuela.nombre &&
       normalizarTexto(escuela.nombre) === terminoNormalizado
@@ -110,7 +108,6 @@ export function filtrarEscuelas(
       puntuacion += 5000;
     }
 
-    
     if (
       esPosibleCUE &&
       escuela.cue &&
@@ -119,7 +116,6 @@ export function filtrarEscuelas(
       puntuacion += 4000;
     }
 
-    
     if (
       escuela.nombre &&
       normalizarTexto(escuela.nombre).includes(terminoNormalizado)
@@ -127,7 +123,6 @@ export function filtrarEscuelas(
       puntuacion += 3000;
     }
 
-    
     if (
       escuela.director &&
       normalizarTexto(escuela.director).includes(terminoNormalizado)
@@ -135,7 +130,6 @@ export function filtrarEscuelas(
       puntuacion += 2000;
     }
 
-    
     if (
       escuela.localidad &&
       normalizarTexto(escuela.localidad).includes(terminoNormalizado)
@@ -143,15 +137,12 @@ export function filtrarEscuelas(
       puntuacion += 1500;
     }
 
-    
     if (puntuacion > 0) {
       puntuaciones.set(idx, puntuacion);
     }
   });
 
-  
   if (puntuaciones.size === 0) {
-    
     const terminosBusqueda = terminoNormalizado
       .split(/\s+/)
       .filter((term) => term.length > 2);
@@ -160,7 +151,6 @@ export function filtrarEscuelas(
       let puntuacion = 0;
       let terminosEncontrados = 0;
 
-      
       const cumpleTodosLosTerminos = terminosBusqueda.every((termino) => {
         const estaEnNombre = escuela.nombre
           ? normalizarTexto(escuela.nombre).includes(termino)
@@ -182,9 +172,7 @@ export function filtrarEscuelas(
         puntuacion += 500;
       }
 
-      
       terminosBusqueda.forEach((termino) => {
-        
         if (
           escuela.nombre &&
           normalizarTexto(escuela.nombre).includes(termino)
@@ -193,7 +181,6 @@ export function filtrarEscuelas(
           terminosEncontrados++;
         }
 
-        
         if (
           escuela.director &&
           normalizarTexto(escuela.director).includes(termino)
@@ -202,13 +189,11 @@ export function filtrarEscuelas(
           terminosEncontrados++;
         }
 
-        
         if (escuela.cue && String(escuela.cue).includes(termino)) {
           puntuacion += 40;
           terminosEncontrados++;
         }
 
-        
         if (
           escuela.localidad &&
           normalizarTexto(escuela.localidad).includes(termino)
@@ -218,21 +203,18 @@ export function filtrarEscuelas(
         }
       });
 
-      
       if (terminosBusqueda.length > 0) {
         const porcentajeEncontrado =
           terminosEncontrados / (terminosBusqueda.length * 4);
         puntuacion += Math.round(porcentajeEncontrado * 100);
       }
 
-      
       if (puntuacion > 0) {
         puntuaciones.set(idx, puntuacion);
       }
     });
   }
 
-  
   const limite = opciones.limite || 20;
 
   return Array.from(puntuaciones.entries())
@@ -308,7 +290,6 @@ export function buscarEscuelasAvanzado(
     const tipoEscuelaNormalizado = normalizarTexto(escuela.tipoEscuela);
 
     if (numeroEscuela) {
-      
       const escuelaNumeroMatch = nombreNormalizado.match(
         /escuela\s*(?:n[°º.]?)?\s*(\d+)/i,
       );
