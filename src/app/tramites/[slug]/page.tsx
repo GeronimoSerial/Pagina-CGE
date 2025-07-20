@@ -20,14 +20,7 @@ export async function generateStaticParams() {
     return slugs.map((slug) => ({ slug }));
   } catch (error) {
     console.warn('Error generating static params for tramites:', error);
-    return [
-      { slug: 'introduccion' },
-      { slug: 'articulo-11' },
-      { slug: 'articulo-22' },
-      { slug: 'articulo-27' },
-      { slug: 'articulo-28' },
-      { slug: 'accidentes-laborales' },
-    ];
+    return [];
   }
 }
 
