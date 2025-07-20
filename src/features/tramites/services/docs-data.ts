@@ -86,14 +86,6 @@ export function clearNavigationCache() {
 }
 
 export async function getTramitesNavigation(): Promise<NavSection[]> {
-  // const now = Date.now();
-  // if (navigationCache && now - cacheTimestamp < CACHE_DURATION) {
-  //   console.log('📋 Using cached navigation data');
-  //   return navigationCache;
-  // }
-
-  // console.log('🔄 Fetching fresh navigation data from API');
-
   const params = {
     fields: ['categoria', 'titulo', 'slug'],
     sort: ['categoria:asc', 'titulo:asc'],

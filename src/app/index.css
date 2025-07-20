@@ -96,6 +96,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
+  font-size: 90%;
 }
 .group:has(img[src]):not(:has(img[src=''])) .skeleton {
   display: none;
