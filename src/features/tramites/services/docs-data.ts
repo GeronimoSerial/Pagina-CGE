@@ -77,7 +77,7 @@ const categoriaMap: Record<number, string> = {
 
 let navigationCache: NavSection[] | null = null;
 let cacheTimestamp = 0;
-const CACHE_DURATION = 5 * 60 * 1000;
+// const CACHE_DURATION = 2592000;
 
 export function clearNavigationCache() {
   navigationCache = null;
@@ -86,13 +86,13 @@ export function clearNavigationCache() {
 }
 
 export async function getTramitesNavigation(): Promise<NavSection[]> {
-  const now = Date.now();
-  if (navigationCache && now - cacheTimestamp < CACHE_DURATION) {
-    console.log('📋 Using cached navigation data');
-    return navigationCache;
-  }
+  // const now = Date.now();
+  // if (navigationCache && now - cacheTimestamp < CACHE_DURATION) {
+  //   console.log('📋 Using cached navigation data');
+  //   return navigationCache;
+  // }
 
-  console.log('🔄 Fetching fresh navigation data from API');
+  // console.log('🔄 Fetching fresh navigation data from API');
 
   const params = {
     fields: ['categoria', 'titulo', 'slug'],
@@ -129,13 +129,13 @@ export async function getTramitesNavigation(): Promise<NavSection[]> {
   });
 
   navigationCache = sortedSections;
-  cacheTimestamp = now;
+  // cacheTimestamp = now;
 
-  console.log(
-    '✅ Navigation cache updated with',
-    sortedSections.length,
-    'sections',
-  );
+  // console.log(
+  //   '✅ Navigation cache updated with',
+  //   sortedSections.length,
+  //   'sections',
+  // );
   return sortedSections;
 }
 
