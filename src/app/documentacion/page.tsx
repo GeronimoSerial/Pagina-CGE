@@ -34,7 +34,7 @@ export default function Documentacion() {
     <main className="min-h-screen bg-gray-50">
       <HeroSection
         title="Documentación"
-        description="Encuentra todos los documentos, formularios y normativas necesarias para tus trámites"
+        description="Encontrá todos los documentos, formularios y normativas necesarias para tus trámites"
       />
       <InfoBar basePath="/documentacion" />
       <section>

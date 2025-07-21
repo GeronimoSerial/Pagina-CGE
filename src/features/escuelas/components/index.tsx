@@ -72,7 +72,7 @@ export default function EscuelasClient() {
                 Búsqueda de Instituciones
               </h2>
               <p className="text-sm text-gray-500">
-                Encuentra rápidamente cualquier institución.
+                Encontrá rápidamente cualquier institución.
               </p>
             </div>
           </div>

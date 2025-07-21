@@ -47,7 +47,7 @@ export default async function NoticiasPage() {
     <section>
       <HeroSection
         title="Noticias"
-        description="Encuentra información sobre eventos, actividades y noticias institucionales."
+        description="Encontrá información sobre eventos, actividades y noticias institucionales."
       />
       <Suspense
         fallback={

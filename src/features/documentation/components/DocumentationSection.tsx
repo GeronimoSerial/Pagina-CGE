@@ -166,7 +166,7 @@ const DocumentationSection = () => {
             <h2 className="text-lg font-semibold text-gray-800">
               {activeFilter === 'all'
                 ? 'Todos los documentos'
-                : `Documentos de ${activeFilter}`}
+                : `Documentos de ${activeFilter === 'guias' ? 'guías' : activeFilter}`}
             </h2>
             <span className="ml-2 text-sm text-gray-500">
               ({filteredDocuments.length} resultados)
@@ -248,7 +248,7 @@ const DocumentationSection = () => {
         {/* CTA final */}
         <div className="pt-8 text-center border-t border-gray-200">
           <h3 className="mb-3 text-lg font-medium text-gray-800">
-            ¿No encuentras lo que buscas?
+            ¿No encontrás lo que buscas?
           </h3>
           <p className="mx-auto mb-4 max-w-2xl text-gray-600">
             Estamos constantemente actualizando nuestra base de documentos. Si
