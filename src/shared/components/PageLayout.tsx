@@ -1,6 +1,6 @@
 import React from 'react';
 import { Separator } from '@/shared/ui/separator';
-import FAQSection from '@/shared/components/FAQSection';
+import dynamic from 'next/dynamic';
 import HeroSection from '@/shared/components/Hero';
 import {
   ContainerType,
@@ -10,6 +10,9 @@ import {
   getPageLayout,
 } from '@/shared/design-tokens/layout-tokens';
 import { cn } from '@/shared/lib/utils';
+
+// Lazy loading del FAQ - solo se carga cuando showFAQ=true
+const FAQSection = dynamic(() => import('@/shared/components/FAQSection'));
 
 interface HeroProps {
   title: string;

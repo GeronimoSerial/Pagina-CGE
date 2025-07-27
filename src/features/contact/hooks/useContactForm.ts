@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import emailjs from '@emailjs/browser';
 
 export interface ContactoForm {
   nombre: string;
@@ -32,6 +31,9 @@ export const useContactForm = () => {
   const onSubmit = async (data: ContactoForm) => {
     setButtonState('loading');
     try {
+      // Lazy loading de EmailJS - solo se carga cuando se envía el formulario
+      const emailjs = await import('@emailjs/browser');
+
       const templateParams = {
         name: data.nombre,
         email: data.email,

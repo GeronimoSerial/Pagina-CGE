@@ -1,6 +1,5 @@
 import { Card, CardContent } from '@/shared/ui/card';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { formatDate } from '@/shared/lib/date-utils';
 import { ArrowRight, CalendarDays, Tag } from 'lucide-react';
 import { getPortada } from '@/features/noticias/services/noticias';
 import { Noticia } from '@/shared/interfaces';
@@ -30,9 +29,7 @@ export function RegularNewsCard({ noticia }: { noticia: Noticia }) {
               <CalendarDays className="w-4 h-4" />
               <span className="text-xs tracking-wide">
                 {' '}
-                {format(new Date(noticia.fecha), 'EEE, d MMMM yyyy', {
-                  locale: es,
-                })}
+                {formatDate(noticia.fecha)}
               </span>
             </div>
             <div className="flex gap-1 items-center">

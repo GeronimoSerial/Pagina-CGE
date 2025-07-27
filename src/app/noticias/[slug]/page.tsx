@@ -14,8 +14,7 @@ import remarkGfm from 'remark-gfm';
 import { Separador } from '@/shared/components/Separador';
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale/es';
+import { formatDate } from '@/shared/lib/date-utils';
 import {
   newsCache,
   relatedCache,
@@ -156,9 +155,7 @@ export default async function NoticiaPage({ params }: PageProps) {
                     <div className="flex items-center">
                       <CalendarDays className="mr-2 w-4 h-4" />
                       <span className="text-xs tracking-wide">
-                        {format(new Date(noticia.fecha), 'EEE, d MMMM yyyy', {
-                          locale: es,
-                        })}
+                        {formatDate(noticia.fecha)}
                       </span>
                     </div>
                     <div className="flex items-center">
