@@ -31,7 +31,7 @@ export default function LatestNewsStatic({ noticias }: LatestNewsStaticProps) {
       <div className="flex flex-col gap-8 lg:flex-row lg:gap-16">
         <div className="w-full lg:w-96 lg:sticky lg:top-8 lg:self-start">
           <div className="relative mb-8">
-            <h2 className="mb-6 text-2xl font-semibold tracking-wide leading-tight text-gray-300 sm:text-4xl bg-gradient-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
+            <h2 className="mb-6 text-2xl font-semibold tracking-wide leading-tight text-gray-300 sm:text-4xl bg-linear-to-r from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
               ÚLTIMAS NOTICIAS
             </h2>
             <Separator className="bg-green-700 h-0.5" />

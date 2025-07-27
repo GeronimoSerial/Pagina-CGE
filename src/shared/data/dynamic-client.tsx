@@ -61,7 +61,7 @@ export const EscuelaDetalles = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center z-50">
         <div className="bg-white p-8 rounded-2xl shadow-xl flex flex-col items-center space-y-4 border border-gray-100 max-w-sm w-full mx-4">
           <div className="relative">
             <div className="w-16 h-16 rounded-full border-4 border-[#217A4B]/20"></div>

@@ -31,7 +31,7 @@ export const DesktopView = React.memo(
     };
 
     return (
-      <div className="hidden sm:block rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+      <div className="hidden sm:block rounded-lg overflow-hidden border border-gray-200 shadow-xs">
         <div
           ref={parentRef}
           className="overflow-auto max-h-[500px] w-full"
@@ -127,7 +127,7 @@ export const DesktopView = React.memo(
                       className="px-6 py-4 flex items-center"
                       style={{ width: `${columnWidths.nombre}%` }}
                     >
-                      <School className="h-4 w-4 text-[#217A4B] mr-2 flex-shrink-0" />
+                      <School className="h-4 w-4 text-[#217A4B] mr-2 shrink-0" />
                       <span className="text-gray-800 line-clamp-2 font-medium">
                         {escuela.nombre}
                       </span>

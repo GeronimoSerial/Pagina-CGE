@@ -39,7 +39,7 @@ export const MemberDetails = ({
         </DialogHeader>
 
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-6">
-          <div className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full overflow-hidden shadow-md bg-green-50 flex-shrink-0">
+          <div className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full overflow-hidden shadow-md bg-green-50 shrink-0">
             <Image
               src={member.imageUrl || '/placeholder.svg?height=144&width=144'}
               alt={member.name}
@@ -48,7 +48,7 @@ export const MemberDetails = ({
               height={500}
             />
           </div>
-          <div className="text-center sm:text-left flex-grow">
+          <div className="text-center sm:text-left grow">
             <p className="text-lg font-semibold text-green-600">
               {member.position}
             </p>
@@ -60,7 +60,7 @@ export const MemberDetails = ({
             <div className="mt-4 space-y-2 text-sm text-gray-600">
               {member.email && (
                 <div className="flex items-center justify-center sm:justify-start gap-2">
-                  <Mail size={18} className="text-green-600 flex-shrink-0" />
+                  <Mail size={18} className="text-green-600 shrink-0" />
                   <a
                     href={`mailto:${member.email}`}
                     className="hover:underline hover:text-green-700"
@@ -71,7 +71,7 @@ export const MemberDetails = ({
               )}
               {member.phone && (
                 <div className="flex items-center justify-center sm:justify-start gap-2">
-                  <Phone size={18} className="text-green-600 flex-shrink-0" />
+                  <Phone size={18} className="text-green-600 shrink-0" />
                   <a
                     href={`tel:${member.phone}`}
                     className="hover:underline hover:text-green-700"

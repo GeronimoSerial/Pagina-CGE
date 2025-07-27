@@ -25,7 +25,7 @@ export const MobileView = ({ members, onViewDetails }: MobileViewProps) => {
     <section className="max-w-2xl mx-auto space-y-3 px-3 pb-4">
       {/* Presidente */}
       {presidente && (
-        <Card className="border-primary/30 shadow-md bg-gradient-to-br from-green-50 to-white hover:shadow-lg transition-shadow duration-300">
+        <Card className="border-primary/30 shadow-md bg-linear-to-br from-green-50 to-white hover:shadow-lg transition-shadow duration-300">
           <CardContent className="p-4">
             <div className="text-center mb-3">
               <span className="text-xs font-medium text-primary/70 uppercase tracking-wider bg-primary/5 px-3 py-1 rounded-full">
@@ -52,7 +52,7 @@ export const MobileView = ({ members, onViewDetails }: MobileViewProps) => {
         {secretaria && (
           <AccordionItem
             value="Secretaría"
-            className="border-primary/10 bg-white rounded-lg shadow-sm"
+            className="border-primary/10 bg-white rounded-lg shadow-xs"
           >
             <AccordionTrigger className="py-3 px-4 text-primary font-medium hover:bg-green-50/50 rounded-t-lg">
               <div className="flex items-center gap-2">
@@ -79,7 +79,7 @@ export const MobileView = ({ members, onViewDetails }: MobileViewProps) => {
         {vocalesEstatales.length > 0 && (
           <AccordionItem
             value="estatales"
-            className="border-primary/10 bg-white rounded-lg shadow-sm"
+            className="border-primary/10 bg-white rounded-lg shadow-xs"
           >
             <AccordionTrigger className="py-3 px-4 text-primary font-medium hover:bg-green-50/50 rounded-t-lg">
               <div className="flex items-center gap-2">
@@ -111,7 +111,7 @@ export const MobileView = ({ members, onViewDetails }: MobileViewProps) => {
         {vocalesGremiales.length > 0 && (
           <AccordionItem
             value="gremiales"
-            className="border-primary/10 bg-white rounded-lg shadow-sm"
+            className="border-primary/10 bg-white rounded-lg shadow-xs"
           >
             <AccordionTrigger className="py-3 px-4 text-primary font-medium hover:bg-green-50/50 rounded-t-lg">
               <div className="flex items-center gap-2">
@@ -163,7 +163,7 @@ const MobileCardContent = ({
     >
       <div
         className={cn(
-          'relative rounded-full overflow-hidden bg-primary/10 flex-shrink-0 ring-2 ring-primary/20 ring-offset-1',
+          'relative rounded-full overflow-hidden bg-primary/10 shrink-0 ring-2 ring-primary/20 ring-offset-1',
           isPresident ? 'w-20 h-20' : 'w-14 h-14',
         )}
       >
@@ -175,7 +175,7 @@ const MobileCardContent = ({
       </div>
       <div
         className={cn(
-          'flex-grow min-w-0',
+          'grow min-w-0',
           isPresident && 'flex flex-col items-center',
         )}
       >
@@ -202,7 +202,7 @@ const MobileCardContent = ({
         </p>
         {member.email && (
           <p className="text-xs text-gray-500 mt-1 flex items-center gap-1 truncate">
-            <Mail className="w-3 h-3 flex-shrink-0" />
+            <Mail className="w-3 h-3 shrink-0" />
             <span className="truncate">{member.email}</span>
           </p>
         )}

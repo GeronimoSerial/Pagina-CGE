@@ -65,13 +65,13 @@ export const NodeContent = ({
                   </span>
                 )}
               </p>
-              <button className="mt-2 text-xs text-white bg-green-600 hover:bg-green-700 px-3 py-1 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+              <button className="mt-2 text-xs text-white bg-green-600 hover:bg-green-700 px-3 py-1 rounded-md transition-colors duration-200 focus:outline-hidden focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
                 Ver Detalles
               </button>
             </div>
           </div>
 
-          <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-lg" />
+          <div className="absolute inset-0 bg-linear-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-lg" />
         </CardContent>
       </Card>
     </div>

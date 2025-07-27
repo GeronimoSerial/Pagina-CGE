@@ -34,7 +34,7 @@ function CarouselSlide({
 
   return (
     <div
-      className="relative h-[16rem] md:h-[32rem] rounded-2xl overflow-hidden shadow-xl cursor-pointer"
+      className="relative h-64 md:h-128 rounded-2xl overflow-hidden shadow-xl cursor-pointer"
       onClick={onClick}
     >
       <Image
@@ -48,7 +48,7 @@ function CarouselSlide({
         blurDataURL={defaultBlur}
         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 800px"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-20" />
+      <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent z-20" />
       {(alt || description) && (
         <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8 z-30">
           {alt && (
@@ -57,7 +57,7 @@ function CarouselSlide({
             </h4>
           )}
           {description && (
-            <p className="text-white/90 drop-shadow text-xs md:text-lg max-w-3xl line-clamp-2 md:line-clamp-none">
+            <p className="text-white/90 drop-shadow-sm text-xs md:text-lg max-w-3xl line-clamp-2 md:line-clamp-none">
               {description}
             </p>
           )}

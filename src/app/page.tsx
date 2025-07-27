@@ -60,7 +60,6 @@ export default async function PagPrincipal() {
   return (
     <div className="page-bg-transparent">
       <main>
-
         <HeroMain />
         <Separator className="section-separator" />
 

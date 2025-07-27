@@ -27,7 +27,7 @@ function DesktopView() {
               id="que-es"
               className="text-2xl font-bold text-gray-800 mb-4 flex items-center"
             >
-              <MessageSquare className="h-6 w-6 text-[#3D8B37] mr-3 flex-shrink-0" />
+              <MessageSquare className="h-6 w-6 text-[#3D8B37] mr-3 shrink-0" />
               ¿Qué es el Chat Normativo?
             </h2>
             <p className="text-gray-600 leading-relaxed">
@@ -48,7 +48,7 @@ function DesktopView() {
               id="como-funciona"
               className="text-2xl font-bold text-gray-800 mb-6 flex items-center"
             >
-              <Sparkles className="h-6 w-6 text-[#3D8B37] mr-3 flex-shrink-0" />
+              <Sparkles className="h-6 w-6 text-[#3D8B37] mr-3 shrink-0" />
               ¿Cómo funciona?
             </h2>
 
@@ -132,7 +132,7 @@ function DesktopView() {
               id="info-oficial"
               className="text-2xl font-bold text-gray-800 mb-4 flex items-center"
             >
-              <Shield className="h-6 w-6 text-[#3D8B37] mr-3 flex-shrink-0" />
+              <Shield className="h-6 w-6 text-[#3D8B37] mr-3 shrink-0" />
               Basado en Documentación Oficial
             </h2>
             <div className="space-y-4">
@@ -146,13 +146,13 @@ function DesktopView() {
                   Importante:
                 </strong>{' '}
                 <p className="text-gray-800">
-                  <span className="inline-block w-2 h-2 bg-[#3D8B37] rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                  <span className="inline-block w-2 h-2 bg-[#3D8B37] rounded-full mt-2 mr-2 shrink-0"></span>
                   Toda información consultada deberá ser verificada en la
                   normativa vigente antes de tomar decisiones formales o
                   administrativas.
                 </p>
                 <p>
-                  <span className="inline-block w-2 h-2 bg-[#3D8B37] rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                  <span className="inline-block w-2 h-2 bg-[#3D8B37] rounded-full mt-2 mr-2 shrink-0"></span>
                   El uso del asistente no exime al usuario de verificar la
                   fuente oficial correspondiente.
                 </p>
@@ -170,7 +170,7 @@ function DesktopView() {
             href={linkChat}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center w-full px-8 py-4 rounded-xl bg-[#216B1D] hover:bg-[#195016] text-white font-medium text-lg transition-all duration-200 shadow-md hover:shadow-lg focus:ring-2 focus:ring-offset-2 focus:ring-[#3D8B37] focus:outline-none"
+            className="flex items-center justify-center w-full px-8 py-4 rounded-xl bg-[#216B1D] hover:bg-[#195016] text-white font-medium text-lg transition-all duration-200 shadow-md hover:shadow-lg focus:ring-2 focus:ring-offset-2 focus:ring-[#3D8B37] focus:outline-hidden"
             aria-label="Iniciar Chat Normativo CGE"
           >
             Iniciar Chat
@@ -220,7 +220,7 @@ function MobileView() {
       {/* Información en formato compacto */}
       <div className="space-y-6">
         {/* Qué es - Versión móvil */}
-        <div className="bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+        <div className="bg-white rounded-lg p-5 shadow-xs border border-gray-100">
           <div className="flex items-center mb-3">
             <div className="p-2 bg-[#3D8B37]/10 rounded-lg mr-3">
               <MessageSquare className="h-5 w-5 text-[#3D8B37]" />
@@ -234,7 +234,7 @@ function MobileView() {
         </div>
 
         {/* Cómo usar - Versión móvil */}
-        <div className="bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+        <div className="bg-white rounded-lg p-5 shadow-xs border border-gray-100">
           <div className="flex items-center mb-3">
             <div className="p-2 bg-[#3D8B37]/10 rounded-lg mr-3">
               <Sparkles className="h-5 w-5 text-[#3D8B37]" />
@@ -262,7 +262,7 @@ function MobileView() {
         </div>
 
         {/* Información oficial - Versión móvil */}
-        <div className="bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+        <div className="bg-white rounded-lg p-5 shadow-xs border border-gray-100">
           <div className="flex items-center mb-3">
             <div className="p-2 bg-[#3D8B37]/10 rounded-lg mr-3">
               <Shield className="h-5 w-5 text-[#3D8B37]" />

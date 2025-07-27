@@ -1,58 +1,151 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@plugin 'tailwindcss-animate';
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --spacing-section-sm: 2rem;
+  --spacing-section-md: 3rem;
+  --spacing-section-lg: 4rem;
+  --spacing-element-sm: 1.5rem;
+  --spacing-element-md: 2rem;
+  --spacing-separator: 2rem;
+
+  --container-page-content: 72rem;
+  --container-article-content: 56rem;
+  --container-wide-content: 80rem;
+  --container-form-content: 42rem;
+  --container-institutional: 96rem;
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 /* CGE Design System - Layout Components */
-@layer components {
+@utility page-container {
   /* Container System */
-  .page-container {
-    @apply container mx-auto px-4 md:px-6 max-w-page-content;
-  }
-
-  .content-container {
-    @apply mx-auto px-6 md:px-8 max-w-article-content;
-  }
-
-  .wide-container {
-    @apply container mx-auto px-4 md:px-6 max-w-wide-content;
-  }
-
-  .form-container {
-    @apply container mx-auto px-4 md:px-6 max-w-form-content;
-  }
-
+  @apply container mx-auto px-4 md:px-6 max-w-page-content;
+}
+@utility content-container {
+  @apply mx-auto px-6 md:px-8 max-w-article-content;
+}
+@utility wide-container {
+  @apply container mx-auto px-4 md:px-6 max-w-wide-content;
+}
+@utility form-container {
+  @apply container mx-auto px-4 md:px-6 max-w-form-content;
+}
+@utility section-spacing {
   /* Spacing System */
-  .section-spacing {
-    @apply py-section-sm md:py-section-md;
-  }
-
-  .section-spacing-large {
-    @apply py-section-lg;
-  }
-
-  .section-separator {
-    @apply my-separator;
-  }
-
-  .element-spacing {
-    @apply mb-element-sm md:mb-element-md;
-  }
-
+  @apply py-section-sm md:py-section-md;
+}
+@utility section-spacing-large {
+  @apply py-section-lg;
+}
+@utility section-separator {
+  @apply my-separator;
+}
+@utility element-spacing {
+  @apply mb-element-sm md:mb-element-md;
+}
+@utility page-bg-default {
   /* Background System */
-  .page-bg-default {
-    @apply bg-gray-50 min-h-screen;
-  }
+  @apply bg-gray-50 min-h-screen;
+}
+@utility page-bg-transparent {
+  @apply min-h-screen;
+}
+@utility page-bg-gradient {
+  @apply bg-linear-to-b from-white via-gray-50 to-white min-h-screen;
+}
+@utility page-bg-white {
+  @apply bg-white min-h-screen;
+}
 
-  .page-bg-transparent {
-    @apply min-h-screen;
-  }
-
-  .page-bg-gradient {
-    @apply bg-gradient-to-b from-white via-gray-50 to-white min-h-screen;
-  }
-  
-  .page-bg-white {
-    @apply bg-white min-h-screen;
+@utility hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 
@@ -155,45 +248,37 @@
   }
 }
 
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
-  font-size: 90%;
-}
-.group:has(img[src]):not(:has(img[src=''])) .skeleton {
-  display: none;
-}
-
-/* Desactivar solo las animaciones decorativas en dispositivos móviles */
-@media (max-width: 768px) {
-  /* Desactivar efectos hover y animaciones decorativas */
-  .group:hover img.transition-transform,
-  .group:hover img.scale-105,
-  .group:active img.scale-105 {
-    transform: none !important;
-    transition: none !important;
-  }
-
-  /* Desactivar otras animaciones decorativas */
-  .group img {
-    transition: none !important;
-  }
-}
-
-/* Habilitar animaciones decorativas solo si el dispositivo lo soporta y prefiere animaciones */
-@media (prefers-reduced-motion: no-preference) and (min-width: 769px) {
-  .group:hover img {
-    transform: scale(1.05);
-    transition: transform 700ms;
-  }
-}
-
 @layer utilities {
-  .hide-scrollbar {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    font-size: 90%;
   }
-  .hide-scrollbar::-webkit-scrollbar {
+  .group:has(img[src]):not(:has(img[src=''])) .skeleton {
     display: none;
+  }
+
+  /* Desactivar solo las animaciones decorativas en dispositivos móviles */
+  @media (max-width: 768px) {
+    /* Desactivar efectos hover y animaciones decorativas */
+    .group:hover img.transition-transform,
+    .group:hover img.scale-105,
+    .group:active img.scale-105 {
+      transform: none !important;
+      transition: none !important;
+    }
+
+    /* Desactivar otras animaciones decorativas */
+    .group img {
+      transition: none !important;
+    }
+  }
+
+  /* Habilitar animaciones decorativas solo si el dispositivo lo soporta y prefiere animaciones */
+  @media (prefers-reduced-motion: no-preference) and (min-width: 769px) {
+    .group:hover img {
+      transform: scale(1.05);
+      transition: transform 700ms;
+    }
   }
 }

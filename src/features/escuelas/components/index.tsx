@@ -60,7 +60,7 @@ export default function EscuelasClient() {
   }
 
   return (
-    <div className="bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+    <div className="bg-linear-to-b from-white to-gray-50 rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
       <div className="p-8 space-y-6">
         <div className="bg-white rounded-xl border border-gray-200 shadow-lg p-4 sm:p-6 transform transition hover:shadow-xl relative z-20">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
@@ -86,7 +86,7 @@ export default function EscuelasClient() {
         {/* Stats cards with improved responsive layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="bg-white rounded-xl border border-gray-200 shadow-md p-4 flex items-center hover:shadow-lg transition-shadow">
-            <div className="rounded-full bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] p-2 mr-3 shadow-md">
+            <div className="rounded-full bg-linear-to-br from-[#3D8B37] to-[#2D6A27] p-2 mr-3 shadow-md">
               <School className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -98,7 +98,7 @@ export default function EscuelasClient() {
             </div>
           </div>
           <div className="bg-white rounded-xl border border-gray-200 shadow-md p-4 flex items-center hover:shadow-lg transition-shadow">
-            <div className="rounded-full bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] p-2 mr-3 shadow-md">
+            <div className="rounded-full bg-linear-to-br from-[#3D8B37] to-[#2D6A27] p-2 mr-3 shadow-md">
               <Users className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -114,7 +114,7 @@ export default function EscuelasClient() {
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden mb-8 transform transition hover:shadow-xl z-10 relative">
-          <div className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] p-6">
+          <div className="bg-linear-to-br from-[#3D8B37] to-[#2D6A27] p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <Building2 className="h-8 w-8 text-white mr-4" />

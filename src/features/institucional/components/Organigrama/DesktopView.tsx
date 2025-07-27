@@ -23,7 +23,7 @@ export const OrganizationChart = ({
   const vocalesGremiales = members.filter((m) => m.department === 'Gremial');
 
   return (
-    <div className="w-full h-full overflow-hidden bg-gradient-to-br from-green-50 via-slate-50 to-white rounded-xl shadow-lg border border-gray-200 p-1">
+    <div className="w-full h-full overflow-hidden bg-linear-to-br from-green-50 via-slate-50 to-white rounded-xl shadow-lg border border-gray-200 p-1">
       <TransformWrapper
         initialScale={1}
         minScale={0.3}
@@ -35,8 +35,8 @@ export const OrganizationChart = ({
         smooth={true}
       >
         <TransformComponent
-          wrapperClass="!w-full !h-full"
-          contentClass="!w-full !h-full !flex !items-start !justify-start"
+          wrapperClass="w-full! h-full!"
+          contentClass="w-full! h-full! flex! items-start! justify-start!"
         >
           <div className="w-full h-full p-2 min-w-[600px]">
             {presidente && (
@@ -128,7 +128,7 @@ export const OrganizationChart = ({
 };
 
 const GroupHeader = ({ title, icon }: GroupHeaderProps) => (
-  <div className="px-3 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-md shadow-md mb-3 w-40 sm:w-44 max-w-full mx-auto flex items-center justify-center gap-2 transform transition-all hover:shadow-lg hover:scale-105">
+  <div className="px-3 py-2 bg-linear-to-r from-green-600 to-green-700 text-white rounded-md shadow-md mb-3 w-40 sm:w-44 max-w-full mx-auto flex items-center justify-center gap-2 transform transition-all hover:shadow-lg hover:scale-105">
     {icon}
     <h4 className="font-medium text-center text-xs sm:text-sm tracking-wide">
       {title}
