@@ -60,29 +60,26 @@ export default async function PagPrincipal() {
   return (
     <div className="page-bg-transparent">
       <main>
-        {/* Hero Section - mantiene su diseño único */}
+
         <HeroMain />
         <Separator className="section-separator" />
-        
-        {/* Quick Access Section */}
+
         <section className="section-spacing">
           <div className="page-container">
             <QuickAccess />
           </div>
         </section>
-        
+
         <Separador />
-        
-        {/* Latest News Section */}
+
         <section>
           <LatestNewsStatic noticias={latestNewsData.noticias} />
         </section>
-        
+
         <Separador />
-        
-        {/* Social Media Section */}
+
         <SocialMediaSection />
-        
+
         <Separator className="section-separator bg-gray-50" />
       </main>
     </div>

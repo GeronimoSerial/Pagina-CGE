@@ -16,8 +16,7 @@ const linkChat =
 function DesktopView() {
   return (
     <div className="hidden md:block section-spacing">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start page-container">{/* mantenemos el grid especial */}
-        {/* Columna de información */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start page-container">
         <div className="space-y-6 lg:space-y-8">
           {/* Qué es */}
           <section
@@ -309,8 +308,9 @@ export default function ChatBot() {
     <PageLayout
       pageType="content"
       hero={{
-        title: "Chat Normativo CGE",
-        description: "Consultá normativa educativa en segundos con el chatbot oficial del Consejo General de Educación."
+        title: 'Chat Normativo CGE',
+        description:
+          'Consultá normativa educativa en segundos con el chatbot oficial del Consejo General de Educación.',
       }}
       showSeparator={false}
     >

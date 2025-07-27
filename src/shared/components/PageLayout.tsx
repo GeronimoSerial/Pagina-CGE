@@ -8,7 +8,7 @@ import {
   SpacingType,
   getLayoutClasses,
   getPageLayout,
-} from '@/shared/lib/layout-tokens';
+} from '@/shared/design-tokens/layout-tokens';
 import { cn } from '@/shared/lib/utils';
 
 interface HeroProps {
@@ -63,7 +63,6 @@ export function PageLayout({
   className,
   sectionClassName,
 }: PageLayoutProps) {
-  // Usar preset de página si está definido, sino usar configuración manual
   const layout = pageType
     ? getPageLayout(pageType)
     : getLayoutClasses({ container: containerType, background, spacing });
@@ -89,7 +88,7 @@ export function PageLayout({
   );
 }
 
-// Componente especializado para páginas de contenido simple
+
 export function ContentPageLayout({
   children,
   title,
@@ -118,7 +117,7 @@ export function ContentPageLayout({
   );
 }
 
-// Componente especializado para formularios
+
 export function FormPageLayout({
   children,
   title,
@@ -144,7 +143,7 @@ export function FormPageLayout({
   );
 }
 
-// Hook para usar las clases de layout en componentes existentes
+
 export function useLayoutClasses(
   containerType?: ContainerType,
   background?: BackgroundType,

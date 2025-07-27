@@ -1,8 +1,3 @@
-/**
- * CGE Design System - Layout Tokens
- * Sistema unificado de containers, spacing y backgrounds
- */
-
 // Tipos para los Design Tokens
 export type ContainerType =
   | 'standard'
@@ -13,7 +8,6 @@ export type ContainerType =
 export type BackgroundType = 'default' | 'transparent' | 'gradient' | 'white';
 export type SpacingType = 'normal' | 'large';
 
-// Container Classes
 export const CONTAINER_CLASSES: Record<ContainerType, string> = {
   standard: 'page-container', // max-w-6xl para páginas estándar
   content: 'content-container', // max-w-4xl para artículos/contenido
@@ -22,7 +16,6 @@ export const CONTAINER_CLASSES: Record<ContainerType, string> = {
   institutional: 'container mx-auto px-4 md:px-6 max-w-institutional', // max-w-9xl solo institucional
 };
 
-// Background Classes
 export const BACKGROUND_CLASSES: Record<BackgroundType, string> = {
   default: 'page-bg-default', // bg-gray-50 min-h-screen
   transparent: 'page-bg-transparent', // min-h-screen
@@ -30,7 +23,6 @@ export const BACKGROUND_CLASSES: Record<BackgroundType, string> = {
   white: 'page-bg-white', // bg-white min-h-screen para artículos
 };
 
-// Spacing Classes
 export const SPACING_CLASSES = {
   section: {
     normal: 'section-spacing', // py-8 md:py-12
@@ -53,7 +45,6 @@ export function getSectionSpacing(type: SpacingType = 'normal'): string {
   return SPACING_CLASSES.section[type];
 }
 
-// Utility para combinar clases de layout
 export function getLayoutClasses({
   container = 'standard',
   background = 'default',
@@ -72,7 +63,6 @@ export function getLayoutClasses({
   };
 }
 
-// Configuraciones pre-definidas por tipo de página
 export const PAGE_LAYOUTS = {
   homepage: {
     container: 'standard' as ContainerType,
@@ -106,7 +96,6 @@ export const PAGE_LAYOUTS = {
   },
 } as const;
 
-// Helper para obtener layout completo por tipo de página
 export function getPageLayout(pageType: keyof typeof PAGE_LAYOUTS) {
   const config = PAGE_LAYOUTS[pageType];
   return getLayoutClasses(config);
