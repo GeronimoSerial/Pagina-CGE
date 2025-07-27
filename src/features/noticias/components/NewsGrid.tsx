@@ -1,6 +1,5 @@
 import React from 'react';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { formatDate } from '@/shared/lib/date-utils';
 import { ArrowRight, User, CalendarDays, Tag } from 'lucide-react';
 import { getPortada } from '@/features/noticias/services/noticias';
 import { Card, CardContent } from '@/shared/ui/card';
@@ -55,13 +54,7 @@ export default function NewsGrid({
                             </span>
                             <CalendarDays className="inline-block mr-1 ml-3 w-4 h-4 text-gray-500" />
                             <span className="text-xs text-gray-500">
-                              {format(
-                                new Date(noticia.fecha),
-                                'EEE, d MMMM yyyy',
-                                {
-                                  locale: es,
-                                },
-                              )}
+                              {formatDate(noticia.fecha)}
                             </span>
                           </div>
                           <a href={`/noticias/${noticia.slug}`}>
