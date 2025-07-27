@@ -133,11 +133,11 @@ export default async function NoticiaPage({ params }: PageProps) {
   ).catch(() => []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col page-bg-white">
       <div className="flex flex-1">
         <main className="flex-1 transition-all duration-300">
-          <div className="px-4 py-8 mx-auto max-w-5xl sm:px-6 lg:px-8">
-            <nav className="flex items-center mb-6 text-sm text-gray-500">
+          <div className="wide-container section-spacing">
+            <nav className="flex items-center element-spacing text-sm text-gray-500">
               <Link href="/" className="hover:text-green-800">
                 Inicio
               </Link>
@@ -149,7 +149,7 @@ export default async function NoticiaPage({ params }: PageProps) {
               <span className="text-gray-900">{noticia.titulo}</span>
             </nav>
 
-            <article className="mb-8 bg-white rounded-xl shadow-sm">
+            <article className="element-spacing bg-white rounded-xl shadow-sm">
               <div className="p-6 sm:p-8">
                 <header className="mb-8">
                   <div className="flex flex-wrap gap-4 items-center mb-4 text-sm text-gray-500">
