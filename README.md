@@ -106,11 +106,11 @@ El sitio estará disponible en `http://localhost:3000`.
 - Visualización de documentos
 - Interfaz adaptativa para dispositivos móviles
 
-#  Arquitectura y Patrones Críticos
+# Arquitectura y Patrones Críticos
 
 Este portal utiliza **Next.js 15.3.1 (App Router)**, **TypeScript**, **Tailwind CSS** y **Strapi CMS**. Está optimizado para VPS con generación estática, ISR y multi-caché.
 
-##  Estrategia de Caché Multi-Capa
+## Estrategia de Caché Multi-Capa
 
 1. **Caché en Memoria Agresivo** (`src/shared/lib/aggressive-cache.ts`)
    - Usa `withCache(noticiasCache, key, fetchFn)` en páginas individuales (`[slug]/page.tsx`).
@@ -125,7 +125,6 @@ Este portal utiliza **Next.js 15.3.1 (App Router)**, **TypeScript**, **Tailwind 
 3. **Caché HTTP** (`next.config.mjs`)
    - Assets: 1 año immutable.
    - API: 30s-5min según tipo.
-
 
 ## 📂 Estructura Clave
 
