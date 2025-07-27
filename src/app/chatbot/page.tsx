@@ -1,4 +1,4 @@
-import HeroSection from '@/shared/components/Hero';
+import { PageLayout } from '@/shared/components/PageLayout';
 import Image from 'next/image';
 import { MessageSquare, Shield, Sparkles, ExternalLink } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -15,8 +15,8 @@ const linkChat =
 
 function DesktopView() {
   return (
-    <div className="hidden md:block container mx-auto px-4 py-12 lg:py-16">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start max-w-6xl mx-auto">
+    <div className="hidden md:block section-spacing">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start page-container">{/* mantenemos el grid especial */}
         {/* Columna de información */}
         <div className="space-y-6 lg:space-y-8">
           {/* Qué es */}
@@ -306,13 +306,16 @@ function MobileView() {
 
 export default function ChatBot() {
   return (
-    <main className="min-h-screen bg-gray-50">
-      <HeroSection
-        title="Chat Normativo CGE"
-        description="Consultá normativa educativa en segundos con el chatbot oficial del Consejo General de Educación."
-      />
+    <PageLayout
+      pageType="content"
+      hero={{
+        title: "Chat Normativo CGE",
+        description: "Consultá normativa educativa en segundos con el chatbot oficial del Consejo General de Educación."
+      }}
+      showSeparator={false}
+    >
       <DesktopView />
       <MobileView />
-    </main>
+    </PageLayout>
   );
 }

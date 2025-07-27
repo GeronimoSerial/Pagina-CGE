@@ -1,9 +1,8 @@
-import HeroSection from '@/shared/components/Hero';
 import {
   getNoticiasPaginadas,
   getNoticiasCategorias,
 } from '@/features/noticias/services/noticias';
-import { Separator } from '@/shared/ui/separator';
+import { PageLayout } from '@/shared/components/PageLayout';
 import { Metadata } from 'next';
 import NewsContainer from '@/features/noticias/components/NewsContainer';
 import { Suspense } from 'react';
@@ -44,11 +43,15 @@ export default async function NoticiasPage() {
   ]);
 
   return (
-    <section>
-      <HeroSection
-        title="Noticias"
-        description="Encontrá información sobre eventos, actividades y noticias institucionales."
-      />
+    <PageLayout
+      pageType="wide"
+      hero={{
+        title: 'Noticias',
+        description:
+          'Encontrá información sobre eventos, actividades y noticias institucionales.',
+      }}
+      showSeparator={true}
+    >
       <Suspense
         fallback={
           <div className="flex justify-center items-center py-12">
@@ -61,7 +64,6 @@ export default async function NoticiasPage() {
       >
         <NewsContainer initialData={initialNoticias} categorias={categorias} />
       </Suspense>
-      <Separator className="my-8 bg-gray-50" />
-    </section>
+    </PageLayout>
   );
 }

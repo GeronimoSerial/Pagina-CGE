@@ -2,6 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
+/* CGE Design System - Layout Components */
+@layer components {
+  /* Container System */
+  .page-container {
+    @apply container mx-auto px-4 md:px-6 max-w-page-content;
+  }
+
+  .content-container {
+    @apply mx-auto px-6 md:px-8 max-w-article-content;
+  }
+
+  .wide-container {
+    @apply container mx-auto px-4 md:px-6 max-w-wide-content;
+  }
+
+  .form-container {
+    @apply container mx-auto px-4 md:px-6 max-w-form-content;
+  }
+
+  /* Spacing System */
+  .section-spacing {
+    @apply py-section-sm md:py-section-md;
+  }
+
+  .section-spacing-large {
+    @apply py-section-lg;
+  }
+
+  .section-separator {
+    @apply my-separator;
+  }
+
+  .element-spacing {
+    @apply mb-element-sm md:mb-element-md;
+  }
+
+  /* Background System */
+  .page-bg-default {
+    @apply bg-gray-50 min-h-screen;
+  }
+
+  .page-bg-transparent {
+    @apply min-h-screen;
+  }
+
+  .page-bg-gradient {
+    @apply bg-gradient-to-b from-white via-gray-50 to-white min-h-screen;
+  }
+  
+  .page-bg-white {
+    @apply bg-white min-h-screen;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -36,6 +90,14 @@
 
     --institutional-green: 115 44% 38%; /* Verde institucional */
     --institutional-green-foreground: 115 44% 38%;
+
+    /* CGE Design Tokens - Layout System */
+    --page-padding-x: 1rem; /* px-4 base */
+    --page-padding-x-md: 1.5rem; /* md:px-6 */
+    --page-padding-x-lg: 2rem; /* lg:px-8 */
+    --page-padding-y: 2rem; /* py-8 base */
+    --page-padding-y-md: 3rem; /* md:py-12 */
+    --page-padding-y-lg: 4rem; /* py-16 especial */
   }
 
   .dark {

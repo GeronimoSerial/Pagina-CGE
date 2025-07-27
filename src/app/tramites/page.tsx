@@ -24,11 +24,11 @@ export default async function IntroduccionPage() {
   const markdown = article.content?.[0]?.content || '';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="page-bg-default">
       <main className="flex-1 lg:overflow-y-auto">
-        <div className="px-6 py-8 mx-auto max-w-4xl lg:px-8 lg:py-12">
+        <div className="content-container section-spacing">
           {/* Article Header */}
-          <header className="mb-8">
+          <header className="element-spacing">
             <div className="flex items-center mb-4">
               <span className="inline-flex items-center px-3 py-1 mr-3 text-xs font-medium text-white bg-green-800 rounded-full">
                 {article.category}
@@ -57,7 +57,7 @@ export default async function IntroduccionPage() {
         </div>
 
         {/* Article Footer */}
-        <footer className="px-6 pb-8 mx-auto max-w-4xl lg:px-8">
+        <footer className="content-container pb-8">
           <div className="pt-8 border-t border-gray-200">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="mb-4 text-sm text-gray-600 sm:mb-0">
@@ -68,6 +68,14 @@ export default async function IntroduccionPage() {
                 >
                   Comunícanos
                 </a>
+              </div>
+              <div className="text-sm text-gray-500">
+                Última actualización:{' '}
+                {new Date(article.lastUpdated).toLocaleDateString('es-ES', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
               </div>
             </div>
           </div>
