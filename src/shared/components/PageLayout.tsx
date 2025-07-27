@@ -88,7 +88,6 @@ export function PageLayout({
   );
 }
 
-
 export function ContentPageLayout({
   children,
   title,
@@ -117,7 +116,6 @@ export function ContentPageLayout({
   );
 }
 
-
 export function FormPageLayout({
   children,
   title,
@@ -142,7 +140,6 @@ export function FormPageLayout({
     </PageLayout>
   );
 }
-
 
 export function useLayoutClasses(
   containerType?: ContainerType,

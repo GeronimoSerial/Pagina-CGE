@@ -40,13 +40,13 @@ export const AccordionItemUnificado = React.memo(
       <AccordionItem
         key={id}
         value={id}
-        className={`bg-white rounded-xl overflow-hidden border border-gray-200 shadow-sm transition-all duration-300 ${
+        className={`bg-white rounded-xl overflow-hidden border border-gray-200 shadow-xs transition-all duration-300 ${
           isExpanded
             ? 'shadow-md border-[#217A4B]/30 transform scale-[1.01]'
-            : 'hover:border-gray-300 hover:shadow'
+            : 'hover:border-gray-300 hover:shadow-sm'
         }`}
       >
-        <div className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] p-6 rounded-l w-full flex items-center justify-between cursor-default select-none">
+        <div className="bg-linear-to-br from-[#3D8B37] to-[#2D6A27] p-6 rounded-l w-full flex items-center justify-between cursor-default select-none">
           <div className="flex items-center">
             <Building2 className="h-8 w-8 text-white mr-4" />
             <div>

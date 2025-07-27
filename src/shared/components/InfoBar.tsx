@@ -42,7 +42,7 @@ export default function InfoBar({ basePath }: { basePath: string }) {
           ];
   return (
     <main>
-      <div className="bg-white border-b border-gray-100 shadow-sm">
+      <div className="bg-white border-b border-gray-100 shadow-xs">
         <div className="container mx-auto px-4 md:px-6 py-2">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             {infoBarItems.map((item, index) => (

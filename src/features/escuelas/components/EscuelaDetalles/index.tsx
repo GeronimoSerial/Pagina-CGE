@@ -37,7 +37,7 @@ const EscuelaDetalles = memo(({ escuela, onClose }: EscuelaDetallesProps) => {
       <DialogContent className="max-w-4xl p-0 overflow-hidden w-[95vw] rounded-2xl shadow-2xl border-0 max-h-[95vh] flex flex-col">
         <div className="bg-white pt-6 pb-4 px-5 border-b border-gray-100">
           <div className="flex items-center gap-3">
-            <div className="flex-shrink-0 bg-white p-2 rounded-lg shadow-sm border border-gray-100">
+            <div className="shrink-0 bg-white p-2 rounded-lg shadow-xs border border-gray-100">
               <School className="h-6 w-6 text-[#217A4B]" />
             </div>
             <DialogTitle className="text-xl font-bold text-gray-900 tracking-tight break-words">
@@ -69,10 +69,10 @@ const EscuelaDetalles = memo(({ escuela, onClose }: EscuelaDetallesProps) => {
           </div>
         </div>
 
-        <div className="flex-grow overflow-y-auto bg-gray-50/50">
+        <div className="grow overflow-y-auto bg-gray-50/50">
           <div className="p-5">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-xl p-5 shadow-xs border border-gray-100">
                 <div className="space-y-4">
                   <div className="border-b border-gray-100 pb-3">
                     <div className="flex items-center gap-2 mb-3">
@@ -121,7 +121,7 @@ const EscuelaDetalles = memo(({ escuela, onClose }: EscuelaDetallesProps) => {
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-xl p-5 shadow-xs border border-gray-100">
                 <div className="border-b border-gray-100 pb-3">
                   <div className="flex items-center gap-2 mb-3">
                     <Info className="h-4 w-4 text-[#217A4B]" />
@@ -181,7 +181,7 @@ const EscuelaDetalles = memo(({ escuela, onClose }: EscuelaDetallesProps) => {
           <DialogClose asChild className="order-1 xs:order-2 w-full xs:w-auto">
             <Button
               variant="outline"
-              className="border-gray-300 text-gray-700 hover:bg-gray-50 px-5 py-2 rounded-lg font-medium shadow-sm hover:shadow transition-all w-full xs:w-auto"
+              className="border-gray-300 text-gray-700 hover:bg-gray-50 px-5 py-2 rounded-lg font-medium shadow-xs hover:shadow-sm transition-all w-full xs:w-auto"
             >
               Cerrar
             </Button>

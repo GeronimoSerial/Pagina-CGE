@@ -43,7 +43,7 @@ export const MobileView = React.memo(
               return (
                 <div
                   key={escuela.cue}
-                  className="bg-white rounded-lg border border-gray-200 shadow-sm 
+                  className="bg-white rounded-lg border border-gray-200 shadow-xs 
                                overflow-hidden cursor-pointer hover:border-[#217A4B]/40 transition-all absolute"
                   style={{
                     top: 0,
@@ -60,7 +60,7 @@ export const MobileView = React.memo(
                                  flex items-center justify-between"
                   >
                     <div className="flex items-center">
-                      <School className="h-3 w-3 text-[#217A4B] mr-1.5 flex-shrink-0" />
+                      <School className="h-3 w-3 text-[#217A4B] mr-1.5 shrink-0" />
                       <span className="font-mono text-xs text-gray-600 truncate">
                         CUE: {escuela.cue}
                       </span>

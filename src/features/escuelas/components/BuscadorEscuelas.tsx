@@ -68,15 +68,15 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           className={`w-full pl-10 bg-white border-2 border-gray-300 rounded-xl py-2.5 px-4 
-            focus:outline-none focus:ring-2 focus:ring-[#3D8B37]/30 focus:border-[#3D8B37] 
+            focus:outline-hidden focus:ring-2 focus:ring-[#3D8B37]/30 focus:border-[#3D8B37] 
             transition-all duration-200 ease-in-out text-sm placeholder:text-gray-500 
-            hover:border-[#3D8B37] shadow-sm`}
+            hover:border-[#3D8B37] shadow-xs`}
         />
       </div>
 
       {showResults && resultados.length > 0 && (
         <div
-          className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-xl z-[100] overflow-hidden max-h-[350px] overflow-y-auto"
+          className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-xl z-100 overflow-hidden max-h-[350px] overflow-y-auto"
           style={{ filter: 'drop-shadow(0 20px 13px rgb(0 0 0 / 0.1))' }}
         >
           <div className="p-3 bg-[#217A4B]/5 border-b border-gray-100 flex justify-between items-center">
@@ -104,7 +104,7 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
               >
                 <div className="p-3">
                   <div className="flex items-start">
-                    <div className="bg-[#217A4B]/10 p-2 rounded-lg mr-3 flex-shrink-0">
+                    <div className="bg-[#217A4B]/10 p-2 rounded-lg mr-3 shrink-0">
                       <School className="h-4 w-4 text-[#217A4B]" />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -148,7 +148,7 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
 
       {/* Mensaje de no resultados */}
       {showResults && searchTerm && resultados.length === 0 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-xl z-[100] p-6 text-center">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-xl z-100 p-6 text-center">
           <div className="flex flex-col items-center">
             <div className="bg-gray-100 p-3 rounded-full mb-3">
               <Search className="h-5 w-5 text-gray-400" />

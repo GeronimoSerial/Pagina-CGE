@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] text-white py-16">
+    <footer className="bg-linear-to-br from-[#3D8B37] to-[#2D6A27] text-white py-16">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div>

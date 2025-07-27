@@ -117,7 +117,7 @@ const DocumentationSection = () => {
                       <span className="text-xs text-gray-500">{doc.date}</span>
                     </div>
                   </CardHeader>
-                  <CardContent className="flex-grow px-4 py-2">
+                  <CardContent className="grow px-4 py-2">
                     <CardTitle className="mb-1 text-sm font-semibold line-clamp-2">
                       {doc.title}
                     </CardTitle>
@@ -143,7 +143,7 @@ const DocumentationSection = () => {
 
           {/* Sección de búsqueda */}
           <div className="mt-10 mb-8">
-            <div className="p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
+            <div className="p-6 bg-white rounded-xl border border-gray-200 shadow-xs">
               <SearchInput
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -197,7 +197,7 @@ const DocumentationSection = () => {
                         </span>
                       </div>
                     </CardHeader>
-                    <CardContent className="flex-grow px-4 py-2">
+                    <CardContent className="grow px-4 py-2">
                       <CardTitle className="mb-1 text-sm font-semibold line-clamp-2">
                         {doc.title}
                       </CardTitle>

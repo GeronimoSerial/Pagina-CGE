@@ -34,7 +34,7 @@ export default function ContactForm() {
   const { form, enviado, error, buttonState, onSubmit } = useContactForm();
 
   return (
-    <Card className="w-full max-w-2xl mx-auto bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 shadow-sm">
+    <Card className="w-full max-w-2xl mx-auto bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 shadow-xs">
       <CardContent className="p-4">
         {enviado && (
           <Alert className="mb-4 border-green-200 bg-green-50 dark:bg-green-950/20 dark:border-green-800">

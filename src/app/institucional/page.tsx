@@ -230,15 +230,15 @@ export default function Institucional() {
 
                 <div className="space-y-3">
                   <div className="flex items-start">
-                    <MapPin className="h-5 w-5 mt-0.5 mr-3 text-[#217A4B] flex-shrink-0" />
+                    <MapPin className="h-5 w-5 mt-0.5 mr-3 text-[#217A4B] shrink-0" />
                     <p>Catamarca 640, Corrientes</p>
                   </div>
                   <div className="flex items-start">
-                    <Phone className="h-5 w-5 mt-0.5 mr-3 text-[#217A4B] flex-shrink-0" />
+                    <Phone className="h-5 w-5 mt-0.5 mr-3 text-[#217A4B] shrink-0" />
                     <p>(0379) 442-4264</p>
                   </div>
                   <div className="flex items-start">
-                    <Mail className="h-5 w-5 mt-0.5 mr-3 text-[#217A4B] flex-shrink-0" />
+                    <Mail className="h-5 w-5 mt-0.5 mr-3 text-[#217A4B] shrink-0" />
                     <p>cge@mec.gob.ar</p>
                   </div>
                 </div>
