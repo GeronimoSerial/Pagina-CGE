@@ -1,6 +1,6 @@
 //Pagina principal para la sección de escuelas
 import { Metadata } from 'next';
-import { EscuelasClient } from '@/shared/data/dynamic-client';
+import { SchoolsClient } from '@/shared/data/dynamic-client';
 import { ContentPageLayout } from '@/shared/components/PageLayout';
 
 export const metadata: Metadata = {
@@ -34,7 +34,7 @@ export default function Escuelas() {
       showFAQ={true}
       faqBasePath="/escuelas"
     >
-      <EscuelasClient />
+      <SchoolsClient />
     </ContentPageLayout>
   );
 }

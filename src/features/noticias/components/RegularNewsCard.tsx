@@ -1,11 +1,11 @@
 import { Card, CardContent } from '@/shared/ui/card';
 import { formatDate } from '@/shared/lib/date-utils';
 import { ArrowRight, CalendarDays, Tag } from 'lucide-react';
-import { getPortada } from '@/features/noticias/services/noticias';
-import { Noticia } from '@/shared/interfaces';
+import { getCover } from '@/features/noticias/services/news';
+import { NewsItem } from '@/shared/interfaces';
 import Image from 'next/image';
 
-export function RegularNewsCard({ noticia }: { noticia: Noticia }) {
+export function RegularNewsCard({ noticia }: { noticia: NewsItem }) {
   return (
     <Card
       key={noticia.id}
@@ -16,7 +16,7 @@ export function RegularNewsCard({ noticia }: { noticia: Noticia }) {
           <Image
             className="object-cover w-full h-48 transition-transform duration-300 sm:h-56 group-hover:scale-105"
             alt={noticia.titulo}
-            src={getPortada({ noticia }) || ''}
+            src={getCover({ noticia }) || ''}
             width={1200}
             height={630}
             priority

@@ -1,4 +1,3 @@
-// Documentación descargable.
 import { DocumentacionSection } from '@/shared/data/dynamic-client';
 import { ContentPageLayout } from '@/shared/components/PageLayout';
 import { Metadata } from 'next';

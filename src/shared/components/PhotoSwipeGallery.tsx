@@ -3,11 +3,11 @@
 import { useEffect } from 'react';
 import PhotoSwipeLightBox from 'photoswipe/lightbox';
 import 'photoswipe/style.css';
-import { getImagenes } from '@/features/noticias/services/noticias';
-import { Noticia } from '@/shared/interfaces';
+import { getImages } from '@/features/noticias/services/news';
+import { NewsItem } from '@/shared/interfaces';
 
 interface PhotoSwipeGalleryProps {
-  noticia: Noticia;
+  noticia: NewsItem;
 }
 
 export default function PhotoSwipeGallery({ noticia }: PhotoSwipeGalleryProps) {
@@ -31,7 +31,7 @@ export default function PhotoSwipeGallery({ noticia }: PhotoSwipeGalleryProps) {
     >
       {noticia.imagen &&
         noticia.imagen.length > 0 &&
-        getImagenes(noticia).map((img, index) => (
+        getImages(noticia).map((img, index) => (
           <a
             href={img.url}
             data-pswp-width={img.width}

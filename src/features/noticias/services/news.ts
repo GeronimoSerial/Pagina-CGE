@@ -1,5 +1,5 @@
 import { API_URL, PERFORMANCE_CONFIG } from '@/shared/lib/config';
-import { Noticia } from '@/shared/interfaces';
+import { NewsItem } from '@/shared/interfaces';
 import qs from 'qs';
 import { cfImages } from '@/shared/lib/cloudflare-images';
 
@@ -19,7 +19,7 @@ function createCacheKey(
   return `noticias-filtered-${bucket}-${pageSize}-${filterHash}`;
 }
 
-export async function getAllNoticias() {
+export async function getAllNews() {
   const query = qs.stringify(
     {
       fields: ['slug'],
@@ -42,7 +42,7 @@ export async function getAllNoticias() {
   return data;
 }
 
-export async function getNoticiasPaginadas(
+export async function getPaginatedNews(
   page: number = 1,
   pageSize: number = 4,
   filters: Record<string, any> = {},
@@ -106,7 +106,7 @@ export async function getNoticiasPaginadas(
     const { data, meta } = await res.json();
     return { noticias: data, pagination: meta.pagination };
   } catch (error) {
-    console.error('Error in getNoticiasPaginadas:', error);
+    console.error('Error in getPaginatedNews:', error);
 
     return {
       noticias: [],
@@ -120,7 +120,7 @@ export async function getNoticiasPaginadas(
   }
 }
 
-export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
+export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
   const query = qs.stringify(
     {
       filters: {
@@ -166,10 +166,7 @@ export async function getNoticiaBySlug(slug: string): Promise<Noticia | null> {
   };
 }
 
-export async function getNoticiasRelacionadas(
-  categoria: string,
-  excludeSlug?: string,
-) {
+export async function getRelatedNews(categoria: string, excludeSlug?: string) {
   const filters: any = {
     categoria: { $eq: categoria },
     publicado: { $eq: true },
@@ -203,14 +200,14 @@ export async function getNoticiasRelacionadas(
   return data;
 }
 
-export function getPortada({ noticia }: any) {
+export function getCover({ noticia }: any) {
   const url = noticia.portada?.data?.url || noticia.portada?.url;
 
   if (!url) return null;
   return cfImages(url, 1200, 'auto');
 }
 
-export function getImagenes(noticia: Noticia) {
+export function getImages(noticia: NewsItem) {
   return (
     noticia.imagen?.map((img: any) => ({
       url: cfImages(img.url, 800, 'auto'),
@@ -221,7 +218,7 @@ export function getImagenes(noticia: Noticia) {
   );
 }
 
-export async function getNoticiasCategorias(): Promise<
+export async function getNewsCategories(): Promise<
   Array<{ id: number; nombre: string }>
 > {
   const query = qs.stringify(

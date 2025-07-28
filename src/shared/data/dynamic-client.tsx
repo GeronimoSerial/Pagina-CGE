@@ -1,4 +1,3 @@
-// Componentes cargados dinamicamente
 'use client';
 import dynamic from 'next/dynamic';
 import SkeletonLoading from '../components/SkeletonComponent';
@@ -23,22 +22,14 @@ const LoadingSpinner = ({ text }: { text?: string }) => (
 );
 
 export const ClientCarousel = dynamic(
-  () => import('../components/CarouselDeImagenes'),
+  () => import('../components/ImageCarousel'),
   {
     ssr: false,
     loading: () => <LoadingSpinner text="Cargando carrusel de imagenes" />,
   },
 );
 
-export const ClientOrganigrama = dynamic(
-  () => import('@src/features/institucional/components/Organigrama'),
-  {
-    ssr: false,
-    loading: () => <LoadingSpinner text="Cargando organigrama" />,
-  },
-);
-
-export const EscuelasClient = dynamic(
+export const SchoolsClient = dynamic(
   () => import('@/features/escuelas/components/index'),
   {
     ssr: false,

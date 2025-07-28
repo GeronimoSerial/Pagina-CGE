@@ -1,41 +1,41 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import type { Escuela } from '@/shared/interfaces';
-import { buscarEscuelasAvanzado } from '../utils/searchUtils';
-import { Info, MapPin, School, Search } from 'lucide-react';
+import type { School } from '@/shared/interfaces';
+import { searchSchoolsAdvanced } from '../utils/searchUtils';
+import { Info, MapPin, School as SchoolIcon, Search } from 'lucide-react';
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 
-interface BuscadorEscuelasProps {
-  escuelas: Escuela[];
-  onSelectEscuela: (escuela: Escuela) => void;
+interface SchoolSearchProps {
+  schools: School[];
+  onSelectSchool: (school: School) => void;
 }
 
-const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
-  escuelas,
-  onSelectEscuela,
+const SchoolSearch: React.FC<SchoolSearchProps> = ({
+  schools,
+  onSelectSchool,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [resultados, setResultados] = useState<Escuela[]>([]);
+  const [results, setResults] = useState<School[]>([]);
   const [showResults, setShowResults] = useState<boolean>(false);
 
   const handleSearch = useCallback(() => {
     if (searchTerm.trim() === '') {
-      setResultados([]);
+      setResults([]);
       setShowResults(false);
       return;
     }
 
-    const results = buscarEscuelasAvanzado(escuelas, searchTerm);
-    setResultados(results);
+    const searchResults = searchSchoolsAdvanced(schools, searchTerm);
+    setResults(searchResults);
     setShowResults(true);
-  }, [escuelas, searchTerm]);
+  }, [schools, searchTerm]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (searchTerm.trim()) {
         handleSearch();
       } else {
-        setResultados([]);
+        setResults([]);
         setShowResults(false);
       }
     }, 300);
@@ -45,16 +45,16 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
 
   const handleClear = useCallback(() => {
     setSearchTerm('');
-    setResultados([]);
+    setResults([]);
     setShowResults(false);
   }, []);
 
-  const handleSelectEscuela = useCallback(
-    (escuela: Escuela) => {
-      onSelectEscuela(escuela);
+  const handleSelectSchool = useCallback(
+    (school: School) => {
+      onSelectSchool(school);
       setShowResults(false);
     },
-    [onSelectEscuela],
+    [onSelectSchool],
   );
 
   return (
@@ -74,7 +74,7 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
         />
       </div>
 
-      {showResults && resultados.length > 0 && (
+      {showResults && results.length > 0 && (
         <div
           className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-xl z-100 overflow-hidden max-h-[350px] overflow-y-auto"
           style={{ filter: 'drop-shadow(0 20px 13px rgb(0 0 0 / 0.1))' }}
@@ -84,7 +84,7 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
               variant="secondary"
               className="bg-[#217A4B]/10 text-[#217A4B] border-[#217A4B]/20 hover:bg-[#217A4B]/20"
             >
-              {resultados.length} escuelas encontradas
+              {results.length} escuelas encontradas
             </Badge>
             <Button
               variant="ghost"
@@ -96,26 +96,26 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
             </Button>
           </div>
           <ul className="divide-y divide-gray-100">
-            {resultados.map((escuela) => (
+            {results.map((school) => (
               <li
-                key={escuela.cue}
+                key={school.cue}
                 className="hover:bg-gray-50 transition-colors cursor-pointer"
-                onClick={() => handleSelectEscuela(escuela)}
+                onClick={() => handleSelectSchool(school)}
               >
                 <div className="p-3">
                   <div className="flex items-start">
                     <div className="bg-[#217A4B]/10 p-2 rounded-lg mr-3 shrink-0">
-                      <School className="h-4 w-4 text-[#217A4B]" />
+                      <SchoolIcon className="h-4 w-4 text-[#217A4B]" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="font-medium text-gray-800 truncate">
-                        {escuela.nombre}
+                        {school.nombre}
                       </p>
 
                       <div className="mt-2 flex items-center gap-2 flex-wrap">
                         <Badge className="bg-[#217A4B] text-white border-0 px-3 py-1 flex items-center gap-1">
                           <Info className="h-3 w-3" />
-                          <span className="font-mono">CUE: {escuela.cue}</span>
+                          <span className="font-mono">CUE: {school.cue}</span>
                         </Badge>
 
                         <Badge
@@ -124,18 +124,18 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
                         >
                           <MapPin className="h-3 w-3" />
                           <span>
-                            {escuela.departamento} - {escuela.localidad}
+                            {school.departamento} - {school.localidad}
                           </span>
                         </Badge>
                       </div>
 
                       <div className="flex flex-wrap gap-x-4 mt-2 text-xs text-gray-500">
                         <span>
-                          Directora: <b>{escuela.director || 'Sin director'}</b>
+                          Director: <b>{school.director || 'Sin director'}</b>
                         </span>
 
-                        <span>{escuela.tipoEscuela || 'Sin tipo'}</span>
-                        <span>Turno: {escuela.turno}</span>
+                        <span>{school.tipoEscuela || 'Sin tipo'}</span>
+                        <span>Turno: {school.turno || 'Sin turno'}</span>
                       </div>
                     </div>
                   </div>
@@ -146,8 +146,8 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
         </div>
       )}
 
-      {/* Mensaje de no resultados */}
-      {showResults && searchTerm && resultados.length === 0 && (
+      {/* No results message */}
+      {showResults && searchTerm && results.length === 0 && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-xl z-100 p-6 text-center">
           <div className="flex flex-col items-center">
             <div className="bg-gray-100 p-3 rounded-full mb-3">
@@ -174,4 +174,4 @@ const BuscadorEscuelas: React.FC<BuscadorEscuelasProps> = ({
   );
 };
 
-export default BuscadorEscuelas;
+export default SchoolSearch;

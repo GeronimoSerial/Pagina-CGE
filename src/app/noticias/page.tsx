@@ -1,7 +1,7 @@
 import {
-  getNoticiasPaginadas,
-  getNoticiasCategorias,
-} from '@/features/noticias/services/noticias';
+  getPaginatedNews,
+  getNewsCategories,
+} from '@/features/noticias/services/news';
 import { PageLayout } from '@/shared/components/PageLayout';
 import { Metadata } from 'next';
 import NewsContainer from '@/features/noticias/components/NewsContainer';
@@ -36,10 +36,9 @@ export const metadata: Metadata = {
 export const revalidate = 2592000;
 
 export default async function NoticiasPage() {
-  // Pre-renderizar contenido inicial (SSG) - Sin API calls del usuario
   const [initialNoticias, categorias] = await Promise.all([
-    getNoticiasPaginadas(1, 6), // Primeras 6 noticias
-    getNoticiasCategorias(),
+    getPaginatedNews(1, 6),
+    getNewsCategories(),
   ]);
 
   return (

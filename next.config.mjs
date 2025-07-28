@@ -2,11 +2,8 @@
 const nextConfig = {
   serverExternalPackages: ['sharp'],
 
-  // Optimizaciones experimentales para bundle size
   experimental: {
-    optimizePackageImports: [
-      'lucide-react',
-    ],
+    optimizePackageImports: ['lucide-react'],
   },
 
   images: {

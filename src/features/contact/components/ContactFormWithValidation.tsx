@@ -31,12 +31,12 @@ import { Alert, AlertDescription, AlertTitle } from '@/shared/ui/alert';
 import { useContactForm } from '@/features/contact/hooks/useContactForm';
 
 export default function ContactFormWithValidation() {
-  const { form, enviado, error, buttonState, onSubmit } = useContactForm();
+  const { form, sent, error, buttonState, onSubmit } = useContactForm();
 
   return (
-    <Card className="w-full max-w-2xl mx-auto bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 shadow-xs">
-      <CardContent className="p-4">
-        {enviado && (
+    <Card className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <CardContent className="p-8">
+        {sent && (
           <Alert className="mb-4 border-green-200 bg-green-50 dark:bg-green-950/20 dark:border-green-800">
             <CheckCircle2 className="h-4 w-4 text-[#3D8B37]" />
             <AlertTitle className="text-[#3D8B37] dark:text-green-200">

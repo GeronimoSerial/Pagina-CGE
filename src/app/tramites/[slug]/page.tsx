@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import {
-  getTramiteArticleBySlug,
-  getAllTramiteSlugs,
+  getProcedureBySlug,
+  getAllProcedureSlugs,
   Article,
 } from '@/features/tramites/services/docs-data';
 import ReactMarkdown from 'react-markdown';
@@ -16,7 +16,7 @@ interface PageProps {
 
 export async function generateStaticParams() {
   try {
-    const slugs = await getAllTramiteSlugs();
+    const slugs = await getAllProcedureSlugs();
     return slugs.map((slug) => ({ slug }));
   } catch (error) {
     console.warn('Error generating static params for tramites:', error);
@@ -32,7 +32,7 @@ export default async function DocumentPage({ params }: PageProps) {
   const article: Article | null = await withCache(
     tramitesCache,
     `tramite-${slug}`,
-    async () => await getTramiteArticleBySlug(slug),
+    async () => await getProcedureBySlug(slug),
   );
 
   if (!article) {
@@ -106,7 +106,7 @@ export default async function DocumentPage({ params }: PageProps) {
 }
 
 export async function generateMetadata({ params }: PageProps) {
-  const article = await getTramiteArticleBySlug((await params).slug);
+  const article = await getProcedureBySlug((await params).slug);
   const slug = (await params).slug;
   if (!article) {
     return {

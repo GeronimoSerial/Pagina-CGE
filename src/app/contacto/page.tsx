@@ -1,4 +1,3 @@
-// Página de contacto
 import ContactForm from '@/features/contact/components';
 import { FormPageLayout } from '@/shared/components/PageLayout';
 import { Metadata } from 'next';

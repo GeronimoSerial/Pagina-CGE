@@ -1,13 +1,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-
-export interface ContactoForm {
-  nombre: string;
-  email: string;
-  asunto: string;
-  mensaje: string;
-  area: string;
-}
+import { ContactForm } from '@/shared/interfaces';
 
 const SERVICE_ID = process.env.NEXT_PUBLIC_SERVICE_ID || 'default_service';
 const TEMPLATE_ID = process.env.NEXT_PUBLIC_TEMPLATE_ID || 'default_template';
@@ -18,20 +11,19 @@ if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
 }
 
 export const useContactForm = () => {
-  const [enviado, setEnviado] = useState(false);
+  const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [buttonState, setButtonState] = useState<
     'idle' | 'loading' | 'success'
   >('idle');
 
-  const form = useForm<ContactoForm>({
+  const form = useForm<ContactForm>({
     defaultValues: { nombre: '', email: '', asunto: '', mensaje: '', area: '' },
   });
 
-  const onSubmit = async (data: ContactoForm) => {
+  const onSubmit = async (data: ContactForm) => {
     setButtonState('loading');
     try {
-      // Lazy loading de EmailJS - solo se carga cuando se envía el formulario
       const emailjs = await import('@emailjs/browser');
 
       const templateParams = {
@@ -50,13 +42,13 @@ export const useContactForm = () => {
       );
 
       if (result.text === 'OK') {
-        setEnviado(true);
+        setSent(true);
         setError(null);
         form.reset();
         setButtonState('success');
         setTimeout(() => {
           setButtonState('idle');
-          setEnviado(false);
+          setSent(false);
         }, 5000);
       }
     } catch (error) {
@@ -68,7 +60,7 @@ export const useContactForm = () => {
 
   return {
     form,
-    enviado,
+    sent,
     error,
     buttonState,
     onSubmit,

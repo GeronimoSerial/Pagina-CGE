@@ -7,9 +7,9 @@ import {
   DialogClose,
 } from '@/shared/ui/dialog';
 import { Button } from '@/shared/ui/button';
-import type { Escuela } from '@/shared/interfaces';
+import type { School } from '@/shared/interfaces';
 import {
-  School,
+  School as SchoolIcon,
   MapPin,
   Info,
   Building2,
@@ -18,10 +18,10 @@ import {
   Map,
   ArrowRight,
 } from 'lucide-react';
-import { formatearFecha } from '@/shared/lib/utils';
+import { formatDate } from '@/shared/lib/utils';
 
 interface EscuelaDetallesProps {
-  escuela: Escuela;
+  escuela: School;
   onClose: () => void;
 }
 
@@ -38,7 +38,7 @@ const EscuelaDetalles = memo(({ escuela, onClose }: EscuelaDetallesProps) => {
         <div className="bg-white pt-6 pb-4 px-5 border-b border-gray-100">
           <div className="flex items-center gap-3">
             <div className="shrink-0 bg-white p-2 rounded-lg shadow-xs border border-gray-100">
-              <School className="h-6 w-6 text-[#217A4B]" />
+              <SchoolIcon className="h-6 w-6 text-[#217A4B]" />
             </div>
             <DialogTitle className="text-xl font-bold text-gray-900 tracking-tight break-words">
               {escuela.nombre}
@@ -88,7 +88,7 @@ const EscuelaDetalles = memo(({ escuela, onClose }: EscuelaDetallesProps) => {
                           Fecha de Fundación:
                         </span>
                         <span className="text-sm font-medium text-gray-800">
-                          {formatearFecha(
+                          {formatDate(
                             escuela.fechaFundacion || 'No especificada',
                           )}
                         </span>
