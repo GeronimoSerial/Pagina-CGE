@@ -29,7 +29,7 @@ export default function TramitesLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <div className="block lg:grid lg:grid-cols-[300px_1fr] lg:gap-0 min-h-screen">
-        <Suspense fallback={<div className="w-[300px] h-screen bg-gray-50" />}>
+        <Suspense fallback={<div className="w-[300px] h-screen " />}>
           <NavigationLoader />
         </Suspense>
         <div className="w-full lg:pt-0">{children}</div>
