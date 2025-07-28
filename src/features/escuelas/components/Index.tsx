@@ -1,13 +1,13 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { Accordion } from '@/shared/ui/accordion';
-import BuscadorEscuelas from './BuscadorEscuelas';
+import SchoolSearch from './SchoolSearch';
 import { EscuelaDetalles } from '@/shared/data/dynamic-client';
 import AccordionItemUnificado from './Accordion';
-import type { Escuela } from '@/shared/interfaces';
-import { agruparEscuelasPorDepartamento } from '../utils/escuelas';
+import type { School } from '@/shared/interfaces';
+import { groupSchoolsByDepartment } from '../utils/escuelas';
 import {
   AlertCircle,
-  School,
+  School as SchoolIcon,
   Search,
   Map,
   Users,
@@ -21,29 +21,30 @@ import {
   SelectContent,
   SelectItem,
 } from '@/shared/ui/select';
-import { useEscuelas } from '@/features/institucional/hooks/useEscuelas';
+import { useSchools } from '@/features/institucional/hooks/useSchools';
 
-interface EscuelaConMail extends Escuela {
+interface SchoolWithMail extends School {
   mail?: string | null;
 }
 
-export default function EscuelasClient() {
-  const { escuelas, loading, error } = useEscuelas();
+export default function SchoolsClient() {
+  const { schools, loading, error } = useSchools();
   const [expanded, setExpanded] = useState<string | undefined>(undefined);
-  const [escuelaSeleccionada, setEscuelaSeleccionada] =
-    useState<EscuelaConMail | null>(null);
-
-  const escuelasPorDepartamento = useMemo(
-    () => agruparEscuelasPorDepartamento(escuelas),
-    [escuelas],
+  const [selectedSchool, setSelectedSchool] = useState<SchoolWithMail | null>(
+    null,
   );
 
-  const handleSelectEscuela = useCallback((escuela: EscuelaConMail) => {
-    setEscuelaSeleccionada(escuela);
+  const schoolsByDepartment = useMemo(
+    () => groupSchoolsByDepartment(schools),
+    [schools],
+  );
+
+  const handleSelectSchool = useCallback((school: SchoolWithMail) => {
+    setSelectedSchool(school);
   }, []);
 
-  const handleCloseDetalles = useCallback(() => {
-    setEscuelaSeleccionada(null);
+  const handleCloseDetails = useCallback(() => {
+    setSelectedSchool(null);
   }, []);
 
   if (error) {
@@ -60,7 +61,7 @@ export default function EscuelasClient() {
   }
 
   return (
-    <div className="bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+    <div className="bg-linear-to-b from-white to-gray-50 rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
       <div className="p-8 space-y-6">
         <div className="bg-white rounded-xl border border-gray-200 shadow-lg p-4 sm:p-6 transform transition hover:shadow-xl relative z-20">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
@@ -77,17 +78,17 @@ export default function EscuelasClient() {
             </div>
           </div>
           <div className="w-full">
-            <BuscadorEscuelas
-              escuelas={escuelas}
-              onSelectEscuela={handleSelectEscuela}
+            <SchoolSearch
+              schools={schools}
+              onSelectSchool={handleSelectSchool}
             />
           </div>
         </div>
         {/* Stats cards with improved responsive layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="bg-white rounded-xl border border-gray-200 shadow-md p-4 flex items-center hover:shadow-lg transition-shadow">
-            <div className="rounded-full bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] p-2 mr-3 shadow-md">
-              <School className="h-5 w-5 text-white" />
+            <div className="rounded-full bg-linear-to-br from-[#3D8B37] to-[#2D6A27] p-2 mr-3 shadow-md">
+              <SchoolIcon className="h-5 w-5 text-white" />
             </div>
             <div>
               <p className="text-[10px] uppercase font-semibold text-gray-500 tracking-wider">
@@ -98,7 +99,7 @@ export default function EscuelasClient() {
             </div>
           </div>
           <div className="bg-white rounded-xl border border-gray-200 shadow-md p-4 flex items-center hover:shadow-lg transition-shadow">
-            <div className="rounded-full bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] p-2 mr-3 shadow-md">
+            <div className="rounded-full bg-linear-to-br from-[#3D8B37] to-[#2D6A27] p-2 mr-3 shadow-md">
               <Users className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -114,7 +115,7 @@ export default function EscuelasClient() {
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden mb-8 transform transition hover:shadow-xl z-10 relative">
-          <div className="bg-gradient-to-br from-[#3D8B37] to-[#2D6A27] p-6">
+          <div className="bg-linear-to-br from-[#3D8B37] to-[#2D6A27] p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <Building2 className="h-8 w-8 text-white mr-4" />
@@ -146,11 +147,10 @@ export default function EscuelasClient() {
                   <SelectValue placeholder="Seleccionar departamento" />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.keys(escuelasPorDepartamento)
+                  {Object.keys(schoolsByDepartment)
                     .sort((a, b) => a.localeCompare(b))
                     .map((dep) => {
-                      const cantidadEscuelas =
-                        escuelasPorDepartamento[dep].length;
+                      const cantidadEscuelas = schoolsByDepartment[dep].length;
                       return (
                         <SelectItem
                           key={dep}
@@ -173,7 +173,7 @@ export default function EscuelasClient() {
         <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden mt-6 z-10 relative">
           <div className="p-1">
             {expanded &&
-              Object.keys(escuelasPorDepartamento).map((dep) => (
+              Object.keys(schoolsByDepartment).map((dep) => (
                 <div
                   key={dep}
                   className={expanded === dep ? 'block' : 'hidden'}
@@ -187,9 +187,9 @@ export default function EscuelasClient() {
                   >
                     <AccordionItemUnificado
                       agrupador={{ id: dep, nombre: dep }}
-                      escuelas={escuelasPorDepartamento[dep] || []}
+                      escuelas={schoolsByDepartment[dep] || []}
                       isExpanded={expanded === dep}
-                      onSelectEscuela={handleSelectEscuela}
+                      onSelectEscuela={handleSelectSchool}
                       tipo="departamento"
                     />
                   </Accordion>
@@ -212,10 +212,10 @@ export default function EscuelasClient() {
         </div>
       </div>
 
-      {escuelaSeleccionada && (
+      {selectedSchool && (
         <EscuelaDetalles
-          escuela={escuelaSeleccionada}
-          onClose={handleCloseDetalles}
+          escuela={selectedSchool}
+          onClose={handleCloseDetails}
         />
       )}
     </div>

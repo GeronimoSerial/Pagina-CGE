@@ -4,7 +4,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import NewsGrid from './NewsGrid';
 import SimplePagination from './SimplePagination';
-import { Noticia } from '@/shared/interfaces';
+import { NewsItem } from '@/shared/interfaces';
 import { STRAPI_URL } from '@/shared/lib/config';
 
 function useDebounce<T>(value: T, delay: number): T {
@@ -33,7 +33,7 @@ export default function DynamicNewsClient({
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [noticias, setNoticias] = useState<Noticia[]>([]);
+  const [news, setNews] = useState<NewsItem[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -95,7 +95,7 @@ export default function DynamicNewsClient({
 
       const noticiasData = await noticiasRes.json();
 
-      const mapeadas: Noticia[] = noticiasData.data.map((noticia: any) => ({
+      const mapeadas: NewsItem[] = noticiasData.data.map((noticia: any) => ({
         id: noticia.id,
         autor: noticia.autor || 'Redacción CGE',
         titulo: noticia.titulo,
@@ -108,7 +108,7 @@ export default function DynamicNewsClient({
         imagen: noticia.imagen,
       }));
 
-      setNoticias(mapeadas);
+      setNews(mapeadas);
       setTotalPages(noticiasData.meta?.pagination?.pageCount || 1);
     } catch (error: any) {
       console.error('Error fetching noticias:', error);
@@ -155,26 +155,23 @@ export default function DynamicNewsClient({
     );
   }
 
-  const noticiasDestacadas = noticias.filter((noticia) => noticia.esImportante);
-  const noticiasRegulares = noticias.filter((noticia) => !noticia.esImportante);
+  const featuredNews = news.filter((item) => item.esImportante);
+  const regularNews = news.filter((item) => !item.esImportante);
 
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div className="text-sm text-gray-600">
-          {noticias.length > 0
-            ? `${noticias.length} noticia${noticias.length !== 1 ? 's' : ''} encontrada${noticias.length !== 1 ? 's' : ''}`
+          {news.length > 0
+            ? `${news.length} noticia${news.length !== 1 ? 's' : ''} encontrada${news.length !== 1 ? 's' : ''}`
             : 'No se encontraron noticias'}
         </div>
       </div>
 
       {/* Grid de noticias filtradas */}
-      {noticias.length > 0 ? (
+      {news.length > 0 ? (
         <>
-          <NewsGrid
-            noticiasDestacadas={noticiasDestacadas}
-            noticiasRegulares={noticiasRegulares}
-          />
+          <NewsGrid featuredNews={featuredNews} regularNews={regularNews} />
 
           {/* Paginación */}
           {totalPages > 1 && (

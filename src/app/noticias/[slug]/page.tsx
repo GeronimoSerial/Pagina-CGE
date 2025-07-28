@@ -1,34 +1,33 @@
 import Link from 'next/link';
 import { CalendarDays, Pencil } from 'lucide-react';
 import {
-  getNoticiaBySlug,
-  getPortada,
-  getNoticiasRelacionadas,
-  getAllNoticias,
-} from '@/features/noticias/services/noticias';
+  getNewsBySlug,
+  getCover,
+  getRelatedNews,
+  getAllNews,
+} from '@/features/noticias/services/news';
 import ReactMarkdown from 'react-markdown';
 import { notFound } from 'next/navigation';
-import PhotoSwipeGallery from '@/shared/components/PhotoSwipeGallery';
+import { PhotoSwipeGallery } from '@/shared/data/dynamic-client';
 import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
 import remarkGfm from 'remark-gfm';
 import { Separador } from '@/shared/components/Separador';
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale/es';
+import { formatDate } from '@/shared/lib/date-utils';
 import {
   newsCache,
   relatedCache,
   withCache,
 } from '@/shared/lib/aggressive-cache';
-import { Noticia } from '@/shared/interfaces';
+import { NewsItem } from '@/shared/interfaces';
 
 export const revalidate = 2592000; // 30 días
 
 export async function generateStaticParams() {
   try {
-    const noticias = await getAllNoticias();
-    return noticias.slice(0, 50).map((noticia: { slug: string }) => ({
+    const news = await getAllNews();
+    return news.slice(0, 50).map((noticia: { slug: string }) => ({
       slug: noticia.slug,
     }));
   } catch (error) {
@@ -44,7 +43,7 @@ export async function generateMetadata({
   const { slug } = await params;
 
   const noticia = await withCache(newsCache, `metadata-${slug}`, () =>
-    getNoticiaBySlug(slug),
+    getNewsBySlug(slug),
   );
 
   if (!noticia) return {};
@@ -116,10 +115,10 @@ interface PageProps {
 export default async function NoticiaPage({ params }: PageProps) {
   const { slug } = await params;
 
-  const noticia: Noticia | null = await withCache(
+  const noticia: NewsItem | null = await withCache(
     newsCache,
     `noticia-${slug}`,
-    () => getNoticiaBySlug(slug),
+    () => getNewsBySlug(slug),
   );
 
   if (!noticia) {
@@ -129,15 +128,15 @@ export default async function NoticiaPage({ params }: PageProps) {
   const relatedFinal = await withCache(
     relatedCache,
     `related-${noticia.categoria}-${slug}`,
-    () => getNoticiasRelacionadas(noticia.categoria, slug),
+    () => getRelatedNews(noticia.categoria, slug),
   ).catch(() => []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col page-bg-white">
       <div className="flex flex-1">
         <main className="flex-1 transition-all duration-300">
-          <div className="px-4 py-8 mx-auto max-w-5xl sm:px-6 lg:px-8">
-            <nav className="flex items-center mb-6 text-sm text-gray-500">
+          <div className="wide-container section-spacing">
+            <nav className="flex items-center element-spacing text-sm text-gray-500">
               <Link href="/" className="hover:text-green-800">
                 Inicio
               </Link>
@@ -149,16 +148,14 @@ export default async function NoticiaPage({ params }: PageProps) {
               <span className="text-gray-900">{noticia.titulo}</span>
             </nav>
 
-            <article className="mb-8 bg-white rounded-xl shadow-sm">
+            <article className="element-spacing bg-white rounded-xl shadow-xs">
               <div className="p-6 sm:p-8">
                 <header className="mb-8">
                   <div className="flex flex-wrap gap-4 items-center mb-4 text-sm text-gray-500">
                     <div className="flex items-center">
                       <CalendarDays className="mr-2 w-4 h-4" />
                       <span className="text-xs tracking-wide">
-                        {format(new Date(noticia.fecha), 'EEE, d MMMM yyyy', {
-                          locale: es,
-                        })}
+                        {formatDate(noticia.fecha)}
                       </span>
                     </div>
                     <div className="flex items-center">
@@ -179,7 +176,7 @@ export default async function NoticiaPage({ params }: PageProps) {
 
                 {noticia.portada && (
                   <Image
-                    src={getPortada({ noticia }) || ''}
+                    src={getCover({ noticia }) || ''}
                     alt={noticia.titulo}
                     className="object-cover mb-8 w-full max-h-96 rounded"
                     width={1200}
@@ -207,10 +204,10 @@ export default async function NoticiaPage({ params }: PageProps) {
           </div>
         </main>
 
-        <aside className="hidden overflow-hidden sticky top-[85px] mt-16 mr-4 mb-3 w-72 lg:h-[530px] border-t-2 border-r border-b border-l shadow-lg backdrop-blur-sm transition-all duration-500 ease-out border-slate-200 border-t-slate-300 shadow-slate-200/50 lg:block bg-white/95">
+        <aside className="hidden overflow-hidden sticky top-[85px] mt-16 mr-4 mb-3 w-72 lg:h-[450px] border-t-2 border-r border-b border-l shadow-lg backdrop-blur-xs transition-all duration-500 ease-out border-slate-200 border-t-slate-300 shadow-slate-200/50 lg:block bg-white/95">
           <div className="flex flex-col h-full">
             <div className="px-2 py-6">
-              <h3 className="px-4 mb-3 text-sm font-semibold tracking-[0.1em] text-black ">
+              <h3 className="px-4 mb-3 text-sm font-semibold tracking-widest text-black ">
                 ENLACES INSTITUCIONALES
               </h3>
 
@@ -259,12 +256,12 @@ export default async function NoticiaPage({ params }: PageProps) {
 
             {Array.isArray(relatedFinal) && relatedFinal.length > 0 && (
               <div className="flex-1 px-2 py-3">
-                <h3 className="px-4 mb-2 text-sm font-semibold tracking-[0.1em] text-black ">
+                <h3 className="px-4 mb-3 text-sm font-semibold tracking-widest text-black ">
                   ARTÍCULOS RELACIONADOS
                 </h3>
 
                 <div className="space-y-1">
-                  {relatedFinal.map((item: any) => (
+                  {relatedFinal.slice(0, 2).map((item: any) => (
                     <Link
                       key={item.id}
                       href={`/noticias/${item.slug}`}

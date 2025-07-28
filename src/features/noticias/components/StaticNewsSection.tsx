@@ -17,18 +17,15 @@ export default function StaticNewsSection({
 }: StaticNewsSectionProps) {
   const { noticias, pagination } = initialData;
 
-  const noticiasDestacadas =
+  const featuredNews =
     noticias.filter((noticia: any) => noticia.esImportante) || [];
-  const noticiasRegulares =
+  const regularNews =
     noticias.filter((noticia: any) => !noticia.esImportante) || [];
 
   return (
     <div className="space-y-8">
       <div>
-        <NewsGrid
-          noticiasDestacadas={noticiasDestacadas}
-          noticiasRegulares={noticiasRegulares}
-        />
+        <NewsGrid featuredNews={featuredNews} regularNews={regularNews} />
       </div>
 
       {pagination?.pageCount > 1 && (

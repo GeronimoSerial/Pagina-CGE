@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import type { Escuela } from '@/shared/interfaces';
+import type { School } from '@/shared/interfaces';
 
 const CACHE_KEY = 'escuelas_cache_v1';
 const CACHE_EXPIRATION_MS = 60 * 60 * 1000; // 1 hora
 
-export function useEscuelas() {
-  const [escuelas, setEscuelas] = useState<Escuela[]>([]);
+export function useSchools() {
+  const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,7 +18,7 @@ export function useEscuelas() {
           cache.timestamp &&
           Date.now() - cache.timestamp < CACHE_EXPIRATION_MS
         ) {
-          setEscuelas(cache.data);
+          setSchools(cache.data);
           setLoading(false);
           return;
         }
@@ -31,7 +31,7 @@ export function useEscuelas() {
         return res.json();
       })
       .then((data) => {
-        setEscuelas(data);
+        setSchools(data);
         setLoading(false);
         localStorage.setItem(
           CACHE_KEY,
@@ -44,5 +44,5 @@ export function useEscuelas() {
       });
   }, []);
 
-  return { escuelas, loading, error };
+  return { schools, loading, error };
 }

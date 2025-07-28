@@ -117,7 +117,7 @@ export default function NewsSearch({
               value={filtros.q}
               onChange={(e) => setFiltros({ ...filtros, q: e.target.value })}
               onKeyDown={handleKeyDown}
-              className="h-9 w-full pl-9 pr-10 text-sm rounded-md border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-none shadow-xs"
+              className="h-9 w-full pl-9 pr-10 text-sm rounded-md border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-hidden shadow-2xs"
               autoFocus
               onFocus={(e) =>
                 e.target.parentElement
@@ -144,7 +144,7 @@ export default function NewsSearch({
           <div className="flex flex-row md:flex-row gap-2 items-center md:ml-1">
             <button
               onClick={handleSearch}
-              className={`flex gap-1 items-center h-9 px-3 rounded-md text-xs font-medium transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/50 focus:outline-none min-w-[36px] ${
+              className={`flex gap-1 items-center h-9 px-3 rounded-md text-xs font-medium transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/50 focus:outline-hidden min-w-[36px] ${
                 hasPendingSearch
                   ? 'text-white bg-[#2d6b29] hover:bg-[#1f4d1c]'
                   : 'text-white bg-[#3D8B37] hover:bg-[#2d6b29]'
@@ -164,7 +164,7 @@ export default function NewsSearch({
             </button>
             <button
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className="flex gap-1 items-center h-9 px-3 rounded-md text-xs font-medium text-[#3D8B37] bg-[#F3F4F6] border border-[#3D8B37]/20 hover:bg-[#e5e7eb] transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/50 focus:outline-none min-w-[36px]"
+              className="flex gap-1 items-center h-9 px-3 rounded-md text-xs font-medium text-[#3D8B37] bg-[#F3F4F6] border border-[#3D8B37]/20 hover:bg-[#e5e7eb] transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/50 focus:outline-hidden min-w-[36px]"
               style={{ minHeight: 36 }}
               aria-expanded={showAdvanced}
             >
@@ -182,7 +182,7 @@ export default function NewsSearch({
             {(activeFiltersCount > 0 || filtros.q) && (
               <button
                 onClick={clearAll}
-                className="flex gap-1 items-center h-9 px-2 rounded-md border border-slate-300 text-xs text-slate-600 hover:text-[#3D8B37] hover:border-[#3D8B37]/50 hover:bg-[#F3F4F6] transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/50 focus:outline-none min-w-[36px]"
+                className="flex gap-1 items-center h-9 px-2 rounded-md border border-slate-300 text-xs text-slate-600 hover:text-[#3D8B37] hover:border-[#3D8B37]/50 hover:bg-[#F3F4F6] transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/50 focus:outline-hidden min-w-[36px]"
                 style={{ minHeight: 36 }}
               >
                 <X className="w-3 h-3" />
@@ -195,7 +195,7 @@ export default function NewsSearch({
         {(activeFiltersCount > 0 || filtros.q) && (
           <div className="flex flex-wrap gap-1 mt-2">
             {filtros.q && (
-              <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-xs">
+              <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-2xs">
                 <Search className="w-3 h-3" />
                 <span>
                   "
@@ -215,7 +215,7 @@ export default function NewsSearch({
               </div>
             )}
             {filtros.categoria && (
-              <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-xs">
+              <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-2xs">
                 <Tag className="w-3 h-3" />
                 <span>{filtros.categoria}</span>
                 <button
@@ -229,7 +229,7 @@ export default function NewsSearch({
               </div>
             )}
             {filtros.desde && (
-              <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-xs">
+              <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-2xs">
                 <Calendar className="w-3 h-3" />
                 <span>Desde: {filtros.desde}</span>
                 <button
@@ -243,7 +243,7 @@ export default function NewsSearch({
               </div>
             )}
             {filtros.hasta && (
-              <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-xs">
+              <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-2xs">
                 <Calendar className="w-3 h-3" />
                 <span>Hasta: {filtros.hasta}</span>
                 <button
@@ -274,7 +274,7 @@ export default function NewsSearch({
                   type="date"
                   value={filtros.desde || ''}
                   onChange={(e) => handleInputChange('desde', e.target.value)}
-                  className="h-8 px-2 w-full text-xs rounded border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-none"
+                  className="h-8 px-2 w-full text-xs rounded border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-hidden"
                   style={{ minHeight: 32, maxWidth: '100%' }}
                 />
               </div>
@@ -287,7 +287,7 @@ export default function NewsSearch({
                   type="date"
                   value={filtros.hasta || ''}
                   onChange={(e) => handleInputChange('hasta', e.target.value)}
-                  className="h-8 px-2 w-full text-xs rounded border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-none"
+                  className="h-8 px-2 w-full text-xs rounded border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-hidden"
                   style={{ minHeight: 32, maxWidth: '100%' }}
                 />
               </div>
@@ -301,7 +301,7 @@ export default function NewsSearch({
                   onChange={(e) =>
                     handleInputChange('categoria', e.target.value)
                   }
-                  className="h-8 px-2 w-full text-xs rounded border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-none"
+                  className="h-8 px-2 w-full text-xs rounded border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-hidden"
                   style={{ minHeight: 32, maxWidth: '100%' }}
                 >
                   <option value="">Todas</option>

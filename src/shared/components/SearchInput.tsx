@@ -46,9 +46,9 @@ const SearchInput: React.FC<SearchInputProps> = ({
           type="search"
           placeholder={placeholder || 'Buscar...'}
           className={`w-full pl-10 bg-white border-2 border-gray-300 rounded-xl py-2.5 px-4 
-            focus:outline-none focus:ring-2 focus:ring-[#3D8B37]/30 focus:border-[#3D8B37] 
+            focus:outline-hidden focus:ring-2 focus:ring-[#3D8B37]/30 focus:border-[#3D8B37] 
             transition-all duration-200 ease-in-out text-sm placeholder:text-gray-500 
-            hover:border-[#3D8B37] shadow-sm ${className || ''}`}
+            hover:border-[#3D8B37] shadow-xs ${className || ''}`}
           value={value}
           onChange={onChange}
         />
@@ -61,7 +61,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
               ${
                 !selectedCategory
                   ? 'bg-[#216B1D] hover:bg-[#195016] text-white border-transparent font-medium shadow-md'
-                  : 'text-gray-700 border-gray-200 bg-white hover:border-[#3D8B37] hover:text-[#3D8B37] hover:bg-[#3D8B37]/10 shadow-sm'
+                  : 'text-gray-700 border-gray-200 bg-white hover:border-[#3D8B37] hover:text-[#3D8B37] hover:bg-[#3D8B37]/10 shadow-xs'
               }`}
             onClick={() => onCategoryChange('')}
           >
@@ -74,7 +74,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
                 ${
                   selectedCategory === cat
                     ? 'bg-[#205C3B] border-transparent text-white font-medium shadow-md hover:bg-[#194931]'
-                    : 'text-gray-800 border-gray-200 bg-white hover:border-[#205C3B] hover:text-[#205C3B] hover:bg-[#205C3B]/10 shadow-sm'
+                    : 'text-gray-800 border-gray-200 bg-white hover:border-[#205C3B] hover:text-[#205C3B] hover:bg-[#205C3B]/10 shadow-xs'
                 }`}
               onClick={() => onCategoryChange(cat)}
             >

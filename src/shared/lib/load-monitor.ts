@@ -12,7 +12,7 @@ class LoadTestMonitor {
   private requestTimes: number[] = [];
   private errorCount = 0;
   private totalRequests = 0;
-  private maxMetrics = 100; // Mantener últimas 100 métricas
+  private maxMetrics = 100;
 
   startRequest(): string {
     this.activeRequests++;
@@ -33,12 +33,10 @@ class LoadTestMonitor {
       this.errorCount++;
     }
 
-    // Mantener solo las últimas 50 mediciones de tiempo
     if (this.requestTimes.length > 50) {
       this.requestTimes = this.requestTimes.slice(-50);
     }
 
-    // Capturar snapshot cada 10 requests
     if (this.totalRequests % 10 === 0) {
       this.captureSnapshot();
     }

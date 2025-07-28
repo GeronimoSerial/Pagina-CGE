@@ -89,7 +89,7 @@ const DocumentationSection = () => {
         <div className="mb-8">
           <div className="flex items-center mb-4">
             <div className="mr-2 w-1 h-6 bg-green-500 rounded-full"></div>
-            <h2 className="text-lg font-semibold text-gray-800">
+            <h2 className="text-xl md:text-2xl font-semibold text-gray-800">
               Últimos documentos añadidos
             </h2>
           </div>
@@ -117,18 +117,24 @@ const DocumentationSection = () => {
                       <span className="text-xs text-gray-500">{doc.date}</span>
                     </div>
                   </CardHeader>
-                  <CardContent className="flex-grow px-4 py-2">
-                    <CardTitle className="mb-1 text-sm font-semibold line-clamp-2">
+                  <CardContent className="grow px-4 py-2">
+                    <CardTitle
+                      className="mb-1 text-lg font-semibold line-clamp-2"
+                      title={doc.title}
+                    >
                       {doc.title}
                     </CardTitle>
-                    <CardDescription className="text-xs text-gray-600 line-clamp-2">
+                    <CardDescription
+                      className="text-sm text-gray-600 line-clamp-2"
+                      title={doc.description}
+                    >
                       {doc.description}
                     </CardDescription>
                   </CardContent>
                   <CardFooter className="px-4 py-3">
                     <Button
                       variant="outline"
-                      className="flex gap-2 items-center w-full text-xs"
+                      className="flex gap-2 items-center w-full text-sm hover:bg-[#3D8B37] hover:text-white transition-colors"
                       asChild
                     >
                       <a href={doc.downloadUrl}>
@@ -143,7 +149,7 @@ const DocumentationSection = () => {
 
           {/* Sección de búsqueda */}
           <div className="mt-10 mb-8">
-            <div className="p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
+            <div className="p-6 bg-white rounded-xl border border-gray-200 shadow-xs">
               <SearchInput
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -163,7 +169,7 @@ const DocumentationSection = () => {
         <div className="mb-8">
           <div className="flex items-center mb-4">
             <div className="mr-2 w-1 h-6 bg-green-500 rounded-full"></div>
-            <h2 className="text-lg font-semibold text-gray-800">
+            <h2 className="text-xl md:text-2xl font-semibold text-gray-800">
               {activeFilter === 'all'
                 ? 'Todos los documentos'
                 : `Documentos de ${activeFilter === 'guias' ? 'guías' : activeFilter}`}
@@ -197,18 +203,24 @@ const DocumentationSection = () => {
                         </span>
                       </div>
                     </CardHeader>
-                    <CardContent className="flex-grow px-4 py-2">
-                      <CardTitle className="mb-1 text-sm font-semibold line-clamp-2">
+                    <CardContent className="grow px-4 py-2">
+                      <CardTitle
+                        className="mb-1 text-lg font-semibold line-clamp-2"
+                        title={doc.title}
+                      >
                         {doc.title}
                       </CardTitle>
-                      <CardDescription className="text-xs text-gray-600 line-clamp-3">
+                      <CardDescription
+                        className="text-sm text-gray-600 line-clamp-3"
+                        title={doc.description}
+                      >
                         {doc.description}
                       </CardDescription>
                     </CardContent>
                     <CardFooter className="px-4 py-3">
                       <Button
                         variant="outline"
-                        className="flex gap-2 items-center w-full text-xs"
+                        className="flex gap-2 items-center w-full text-sm hover:bg-[#3D8B37] hover:text-white transition-colors"
                         asChild
                       >
                         <a href={doc.downloadUrl}>

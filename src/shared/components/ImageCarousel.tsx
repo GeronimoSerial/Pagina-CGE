@@ -1,8 +1,8 @@
-//Carousel de imagenes provisorio
+//Image carousel component
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import type { ImagenCarruselGenerica } from '@/shared/interfaces/index';
+import type { GenericCarouselImage } from '@/shared/interfaces/index';
 import { useState, useEffect, useCallback } from 'react';
 
 import 'swiper/css';
@@ -19,7 +19,7 @@ function CarouselSlide({
   onClick,
   horizontal = false,
 }: {
-  slide: ImagenCarruselGenerica;
+  slide: GenericCarouselImage;
   isFirst: boolean;
   onClick?: () => void;
   horizontal?: boolean;
@@ -34,7 +34,7 @@ function CarouselSlide({
 
   return (
     <div
-      className="relative h-[16rem] md:h-[32rem] rounded-2xl overflow-hidden shadow-xl cursor-pointer"
+      className="relative h-64 md:h-128 rounded-2xl overflow-hidden shadow-xl cursor-pointer"
       onClick={onClick}
     >
       <Image
@@ -48,7 +48,7 @@ function CarouselSlide({
         blurDataURL={defaultBlur}
         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 800px"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-20" />
+      <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent z-20" />
       {(alt || description) && (
         <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8 z-30">
           {alt && (
@@ -57,7 +57,7 @@ function CarouselSlide({
             </h4>
           )}
           {description && (
-            <p className="text-white/90 drop-shadow text-xs md:text-lg max-w-3xl line-clamp-2 md:line-clamp-none">
+            <p className="text-white/90 drop-shadow-sm text-xs md:text-lg max-w-3xl line-clamp-2 md:line-clamp-none">
               {description}
             </p>
           )}
@@ -67,22 +67,22 @@ function CarouselSlide({
   );
 }
 
-function ModalCarrusel({
-  imagenes,
-  indiceActivo,
-  cerrarModal,
+function CarouselModal({
+  images,
+  activeIndex,
+  closeModal,
 }: {
-  imagenes: ImagenCarruselGenerica[];
-  indiceActivo: number;
-  cerrarModal: () => void;
+  images: GenericCarouselImage[];
+  activeIndex: number;
+  closeModal: () => void;
 }) {
   return (
     <div
       className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"
-      onClick={cerrarModal}
+      onClick={closeModal}
     >
       <button
-        onClick={cerrarModal}
+        onClick={closeModal}
         className="absolute top-4 right-4 text-white text-3xl z-50 hover:scale-110 transition"
         aria-label="Cerrar modal"
       >
@@ -90,14 +90,14 @@ function ModalCarrusel({
       </button>
       <div className="w-full h-full" onClick={(e) => e.stopPropagation()}>
         <Swiper
-          initialSlide={indiceActivo}
+          initialSlide={activeIndex}
           loop
           navigation
           pagination={{ clickable: true }}
           modules={[Navigation, Pagination]}
           className="w-full h-full"
         >
-          {imagenes.map((img, i) => (
+          {images.map((img, i) => (
             <SwiperSlide key={i}>
               <div className="flex items-center justify-center h-full">
                 <Image
@@ -116,42 +116,42 @@ function ModalCarrusel({
   );
 }
 
-export default function CarouselDeImagenes({
-  imagenes,
+export default function ImageCarousel({
+  images,
   horizontal,
 }: {
-  imagenes: ImagenCarruselGenerica[];
+  images: GenericCarouselImage[];
   horizontal?: boolean;
 }) {
-  if (!imagenes || imagenes.length === 0) return null;
+  if (!images || images.length === 0) return null;
 
-  const [modalAbierto, setModalAbierto] = useState(false);
-  const [indiceActivo, setIndiceActivo] = useState(0);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const cerrarModal = useCallback(() => {
-    setModalAbierto(false);
+  const closeModal = useCallback(() => {
+    setModalOpen(false);
   }, []);
 
-  const abrirModal = useCallback((indice: number) => {
-    setIndiceActivo(indice);
-    setModalAbierto(true);
+  const openModal = useCallback((index: number) => {
+    setActiveIndex(index);
+    setModalOpen(true);
   }, []);
 
   useEffect(() => {
-    const manejarEsc = (e: KeyboardEvent) => {
+    const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        cerrarModal();
+        closeModal();
       }
     };
-    if (modalAbierto) {
-      window.addEventListener('keydown', manejarEsc);
+    if (modalOpen) {
+      window.addEventListener('keydown', handleEsc);
     }
     return () => {
-      window.removeEventListener('keydown', manejarEsc);
+      window.removeEventListener('keydown', handleEsc);
     };
-  }, [modalAbierto, cerrarModal]);
+  }, [modalOpen, closeModal]);
 
-  const manejarClickSlide = (i: number) => () => abrirModal(i);
+  const handleSlideClick = (i: number) => () => openModal(i);
 
   return (
     <div className="w-full max-w-5xl mx-auto my-11 relative">
@@ -168,23 +168,23 @@ export default function CarouselDeImagenes({
         }}
         className="h-full w-full rounded-2xl"
       >
-        {imagenes.map((slide, index) => (
+        {images.map((slide, index) => (
           <SwiperSlide key={index}>
             <CarouselSlide
               slide={slide}
               isFirst={index === 0}
-              onClick={manejarClickSlide(index)}
+              onClick={handleSlideClick(index)}
               horizontal={horizontal}
             />
           </SwiperSlide>
         ))}
       </Swiper>
 
-      {modalAbierto && (
-        <ModalCarrusel
-          imagenes={imagenes}
-          indiceActivo={indiceActivo}
-          cerrarModal={cerrarModal}
+      {modalOpen && (
+        <CarouselModal
+          images={images}
+          activeIndex={activeIndex}
+          closeModal={closeModal}
         />
       )}
     </div>

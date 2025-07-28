@@ -1,10 +1,7 @@
-// Documentación descargable.
 import { DocumentacionSection } from '@/shared/data/dynamic-client';
-import HeroSection from '@/shared/components/Hero';
-import FAQSection from '@/shared/components/FAQSection';
+import { ContentPageLayout } from '@/shared/components/PageLayout';
 import { Metadata } from 'next';
-import InfoBar from '@/shared/components/InfoBar';
-import { Separator } from '@radix-ui/react-separator';
+
 export const metadata: Metadata = {
   title: 'Documentación',
   description:
@@ -31,19 +28,14 @@ export const metadata: Metadata = {
 
 export default function Documentacion() {
   return (
-    <main className="min-h-screen bg-gray-50">
-      <HeroSection
-        title="Documentación"
-        description="Encontrá todos los documentos, formularios y normativas necesarias para tus trámites"
-      />
-      <InfoBar basePath="/documentacion" />
-      <section>
-        <div className="container px-4 mx-auto md:px-6">
-          <DocumentacionSection />
-        </div>
-      </section>
-      <FAQSection basePath="/documentacion" />
-      <Separator className="my-8 bg-gray-50" />
-    </main>
+    <ContentPageLayout
+      title="Documentación"
+      description="Encontrá todos los documentos, formularios y normativas necesarias para tus trámites"
+      showFAQ={true}
+      showInfoBar={true}
+      basePath="/documentacion"
+    >
+      <DocumentacionSection />
+    </ContentPageLayout>
   );
 }
