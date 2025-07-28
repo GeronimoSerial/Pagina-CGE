@@ -30,7 +30,7 @@ export const ClientCarousel = dynamic(
 );
 
 export const SchoolsClient = dynamic(
-  () => import('@/features/escuelas/components/index'),
+  () => import('@/features/escuelas/components/Index'),
   {
     ssr: false,
     loading: () => <LoadingSpinner text="Cargando escuelas" />,

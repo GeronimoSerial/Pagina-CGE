@@ -32,33 +32,35 @@ export function RegularNewsCard({
           />
           <div className="absolute inset-0 transition-colors duration-300 bg-black/0 group-hover:bg-black/10" />
         </div>
-        <div className="p-6">
-          <div className="flex gap-4 items-center mb-4 text-sm text-gray-500">
-            <div className="flex gap-1 items-center">
-              <CalendarDays className="w-4 h-4" />
-              <span className="text-xs tracking-wide">
-                {' '}
-                {formatDate(noticia.fecha)}
-              </span>
+        <div className="p-6 flex flex-col justify-between h-[250px]">
+          <div>
+            <div className="flex gap-4 items-center mb-4 text-sm text-gray-500">
+              <div className="flex gap-1 items-center">
+                <CalendarDays className="w-4 h-4" />
+                <span className="text-xs tracking-wide">
+                  {' '}
+                  {formatDate(noticia.fecha)}
+                </span>
+              </div>
+              <div className="flex gap-1 items-center">
+                <Tag className="w-4 h-4" />
+                <span className="tracking-wide">
+                  {noticia.categoria ?? 'Redacción CGE'}
+                </span>
+              </div>
             </div>
-            <div className="flex gap-1 items-center">
-              <Tag className="w-4 h-4" />
-              <span className="tracking-wide">
-                {noticia.categoria ?? 'Redacción CGE'}
-              </span>
-            </div>
+            <a href={`/noticias/${noticia.slug}`}>
+              <h4 className="mb-3 text-lg font-semibold leading-7 text-gray-900 transition-colors duration-200 hover:text-green-900">
+                {noticia.titulo}
+              </h4>
+            </a>
+            <p
+              className="mb-4 text-sm leading-relaxed text-gray-600"
+              title={noticia.resumen}
+            >
+              {noticia.resumen}
+            </p>
           </div>
-          <a href={`/noticias/${noticia.slug}`}>
-            <h4 className="mb-3 text-lg font-semibold leading-7 text-gray-900 transition-colors duration-200 hover:text-green-900">
-              {noticia.titulo}
-            </h4>
-          </a>
-          <p
-            className="mb-4 text-sm leading-relaxed text-gray-600"
-            title={noticia.resumen}
-          >
-            {noticia.resumen}
-          </p>
           <div className="flex items-center text-sm font-medium text-gray-900 transition-colors duration-200 hover:text-green-900">
             <a
               href={`/noticias/${noticia.slug}`}
