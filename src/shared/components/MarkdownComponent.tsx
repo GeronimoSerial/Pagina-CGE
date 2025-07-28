@@ -2,17 +2,17 @@ import { Components } from 'react-markdown';
 // renderizado de texto p/ full article
 export const MarkdownComponent: Components = {
   h1: ({ children }) => (
-    <h1 className="text-4xl font-bold text-slate-900 mt-8 mb-4 border-b pb-1 border-slate-200">
+    <h1 className="text-3xl font-bold text-slate-900 mt-8 mb-4 border-b pb-1 border-slate-200">
       {children}
     </h1>
   ),
   h2: ({ children }) => (
-    <h2 className="text-2xl font-semibold mt-6 mb-3 text-slate-800">
+    <h2 className="text-xl font-semibold mt-6 mb-3 text-slate-800">
       {children}
     </h2>
   ),
   h3: ({ children }) => (
-    <h3 className="text-xl font-medium mt-6 mb-3 text-slate-700">{children}</h3>
+    <h3 className="text-lg font-medium mt-6 mb-3 text-slate-700">{children}</h3>
   ),
   a: ({ children, href }) => (
     <a
