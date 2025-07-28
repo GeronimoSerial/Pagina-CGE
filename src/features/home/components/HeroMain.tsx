@@ -1,6 +1,5 @@
 'use client';
 import { Button } from '@/shared/ui/button';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -30,12 +29,7 @@ const HeroMain = () => {
       <div className="absolute inset-0 bg-black/40" />
 
       <div className="relative z-10 h-full w-full max-w-7xl mx-auto px-8 md:px-12 lg:px-20 flex flex-col justify-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="max-w-2xl"
-        >
+        <div className="max-w-2xl animate-fade-in-up">
           <h1
             className="mt-16 text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-4 md:text-balance leading-tight"
             style={{ textShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)' }}
@@ -57,7 +51,7 @@ const HeroMain = () => {
           >
             <Link href="/institucional">Conocé nuestras acciones</Link>
           </Button>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

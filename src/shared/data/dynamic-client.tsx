@@ -88,3 +88,62 @@ export const DocumentacionSection = dynamic(
     loading: () => <LoadingSpinner text="Cargando documentación" />,
   },
 );
+
+// Componentes lazy para homepage optimization
+export const LatestNewsStatic = dynamic(
+  () => import('@/features/noticias/components/LatestNews'),
+  {
+    ssr: false,
+    loading: () => (
+      <section className="relative px-4 py-12 mx-auto w-full max-w-7xl sm:px-6 lg:px-8 lg:py-20">
+        <div className="flex flex-col gap-8 lg:flex-row lg:gap-16">
+          <div className="w-full lg:w-96">
+            <div className="h-8 bg-gray-200 rounded animate-pulse mb-6"></div>
+            <div className="h-6 bg-gray-200 rounded animate-pulse mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded animate-pulse mb-4"></div>
+            <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+          <div className="flex-1">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+              {Array(6)
+                .fill(0)
+                .map((_, i) => (
+                  <div key={i} className="bg-white rounded-xl shadow-sm border">
+                    <div className="h-48 bg-gray-200 rounded-t-xl animate-pulse"></div>
+                    <div className="p-6">
+                      <div className="h-4 bg-gray-200 rounded animate-pulse mb-3"></div>
+                      <div className="h-6 bg-gray-200 rounded animate-pulse mb-3"></div>
+                      <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+                      <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    ),
+  },
+);
+
+export const SocialMediaSection = dynamic(
+  () => import('@/features/socials/components/SocialMediaSection'),
+  {
+    ssr: false,
+    loading: () => (
+      <section className="relative overflow-hidden bg-gray-50">
+        <div className="container relative mx-auto px-6 py-12">
+          <div className="text-center max-w-2xl mx-auto mb-6">
+            <div className="h-8 bg-gray-200 rounded animate-pulse mb-6"></div>
+            <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+          <div className="flex flex-col sm:flex-row justify-center gap-8 max-w-2xl py-2 mx-auto">
+            <div className="flex-1 h-24 bg-gray-200 rounded-3xl animate-pulse"></div>
+            <div className="flex-1 h-24 bg-gray-200 rounded-3xl animate-pulse"></div>
+          </div>
+        </div>
+      </section>
+    ),
+  },
+);

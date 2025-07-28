@@ -149,136 +149,64 @@
   }
 }
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --institutional-green: 115 44% 38%; /* Verde institucional */
-    --institutional-green-foreground: 115 44% 38%;
-
-    /* CGE Design Tokens - Layout System */
-    --page-padding-x: 1rem; /* px-4 base */
-    --page-padding-x-md: 1.5rem; /* md:px-6 */
-    --page-padding-x-lg: 2rem; /* lg:px-8 */
-    --page-padding-y: 2rem; /* py-8 base */
-    --page-padding-y-md: 3rem; /* md:py-12 */
-    --page-padding-y-lg: 4rem; /* py-16 especial */
+/* Optimización: Animaciones CSS para reemplazar Framer Motion */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-  }
-
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-    background-color: #f7faf9;
-  }
-  h1,
-  h2,
-  h3,
-  h4 {
-    font-family: var(--font-lora);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
+.animate-fade-in-up {
+  animation: fade-in-up 0.7s ease-out;
+}
+
+/* CGE Base Styles */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  font-size: 90%;
+}
+
+body {
+  background-color: #f7faf9;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-lora);
+}
+
+.group:has(img[src]):not(:has(img[src=''])) .skeleton {
+  display: none;
+}
+
+/* Performance optimizations para móviles */
+@media (max-width: 768px) {
+  /* Desactivar efectos hover y animaciones decorativas */
+  .group:hover img.transition-transform,
+  .group:hover img.scale-105,
+  .group:active img.scale-105 {
+    transform: none !important;
+    transition: none !important;
   }
-  body {
-    @apply bg-background text-foreground;
-    background-color: #f7faf9;
+
+  /* Desactivar otras animaciones decorativas */
+  .group img {
+    transition: none !important;
   }
 }
 
-@layer utilities {
-  html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 5rem;
-    font-size: 90%;
-  }
-  .group:has(img[src]):not(:has(img[src=''])) .skeleton {
-    display: none;
-  }
-
-  /* Desactivar solo las animaciones decorativas en dispositivos móviles */
-  @media (max-width: 768px) {
-    /* Desactivar efectos hover y animaciones decorativas */
-    .group:hover img.transition-transform,
-    .group:hover img.scale-105,
-    .group:active img.scale-105 {
-      transform: none !important;
-      transition: none !important;
-    }
-
-    /* Desactivar otras animaciones decorativas */
-    .group img {
-      transition: none !important;
-    }
-  }
-
-  /* Habilitar animaciones decorativas solo si el dispositivo lo soporta y prefiere animaciones */
-  @media (prefers-reduced-motion: no-preference) and (min-width: 769px) {
-    .group:hover img {
-      transform: scale(1.05);
-      transition: transform 700ms;
-    }
+/* Habilitar animaciones decorativas solo si el dispositivo lo soporta y prefiere animaciones */
+@media (prefers-reduced-motion: no-preference) and (min-width: 769px) {
+  .group:hover img {
+    transform: scale(1.05);
+    transition: transform 700ms;
   }
 }
