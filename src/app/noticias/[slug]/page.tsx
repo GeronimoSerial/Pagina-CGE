@@ -8,7 +8,7 @@ import {
 } from '@/features/noticias/services/news';
 import ReactMarkdown from 'react-markdown';
 import { notFound } from 'next/navigation';
-import PhotoSwipeGallery from '@/shared/components/PhotoSwipeGallery';
+import { PhotoSwipeGallery } from '@/shared/data/dynamic-client';
 import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
 import remarkGfm from 'remark-gfm';
 import { Separador } from '@/shared/components/Separador';
