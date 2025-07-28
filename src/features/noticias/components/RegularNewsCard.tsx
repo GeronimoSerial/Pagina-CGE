@@ -5,7 +5,15 @@ import { getCover } from '@/features/noticias/services/news';
 import { NewsItem } from '@/shared/interfaces';
 import Image from 'next/image';
 
-export function RegularNewsCard({ noticia }: { noticia: NewsItem }) {
+export function RegularNewsCard({
+  noticia,
+  index = 0,
+}: {
+  noticia: NewsItem;
+  index?: number;
+}) {
+  const isFirstImage = index === 0;
+
   return (
     <Card
       key={noticia.id}
@@ -19,7 +27,8 @@ export function RegularNewsCard({ noticia }: { noticia: NewsItem }) {
             src={getCover({ noticia }) || ''}
             width={1200}
             height={630}
-            priority
+            priority={isFirstImage}
+            loading={isFirstImage ? 'eager' : 'lazy'}
           />
           <div className="absolute inset-0 transition-colors duration-300 bg-black/0 group-hover:bg-black/10" />
         </div>

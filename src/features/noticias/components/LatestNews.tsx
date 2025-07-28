@@ -60,8 +60,12 @@ export default function LatestNewsStatic({ noticias }: LatestNewsStaticProps) {
         <div className="flex-1">
           {noticiasFormateadas.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-              {noticiasFormateadas.map((noticia) => (
-                <RegularNewsCard key={noticia.id} noticia={noticia} />
+              {noticiasFormateadas.map((noticia, index) => (
+                <RegularNewsCard
+                  key={noticia.id}
+                  noticia={noticia}
+                  index={index}
+                />
               ))}
             </div>
           ) : (

@@ -1,10 +1,12 @@
 import HeroMain from '@/features/home/components/HeroMain';
 import QuickAccess from '@/features/home/components/QuickAccess';
 import { Separator } from '@radix-ui/react-separator';
-import SocialMediaSection from '@/features/socials/components/SocialMediaSection';
 import { Separador } from '@/shared/components/Separador';
 import { Metadata } from 'next';
-import LatestNewsStatic from '@/features/noticias/components/LatestNews';
+import {
+  LatestNewsStatic,
+  SocialMediaSection,
+} from '@/shared/data/dynamic-client';
 import { getPaginatedNews } from '@/features/noticias/services/news';
 
 export const metadata: Metadata = {
