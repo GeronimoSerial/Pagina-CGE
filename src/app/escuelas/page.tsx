@@ -32,7 +32,7 @@ export default function Escuelas() {
       title="Escuelas"
       description="Instituciones dependientes del Consejo General de Educación."
       showFAQ={true}
-      faqBasePath="/escuelas"
+      basePath="/escuelas"
     >
       <SchoolsClient />
     </ContentPageLayout>

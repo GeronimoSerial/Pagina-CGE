@@ -50,6 +50,8 @@ export default async function NoticiasPage() {
           'Encontrá información sobre eventos, actividades y noticias institucionales.',
       }}
       showSeparator={true}
+      showInfoBar={true}
+      basePath="/noticias"
     >
       <Suspense
         fallback={

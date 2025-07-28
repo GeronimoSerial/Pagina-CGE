@@ -204,7 +204,7 @@ export default async function NoticiaPage({ params }: PageProps) {
           </div>
         </main>
 
-        <aside className="hidden overflow-hidden sticky top-[85px] mt-16 mr-4 mb-3 w-72 lg:h-[530px] border-t-2 border-r border-b border-l shadow-lg backdrop-blur-xs transition-all duration-500 ease-out border-slate-200 border-t-slate-300 shadow-slate-200/50 lg:block bg-white/95">
+        <aside className="hidden overflow-hidden sticky top-[85px] mt-16 mr-4 mb-3 w-72 lg:h-[450px] border-t-2 border-r border-b border-l shadow-lg backdrop-blur-xs transition-all duration-500 ease-out border-slate-200 border-t-slate-300 shadow-slate-200/50 lg:block bg-white/95">
           <div className="flex flex-col h-full">
             <div className="px-2 py-6">
               <h3 className="px-4 mb-3 text-sm font-semibold tracking-widest text-black ">
@@ -256,12 +256,12 @@ export default async function NoticiaPage({ params }: PageProps) {
 
             {Array.isArray(relatedFinal) && relatedFinal.length > 0 && (
               <div className="flex-1 px-2 py-3">
-                <h3 className="px-4 mb-2 text-sm font-semibold tracking-widest text-black ">
+                <h3 className="px-4 mb-3 text-sm font-semibold tracking-widest text-black ">
                   ARTÍCULOS RELACIONADOS
                 </h3>
 
                 <div className="space-y-1">
-                  {relatedFinal.map((item: any) => (
+                  {relatedFinal.slice(0, 2).map((item: any) => (
                     <Link
                       key={item.id}
                       href={`/noticias/${item.slug}`}

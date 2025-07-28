@@ -10,7 +10,7 @@ import {
   getPageLayout,
 } from '@/shared/design-tokens/layout-tokens';
 import { cn } from '@/shared/lib/utils';
-
+import InfoBar from './InfoBar';
 const FAQSection = dynamic(() => import('@/shared/components/FAQSection'));
 
 interface HeroProps {
@@ -39,7 +39,7 @@ interface PageLayoutProps {
 
   // FAQ section
   showFAQ?: boolean;
-  faqBasePath?: string;
+  basePath?: string;
 
   // Additional sections
   showSeparator?: boolean;
@@ -48,6 +48,9 @@ interface PageLayoutProps {
   // Custom classes
   className?: string;
   sectionClassName?: string;
+
+  // Info bar
+  showInfoBar?: boolean;
 }
 
 export function PageLayout({
@@ -58,7 +61,8 @@ export function PageLayout({
   pageType,
   hero,
   showFAQ = false,
-  faqBasePath,
+  showInfoBar = false,
+  basePath,
   showSeparator = true,
   separatorClass,
   className,
@@ -73,12 +77,13 @@ export function PageLayout({
       {hero && (
         <HeroSection title={hero.title} description={hero.description} />
       )}
+      {showInfoBar && <InfoBar basePath={basePath} />}
 
       <section className={cn(layout.section, sectionClassName)}>
         <div className={layout.container}>{children}</div>
       </section>
 
-      {showFAQ && faqBasePath && <FAQSection basePath={faqBasePath} />}
+      {showFAQ && basePath && <FAQSection basePath={basePath} />}
 
       {showSeparator && (
         <Separator
@@ -94,14 +99,16 @@ export function ContentPageLayout({
   title,
   description,
   showFAQ = false,
-  faqBasePath,
+  basePath,
   className,
+  showInfoBar = false,
 }: {
   children: React.ReactNode;
   title: string;
   description: string;
   showFAQ?: boolean;
-  faqBasePath?: string;
+  showInfoBar?: boolean;
+  basePath?: string;
   className?: string;
 }) {
   return (
@@ -109,8 +116,9 @@ export function ContentPageLayout({
       pageType="content"
       hero={{ title, description }}
       showFAQ={showFAQ}
-      faqBasePath={faqBasePath}
+      basePath={basePath}
       className={className}
+      showInfoBar={showInfoBar}
     >
       {children}
     </PageLayout>
@@ -122,20 +130,20 @@ export function FormPageLayout({
   title,
   description,
   showFAQ = false,
-  faqBasePath,
+  basePath,
 }: {
   children: React.ReactNode;
   title: string;
   description: string;
   showFAQ?: boolean;
-  faqBasePath?: string;
+  basePath?: string;
 }) {
   return (
     <PageLayout
       pageType="form"
       hero={{ title, description }}
       showFAQ={showFAQ}
-      faqBasePath={faqBasePath}
+      basePath={basePath}
     >
       {children}
     </PageLayout>

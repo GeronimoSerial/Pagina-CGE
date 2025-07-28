@@ -32,7 +32,7 @@ export default function Contacto() {
       title="Contacto"
       description="Si tienes alguna consulta o sugerencia, no dudes en contactarnos. Estamos aquí para ayudarte."
       showFAQ={true}
-      faqBasePath="/contacto"
+      basePath="/contacto"
     >
       <ContactForm />
     </FormPageLayout>
