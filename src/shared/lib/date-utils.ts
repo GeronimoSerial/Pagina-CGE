@@ -1,8 +1,3 @@
-/**
- * Utilidades para formateo de fechas usando Intl.DateTimeFormat nativo
- * Reemplaza date-fns para reducir el bundle size
- */
-
 export const formatDate = (
   date: string | Date,
   options?: Intl.DateTimeFormatOptions,
@@ -49,14 +44,12 @@ export const formatDateWithTime = (date: string | Date): string => {
   }).format(dateObj);
 };
 
-// Función para añadir días a una fecha (reemplaza addDays de date-fns)
 export const addDays = (date: Date, days: number): Date => {
   const result = new Date(date);
   result.setDate(result.getDate() + days);
   return result;
 };
 
-// Formato para date picker (reemplaza el formato 'LLL dd, y' de date-fns)
 export const formatDatePicker = (date: Date): string => {
   return new Intl.DateTimeFormat('es-ES', {
     month: 'short',

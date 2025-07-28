@@ -11,7 +11,6 @@ import {
 } from '@/shared/design-tokens/layout-tokens';
 import { cn } from '@/shared/lib/utils';
 
-// Lazy loading del FAQ - solo se carga cuando showFAQ=true
 const FAQSection = dynamic(() => import('@/shared/components/FAQSection'));
 
 interface HeroProps {
@@ -22,7 +21,6 @@ interface HeroProps {
 interface PageLayoutProps {
   children: React.ReactNode;
 
-  // Layout configuration
   containerType?: ContainerType;
   background?: BackgroundType;
   spacing?: SpacingType;

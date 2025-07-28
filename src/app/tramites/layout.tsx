@@ -4,7 +4,7 @@ import { ResponsiveNav } from '@/features/tramites/navigation/responsive-nav';
 export const revalidate = 2592000; // 30 días
 
 async function NavigationLoader() {
-  const { getTramitesNavigation } = await import(
+  const { getProceduresNavigation } = await import(
     '@/features/tramites/services/docs-data'
   );
   const { withCache, tramitesCache } = await import(
@@ -15,7 +15,7 @@ async function NavigationLoader() {
     const navigationSections = await withCache(
       tramitesCache,
       'tramites-navigation',
-      getTramitesNavigation,
+      getProceduresNavigation,
     );
 
     return <ResponsiveNav sections={navigationSections} />;
@@ -28,13 +28,10 @@ async function NavigationLoader() {
 export default function TramitesLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      {/* Main Layout - Grid en desktop, block en móvil/tablet */}
       <div className="block lg:grid lg:grid-cols-[300px_1fr] lg:gap-0 min-h-screen">
-        {/* Responsive Navigation - con Suspense para manejo de carga */}
         <Suspense fallback={<div className="w-[300px] h-screen bg-gray-50" />}>
           <NavigationLoader />
         </Suspense>
-        {/* Contenido de la página -  */}
         <div className="w-full lg:pt-0">{children}</div>
       </div>
     </>

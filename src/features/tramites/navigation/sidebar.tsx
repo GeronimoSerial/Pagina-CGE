@@ -18,12 +18,9 @@ interface SidebarProps {
 export function Sidebar({ sections, onLinkClick }: SidebarProps) {
   const pathname = usePathname();
 
-  // Extraigo el slug del artículo de la ruta actual
   const currentSlug = pathname.split('/')[2] || '';
 
-  // Estado para controlar qué categoría está expandida
   const [openSection, setOpenSection] = useState<string | null>(() => {
-    // Si la ruta actual pertenece a un artículo, expande la categoría correspondiente
     const found = sections.find((section) =>
       section.items.some((item) => item.id === currentSlug),
     );

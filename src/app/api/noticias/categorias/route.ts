@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { getNoticiasCategorias } from '@/features/noticias/services/noticias';
+import { getNewsCategories } from '@/features/noticias/services/news';
 
 export async function GET() {
   try {
-    const categorias = await getNoticiasCategorias();
+    const categorias = await getNewsCategories();
 
     return NextResponse.json(
       {

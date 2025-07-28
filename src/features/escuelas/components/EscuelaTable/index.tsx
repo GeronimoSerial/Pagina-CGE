@@ -1,17 +1,17 @@
 import React, { useCallback, memo } from 'react';
-import type { Escuela } from '@/shared/interfaces';
+import type { School } from '@/shared/interfaces';
 import { MobileView } from './MobileView';
 import { DesktopView } from './DesktopView';
 
 interface EscuelasTableProps {
-  escuelas: Escuela[];
-  onSelectEscuela: (escuela: Escuela) => void;
+  escuelas: School[];
+  onSelectEscuela: (escuela: School) => void;
 }
 
 const EscuelasTable = memo(
   ({ escuelas, onSelectEscuela }: EscuelasTableProps) => {
     const handleClick = useCallback(
-      (escuela: Escuela) => {
+      (escuela: School) => {
         onSelectEscuela(escuela);
       },
       [onSelectEscuela],

@@ -2,16 +2,16 @@ import { Loader2, SearchIcon, Building2 } from 'lucide-react';
 import React, { Suspense } from 'react';
 import { AccordionContent, AccordionItem } from '@/shared/ui/accordion';
 import { EscuelasTable } from '@/shared/data/dynamic-client';
-import type { Escuela } from '@/shared/interfaces';
+import type { School } from '@/shared/interfaces';
 
 interface Props {
   agrupador: {
     id: number | string;
     nombre: string;
   };
-  escuelas: Escuela[];
+  escuelas: School[];
   isExpanded: boolean;
-  onSelectEscuela: (escuela: Escuela) => void;
+  onSelectEscuela: (escuela: School) => void;
   tipo: 'supervisor' | 'departamento';
 }
 

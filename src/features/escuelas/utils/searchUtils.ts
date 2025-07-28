@@ -1,5 +1,5 @@
-import type { Escuela } from '@/shared/interfaces';
-import { normalizarTexto } from '@/shared/lib/utils';
+import type { School } from '@/shared/interfaces';
+import { normalizeText } from '@/shared/lib/utils';
 export interface SearchIndex {
   nombreIndex: Map<string, number[]>;
   directorIndex: Map<string, number[]>;
@@ -7,7 +7,7 @@ export interface SearchIndex {
   localidadIndex: Map<string, number[]>;
 }
 
-export function createSearchIndex(escuelas: Escuela[]): SearchIndex {
+export function createSearchIndex(escuelas: School[]): SearchIndex {
   const nombreIndex = new Map<string, number[]>();
   const directorIndex = new Map<string, number[]>();
   const cueIndex = new Map<string, number[]>();
@@ -15,10 +15,10 @@ export function createSearchIndex(escuelas: Escuela[]): SearchIndex {
 
   escuelas.forEach((escuela, idx) => {
     if (escuela.nombre) {
-      const palabrasNombre = normalizarTexto(escuela.nombre).split(/\s+/);
-      indexarPalabras(palabrasNombre, nombreIndex, idx);
+      const nameWords = normalizeText(escuela.nombre).split(/\s+/);
+      indexWords(nameWords, nombreIndex, idx);
 
-      const nombreCompleto = normalizarTexto(escuela.nombre);
+      const nombreCompleto = normalizeText(escuela.nombre);
       if (!nombreIndex.has(nombreCompleto)) {
         nombreIndex.set(nombreCompleto, []);
       }
@@ -26,8 +26,8 @@ export function createSearchIndex(escuelas: Escuela[]): SearchIndex {
     }
 
     if (escuela.director) {
-      const palabrasDirector = normalizarTexto(escuela.director).split(/\s+/);
-      indexarPalabras(palabrasDirector, directorIndex, idx);
+      const directorWords = normalizeText(escuela.director).split(/\s+/);
+      indexWords(directorWords, directorIndex, idx);
     }
 
     if (escuela.cue) {
@@ -39,8 +39,8 @@ export function createSearchIndex(escuelas: Escuela[]): SearchIndex {
     }
 
     if (escuela.localidad) {
-      const palabrasLocalidad = normalizarTexto(escuela.localidad).split(/\s+/);
-      indexarPalabras(palabrasLocalidad, localidadIndex, idx);
+      const localityWords = normalizeText(escuela.localidad).split(/\s+/);
+      indexWords(localityWords, localidadIndex, idx);
     }
   });
 
@@ -52,193 +52,182 @@ export function createSearchIndex(escuelas: Escuela[]): SearchIndex {
   };
 }
 
-function indexarPalabras(
-  palabras: string[],
-  indice: Map<string, number[]>,
+function indexWords(
+  words: string[],
+  index: Map<string, number[]>,
   idx: number,
 ) {
-  palabras.forEach((palabra) => {
-    if (palabra.length > 2) {
-      if (!indice.has(palabra)) {
-        indice.set(palabra, []);
+  words.forEach((word) => {
+    if (word.length > 2) {
+      if (!index.has(word)) {
+        index.set(word, []);
       }
-      indice.get(palabra)?.push(idx);
+      index.get(word)?.push(idx);
     }
   });
 }
 
 export interface FiltroOptions {
   supervisor?: string;
-  limite?: number;
+  limit?: number;
 }
 
-export function filtrarEscuelas(
-  escuelas: Escuela[],
-  termino: string,
-  opciones: FiltroOptions = {},
-): Escuela[] {
-  let escuelasFiltradas = [...escuelas];
+export function filterSchools(
+  escuelas: School[],
+  term: string,
+  options: FiltroOptions = {},
+): School[] {
+  let filteredSchools = [...escuelas];
 
-  if (opciones.supervisor) {
-    escuelasFiltradas = escuelasFiltradas.filter(
-      (escuela) => String(escuela.supervisorID) === opciones.supervisor,
+  if (options.supervisor) {
+    filteredSchools = filteredSchools.filter(
+      (escuela) => String(escuela.supervisorID) === options.supervisor,
     );
   }
 
-  if (!termino || termino.trim() === '') {
-    const limite = opciones.limite || escuelasFiltradas.length;
-    return escuelasFiltradas.slice(0, limite);
+  if (!term || term.trim() === '') {
+    const limit = options.limit || filteredSchools.length;
+    return filteredSchools.slice(0, limit);
   }
 
-  const indiceTemp = createSearchIndex(escuelasFiltradas);
+  const tempIndex = createSearchIndex(filteredSchools);
 
-  const terminoNormalizado = normalizarTexto(termino);
+  const normalizedTerm = normalizeText(term);
 
-  const puntuaciones = new Map<number, number>();
+  const scorees = new Map<number, number>();
 
-  const esPosibleCUE = /^\d+$/.test(terminoNormalizado);
+  const esPosibleCUE = /^\d+$/.test(normalizedTerm);
 
-  escuelasFiltradas.forEach((escuela, idx) => {
-    let puntuacion = 0;
+  filteredSchools.forEach((escuela, idx) => {
+    let score = 0;
 
-    if (
-      escuela.nombre &&
-      normalizarTexto(escuela.nombre) === terminoNormalizado
-    ) {
-      puntuacion += 5000;
+    if (escuela.nombre && normalizeText(escuela.nombre) === normalizedTerm) {
+      score += 5000;
     }
 
-    if (
-      esPosibleCUE &&
-      escuela.cue &&
-      String(escuela.cue) === terminoNormalizado
-    ) {
-      puntuacion += 4000;
+    if (esPosibleCUE && escuela.cue && String(escuela.cue) === normalizedTerm) {
+      score += 4000;
     }
 
     if (
       escuela.nombre &&
-      normalizarTexto(escuela.nombre).includes(terminoNormalizado)
+      normalizeText(escuela.nombre).includes(normalizedTerm)
     ) {
-      puntuacion += 3000;
+      score += 3000;
     }
 
     if (
       escuela.director &&
-      normalizarTexto(escuela.director).includes(terminoNormalizado)
+      normalizeText(escuela.director).includes(normalizedTerm)
     ) {
-      puntuacion += 2000;
+      score += 2000;
     }
 
     if (
       escuela.localidad &&
-      normalizarTexto(escuela.localidad).includes(terminoNormalizado)
+      normalizeText(escuela.localidad).includes(normalizedTerm)
     ) {
-      puntuacion += 1500;
+      score += 1500;
     }
 
-    if (puntuacion > 0) {
-      puntuaciones.set(idx, puntuacion);
+    if (score > 0) {
+      scorees.set(idx, score);
     }
   });
 
-  if (puntuaciones.size === 0) {
-    const terminosBusqueda = terminoNormalizado
+  if (scorees.size === 0) {
+    const searchTerms = normalizedTerm
       .split(/\s+/)
       .filter((term) => term.length > 2);
 
-    escuelasFiltradas.forEach((escuela, idx) => {
-      let puntuacion = 0;
-      let terminosEncontrados = 0;
+    filteredSchools.forEach((escuela, idx) => {
+      let score = 0;
+      let foundTerms = 0;
 
-      const cumpleTodosLosTerminos = terminosBusqueda.every((termino) => {
+      const meetsAllTerms = searchTerms.every((term) => {
         const estaEnNombre = escuela.nombre
-          ? normalizarTexto(escuela.nombre).includes(termino)
+          ? normalizeText(escuela.nombre).includes(term)
           : false;
         const estaEnDirector = escuela.director
-          ? normalizarTexto(escuela.director).includes(termino)
+          ? normalizeText(escuela.director).includes(term)
           : false;
         const estaEnCUE = escuela.cue
-          ? String(escuela.cue).includes(termino)
+          ? String(escuela.cue).includes(term)
           : false;
         const estaEnLocalidad = escuela.localidad
-          ? normalizarTexto(escuela.localidad).includes(termino)
+          ? normalizeText(escuela.localidad).includes(term)
           : false;
 
         return estaEnNombre || estaEnDirector || estaEnCUE || estaEnLocalidad;
       });
 
-      if (cumpleTodosLosTerminos) {
-        puntuacion += 500;
+      if (meetsAllTerms) {
+        score += 500;
       }
 
-      terminosBusqueda.forEach((termino) => {
-        if (
-          escuela.nombre &&
-          normalizarTexto(escuela.nombre).includes(termino)
-        ) {
-          puntuacion += 50;
-          terminosEncontrados++;
+      searchTerms.forEach((term) => {
+        if (escuela.nombre && normalizeText(escuela.nombre).includes(term)) {
+          score += 50;
+          foundTerms++;
         }
 
         if (
           escuela.director &&
-          normalizarTexto(escuela.director).includes(termino)
+          normalizeText(escuela.director).includes(term)
         ) {
-          puntuacion += 30;
-          terminosEncontrados++;
+          score += 30;
+          foundTerms++;
         }
 
-        if (escuela.cue && String(escuela.cue).includes(termino)) {
-          puntuacion += 40;
-          terminosEncontrados++;
+        if (escuela.cue && String(escuela.cue).includes(term)) {
+          score += 40;
+          foundTerms++;
         }
 
         if (
           escuela.localidad &&
-          normalizarTexto(escuela.localidad).includes(termino)
+          normalizeText(escuela.localidad).includes(term)
         ) {
-          puntuacion += 25;
-          terminosEncontrados++;
+          score += 25;
+          foundTerms++;
         }
       });
 
-      if (terminosBusqueda.length > 0) {
-        const porcentajeEncontrado =
-          terminosEncontrados / (terminosBusqueda.length * 4);
-        puntuacion += Math.round(porcentajeEncontrado * 100);
+      if (searchTerms.length > 0) {
+        const porcentajeEncontrado = foundTerms / (searchTerms.length * 4);
+        score += Math.round(porcentajeEncontrado * 100);
       }
 
-      if (puntuacion > 0) {
-        puntuaciones.set(idx, puntuacion);
+      if (score > 0) {
+        scorees.set(idx, score);
       }
     });
   }
 
-  const limite = opciones.limite || 20;
+  const limit = options.limit || 20;
 
-  return Array.from(puntuaciones.entries())
+  return Array.from(scorees.entries())
     .sort((a, b) => b[1] - a[1])
-    .map(([idx]) => escuelasFiltradas[idx])
-    .slice(0, limite);
+    .map(([idx]) => filteredSchools[idx])
+    .slice(0, limit);
 }
 
-export function buscarEscuelas(
-  escuelas: Escuela[],
-  termino: string,
+export function searchSchools(
+  escuelas: School[],
+  term: string,
   supervisor = '',
-): Escuela[] {
-  return filtrarEscuelas(escuelas, termino, {
+): School[] {
+  return filterSchools(escuelas, term, {
     supervisor,
-    limite: 20,
+    limit: 20,
   });
 }
 
-export function destacarTerminos(texto: string, termino: string): string {
-  if (!texto || !termino) return texto;
+export function highlightTerms(texto: string, term: string): string {
+  if (!texto || !term) return texto;
 
-  const terminoNormalizado = normalizarTexto(termino);
-  const terminosSeparados = terminoNormalizado
+  const normalizedTerm = normalizeText(term);
+  const terminosSeparados = normalizedTerm
     .split(/\s+/)
     .filter((t) => t.length > 2);
 
@@ -259,42 +248,42 @@ export function destacarTerminos(texto: string, termino: string): string {
   return resultado;
 }
 
-export function buscarEscuelasAvanzado(
-  escuelas: Escuela[],
-  termino: string,
-  limite: number = 20,
-): Escuela[] {
-  if (!termino || termino.trim() === '') {
+export function searchSchoolsAdvanced(
+  escuelas: School[],
+  term: string,
+  limit: number = 20,
+): School[] {
+  if (!term || term.trim() === '') {
     return [];
   }
 
-  const terminoNormalizado = normalizarTexto(termino);
+  const normalizedTerm = normalizeText(term);
 
   const resultadosConPuntuacion: Array<{
-    escuela: Escuela;
-    puntuacion: number;
+    escuela: School;
+    score: number;
   }> = [];
 
-  const numeroEscuelaMatch = terminoNormalizado.match(
+  const numeroEscuelaMatch = normalizedTerm.match(
     /escuela\s*(?:n[°º.]?)?\s*(\d+)/i,
   );
   const numeroEscuela = numeroEscuelaMatch ? numeroEscuelaMatch[1] : null;
 
   escuelas.forEach((escuela) => {
-    let puntuacion = 0;
-    const nombreNormalizado = normalizarTexto(escuela.nombre);
-    const directorNormalizado = normalizarTexto(escuela.director);
+    let score = 0;
+    const nombreNormalizado = normalizeText(escuela.nombre);
+    const directorNormalizado = normalizeText(escuela.director);
     const cueString = escuela.cue.toString();
-    const departamentoNormalizado = normalizarTexto(escuela.departamento);
-    const localidadNormalizada = normalizarTexto(escuela.localidad);
-    const tipoEscuelaNormalizado = normalizarTexto(escuela.tipoEscuela);
+    const departamentoNormalizado = normalizeText(escuela.departamento);
+    const localidadNormalizada = normalizeText(escuela.localidad);
+    const tipoEscuelaNormalizado = normalizeText(escuela.tipoEscuela);
 
     if (numeroEscuela) {
       const escuelaNumeroMatch = nombreNormalizado.match(
         /escuela\s*(?:n[°º.]?)?\s*(\d+)/i,
       );
       if (escuelaNumeroMatch && escuelaNumeroMatch[1] === numeroEscuela) {
-        puntuacion += 5000; // Coincidencia exacta de número de escuela
+        score += 5000; // Coincidencia exacta de número de escuela
       }
 
       // Buscar números en otras formas (por ejemplo "N° 17" sin la palabra "escuela")
@@ -303,93 +292,93 @@ export function buscarEscuelasAvanzado(
           new RegExp(`\\bn[°º.]?\\s*${numeroEscuela}\\b`, 'i'),
         )
       ) {
-        puntuacion += 4500; // Coincidencia de N° XX
+        score += 4500; // Coincidencia de N° XX
       }
 
       // Buscar solo el número si está como palabra independiente
       else if (
         nombreNormalizado.match(new RegExp(`\\b${numeroEscuela}\\b`, 'i'))
       ) {
-        puntuacion += 3000; // Coincidencia solo del número
+        score += 3000; // Coincidencia solo del número
       }
     }
 
     // Buscar el término completo
     if (
-      terminoNormalizado !== 'escuela' &&
-      terminoNormalizado !== 'n' &&
-      terminoNormalizado.length > 2
+      normalizedTerm !== 'escuela' &&
+      normalizedTerm !== 'n' &&
+      normalizedTerm.length > 2
     ) {
-      if (nombreNormalizado === terminoNormalizado) {
-        puntuacion += 1000;
+      if (nombreNormalizado === normalizedTerm) {
+        score += 1000;
       }
       // Nombre comienza con el término de búsqueda
-      else if (nombreNormalizado.startsWith(terminoNormalizado)) {
-        puntuacion += 500;
+      else if (nombreNormalizado.startsWith(normalizedTerm)) {
+        score += 500;
       }
       // Nombre contiene el término de búsqueda como palabra completa
       else if (
-        nombreNormalizado.includes(` ${terminoNormalizado} `) ||
-        nombreNormalizado.includes(`${terminoNormalizado} `) ||
-        nombreNormalizado.includes(` ${terminoNormalizado}`)
+        nombreNormalizado.includes(` ${normalizedTerm} `) ||
+        nombreNormalizado.includes(`${normalizedTerm} `) ||
+        nombreNormalizado.includes(` ${normalizedTerm}`)
       ) {
-        puntuacion += 300;
+        score += 300;
       }
       // Nombre contiene el término de búsqueda como parte
-      else if (nombreNormalizado.includes(terminoNormalizado)) {
-        puntuacion += 200;
+      else if (nombreNormalizado.includes(normalizedTerm)) {
+        score += 200;
       }
 
       // Coincidencia en otros campos
-      if (directorNormalizado.includes(terminoNormalizado)) {
-        puntuacion += 100;
+      if (directorNormalizado.includes(normalizedTerm)) {
+        score += 100;
       } else {
         // Si el término tiene dos palabras, buscar también el orden invertido
-        const partes = terminoNormalizado.split(' ');
+        const partes = normalizedTerm.split(' ');
         if (partes.length === 2) {
           const invertido = `${partes[1]} ${partes[0]}`;
           if (directorNormalizado.includes(invertido)) {
-            puntuacion += 100;
+            score += 100;
           }
         }
       }
 
-      if (cueString === terminoNormalizado) {
-        puntuacion += 800; // Coincidencia exacta de CUE
-      } else if (cueString.includes(terminoNormalizado)) {
-        puntuacion += 150; // Coincidencia parcial de CUE
+      if (cueString === normalizedTerm) {
+        score += 800; // Coincidencia exacta de CUE
+      } else if (cueString.includes(normalizedTerm)) {
+        score += 150; // Coincidencia parcial de CUE
       }
 
-      if (departamentoNormalizado === terminoNormalizado) {
-        puntuacion += 100;
-      } else if (departamentoNormalizado.includes(terminoNormalizado)) {
-        puntuacion += 50;
+      if (departamentoNormalizado === normalizedTerm) {
+        score += 100;
+      } else if (departamentoNormalizado.includes(normalizedTerm)) {
+        score += 50;
       }
 
-      if (localidadNormalizada === terminoNormalizado) {
-        puntuacion += 100;
-      } else if (localidadNormalizada.includes(terminoNormalizado)) {
-        puntuacion += 50;
+      if (localidadNormalizada === normalizedTerm) {
+        score += 100;
+      } else if (localidadNormalizada.includes(normalizedTerm)) {
+        score += 50;
       }
 
-      if (tipoEscuelaNormalizado === terminoNormalizado) {
-        puntuacion += 100;
+      if (tipoEscuelaNormalizado === normalizedTerm) {
+        score += 100;
       } else if (
         tipoEscuelaNormalizado &&
-        tipoEscuelaNormalizado.includes(terminoNormalizado)
+        tipoEscuelaNormalizado.includes(normalizedTerm)
       ) {
-        puntuacion += 50;
+        score += 50;
       }
     }
 
-    if (puntuacion > 0) {
-      resultadosConPuntuacion.push({ escuela, puntuacion });
+    if (score > 0) {
+      resultadosConPuntuacion.push({ escuela, score });
     }
   });
 
   // Ordenar por puntuación y obtener solo las escuelas
   return resultadosConPuntuacion
-    .sort((a, b) => b.puntuacion - a.puntuacion)
+    .sort((a, b) => b.score - a.score)
     .map((item) => item.escuela)
-    .slice(0, limite);
+    .slice(0, limit);
 }

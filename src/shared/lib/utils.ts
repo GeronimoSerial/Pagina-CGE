@@ -4,9 +4,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function normalizarTexto(texto: unknown): string {
-  if (texto === null || texto === undefined) return '';
-  return String(texto)
+export function normalizeText(text: unknown): string {
+  if (text === null || text === undefined) return '';
+  return String(text)
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -14,10 +14,10 @@ export function normalizarTexto(texto: unknown): string {
     .trim();
 }
 
-export function formatearFecha(fechaStr: string | Date) {
-  if (!fechaStr) return '';
+export function formatDate(dateStr: string | Date) {
+  if (!dateStr) return '';
 
-  const date = new Date(fechaStr);
+  const date = new Date(dateStr);
   if (isNaN(date.getTime())) return '';
 
   return date.toLocaleDateString('es-AR', {
@@ -47,22 +47,22 @@ export function normalizeArticle(item: any) {
   };
 }
 
-export function filtrarArticulos(
+export function filterArticles(
   article: any[],
   searchTerm: string,
-  categoriaSeleccionada: string,
+  selectedCategory: string,
 ) {
   return article.filter((item) => {
-    const coincideCategoria =
-      !categoriaSeleccionada || item.categoria === categoriaSeleccionada;
+    const matchesCategory =
+      !selectedCategory || item.categoria === selectedCategory;
 
     if (!searchTerm) {
-      return coincideCategoria;
+      return matchesCategory;
     }
 
-    const searchTermNormalized = normalizarTexto(searchTerm);
-    const titleNormalized = normalizarTexto(item.title || item.titulo);
-    const descriptionNormalized = normalizarTexto(
+    const searchTermNormalized = normalizeText(searchTerm);
+    const titleNormalized = normalizeText(item.title || item.titulo);
+    const descriptionNormalized = normalizeText(
       item.description || item.resumen,
     );
     const contentToSearch = titleNormalized + ' ' + descriptionNormalized;
@@ -71,11 +71,11 @@ export function filtrarArticulos(
       .split(/\s+/)
       .filter((word) => word.length > 0);
 
-    const coincideBusqueda = searchWords.every((word) =>
+    const matchesSearch = searchWords.every((word) =>
       contentToSearch.includes(word),
     );
 
-    return coincideCategoria && coincideBusqueda;
+    return matchesCategory && matchesSearch;
   });
 }
 
@@ -158,9 +158,9 @@ export const filterDocuments = (
       return matchesFilter;
     }
 
-    const searchTermNormalized = normalizarTexto(searchTerm);
-    const titleNormalized = normalizarTexto(doc.title);
-    const descriptionNormalized = normalizarTexto(doc.description);
+    const searchTermNormalized = normalizeText(searchTerm);
+    const titleNormalized = normalizeText(doc.title);
+    const descriptionNormalized = normalizeText(doc.description);
     const contentToSearch = titleNormalized + ' ' + descriptionNormalized;
 
     const searchWords = searchTermNormalized

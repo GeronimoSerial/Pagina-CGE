@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import {
-  getTramiteArticleBySlug,
+  getProcedureBySlug,
   Article,
 } from '@/features/tramites/services/docs-data';
 import ReactMarkdown from 'react-markdown';
@@ -14,8 +14,7 @@ export default async function IntroduccionPage() {
   const article = await withCache(
     tramitesCache,
     'tramite-introduccion',
-    async (): Promise<Article | null> =>
-      getTramiteArticleBySlug('introduccion'),
+    async (): Promise<Article | null> => getProcedureBySlug('introduccion'),
   );
 
   if (!article) {
@@ -86,7 +85,7 @@ export default async function IntroduccionPage() {
 }
 
 export async function generateMetadata() {
-  const article = await getTramiteArticleBySlug('introduccion');
+  const article = await getProcedureBySlug('introduccion');
 
   if (!article) {
     return {

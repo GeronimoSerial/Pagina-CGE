@@ -1,4 +1,3 @@
-// Información detallada sobre las políticas de accesibilidad del CGE en Corrientes
 import { PageLayout } from '@/shared/components/PageLayout';
 import { Metadata } from 'next';
 

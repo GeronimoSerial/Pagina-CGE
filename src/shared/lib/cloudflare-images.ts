@@ -13,7 +13,6 @@ export const cfImages = (
     return `${STRAPI_URL}/cdn-cgi/image/width=${width},format=${format}${path}`;
   }
 
-  // Si es un path relativo (empezando con /uploads/), construir la URL
   if (url.startsWith('/uploads/')) {
     return `${STRAPI_URL}/cdn-cgi/image/width=${width},format=${format}${url}`;
   }

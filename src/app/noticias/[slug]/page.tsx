@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import { CalendarDays, Pencil } from 'lucide-react';
 import {
-  getNoticiaBySlug,
-  getPortada,
-  getNoticiasRelacionadas,
-  getAllNoticias,
-} from '@/features/noticias/services/noticias';
+  getNewsBySlug,
+  getCover,
+  getRelatedNews,
+  getAllNews,
+} from '@/features/noticias/services/news';
 import ReactMarkdown from 'react-markdown';
 import { notFound } from 'next/navigation';
 import PhotoSwipeGallery from '@/shared/components/PhotoSwipeGallery';
@@ -20,14 +20,14 @@ import {
   relatedCache,
   withCache,
 } from '@/shared/lib/aggressive-cache';
-import { Noticia } from '@/shared/interfaces';
+import { NewsItem } from '@/shared/interfaces';
 
 export const revalidate = 2592000; // 30 días
 
 export async function generateStaticParams() {
   try {
-    const noticias = await getAllNoticias();
-    return noticias.slice(0, 50).map((noticia: { slug: string }) => ({
+    const news = await getAllNews();
+    return news.slice(0, 50).map((noticia: { slug: string }) => ({
       slug: noticia.slug,
     }));
   } catch (error) {
@@ -43,7 +43,7 @@ export async function generateMetadata({
   const { slug } = await params;
 
   const noticia = await withCache(newsCache, `metadata-${slug}`, () =>
-    getNoticiaBySlug(slug),
+    getNewsBySlug(slug),
   );
 
   if (!noticia) return {};
@@ -115,10 +115,10 @@ interface PageProps {
 export default async function NoticiaPage({ params }: PageProps) {
   const { slug } = await params;
 
-  const noticia: Noticia | null = await withCache(
+  const noticia: NewsItem | null = await withCache(
     newsCache,
     `noticia-${slug}`,
-    () => getNoticiaBySlug(slug),
+    () => getNewsBySlug(slug),
   );
 
   if (!noticia) {
@@ -128,7 +128,7 @@ export default async function NoticiaPage({ params }: PageProps) {
   const relatedFinal = await withCache(
     relatedCache,
     `related-${noticia.categoria}-${slug}`,
-    () => getNoticiasRelacionadas(noticia.categoria, slug),
+    () => getRelatedNews(noticia.categoria, slug),
   ).catch(() => []);
 
   return (
@@ -176,7 +176,7 @@ export default async function NoticiaPage({ params }: PageProps) {
 
                 {noticia.portada && (
                   <Image
-                    src={getPortada({ noticia }) || ''}
+                    src={getCover({ noticia }) || ''}
                     alt={noticia.titulo}
                     className="object-cover mb-8 w-full max-h-96 rounded"
                     width={1200}

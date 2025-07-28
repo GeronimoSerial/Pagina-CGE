@@ -85,7 +85,7 @@ export function clearNavigationCache() {
   console.log('🧹 Local navigation cache cleared');
 }
 
-export async function getTramitesNavigation(): Promise<NavSection[]> {
+export async function getProceduresNavigation(): Promise<NavSection[]> {
   const params = {
     fields: ['categoria', 'titulo', 'slug'],
     sort: ['categoria:asc', 'titulo:asc'],
@@ -121,17 +121,11 @@ export async function getTramitesNavigation(): Promise<NavSection[]> {
   });
 
   navigationCache = sortedSections;
-  // cacheTimestamp = now;
 
-  // console.log(
-  //   '✅ Navigation cache updated with',
-  //   sortedSections.length,
-  //   'sections',
-  // );
   return sortedSections;
 }
 
-export async function getTramiteArticleBySlug(
+export async function getProcedureBySlug(
   slug: string,
 ): Promise<Article | null> {
   const params = {
@@ -155,16 +149,16 @@ export async function getTramiteArticleBySlug(
     title: t.titulo,
     description: t.resumen,
     lastUpdated: t.updatedAt || t.fecha,
-    content: parseContenidoToSections(t.contenido),
+    content: wrapContentAsSection(t.contenido),
   };
 }
 
-function parseContenidoToSections(contenido: string | null): ArticleSection[] {
+function wrapContentAsSection(contenido: string | null): ArticleSection[] {
   if (!contenido) return [];
   return [{ type: 'paragraph', content: contenido }];
 }
 
-export async function getAllTramiteSlugs(): Promise<string[]> {
+export async function getAllProcedureSlugs(): Promise<string[]> {
   const params = {
     fields: ['slug'],
     'pagination[pageSize]': 250,
@@ -176,7 +170,7 @@ export async function getAllTramiteSlugs(): Promise<string[]> {
   return tramites.map((t) => t.slug);
 }
 
-export async function getAllTramites(): Promise<any[]> {
+export async function getAllProcedures(): Promise<any[]> {
   const params = {
     fields: [
       'id',

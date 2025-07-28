@@ -1,4 +1,3 @@
-// Tipos para los Design Tokens
 export type ContainerType =
   | 'standard'
   | 'content'

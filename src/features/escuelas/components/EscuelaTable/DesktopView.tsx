@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import type { Escuela } from '@/shared/interfaces';
+import type { School } from '@/shared/interfaces';
 import { Button } from '@/shared/ui/button';
-import { Eye, School } from 'lucide-react';
+import { Eye, School as SchoolIcon } from 'lucide-react';
 
 interface DesktopViewProps {
-  escuelas: Escuela[];
-  onSelectEscuela: (escuela: Escuela) => void;
+  escuelas: School[];
+  onSelectEscuela: (escuela: School) => void;
 }
 
 export const DesktopView = React.memo(
@@ -127,7 +127,7 @@ export const DesktopView = React.memo(
                       className="px-6 py-4 flex items-center"
                       style={{ width: `${columnWidths.nombre}%` }}
                     >
-                      <School className="h-4 w-4 text-[#217A4B] mr-2 shrink-0" />
+                      <SchoolIcon className="h-4 w-4 text-[#217A4B] mr-2 shrink-0" />
                       <span className="text-gray-800 line-clamp-2 font-medium">
                         {escuela.nombre}
                       </span>

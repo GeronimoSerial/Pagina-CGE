@@ -1,4 +1,3 @@
-// About Us
 import {
   MapPin,
   Phone,
@@ -177,10 +176,7 @@ export default function Institucional() {
               </div>
             </div>
           </section>
-          <ClientCarousel
-            imagenes={imagenesInstitucionales}
-            horizontal={true}
-          />
+          <ClientCarousel images={imagenesInstitucionales} horizontal={true} />
         </div>
 
         {/* CONTACTO STICKY (ESCRITORIO) */}

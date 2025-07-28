@@ -5,7 +5,7 @@ import SocialMediaSection from '@/features/socials/components/SocialMediaSection
 import { Separador } from '@/shared/components/Separador';
 import { Metadata } from 'next';
 import LatestNewsStatic from '@/features/noticias/components/LatestNews';
-import { getNoticiasPaginadas } from '@/features/noticias/services/noticias';
+import { getPaginatedNews } from '@/features/noticias/services/news';
 
 export const metadata: Metadata = {
   title: 'Consejo General de Educación (CGE)',
@@ -48,7 +48,7 @@ export default async function PagPrincipal() {
   let latestNewsData;
 
   try {
-    latestNewsData = await getNoticiasPaginadas(1, 4);
+    latestNewsData = await getPaginatedNews(1, 4);
   } catch (error) {
     console.error('Error loading home page news:', error);
     latestNewsData = {
