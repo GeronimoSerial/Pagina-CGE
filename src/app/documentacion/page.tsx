@@ -1,7 +1,6 @@
 import { DocumentacionSection } from '@/shared/data/dynamic-client';
 import { ContentPageLayout } from '@/shared/components/PageLayout';
 import { Metadata } from 'next';
-import InfoBar from '@/shared/components/InfoBar';
 
 export const metadata: Metadata = {
   title: 'Documentación',
@@ -33,9 +32,9 @@ export default function Documentacion() {
       title="Documentación"
       description="Encontrá todos los documentos, formularios y normativas necesarias para tus trámites"
       showFAQ={true}
-      faqBasePath="/documentacion"
+      showInfoBar={true}
+      basePath="/documentacion"
     >
-      <InfoBar basePath="/documentacion" />
       <DocumentacionSection />
     </ContentPageLayout>
   );
