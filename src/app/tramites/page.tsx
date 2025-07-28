@@ -44,7 +44,9 @@ export default async function IntroduccionPage() {
             <h1 className="mb-4 text-3xl md:text-4xl font-bold text-gray-900">
               {article.title}
             </h1>
-            <p className="text-lg md:text-xl text-gray-600">{article.description}</p>
+            <p className="text-lg md:text-xl text-gray-600">
+              {article.description}
+            </p>
           </header>
 
           {/* Article Content */}

@@ -42,7 +42,7 @@ export default async function DocumentPage({ params }: PageProps) {
   const markdown = article.content?.[0]?.content || '';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <main className="flex-1 lg:overflow-y-auto">
         <div className="px-6 py-8 mx-auto max-w-4xl lg:px-8 lg:py-12">
           {/* Article Header */}
@@ -63,7 +63,9 @@ export default async function DocumentPage({ params }: PageProps) {
             <h1 className="mb-4 text-3xl md:text-4xl font-bold text-gray-900">
               {article.title}
             </h1>
-            <p className="text-lg md:text-xl text-gray-600">{article.description}</p>
+            <p className="text-lg md:text-xl text-gray-600">
+              {article.description}
+            </p>
           </header>
 
           {/* Article Content */}
