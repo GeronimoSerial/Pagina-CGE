@@ -1,155 +1,233 @@
 @import 'tailwindcss';
 
-@plugin 'tailwindcss-animate';
-@plugin '@tailwindcss/typography';
+:root {
+  /* shadcn/ui Color System */
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  --radius: 0.5rem;
 
-@custom-variant dark (&:is(.dark *));
+  /* CGE Brand Colors */
+  --institutional-green: 115 44% 38%;
+  --institutional-green-foreground: 115 44% 38%;
+}
 
-@theme {
-  --spacing-section-sm: 2rem;
-  --spacing-section-md: 3rem;
-  --spacing-section-lg: 4rem;
-  --spacing-element-sm: 1.5rem;
-  --spacing-element-md: 2rem;
-  --spacing-separator: 2rem;
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 210 40% 98%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 212.7 26.8% 83.9%;
+}
 
-  --container-page-content: 72rem;
-  --container-article-content: 56rem;
-  --container-wide-content: 80rem;
-  --container-form-content: 42rem;
-  --container-institutional: 96rem;
+* {
+  border-color: hsl(var(--border));
+}
 
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  background-color: #f7faf9;
+}
 
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-lora);
+}
 
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  font-size: 90%;
+}
 
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
+/* Corregir cursor pointer en botones y elementos interactivos */
+button,
+[role='button'],
+input[type='submit'],
+input[type='button'],
+.cursor-pointer {
+  cursor: pointer;
+}
 
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
+/* Asegurar fondo blanco sólido en dropdowns y popovers */
+[role='menu'],
+[data-radix-menu-content],
+[data-radix-popper-content-wrapper],
+.dropdown-content,
+.popover-content {
+  background-color: white !important;
+  backdrop-filter: none !important;
+}
 
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
+/* Específico para shadcn/ui components */
+[data-state='open'][role='menu'],
+[data-state='open'][data-radix-menu-content] {
+  background-color: hsl(var(--popover)) !important;
+}
 
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
+/* CGE Design System - Container Components */
+.page-container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  max-width: 72rem;
+}
 
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-
-  --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
-
-  --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
-
-  @keyframes accordion-down {
-    from {
-      height: 0;
-    }
-    to {
-      height: var(--radix-accordion-content-height);
-    }
+@media (min-width: 768px) {
+  .page-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
-  @keyframes accordion-up {
-    from {
-      height: var(--radix-accordion-content-height);
-    }
-    to {
-      height: 0;
-    }
+}
+
+.content-container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  max-width: 56rem;
+}
+
+@media (min-width: 768px) {
+  .content-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
 
-@utility container {
-  margin-inline: auto;
-  padding-inline: 2rem;
-  @media (width >= --theme(--breakpoint-sm)) {
-    max-width: none;
-  }
-  @media (width >= 1400px) {
-    max-width: 1400px;
-  }
+.wide-container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  max-width: 80rem;
 }
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
+@media (min-width: 768px) {
+  .wide-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 }
 
-/* CGE Design System - Layout Components */
-@utility page-container {
-  /* Container System */
-  @apply container mx-auto px-4 md:px-6 max-w-page-content;
-}
-@utility content-container {
-  @apply mx-auto px-6 md:px-8 max-w-article-content;
-}
-@utility wide-container {
-  @apply container mx-auto px-4 md:px-6 max-w-wide-content;
-}
-@utility form-container {
-  @apply container mx-auto px-4 md:px-6 max-w-form-content;
-}
-@utility section-spacing {
-  /* Spacing System */
-  @apply py-section-sm md:py-section-md;
-}
-@utility section-spacing-large {
-  @apply py-section-lg;
-}
-@utility section-separator {
-  @apply my-separator;
-}
-@utility element-spacing {
-  @apply mb-element-sm md:mb-element-md;
-}
-@utility page-bg-default {
-  /* Background System */
-  @apply bg-gray-50 min-h-screen;
-}
-@utility page-bg-transparent {
-  @apply min-h-screen;
-}
-@utility page-bg-gradient {
-  @apply bg-linear-to-b from-white via-gray-50 to-white min-h-screen;
-}
-@utility page-bg-white {
-  @apply bg-white min-h-screen;
+.form-container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  max-width: 42rem;
 }
 
-@utility hide-scrollbar {
+@media (min-width: 768px) {
+  .form-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* Spacing System */
+.section-spacing {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .section-spacing {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
+
+.section-spacing-large {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.section-separator {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.element-spacing {
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .element-spacing {
+    margin-bottom: 2rem;
+  }
+}
+
+/* Background System */
+.page-bg-default {
+  background-color: rgb(249 250 251);
+  min-height: 100vh;
+}
+
+.page-bg-transparent {
+  min-height: 100vh;
+}
+
+.page-bg-gradient {
+  background-image: linear-gradient(to bottom, white, rgb(249 250 251), white);
+  min-height: 100vh;
+}
+
+.page-bg-white {
+  background-color: white;
+  min-height: 100vh;
+}
+
+/* Utilities */
+.hide-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
-/* Optimización: Animaciones CSS para reemplazar Framer Motion */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Animation utilidad personalizada para reemplazar Framer Motion */
+.animate-fade-in-up {
+  animation: fade-in-up 0.7s ease-out;
+}
+
+/* Keyframes para animaciones personalizadas */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -161,28 +239,7 @@
   }
 }
 
-.animate-fade-in-up {
-  animation: fade-in-up 0.7s ease-out;
-}
-
-/* CGE Base Styles */
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
-  font-size: 90%;
-}
-
-body {
-  background-color: #f7faf9;
-}
-
-h1,
-h2,
-h3,
-h4 {
-  font-family: var(--font-lora);
-}
-
+/* Skeleton optimization */
 .group:has(img[src]):not(:has(img[src=''])) .skeleton {
   display: none;
 }
