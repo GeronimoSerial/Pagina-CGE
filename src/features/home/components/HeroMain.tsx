@@ -1,8 +1,8 @@
 'use client';
 import { Button } from '@/shared/ui/button';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ChevronDown } from 'lucide-react';
 
 const HeroMain = () => {
   return (
@@ -30,12 +30,7 @@ const HeroMain = () => {
       <div className="absolute inset-0 bg-black/40" />
 
       <div className="relative z-10 h-full w-full max-w-7xl mx-auto px-8 md:px-12 lg:px-20 flex flex-col justify-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="max-w-2xl"
-        >
+        <div className="max-w-2xl animate-fade-in-up">
           <h1
             className="mt-16 text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-4 md:text-balance leading-tight"
             style={{ textShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)' }}
@@ -53,11 +48,19 @@ const HeroMain = () => {
           <Button
             asChild
             size="default"
-            className="bg-[#205C3B] hover:bg-[#194931] text-white font-bold px-6 py-3 rounded-xl text-base shadow-lg transition-colors border-2 border-white/10 focus:ring-2 focus:ring-[#194931]"
+            className="bg-[#3B8A57] hover:bg-[#194931] text-white font-bold px-6 py-3 rounded-xl text-lg shadow-lg transition-colors focus:ring-2 focus:ring-[#194931]"
           >
             <Link href="/institucional">Conocé nuestras acciones</Link>
           </Button>
-        </motion.div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+          <ChevronDown
+            className="w-8 h-8 text-white/80 animate-bounce"
+            style={{ textShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)' }}
+          />
+        </div>
       </div>
     </div>
   );

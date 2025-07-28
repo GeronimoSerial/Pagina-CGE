@@ -1,25 +1,28 @@
 /** @type {import('tailwindcss').Config} */
-import tailwindcssAnimate from 'tailwindcss-animate';
-import typography from '@tailwindcss/typography';
-
-export default {
-  darkMode: ['class'],
-  content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-  ],
-  prefix: '',
+const config = {
+  content: ['./src/**/*.{html,js,ts,jsx,tsx}'],
   theme: {
-    container: {
-      center: true,
-      padding: '2rem',
-      screens: {
-        '2xl': '1400px',
-      },
-    },
     extend: {
+      maxWidth: {
+        'page-content': '72rem',
+        'article-content': '56rem',
+        'wide-content': '80rem',
+        'form-content': '42rem',
+        institutional: '96rem',
+      },
+      spacing: {
+        'section-sm': '2rem',
+        'section-md': '3rem',
+        'section-lg': '4rem',
+        'element-sm': '1.5rem',
+        'element-md': '2rem',
+        separator: '2rem',
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -54,11 +57,10 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-      },
-      borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        'institutional-green': {
+          DEFAULT: 'hsl(var(--institutional-green))',
+          foreground: 'hsl(var(--institutional-green-foreground))',
+        },
       },
       keyframes: {
         'accordion-down': {
@@ -69,12 +71,19 @@ export default {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        'fade-in-up': {
+          from: { opacity: '0', transform: 'translateY(30px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'fade-in-up': 'fade-in-up 0.7s ease-out',
       },
     },
   },
-  plugins: [tailwindcssAnimate, typography],
+  plugins: [],
 };
+
+export default config;

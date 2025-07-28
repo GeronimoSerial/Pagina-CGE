@@ -11,12 +11,12 @@ const QuickAccessItem = ({
   return (
     <a
       href={href}
-      className="block group focus:outline-none focus:ring-2 focus:ring-[#205C3B] rounded-xl transition-all"
+      className="block group focus:outline-hidden focus:ring-2 focus:ring-[#205C3B] rounded-xl transition-all"
       tabIndex={0}
     >
       <Card className="h-full transition-all border-0 shadow-md hover:shadow-xl hover:scale-[1.03] via-white to-[#E6F4EA] group-hover:border-[#217A4B]/40 rounded-xl">
         <CardContent className="flex flex-col items-center text-center p-6">
-          <div className="p-4 rounded-full bg-gradient-to-br from-[#217A4B]/90 to-[#205C3B]/80 text-white mb-4 mt-2 shadow-lg group-hover:scale-110 transition-transform">
+          <div className="p-4 rounded-full bg-linear-to-br from-[#217A4B]/90 to-[#205C3B]/80 text-white mb-4 mt-2 shadow-lg group-hover:scale-110 transition-transform">
             {icon}
           </div>
           <h3 className="font-bold text-lg mb-1 group-hover:text-[#217A4B] transition-colors">
@@ -70,7 +70,7 @@ const QuickAccess = ({ items = [] }: QuickAccessProps) => {
     <section className="w-full">
       <div className="container mx-auto max-w-7xl">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r md:leading-normal lg:leading-relaxed from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
+          <h2 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-linear-to-r md:leading-normal lg:leading-relaxed from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
             Accesos Rápidos
           </h2>
         </div>

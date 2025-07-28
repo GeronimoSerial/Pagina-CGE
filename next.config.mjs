@@ -2,6 +2,10 @@
 const nextConfig = {
   serverExternalPackages: ['sharp'],
 
+  experimental: {
+    optimizePackageImports: ['lucide-react'],
+  },
+
   images: {
     remotePatterns: [
       {

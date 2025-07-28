@@ -24,13 +24,13 @@ const Header = () => {
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm">
+    <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200 shadow-xs">
       <div className="container px-4 mx-auto sm:px-6">
         <div className="flex justify-between items-center h-16 sm:h-20">
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center group focus:outline-none focus:ring-2 focus:ring-[#2D6628] rounded-lg p-1"
+            className="flex items-center group focus:outline-hidden focus:ring-2 focus:ring-[#2D6628] rounded-lg p-1"
             aria-label="Ir al inicio"
             onClick={closeMenu}
           >

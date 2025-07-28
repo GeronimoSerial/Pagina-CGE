@@ -1,8 +1,10 @@
-//Interfaces comunes
-export interface ContactoForm {
+//Common interfaces
+export interface ContactForm {
   nombre: string;
   email: string;
+  asunto: string;
   mensaje: string;
+  area: string;
 }
 
 export interface QuickAccessItemProps {
@@ -12,7 +14,7 @@ export interface QuickAccessItemProps {
   href: string;
 }
 
-export interface ImagenCarruselGenerica {
+export interface GenericCarouselImage {
   imagen?: string;
   src?: string;
   titulo?: string;
@@ -27,7 +29,7 @@ export interface SocialMediaProps {
   description?: string;
 }
 
-export interface Escuela {
+export interface School {
   cue: number;
   nombre: string;
   director: string;
@@ -51,7 +53,7 @@ export interface Supervisor {
   nombre: string;
 }
 
-export interface Noticia {
+export interface NewsItem {
   id: number;
   autor?: string;
   titulo: string;

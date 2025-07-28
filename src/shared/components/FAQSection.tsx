@@ -38,7 +38,7 @@ export default function FAQSection({ basePath }: FAQSectionProps) {
     <section className="bg-gray-50 border-t border-gray-100 z-10 relative">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r leading-tight md:leading-normal lg:leading-relaxed from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
+          <h2 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-linear-to-r leading-tight md:leading-normal lg:leading-relaxed from-green-700 via-green-600 to-green-500 bg-clip-text text-transparent">
             Preguntas Frecuentes
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto text-md md:text-lg text-balance mb-8">

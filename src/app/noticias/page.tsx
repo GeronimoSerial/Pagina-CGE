@@ -1,9 +1,8 @@
-import HeroSection from '@/shared/components/Hero';
 import {
-  getNoticiasPaginadas,
-  getNoticiasCategorias,
-} from '@/features/noticias/services/noticias';
-import { Separator } from '@/shared/ui/separator';
+  getPaginatedNews,
+  getNewsCategories,
+} from '@/features/noticias/services/news';
+import { PageLayout } from '@/shared/components/PageLayout';
 import { Metadata } from 'next';
 import NewsContainer from '@/features/noticias/components/NewsContainer';
 import { Suspense } from 'react';
@@ -37,18 +36,23 @@ export const metadata: Metadata = {
 export const revalidate = 2592000;
 
 export default async function NoticiasPage() {
-  // Pre-renderizar contenido inicial (SSG) - Sin API calls del usuario
   const [initialNoticias, categorias] = await Promise.all([
-    getNoticiasPaginadas(1, 6), // Primeras 6 noticias
-    getNoticiasCategorias(),
+    getPaginatedNews(1, 6),
+    getNewsCategories(),
   ]);
 
   return (
-    <section>
-      <HeroSection
-        title="Noticias"
-        description="Encontrá información sobre eventos, actividades y noticias institucionales."
-      />
+    <PageLayout
+      pageType="wide"
+      hero={{
+        title: 'Noticias',
+        description:
+          'Encontrá información sobre eventos, actividades y noticias institucionales.',
+      }}
+      showSeparator={true}
+      showInfoBar={true}
+      basePath="/noticias"
+    >
       <Suspense
         fallback={
           <div className="flex justify-center items-center py-12">
@@ -61,7 +65,6 @@ export default async function NoticiasPage() {
       >
         <NewsContainer initialData={initialNoticias} categorias={categorias} />
       </Suspense>
-      <Separator className="my-8 bg-gray-50" />
-    </section>
+    </PageLayout>
   );
 }

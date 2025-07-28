@@ -1,8 +1,7 @@
 import React from 'react';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { formatDate } from '@/shared/lib/date-utils';
 import { ArrowRight, User, CalendarDays, Tag } from 'lucide-react';
-import { getPortada } from '@/features/noticias/services/noticias';
+import { getCover } from '@/features/noticias/services/news';
 import { Card, CardContent } from '@/shared/ui/card';
 import {
   Carousel,
@@ -14,33 +13,30 @@ import {
 import { Separator } from '@radix-ui/react-separator';
 import { Separador } from '@/shared/components/Separador';
 import { RegularNewsCard } from './RegularNewsCard';
-import { Noticia } from '@/shared/interfaces';
+import { NewsItem } from '@/shared/interfaces';
 import Image from 'next/image';
 
 interface NewsGridProps {
-  noticiasDestacadas: Noticia[];
-  noticiasRegulares: Noticia[];
+  featuredNews: NewsItem[];
+  regularNews: NewsItem[];
 }
 
-export default function NewsGrid({
-  noticiasDestacadas,
-  noticiasRegulares,
-}: NewsGridProps) {
+export default function NewsGrid({ featuredNews, regularNews }: NewsGridProps) {
   return (
     <>
       <section className="mb-3">
-        {noticiasDestacadas.length > 0 && (
+        {featuredNews.length > 0 && (
           <>
             <Separador titulo="Destacadas" />
             <Carousel className="mx-auto w-full overflow-x-hidden max-w-7xl">
               <CarouselContent className="-ml-6 ">
-                {noticiasDestacadas.slice(0, 3).map((noticia) => (
+                {featuredNews.slice(0, 3).map((noticia) => (
                   <CarouselItem key={noticia.id} className="pl-6 basis-full">
                     <Card className="overflow-hidden border-0 shadow-2xl">
                       <div className="grid gap-0 lg:grid-cols-2">
-                        <div className="aspect-[4/3] lg:aspect-auto overflow-hidden">
+                        <div className="aspect-4/3 lg:aspect-auto overflow-hidden">
                           <Image
-                            src={getPortada({ noticia }) || ''}
+                            src={getCover({ noticia }) || ''}
                             alt={noticia.titulo}
                             className="object-cover w-full h-full transition-transform duration-500 hover:scale-105"
                             width={1200}
@@ -55,13 +51,7 @@ export default function NewsGrid({
                             </span>
                             <CalendarDays className="inline-block mr-1 ml-3 w-4 h-4 text-gray-500" />
                             <span className="text-xs text-gray-500">
-                              {format(
-                                new Date(noticia.fecha),
-                                'EEE, d MMMM yyyy',
-                                {
-                                  locale: es,
-                                },
-                              )}
+                              {formatDate(noticia.fecha)}
                             </span>
                           </div>
                           <a href={`/noticias/${noticia.slug}`}>
@@ -109,7 +99,7 @@ export default function NewsGrid({
         <Separador titulo="Más noticias" />
 
         <div className="grid gap-8 mx-auto max-w-6xl md:grid-cols-3">
-          {noticiasRegulares.slice(0, 3).map((noticia) => (
+          {regularNews.slice(0, 3).map((noticia) => (
             <RegularNewsCard key={noticia.id} noticia={noticia} />
           ))}
         </div>

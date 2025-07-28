@@ -1,6 +1,6 @@
-import type { Escuela } from '@/shared/interfaces';
+import type { School } from '@/shared/interfaces';
 
-export async function getEscuelas(): Promise<Escuela[]> {
+export async function getSchools(): Promise<School[]> {
   const escuelas: any[] = (
     await import('@/features/escuelas/data/escuelas.json')
   ).default;
@@ -19,14 +19,14 @@ export async function getEscuelas(): Promise<Escuela[]> {
       ...escuela,
       fechaFundacion2,
       categoria,
-    } as Escuela;
+    } as School;
   });
 
   return processedEscuelas;
 }
 
-export function agruparEscuelasPorDepartamento(escuelas: Escuela[]) {
-  const mapa: { [key: string]: Escuela[] } = {};
+export function groupSchoolsByDepartment(escuelas: School[]) {
+  const mapa: { [key: string]: School[] } = {};
   escuelas.forEach((escuela) => {
     if (!mapa[escuela.departamento]) mapa[escuela.departamento] = [];
     mapa[escuela.departamento].push(escuela);

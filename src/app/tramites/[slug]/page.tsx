@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import {
-  getTramiteArticleBySlug,
-  getAllTramiteSlugs,
+  getProcedureBySlug,
+  getAllProcedureSlugs,
   Article,
 } from '@/features/tramites/services/docs-data';
 import ReactMarkdown from 'react-markdown';
@@ -16,7 +16,7 @@ interface PageProps {
 
 export async function generateStaticParams() {
   try {
-    const slugs = await getAllTramiteSlugs();
+    const slugs = await getAllProcedureSlugs();
     return slugs.map((slug) => ({ slug }));
   } catch (error) {
     console.warn('Error generating static params for tramites:', error);
@@ -32,7 +32,7 @@ export default async function DocumentPage({ params }: PageProps) {
   const article: Article | null = await withCache(
     tramitesCache,
     `tramite-${slug}`,
-    async () => await getTramiteArticleBySlug(slug),
+    async () => await getProcedureBySlug(slug),
   );
 
   if (!article) {
@@ -42,7 +42,7 @@ export default async function DocumentPage({ params }: PageProps) {
   const markdown = article.content?.[0]?.content || '';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <main className="flex-1 lg:overflow-y-auto">
         <div className="px-6 py-8 mx-auto max-w-4xl lg:px-8 lg:py-12">
           {/* Article Header */}
@@ -60,10 +60,12 @@ export default async function DocumentPage({ params }: PageProps) {
                 })}
               </div>
             </div>
-            <h1 className="mb-4 text-4xl font-bold text-gray-900">
+            <h1 className="mb-4 text-3xl md:text-4xl font-bold text-gray-900">
               {article.title}
             </h1>
-            <p className="text-xl text-gray-600">{article.description}</p>
+            <p className="text-lg md:text-xl text-gray-600">
+              {article.description}
+            </p>
           </header>
 
           {/* Article Content */}
@@ -106,7 +108,7 @@ export default async function DocumentPage({ params }: PageProps) {
 }
 
 export async function generateMetadata({ params }: PageProps) {
-  const article = await getTramiteArticleBySlug((await params).slug);
+  const article = await getProcedureBySlug((await params).slug);
   const slug = (await params).slug;
   if (!article) {
     return {
