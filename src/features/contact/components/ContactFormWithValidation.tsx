@@ -37,22 +37,22 @@ export default function ContactFormWithValidation() {
     <Card className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
       <CardContent className="p-8">
         {sent && (
-          <Alert className="mb-4 border-green-200 bg-green-50 dark:bg-green-950/20 dark:border-green-800">
+          <Alert className="mb-4 border-green-200 bg-green-50">
             <CheckCircle2 className="h-4 w-4 text-[#3D8B37]" />
-            <AlertTitle className="text-[#3D8B37] dark:text-green-200">
+            <AlertTitle className="text-[#3D8B37]">
               ¡Mensaje enviado con éxito!
             </AlertTitle>
-            <AlertDescription className="text-green-700 dark:text-green-300">
+            <AlertDescription className="text-green-700">
               Gracias por contactarnos. Te responderemos a la brevedad.
             </AlertDescription>
           </Alert>
         )}
         {error && (
-          <Alert className="mb-4 border-red-200 bg-red-50 dark:bg-red-950/20 dark:border-red-800">
-            <AlertTitle className="text-red-800 dark:text-red-200">
+          <Alert className="mb-4 border-red-200 bg-red-50">
+            <AlertTitle className="text-red-800">
               Error al enviar el mensaje
             </AlertTitle>
-            <AlertDescription className="text-red-700 dark:text-red-300">
+            <AlertDescription className="text-red-700">
               {error}. Por favor, intente nuevamente.
             </AlertDescription>
           </Alert>
@@ -66,7 +66,7 @@ export default function ContactFormWithValidation() {
                 rules={{ required: 'El nombre es obligatorio' }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                    <FormLabel className="text-sm flex items-center gap-2 text-gray-700">
                       <User className="h-3.5 w-3.5 text-[#3D8B37]" />
                       Nombre
                     </FormLabel>
@@ -74,7 +74,7 @@ export default function ContactFormWithValidation() {
                       <Input
                         placeholder="Tu nombre completo"
                         {...field}
-                        className="h-9 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 focus:border-[#3D8B37] dark:focus:border-[#3D8B37] focus:ring-1 focus:ring-[#3D8B37]/20"
+                        className="h-9 bg-gray-50 border-gray-200 focus:border-[#3D8B37] focus:ring-1 focus:ring-[#3D8B37]/20"
                       />
                     </FormControl>
                     <FormMessage />
@@ -93,7 +93,7 @@ export default function ContactFormWithValidation() {
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                    <FormLabel className="text-sm flex items-center gap-2 text-gray-700">
                       <Mail className="h-3.5 w-3.5 text-[#3D8B37]" />
                       Email
                     </FormLabel>
@@ -102,7 +102,7 @@ export default function ContactFormWithValidation() {
                         type="email"
                         placeholder="tu@email.com"
                         {...field}
-                        className="h-9 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 focus:border-[#3D8B37] dark:focus:border-[#3D8B37] focus:ring-1 focus:ring-[#3D8B37]/20"
+                        className="h-9 bg-gray-50 border-gray-200 focus:border-[#3D8B37] focus:ring-1 focus:ring-[#3D8B37]/20"
                       />
                     </FormControl>
                     <FormMessage />
@@ -117,7 +117,7 @@ export default function ContactFormWithValidation() {
                 rules={{ required: 'El área es obligatoria' }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                    <FormLabel className="text-sm flex items-center gap-2 text-gray-700">
                       <Building2 className="h-3.5 w-3.5 text-[#3D8B37]" />
                       Área
                     </FormLabel>
@@ -126,7 +126,7 @@ export default function ContactFormWithValidation() {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger className="h-9 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 focus:border-[#3D8B37] dark:focus:border-[#3D8B37] focus:ring-1 focus:ring-[#3D8B37]/20">
+                        <SelectTrigger className="h-9 bg-gray-50 border-gray-200 focus:border-[#3D8B37] focus:ring-1 focus:ring-[#3D8B37]/20">
                           <SelectValue placeholder="Selecciona un área" />
                         </SelectTrigger>
                       </FormControl>
@@ -155,7 +155,7 @@ export default function ContactFormWithValidation() {
                 rules={{ required: 'El asunto es obligatorio' }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                    <FormLabel className="text-sm flex items-center gap-2 text-gray-700">
                       <FileText className="h-3.5 w-3.5 text-[#3D8B37]" />
                       Asunto
                     </FormLabel>
@@ -163,7 +163,7 @@ export default function ContactFormWithValidation() {
                       <Input
                         placeholder="Asunto de tu consulta"
                         {...field}
-                        className="h-9 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 focus:border-[#3D8B37] dark:focus:border-[#3D8B37] focus:ring-1 focus:ring-[#3D8B37]/20"
+                        className="h-9 bg-gray-50 border-gray-200 focus:border-[#3D8B37] focus:ring-1 focus:ring-[#3D8B37]/20"
                       />
                     </FormControl>
                     <FormMessage />
@@ -177,14 +177,14 @@ export default function ContactFormWithValidation() {
               rules={{ required: 'El mensaje es obligatorio' }}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                  <FormLabel className="text-sm flex items-center gap-2 text-gray-700">
                     <MessageSquare className="h-3.5 w-3.5 text-[#3D8B37]" />
                     Mensaje
                   </FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Escribe tu mensaje aquí..."
-                      className="min-h-[100px] bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 focus:border-[#3D8B37] dark:focus:border-[#3D8B37] focus:ring-1 focus:ring-[#3D8B37]/20 resize-none"
+                      className="min-h-[100px] bg-gray-50 border-gray-200 focus:border-[#3D8B37] focus:ring-1 focus:ring-[#3D8B37]/20 resize-none"
                       {...field}
                     />
                   </FormControl>
@@ -195,7 +195,7 @@ export default function ContactFormWithValidation() {
           </form>
         </Form>
       </CardContent>
-      <CardFooter className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-b-lg">
+      <CardFooter className="bg-gray-50 p-4 rounded-b-lg">
         <div className="w-full">
           <button
             type="submit"
