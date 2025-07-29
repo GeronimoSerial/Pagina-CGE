@@ -44,7 +44,7 @@ export function Sidebar({ sections, onLinkClick }: SidebarProps) {
         </div>
         {/* Page Navigation */}
         <nav className="mb-6 space-y-1">
-          <h3 className="mb-2 text-sm font-semibold tracking-wider text-gray-900 uppercase">
+          <h3 className="mb-2 text-md font-semibold tracking-wider text-gray-900 uppercase">
             Categorías
           </h3>
           {sections.map((section: NavSection) => {
