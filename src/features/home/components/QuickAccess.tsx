@@ -45,14 +45,15 @@ const QuickAccess = ({ items = [] }: QuickAccessProps) => {
     {
       icon: <BookOpen size={24} />,
       title: 'Documentación',
-      description: 'Consulte normas y reglamentos oficiales del CGE',
+      description:
+        'Consulte normativa, reglamentos y documentación oficial correspondiente al Consejo General de Educación',
       href: '/documentacion',
     },
     {
       icon: <BotMessageSquare size={24} />,
       title: 'Asistente Virtual',
       description:
-        'Consultá normativa educativa con el chatbot oficial del Consejo General de Educación',
+        'Interactúe con el chatbot oficial del Consejo General de Educación para consultar normativa educativa vigente.',
       href: '/chatbot',
     },
     {

@@ -23,13 +23,7 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
-interface DynamicNewsClientProps {
-  categorias: Array<{ id: number; nombre: string }>;
-}
-
-export default function DynamicNewsClient({
-  categorias,
-}: DynamicNewsClientProps) {
+export default function DynamicNewsClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
 

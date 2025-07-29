@@ -109,33 +109,32 @@ const Header = () => {
         </div>
 
         {/* Menú Mobile */}
-
-        {isMenuOpen && (
-          <div className="lg:hidden border-t border-gray-200 py-2">
-            <nav>
-              <ul className="grid grid-cols-2 gap-1">
-                {navLinks.map((link) => (
-                  <li key={link.href}>
-                    <a
-                      href={link.href}
-                      className={`block px-3 py-2 text-sm font-medium rounded-lg text-center ${
-                        pathname === link.href
-                          ? 'bg-[#205C3B]/10 text-[#205C3B]'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                      }}
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-        )}
       </div>
+      {isMenuOpen && (
+        <div className="lg:hidden border-t fixed inset-x-0 bg-gray-50 top-16 border-gray-200 py-2 space-x-3">
+          <nav>
+            <ul className="grid grid-cols-2 gap-2 px-4">
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className={`block py-6 mb-6 text-md font-medium rounded-lg text-center ${
+                      pathname === link.href
+                        ? 'bg-linear-to-b from-[#3D8B37] to-[#2D6A27] text-white'
+                        : 'text-gray-900 bg-gray-200/50'
+                    }`}
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      )}
     </header>
   );
 };

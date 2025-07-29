@@ -67,55 +67,6 @@ function CarouselSlide({
   );
 }
 
-function CarouselModal({
-  images,
-  activeIndex,
-  closeModal,
-}: {
-  images: GenericCarouselImage[];
-  activeIndex: number;
-  closeModal: () => void;
-}) {
-  return (
-    <div
-      className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"
-      onClick={closeModal}
-    >
-      <button
-        onClick={closeModal}
-        className="absolute top-4 right-4 text-white text-3xl z-50 hover:scale-110 transition"
-        aria-label="Cerrar modal"
-      >
-        Cerrar ✖
-      </button>
-      <div className="w-full h-full" onClick={(e) => e.stopPropagation()}>
-        <Swiper
-          initialSlide={activeIndex}
-          loop
-          navigation
-          pagination={{ clickable: true }}
-          modules={[Navigation, Pagination]}
-          className="w-full h-full"
-        >
-          {images.map((img, i) => (
-            <SwiperSlide key={i}>
-              <div className="flex items-center justify-center h-full">
-                <Image
-                  src={img.imagen || img.src || ''}
-                  alt={img.alt || ''}
-                  width={1200}
-                  height={800}
-                  className="max-h-[90vh] w-auto object-contain rounded-xl shadow-xl"
-                />
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
-    </div>
-  );
-}
-
 export default function ImageCarousel({
   images,
   horizontal,
@@ -164,7 +115,7 @@ export default function ImageCarousel({
         loop
         autoplay={{
           delay: 5000,
-          disableOnInteraction: true,
+          disableOnInteraction: false,
         }}
         className="h-full w-full rounded-2xl"
       >
@@ -179,14 +130,6 @@ export default function ImageCarousel({
           </SwiperSlide>
         ))}
       </Swiper>
-
-      {modalOpen && (
-        <CarouselModal
-          images={images}
-          activeIndex={activeIndex}
-          closeModal={closeModal}
-        />
-      )}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { ArrowRight, CalendarDays, Tag } from 'lucide-react';
 import { getCover } from '@/features/noticias/services/news';
 import { NewsItem } from '@/shared/interfaces';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export function RegularNewsCard({
   noticia,
@@ -17,12 +18,12 @@ export function RegularNewsCard({
   return (
     <Card
       key={noticia.id}
-      className="overflow-hidden bg-white rounded-xl border-none shadow-none transition-all duration-300 group hover:shadow-lg"
+      className="overflow-hidden bg-white rounded-xl border-none transition-all duration-300 group shadow-md hover:shadow-lg"
     >
       <CardContent className="p-0">
         <div className="overflow-hidden relative rounded-t-xl">
           <Image
-            className="object-cover w-full h-48 transition-transform duration-300 sm:h-56 group-hover:scale-105"
+            className="object-cover w-full h-48 transition-transform duration-500 "
             alt={noticia.titulo}
             src={getCover({ noticia }) || ''}
             width={1200}
@@ -49,11 +50,11 @@ export function RegularNewsCard({
                 </span>
               </div>
             </div>
-            <a href={`/noticias/${noticia.slug}`}>
+            <Link href={`/noticias/${noticia.slug}`}>
               <h4 className="mb-3 text-lg font-semibold leading-7 text-gray-900 transition-colors duration-200 hover:text-green-900">
                 {noticia.titulo}
               </h4>
-            </a>
+            </Link>
             <p
               className="mb-4 text-sm leading-relaxed text-gray-600"
               title={noticia.resumen}
@@ -62,13 +63,13 @@ export function RegularNewsCard({
             </p>
           </div>
           <div className="flex items-center text-sm font-medium text-gray-900 transition-colors duration-200 hover:text-green-900">
-            <a
+            <Link
               href={`/noticias/${noticia.slug}`}
               className="inline-flex gap-2 items-center hover:underline"
             >
               Leer más
               <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
-            </a>
+            </Link>
           </div>
         </div>
       </CardContent>

@@ -68,11 +68,13 @@ async function fetchAPI<T>(path: string, params: object = {}): Promise<T> {
 }
 
 const categoriaMap: Record<number, string> = {
-  1: 'Licencias especiales por salud y/o maternidad',
+  1: 'Licencias por salud y/o maternidad',
   2: 'Licencias extraordinarias',
   3: 'Justificación de inasistencias',
   4: 'Permisos',
   5: 'Suplentes',
+  6: 'Traslados',
+  7: 'Salarios',
 };
 
 let navigationCache: NavSection[] | null = null;
@@ -114,11 +116,16 @@ export async function getProceduresNavigation(): Promise<NavSection[]> {
     });
   });
 
-  const sortedSections = Object.values(grouped).sort((a, b) => {
-    if (a.title === 'General') return -1;
-    if (b.title === 'General') return 1;
-    return a.title.localeCompare(b.title);
-  });
+  const sortedSections = Object.values(grouped)
+    .map((section) => ({
+      ...section,
+      items: section.items.sort((a, b) => a.title.localeCompare(b.title)),
+    }))
+    .sort((a, b) => {
+      if (a.title === 'General') return -1;
+      if (b.title === 'General') return 1;
+      return a.title.localeCompare(b.title);
+    });
 
   navigationCache = sortedSections;
 
