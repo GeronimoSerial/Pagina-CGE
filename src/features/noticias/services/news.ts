@@ -218,6 +218,79 @@ export function getImages(noticia: NewsItem) {
   );
 }
 
+export async function getFeaturedNews(limit: number = 5): Promise<NewsItem[]> {
+  const query = qs.stringify(
+    {
+      fields: [
+        'titulo',
+        'resumen',
+        'slug',
+        'fecha',
+        'categoria',
+        'autor',
+        'esImportante',
+      ],
+      filters: {
+        publicado: { $eq: true },
+        esImportante: { $eq: true },
+      },
+      populate: {
+        portada: {
+          fields: ['url', 'alternativeText'],
+        },
+      },
+      sort: ['fecha:desc'],
+      pagination: {
+        limit,
+      },
+    },
+    { encodeValuesOnly: true },
+  );
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(
+      () => controller.abort(),
+      PERFORMANCE_CONFIG.API_TIMEOUT,
+    );
+
+    const res = await fetch(`${API_URL}/noticias?${query}`, {
+      signal: controller.signal,
+      headers: {
+        Accept: 'application/json',
+        'Cache-Control': `max-age=${PERFORMANCE_CONFIG.CACHE.DYNAMIC_MAX_AGE}`,
+        Connection: 'keep-alive',
+      },
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      console.error(
+        `API Error: ${res.status} ${res.statusText} for featured news`,
+      );
+      throw new Error(`HTTP ${res.status}: Failed to fetch featured news`);
+    }
+
+    const { data } = await res.json();
+
+    return data.map((n: any) => ({
+      id: n.id,
+      titulo: n.titulo,
+      resumen: n.resumen,
+      slug: n.slug,
+      fecha: n.fecha,
+      categoria: n.categoria,
+      autor: n.autor,
+      esImportante: n.esImportante,
+      portada: n.portada,
+    }));
+  } catch (error) {
+    console.error('Error in getFeaturedNews:', error);
+    return [];
+  }
+}
+
 export async function getNewsCategories(): Promise<
   Array<{ id: number; nombre: string }>
 > {
