@@ -5,6 +5,7 @@ import {
   Article,
 } from '@/features/tramites/services/docs-data';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
 import { Clock } from 'lucide-react';
 import Link from 'next/link';
@@ -70,7 +71,10 @@ export default async function DocumentPage({ params }: PageProps) {
 
           {/* Article Content */}
           <article className="max-w-none prose prose-lg">
-            <ReactMarkdown components={MarkdownComponent}>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={MarkdownComponent}
+            >
               {markdown}
             </ReactMarkdown>
           </article>

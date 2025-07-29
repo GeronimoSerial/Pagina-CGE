@@ -2,28 +2,34 @@ import Link from 'next/link';
 import NewsGrid from './NewsGrid';
 import { Button } from '@/shared/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { NewsItem } from '@/shared/interfaces';
 
 interface StaticNewsSectionProps {
   initialData: {
     noticias: any[];
     pagination: any;
   };
+  featuredNews?: NewsItem[];
 }
 
 export default function StaticNewsSection({
   initialData,
+  featuredNews = [],
 }: StaticNewsSectionProps) {
   const { noticias, pagination } = initialData;
 
-  const featuredNews =
-    noticias.filter((noticia: any) => noticia.esImportante) || [];
+  const finalFeaturedNews =
+    featuredNews.length > 0
+      ? featuredNews
+      : noticias.filter((noticia: any) => noticia.esImportante) || [];
+
   const regularNews =
     noticias.filter((noticia: any) => !noticia.esImportante) || [];
 
   return (
     <div className="space-y-8">
       <div>
-        <NewsGrid featuredNews={featuredNews} regularNews={regularNews} />
+        <NewsGrid featuredNews={finalFeaturedNews} regularNews={regularNews} />
       </div>
 
       {pagination?.pageCount > 1 && (

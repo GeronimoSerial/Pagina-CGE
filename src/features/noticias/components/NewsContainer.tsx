@@ -5,6 +5,7 @@ import { Suspense } from 'react';
 import NewsSearch from './Search';
 import StaticNewsSection from './StaticNewsSection';
 import DynamicNewsClient from './DynamicNewsClient';
+import { NewsItem } from '@/shared/interfaces';
 
 interface NewsContainerProps {
   initialData: {
@@ -12,11 +13,13 @@ interface NewsContainerProps {
     pagination: any;
   };
   categorias: Array<{ id: number; nombre: string }>;
+  featuredNews?: NewsItem[];
 }
 
 export default function NewsContainer({
   initialData,
   categorias,
+  featuredNews = [],
 }: NewsContainerProps) {
   const searchParams = useSearchParams();
 
@@ -36,7 +39,10 @@ export default function NewsContainer({
       </div>
 
       {!hasActiveFilters ? (
-        <StaticNewsSection initialData={initialData} />
+        <StaticNewsSection
+          initialData={initialData}
+          featuredNews={featuredNews}
+        />
       ) : (
         <Suspense
           fallback={
