@@ -28,12 +28,12 @@ export default function StaticNewsSection({
 
       {pagination?.pageCount > 1 && (
         <div className="flex justify-center pt-8">
-          <Link href="/noticias?page=2">
-            <Button variant="outline" className="flex items-center gap-2">
+          <Button asChild variant="outline" className="flex items-center gap-2">
+            <Link href="/noticias?page=2">
               Ver más noticias
               <ArrowRight className="w-4 h-4" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       )}
     </div>
