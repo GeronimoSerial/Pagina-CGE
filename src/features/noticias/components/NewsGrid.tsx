@@ -24,7 +24,8 @@ interface NewsGridProps {
 
 export default function NewsGrid({ featuredNews, regularNews }: NewsGridProps) {
   const showFeaturedCarousel = featuredNews && featuredNews.length > 0;
-
+  const MAX_REGULAR_NEWS = 9; // Máximo de noticias regulares a mostrar
+  const MAX_FEATURED_NEWS = 3; // Máximo de noticias destacadas a mostrar
   return (
     <>
       {showFeaturedCarousel && (
@@ -32,7 +33,7 @@ export default function NewsGrid({ featuredNews, regularNews }: NewsGridProps) {
           <Separador titulo="Destacadas" />
           <Carousel className="mx-auto w-full overflow-x-hidden max-w-7xl">
             <CarouselContent className="-ml-6 ">
-              {featuredNews.slice(0, 3).map((noticia) => (
+              {featuredNews.slice(0, MAX_FEATURED_NEWS).map((noticia) => (
                 <CarouselItem key={noticia.id} className="pl-6 basis-full">
                   <Card className="overflow-hidden border-0 shadow-2xl">
                     <div className="grid gap-0 lg:grid-cols-2">
@@ -102,7 +103,7 @@ export default function NewsGrid({ featuredNews, regularNews }: NewsGridProps) {
         <section className="mb-6">
           <Separador titulo="Más noticias" />
           <div className="grid gap-8 mx-auto max-w-6xl md:grid-cols-3">
-            {regularNews.slice(0, 9).map((noticia) => (
+            {regularNews.slice(0, MAX_REGULAR_NEWS).map((noticia) => (
               <RegularNewsCard key={noticia.id} noticia={noticia} />
             ))}
           </div>
