@@ -1,5 +1,6 @@
 import { PageLayout } from '@/shared/components/PageLayout';
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Accesibilidad',
@@ -184,9 +185,9 @@ export default function AccesibilidadPage() {
             Si encuentra alguna dificultad para acceder a nuestro contenido o
             desea reportar un problema de accesibilidad, por favor contáctenos a
             través de nuestra{' '}
-            <a href="/contacto" className="text-primary hover:underline">
+            <Link href="/contacto" className="text-primary hover:underline">
               sección de contacto
-            </a>
+            </Link>
             . Nos comprometemos a:
           </p>
           <ul className="list-disc pl-6 mb-6">

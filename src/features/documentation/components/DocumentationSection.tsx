@@ -23,6 +23,7 @@ import { useSearchParams } from 'next/navigation';
 import { filterDocuments } from '@/shared/lib/utils';
 import SearchInput from '@/shared/components/SearchInput';
 import { HeadlessPagination } from './HeadlessPagination';
+import Link from 'next/link';
 
 const DocumentationSection = () => {
   const searchParams = useSearchParams();
@@ -266,14 +267,13 @@ const DocumentationSection = () => {
             Estamos constantemente actualizando nuestra base de documentos. Si
             necesitas algo específico, no dudes en contactarnos.
           </p>
-          <a href="/contacto">
-            <Button
-              variant="outline"
-              className="px-4 py-2 text-green-700 border-green-600 hover:bg-green-50"
-            >
-              Solicitar documentación
-            </Button>
-          </a>
+          <Button
+            asChild
+            variant="outline"
+            className="px-4 py-2 text-green-700 border-green-600 hover:bg-green-50"
+          >
+            <Link href="/contacto">Solicitar documentación</Link>
+          </Button>
         </div>
       </div>
     </section>

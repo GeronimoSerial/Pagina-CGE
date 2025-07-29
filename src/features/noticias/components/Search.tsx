@@ -1,18 +1,15 @@
 'use client';
 
+import { Button } from '@/shared/ui/button';
 import { Calendar, ChevronDown, Filter, Search, Tag, X } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState, useCallback } from 'react';
 
 interface NewsSearchProps {
   categorias: Array<{ id: number; nombre: string }>;
-  placeholder?: string;
 }
 
-export default function NewsSearch({
-  categorias,
-  placeholder,
-}: NewsSearchProps) {
+export default function NewsSearch({ categorias }: NewsSearchProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -106,43 +103,87 @@ export default function NewsSearch({
       style={{ minHeight: 60 }}
     >
       <div className="w-full max-w-[700px] p-2 rounded-lg bg-white border border-slate-200 transition-shadow duration-300 shadow-md">
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3">
-          <div className="relative flex-1">
+        {/* Mobile-specific design */}
+        <div className="flex flex-col gap-2 md:hidden">
+          <div className="relative">
             <Search className="absolute left-3 top-1/2 w-4 h-4 text-slate-700 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
-              placeholder={
-                placeholder || 'Escribe y presiona ENTER para buscar...'
-              }
+              placeholder={'Buscar noticias...'}
               value={filtros.q}
               onChange={(e) => setFiltros({ ...filtros, q: e.target.value })}
               onKeyDown={handleKeyDown}
-              className="h-9 w-full pl-9 pr-10 text-sm rounded-md border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-hidden shadow-2xs"
+              className="h-10 w-full pl-9 pr-10 text-sm rounded-md border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-hidden shadow-2xs"
               autoFocus
-              onFocus={(e) =>
-                e.target.parentElement
-                  ?.querySelector('.clear-btn')
-                  ?.classList.remove('opacity-0')
-              }
-              onBlur={(e) =>
-                e.target.parentElement
-                  ?.querySelector('.clear-btn')
-                  ?.classList.add('opacity-0')
-              }
             />
-            <button
+            <Button
               onClick={() => clearIndividualFilter('q')}
-              className="clear-btn absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#3D8B37] transition-colors duration-200 opacity-0 focus:opacity-100"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#3D8B37] transition-colors duration-200"
               style={{ minWidth: 28, minHeight: 28 }}
               tabIndex={-1}
               aria-label="Limpiar búsqueda"
             >
               <X className="w-4 h-4" />
+            </Button>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              onClick={handleSearch}
+              className={`flex-1 h-10 px-3 rounded-md text-sm font-medium transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/50 focus:outline-hidden ${
+                hasPendingSearch
+                  ? 'text-white bg-[#2d6b29] hover:bg-[#1f4d1c]'
+                  : 'text-white bg-[#3D8B37] hover:bg-[#2d6b29]'
+              }`}
+            >
+              Buscar
+            </Button>
+            <Button
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              className="flex gap-1 items-center h-10 px-3 rounded-md text-sm font-medium text-[#3D8B37] bg-[#F3F4F6] border border-[#3D8B37]/20 hover:bg-[#e5e7eb] transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/50 focus:outline-hidden"
+              aria-expanded={showAdvanced}
+            >
+              Filtros
+              <ChevronDown
+                className={`w-4 h-4 transition-transform duration-200 ${showAdvanced ? 'rotate-180' : ''}`}
+              />
+            </Button>
+          </div>
+          {activeFiltersCount > 0 && (
+            <button
+              onClick={clearAll}
+              className="h-10 px-2 rounded-md border border-slate-300 text-sm text-slate-600 hover:text-[#3D8B37] hover:border-[#3D8B37]/50 hover:bg-[#F3F4F6] transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/50 focus:outline-hidden"
+            >
+              Limpiar filtros
             </button>
+          )}
+        </div>
+
+        {/* Desktop-specific design */}
+        <div className="hidden md:flex flex-col md:flex-row md:items-center gap-2 md:gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 w-4 h-4 text-slate-700 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              placeholder={'Buscar noticias...'}
+              value={filtros.q}
+              onChange={(e) => setFiltros({ ...filtros, q: e.target.value })}
+              onKeyDown={handleKeyDown}
+              className="h-9 w-full pl-9 pr-10 text-sm rounded-md border border-slate-300 bg-slate-50 text-slate-800 transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/70 focus:border-[#3D8B37]/70 focus:bg-white outline-hidden shadow-2xs"
+              autoFocus
+            />
+            <Button
+              onClick={() => clearIndividualFilter('q')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#3D8B37] transition-colors duration-200 opacity-0 focus:opacity-100"
+              style={{ minWidth: 28, minHeight: 28 }}
+              tabIndex={-1}
+              aria-label="Limpiar búsqueda"
+            >
+              <X className="w-4 h-4" />
+            </Button>
           </div>
 
           <div className="flex flex-row md:flex-row gap-2 items-center md:ml-1">
-            <button
+            <Button
               onClick={handleSearch}
               className={`flex gap-1 items-center h-9 px-3 rounded-md text-xs font-medium transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/50 focus:outline-hidden min-w-[36px] ${
                 hasPendingSearch
@@ -161,8 +202,8 @@ export default function NewsSearch({
               {hasPendingSearch && (
                 <div className="ml-1 w-1.5 h-1.5 bg-white rounded-full opacity-75"></div>
               )}
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => setShowAdvanced(!showAdvanced)}
               className="flex gap-1 items-center h-9 px-3 rounded-md text-xs font-medium text-[#3D8B37] bg-[#F3F4F6] border border-[#3D8B37]/20 hover:bg-[#e5e7eb] transition-all duration-200 focus:ring-2 focus:ring-[#3D8B37]/50 focus:outline-hidden min-w-[36px]"
               style={{ minHeight: 36 }}
@@ -178,7 +219,7 @@ export default function NewsSearch({
               <ChevronDown
                 className={`w-4 h-4 transition-transform duration-200 ${showAdvanced ? 'rotate-180' : ''}`}
               />
-            </button>
+            </Button>
             {(activeFiltersCount > 0 || filtros.q) && (
               <button
                 onClick={clearAll}
@@ -191,74 +232,6 @@ export default function NewsSearch({
             )}
           </div>
         </div>
-
-        {(activeFiltersCount > 0 || filtros.q) && (
-          <div className="flex flex-wrap gap-1 mt-2">
-            {filtros.q && (
-              <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-2xs">
-                <Search className="w-3 h-3" />
-                <span>
-                  "
-                  {filtros.q.length > 20
-                    ? filtros.q.substring(0, 20) + '...'
-                    : filtros.q}
-                  "
-                </span>
-                <button
-                  onClick={() => clearIndividualFilter('q')}
-                  className="ml-1 text-slate-400 hover:text-[#3D8B37] transition-colors duration-200"
-                  style={{ minWidth: 24, minHeight: 24 }}
-                  aria-label="Limpiar búsqueda"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </div>
-            )}
-            {filtros.categoria && (
-              <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-2xs">
-                <Tag className="w-3 h-3" />
-                <span>{filtros.categoria}</span>
-                <button
-                  onClick={() => clearIndividualFilter('categoria')}
-                  className="ml-1 text-slate-400 hover:text-[#3D8B37] transition-colors duration-200"
-                  style={{ minWidth: 24, minHeight: 24 }}
-                  aria-label="Limpiar categoría"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </div>
-            )}
-            {filtros.desde && (
-              <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-2xs">
-                <Calendar className="w-3 h-3" />
-                <span>Desde: {filtros.desde}</span>
-                <button
-                  onClick={() => clearIndividualFilter('desde')}
-                  className="ml-1 text-slate-400 hover:text-[#3D8B37] transition-colors duration-200"
-                  style={{ minWidth: 24, minHeight: 24 }}
-                  aria-label="Limpiar fecha desde"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </div>
-            )}
-            {filtros.hasta && (
-              <div className="flex gap-1 items-center px-2 py-0.5 text-xs rounded-full bg-[#F3F4F6] text-slate-700 border border-slate-200 shadow-2xs">
-                <Calendar className="w-3 h-3" />
-                <span>Hasta: {filtros.hasta}</span>
-                <button
-                  onClick={() => clearIndividualFilter('hasta')}
-                  className="ml-1 text-slate-400 hover:text-[#3D8B37] transition-colors duration-200"
-                  style={{ minWidth: 24, minHeight: 24 }}
-                  aria-label="Limpiar fecha hasta"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-
         <div
           className={`transition-all duration-300 ease-out overflow-visible ${showAdvanced ? 'max-h-[500px] opacity-100 mt-3' : 'max-h-0 opacity-0 mt-0'}`}
           style={{ willChange: 'max-height' }}
