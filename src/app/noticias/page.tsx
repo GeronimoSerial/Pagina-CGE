@@ -1,6 +1,7 @@
 import {
   getPaginatedNews,
   getNewsCategories,
+  getFeaturedNews,
 } from '@/features/noticias/services/news';
 import { PageLayout } from '@/shared/components/PageLayout';
 import { Metadata } from 'next';
@@ -36,9 +37,10 @@ export const metadata: Metadata = {
 export const revalidate = 2592000;
 
 export default async function NoticiasPage() {
-  const [initialNoticias, categorias] = await Promise.all([
+  const [initialNoticias, categorias, featuredNews] = await Promise.all([
     getPaginatedNews(1, 6),
     getNewsCategories(),
+    getFeaturedNews(5), // Obtener máximo 5 noticias destacadas
   ]);
 
   return (
@@ -63,7 +65,11 @@ export default async function NoticiasPage() {
           </div>
         }
       >
-        <NewsContainer initialData={initialNoticias} categorias={categorias} />
+        <NewsContainer
+          initialData={initialNoticias}
+          categorias={categorias}
+          featuredNews={featuredNews}
+        />
       </Suspense>
     </PageLayout>
   );
