@@ -2,7 +2,6 @@
 
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
-import NewsGrid from './NewsGrid';
 import NewsSearch from './Search';
 import StaticNewsSection from './StaticNewsSection';
 import DynamicNewsClient from './DynamicNewsClient';
@@ -37,7 +36,7 @@ export default function NewsContainer({
       </div>
 
       {!hasActiveFilters ? (
-        <StaticNewsSection initialData={initialData} categorias={categorias} />
+        <StaticNewsSection initialData={initialData} />
       ) : (
         <Suspense
           fallback={
@@ -49,7 +48,7 @@ export default function NewsContainer({
             </div>
           }
         >
-          <DynamicNewsClient categorias={categorias} />
+          <DynamicNewsClient />
         </Suspense>
       )}
     </div>

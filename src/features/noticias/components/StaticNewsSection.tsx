@@ -8,12 +8,10 @@ interface StaticNewsSectionProps {
     noticias: any[];
     pagination: any;
   };
-  categorias: Array<{ id: number; nombre: string }>;
 }
 
 export default function StaticNewsSection({
   initialData,
-  categorias,
 }: StaticNewsSectionProps) {
   const { noticias, pagination } = initialData;
 
