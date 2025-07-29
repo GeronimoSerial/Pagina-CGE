@@ -232,8 +232,6 @@ export default function NewsSearch({ categorias }: NewsSearchProps) {
             )}
           </div>
         </div>
-
-        {/* Advanced filters section (shared between mobile and desktop) */}
         <div
           className={`transition-all duration-300 ease-out overflow-visible ${showAdvanced ? 'max-h-[500px] opacity-100 mt-3' : 'max-h-0 opacity-0 mt-0'}`}
           style={{ willChange: 'max-height' }}
