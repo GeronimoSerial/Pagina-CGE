@@ -50,11 +50,11 @@ export function RegularNewsCard({
                 </span>
               </div>
             </div>
-            <a href={`/noticias/${noticia.slug}`}>
+            <Link href={`/noticias/${noticia.slug}`}>
               <h4 className="mb-3 text-lg font-semibold leading-7 text-gray-900 transition-colors duration-200 hover:text-green-900">
                 {noticia.titulo}
               </h4>
-            </a>
+            </Link>
             <p
               className="mb-4 text-sm leading-relaxed text-gray-600"
               title={noticia.resumen}

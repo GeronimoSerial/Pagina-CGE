@@ -55,11 +55,11 @@ export default function NewsGrid({ featuredNews, regularNews }: NewsGridProps) {
                               {formatDate(noticia.fecha)}
                             </span>
                           </div>
-                          <a href={`/noticias/${noticia.slug}`}>
+                          <Link href={`/noticias/${noticia.slug}`}>
                             <h3 className="mb-4 font-serif text-2xl font-bold leading-tight text-gray-900 transition-colors cursor-pointer lg:text-3xl hover:text-green-900">
                               {noticia.titulo}
                             </h3>
-                          </a>
+                          </Link>
                           <p className="mb-6 text-lg font-light leading-relaxed text-gray-700">
                             {noticia.resumen}
                           </p>
