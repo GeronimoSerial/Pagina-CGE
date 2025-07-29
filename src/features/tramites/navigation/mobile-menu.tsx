@@ -53,7 +53,7 @@ export function MobileMenu({ sections }: MobileMenuProps) {
             <Link
               href="/"
               onClick={closeMenu}
-              className="flex items-center p-2 bg-green-50 rounded-lg text-green-700 hover:bg-green-100 transition-colors"
+              className="flex items-center p-2  rounded-lg text-green-700 hover:bg-green-100 transition-colors"
             >
               <Home className="mr-2" />
               <span className="font-medium">Volver al inicio</span>
