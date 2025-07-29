@@ -96,7 +96,7 @@ export async function generateMetadata() {
   }
 
   return {
-    title: 'Trámites CGE',
+    title: 'Trámites',
     description:
       'Guía completa de trámites educativos para todos los agentes docentes',
     alternates: {
