@@ -267,13 +267,11 @@ const DocumentationSection = () => {
             Estamos constantemente actualizando nuestra base de documentos. Si
             necesitas algo específico, no dudes en contactarnos.
           </p>
-          <Link href="/contacto">
-            <Button
-              variant="outline"
-              className="px-4 py-2 text-green-700 border-green-600 hover:bg-green-50"
-            >
-              Solicitar documentación
-            </Button>
+          <Link
+            href="/contacto"
+            className="px-4 py-2 text-green-700 border-green-600 hover:bg-green-50"
+          >
+            Solicitar documentación
           </Link>
         </div>
       </div>
