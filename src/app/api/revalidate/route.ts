@@ -35,9 +35,8 @@ export async function POST(request: NextRequest) {
         relatedCache.clear();
         revalidatePath('/');
         revalidatePath('/noticias');
-        revalidatePath('/noticias', 'layout'); // Invalidar también el layout
+        revalidatePath('/noticias', 'layout'); 
 
-        // Invalidar páginas específicas de noticias
         for (let i = 1; i <= 5; i++) {
           revalidatePath(`/noticias?page=${i}`);
         }
