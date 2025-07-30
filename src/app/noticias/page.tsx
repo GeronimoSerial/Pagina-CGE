@@ -36,41 +36,69 @@ export const metadata: Metadata = {
 // ISR: Revalidar cada 30 días  api/revalidate se encarga
 export const revalidate = 2592000;
 
-export default async function NoticiasPage() {
-  const [initialNoticias, categorias, featuredNews] = await Promise.all([
-    getPaginatedNews(1, 6),
-    getNewsCategories(),
-    getFeaturedNews(5), // Obtener máximo 5 noticias destacadas
-  ]);
+export const dynamic = 'force-static';
 
-  return (
-    <PageLayout
-      pageType="wide"
-      hero={{
-        title: 'Noticias',
-        description:
-          'Encontrá información sobre eventos, actividades y noticias institucionales.',
-      }}
-      showSeparator={true}
-      showInfoBar={true}
-      basePath="/noticias"
-    >
-      <Suspense
-        fallback={
-          <div className="flex justify-center items-center py-12">
-            <div className="flex flex-col items-center space-y-4">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3D8B37]"></div>
-              <div className="text-gray-500">Cargando...</div>
-            </div>
-          </div>
-        }
+export default async function NoticiasPage() {
+  try {
+    const [initialNoticias, categorias, featuredNews] = await Promise.all([
+      getPaginatedNews(1, 12),
+      getNewsCategories(),
+      getFeaturedNews(5).catch(() => []),
+    ]);
+
+    return (
+      <PageLayout
+        pageType="wide"
+        hero={{
+          title: 'Noticias',
+          description:
+            'Encontrá información sobre eventos, actividades y noticias institucionales.',
+        }}
+        showSeparator={true}
+        showInfoBar={true}
+        basePath="/noticias"
       >
-        <NewsContainer
-          initialData={initialNoticias}
-          categorias={categorias}
-          featuredNews={featuredNews}
-        />
-      </Suspense>
-    </PageLayout>
-  );
+        <Suspense
+          fallback={
+            <div className="flex justify-center items-center py-12">
+              <div className="flex flex-col items-center space-y-4">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3D8B37]"></div>
+                <div className="text-gray-500">Cargando...</div>
+              </div>
+            </div>
+          }
+        >
+          <NewsContainer
+            initialData={initialNoticias}
+            categorias={categorias}
+            featuredNews={featuredNews}
+          />
+        </Suspense>
+      </PageLayout>
+    );
+  } catch (error) {
+    console.error('Error loading noticias page:', error);
+    return (
+      <PageLayout
+        pageType="wide"
+        hero={{
+          title: 'Noticias',
+          description:
+            'Encontrá información sobre eventos, actividades y noticias institucionales.',
+        }}
+        showSeparator={true}
+        showInfoBar={true}
+        basePath="/noticias"
+      >
+        <div className="flex justify-center items-center py-12">
+          <div className="text-center">
+            <p className="text-red-600">Error al cargar las noticias</p>
+            <p className="text-gray-500">
+              Por favor, intenta nuevamente más tarde
+            </p>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
 }
