@@ -24,7 +24,9 @@ export default function StaticNewsSection({
       : noticias.filter((noticia: any) => noticia.esImportante) || [];
 
   const regularNews =
-    noticias.filter((noticia: any) => !noticia.esImportante) || [];
+    featuredNews.length > 0
+      ? noticias // Si las destacadas vienen por separado, todas las paginadas son "regulares"
+      : noticias.filter((noticia: any) => !noticia.esImportante) || [];
 
   return (
     <div className="space-y-8">
