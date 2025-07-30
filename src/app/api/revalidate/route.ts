@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
         relatedCache.clear();
         revalidatePath('/');
         revalidatePath('/noticias');
-        revalidatePath('/noticias', 'layout'); 
+        revalidatePath('/noticias', 'layout');
 
         for (let i = 1; i <= 5; i++) {
           revalidatePath(`/noticias?page=${i}`);
