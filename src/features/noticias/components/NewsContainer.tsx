@@ -39,7 +39,7 @@ export default function NewsContainer({
         <StaticNewsSection
           initialData={initialData}
           featuredNews={featuredNews}
-          currentPage={1} // Página principal siempre usa StaticNewsSection, paginación en /noticias/page/[pageNumber]
+          currentPage={1}
         />
       ) : (
         <Suspense
