@@ -89,8 +89,9 @@ export async function getPaginatedNews(
       if (countResponse.status === 'success' && countResponse.data?.meta) {
         const totalNews = countResponse.data.meta.pagination.total;
 
-        if (totalNews <= pageSize + 3) {
-          // Pequeño margen para evitar páginas con muy pocas noticias
+        // Solo ajustar pageSize si hay muy pocas noticias (menos que pageSize + 1)
+        // Esto evita páginas con solo 1-2 noticias, pero permite paginación normal
+        if (totalNews <= pageSize + 1 && totalNews <= pageSize * 1.2) {
           actualPageSize = Math.max(totalNews, pageSize);
           console.log(
             `DEBUG: Total news=${totalNews}, adjusting pageSize from ${pageSize} to ${actualPageSize}`,
