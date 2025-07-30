@@ -5,6 +5,8 @@ import {
   newsCache,
   tramitesCache,
   relatedCache,
+  newsPagesCache,
+  featuredNewsCache,
 } from '@/shared/lib/aggressive-cache';
 
 export async function GET() {
@@ -21,6 +23,8 @@ export async function GET() {
       noticias: newsCache.getStats(),
       tramites: tramitesCache.getStats(),
       related: relatedCache.getStats(),
+      newsPages: newsPagesCache.getStats(),
+      featuredNews: featuredNewsCache.getStats(),
     };
 
     let systemInfo = {};
@@ -81,6 +85,9 @@ export async function DELETE() {
     newsCache.clear();
     tramitesCache.clear();
     relatedCache.clear();
+
+    newsPagesCache.clear();
+    featuredNewsCache.clear();
 
     return NextResponse.json(
       {

@@ -86,6 +86,18 @@ export const newsCache = new AggressiveCache<any>(86400000, 50); // 24 horas, 50
 export const tramitesCache = new AggressiveCache<any>(2592000000, 20); // 30 días, 20 trámites max - webhook actualiza inmediatamente
 export const relatedCache = new AggressiveCache<any>(86400000, 100); // 24 horas, 100 queries relacionadas
 export const newsGridCache = new AggressiveCache<any>(86400000, 50); // 24 horas, 50 noticias max
+
+// Nuevos caches para páginas estáticas (Fase 2)
+export const newsPagesCache = new AggressiveCache<any>(
+  24 * 60 * 60 * 1000, // 24h TTL
+  20, // Max 20 entradas (páginas 1-5 * 4 contexts)
+);
+
+// Cache para featured news (compartido entre páginas)
+export const featuredNewsCache = new AggressiveCache<any>(
+  24 * 60 * 60 * 1000, // 24h TTL
+  5, // Solo 1 entrada pero con buffer
+);
 export async function withCache<T>(
   cache: AggressiveCache<T>,
   key: string,

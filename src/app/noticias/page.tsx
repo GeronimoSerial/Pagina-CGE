@@ -41,7 +41,7 @@ export const dynamic = 'force-static';
 export default async function NoticiasPage() {
   try {
     const [initialNoticias, categorias, featuredNews] = await Promise.all([
-      getPaginatedNews(1, 12),
+      getPaginatedNews(1, 9),
       getNewsCategories(),
       getFeaturedNews(5).catch(() => []),
     ]);
