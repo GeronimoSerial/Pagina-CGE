@@ -6,6 +6,7 @@ import {
   newsPagesCache,
   featuredNewsCache,
 } from '@/shared/lib/aggressive-cache';
+import { resilientFetch } from '@/shared/lib/resilient-api';
 
 function createCacheKey(
   page: number,
@@ -37,13 +38,17 @@ export async function getAllNews() {
     { encodeValuesOnly: true },
   );
 
-  const res = await fetch(`${API_URL}/noticias?${query}`);
+  const response = await resilientFetch(`${API_URL}/noticias?${query}`, {
+    cacheKey: 'all-news-slugs',
+    fallbackData: [],
+    timeout: PERFORMANCE_CONFIG.API_TIMEOUT,
+  });
 
-  if (!res.ok) {
+  if (response.status === 'error') {
     throw new Error('Failed to fetch all noticias slugs');
   }
-  const { data } = await res.json();
-  return data;
+
+  return response.data?.data || [];
 }
 
 export async function getPaginatedNews(
@@ -51,7 +56,6 @@ export async function getPaginatedNews(
   pageSize: number = 4,
   filters: Record<string, any> = {},
 ) {
- 
   const shouldCache = page <= 5 && Object.keys(filters).length === 0;
   const cacheKey = shouldCache ? `page-${page}-${pageSize}` : null;
 
@@ -60,7 +64,6 @@ export async function getPaginatedNews(
     if (cached) return cached;
   }
 
- 
   let actualPageSize = pageSize;
   if (page === 1 && Object.keys(filters).length === 0) {
     try {
@@ -73,12 +76,18 @@ export async function getPaginatedNews(
         { encodeValuesOnly: true },
       );
 
-      const countRes = await fetch(`${API_URL}/noticias?${countQuery}`);
-      if (countRes.ok) {
-        const { meta } = await countRes.json();
-        const totalNews = meta.pagination.total;
+      const countResponse = await resilientFetch(
+        `${API_URL}/noticias?${countQuery}`,
+        {
+          cacheKey: 'news-count',
+          fallbackData: { meta: { pagination: { total: pageSize + 3 } } },
+          timeout: PERFORMANCE_CONFIG.CRITICAL_API_TIMEOUT,
+        },
+      );
 
-      
+      if (countResponse.status === 'success' && countResponse.data?.meta) {
+        const totalNews = countResponse.data.meta.pagination.total;
+
         if (totalNews <= pageSize + 3) {
           // Pequeño margen para evitar páginas con muy pocas noticias
           actualPageSize = Math.max(totalNews, pageSize);
@@ -122,34 +131,40 @@ export async function getPaginatedNews(
   );
 
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(
-      () => controller.abort(),
-      PERFORMANCE_CONFIG.API_TIMEOUT,
-    );
-
-    const res = await fetch(`${API_URL}/noticias?${query}`, {
-      signal: controller.signal,
-      headers: {
-        Accept: 'application/json',
-        'Cache-Control': `max-age=${PERFORMANCE_CONFIG.CACHE.DYNAMIC_MAX_AGE}`,
-        Connection: 'keep-alive',
+    const response = await resilientFetch(`${API_URL}/noticias?${query}`, {
+      cacheKey: cacheKey || undefined,
+      fallbackData: {
+        data: [],
+        meta: {
+          pagination: {
+            page: page,
+            pageCount: 0,
+            pageSize: pageSize,
+            total: 0,
+          },
+        },
       },
+      timeout: PERFORMANCE_CONFIG.API_TIMEOUT,
+      retries: 2,
     });
 
-    clearTimeout(timeoutId);
-
-    if (!res.ok) {
-      console.error(
-        `API Error: ${res.status} ${res.statusText} for ${API_URL}/noticias`,
-      );
-      throw new Error(`HTTP ${res.status}: Failed to fetch paginated noticias`);
+    let result;
+    if (response.status === 'error') {
+      result = {
+        noticias: [],
+        pagination: {
+          page: page,
+          pageCount: 0,
+          pageSize: pageSize,
+          total: 0,
+        },
+      };
+    } else {
+      const { data, meta } = response.data;
+      result = { noticias: data, pagination: meta.pagination };
     }
 
-    const { data, meta } = await res.json();
-    const result = { noticias: data, pagination: meta.pagination };
-
-    if (cacheKey && shouldCache) {
+    if (cacheKey && shouldCache && response.status === 'success') {
       newsPagesCache.set(cacheKey, result);
     }
 
@@ -187,12 +202,17 @@ export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
     { encodeValuesOnly: true },
   );
 
-  const res = await fetch(`${API_URL}/noticias?${query}`);
+  const response = await resilientFetch(`${API_URL}/noticias?${query}`, {
+    cacheKey: `news-by-slug-${slug}`,
+    fallbackData: { data: [] },
+    timeout: PERFORMANCE_CONFIG.API_TIMEOUT,
+  });
 
-  if (!res.ok) {
+  if (response.status === 'error') {
     throw new Error('Failed to fetch noticia by slug');
   }
-  const { data } = await res.json();
+
+  const data = response.data?.data || [];
   if (!data || data.length === 0) return null;
 
   const n = data[0];
@@ -240,13 +260,17 @@ export async function getRelatedNews(categoria: string, excludeSlug?: string) {
     { encodeValuesOnly: true },
   );
 
-  const res = await fetch(`${API_URL}/noticias?${query}`);
+  const response = await resilientFetch(`${API_URL}/noticias?${query}`, {
+    cacheKey: `related-news-${categoria}-${excludeSlug || 'all'}`,
+    fallbackData: { data: [] },
+    timeout: PERFORMANCE_CONFIG.API_TIMEOUT,
+  });
 
-  if (!res.ok) {
+  if (response.status === 'error') {
     throw new Error('Failed to fetch noticias relacionadas');
   }
-  const { data } = await res.json();
-  return data;
+
+  return response.data?.data || [];
 }
 
 export function getCover({ noticia }: any) {
@@ -302,32 +326,19 @@ export async function getFeaturedNews(limit: number = 5): Promise<NewsItem[]> {
   );
 
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(
-      () => controller.abort(),
-      PERFORMANCE_CONFIG.API_TIMEOUT,
-    );
-
-    const res = await fetch(`${API_URL}/noticias?${query}`, {
-      signal: controller.signal,
-      headers: {
-        Accept: 'application/json',
-        'Cache-Control': `max-age=${PERFORMANCE_CONFIG.CACHE.DYNAMIC_MAX_AGE}`,
-        Connection: 'keep-alive',
-      },
+    const response = await resilientFetch(`${API_URL}/noticias?${query}`, {
+      cacheKey,
+      fallbackData: { data: [] },
+      timeout: PERFORMANCE_CONFIG.API_TIMEOUT,
+      retries: 2,
     });
 
-    clearTimeout(timeoutId);
-
-    if (!res.ok) {
-      console.error(
-        `API Error: ${res.status} ${res.statusText} for featured news`,
-      );
-      throw new Error(`HTTP ${res.status}: Failed to fetch featured news`);
+    if (response.status === 'error') {
+      console.error('Error fetching featured news, returning empty array');
+      return [];
     }
 
-    const { data } = await res.json();
-
+    const data = response.data?.data || [];
     const result = data.map((n: any) => ({
       id: n.id,
       titulo: n.titulo,
@@ -340,8 +351,11 @@ export async function getFeaturedNews(limit: number = 5): Promise<NewsItem[]> {
       portada: n.portada,
     }));
 
-    // Guardar resultado en cache
-    featuredNewsCache.set(cacheKey, result);
+    // Guardar resultado en cache solo si fue exitoso
+    if (response.status === 'success') {
+      featuredNewsCache.set(cacheKey, result);
+    }
+
     return result;
   } catch (error) {
     console.error('Error in getFeaturedNews:', error);
@@ -362,14 +376,17 @@ export async function getNewsCategories(): Promise<
     { encodeValuesOnly: true },
   );
 
-  const res = await fetch(`${API_URL}/noticias?${query}`);
+  const response = await resilientFetch(`${API_URL}/noticias?${query}`, {
+    cacheKey: 'news-categories',
+    fallbackData: { data: [] },
+    timeout: PERFORMANCE_CONFIG.API_TIMEOUT,
+  });
 
-  if (!res.ok) {
+  if (response.status === 'error') {
     throw new Error('Failed to fetch noticias categorias');
   }
 
-  const { data } = await res.json();
-
+  const data = response.data?.data || [];
   const categoriasUnicas = Array.from(
     new Set(data.map((item: any) => item.categoria).filter(Boolean)),
   );

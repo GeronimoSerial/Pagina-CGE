@@ -35,7 +35,6 @@ export async function generateStaticParams() {
 }
 
 export const revalidate = 2592000; // 30 días
-export const dynamic = 'force-static';
 
 export async function generateMetadata({
   params,
