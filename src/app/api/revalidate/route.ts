@@ -4,6 +4,8 @@ import {
   newsCache,
   tramitesCache,
   relatedCache,
+  newsPagesCache,
+  featuredNewsCache,
 } from '@/shared/lib/aggressive-cache';
 import { clearNavigationCache } from '@/features/tramites/services/docs-data';
 
@@ -31,12 +33,25 @@ export async function POST(request: NextRequest) {
 
     switch (model) {
       case 'noticia':
+        // Limpiar caches existentes
         newsCache.clear();
         relatedCache.clear();
+
+        // Limpiar nuevos caches (Fase 2)
+        newsPagesCache.clear();
+        featuredNewsCache.clear();
+
+        // Invalidar rutas existentes
         revalidatePath('/');
         revalidatePath('/noticias');
         revalidatePath('/noticias', 'layout');
 
+        // Invalidar nuevas rutas estáticas (páginas 1-5)
+        for (let i = 1; i <= 5; i++) {
+          revalidatePath(`/noticias/page/${i}`);
+        }
+
+        // Invalidar legacy query params (mantener por compatibilidad)
         for (let i = 1; i <= 5; i++) {
           revalidatePath(`/noticias?page=${i}`);
         }

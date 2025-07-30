@@ -2,6 +2,10 @@ import { API_URL, PERFORMANCE_CONFIG } from '@/shared/lib/config';
 import { NewsItem } from '@/shared/interfaces';
 import qs from 'qs';
 import { cfImages } from '@/shared/lib/cloudflare-images';
+import {
+  newsPagesCache,
+  featuredNewsCache,
+} from '@/shared/lib/aggressive-cache';
 
 function createCacheKey(
   page: number,
@@ -47,7 +51,47 @@ export async function getPaginatedNews(
   pageSize: number = 4,
   filters: Record<string, any> = {},
 ) {
-  const cacheKey = createCacheKey(page, pageSize, filters);
+  // Solo cachear páginas 1-5 sin filtros
+  const shouldCache = page <= 5 && Object.keys(filters).length === 0;
+  const cacheKey = shouldCache ? `page-${page}-${pageSize}` : null;
+
+  if (cacheKey) {
+    const cached = newsPagesCache.get(cacheKey);
+    if (cached) return cached;
+  }
+
+  // SMART PAGINATION: Para página 1, primero verificar total de noticias
+  let actualPageSize = pageSize;
+  if (page === 1 && Object.keys(filters).length === 0) {
+    try {
+      const countQuery = qs.stringify(
+        {
+          fields: ['id'],
+          filters: { publicado: { $eq: true } },
+          pagination: { limit: 1 },
+        },
+        { encodeValuesOnly: true },
+      );
+
+      const countRes = await fetch(`${API_URL}/noticias?${countQuery}`);
+      if (countRes.ok) {
+        const { meta } = await countRes.json();
+        const totalNews = meta.pagination.total;
+
+        // Si el total es pequeño (ej: 11 noticias), obtener TODAS en página 1
+        // para evitar fragmentación innecesaria
+        if (totalNews <= pageSize + 3) {
+          // Pequeño margen para evitar páginas con muy pocas noticias
+          actualPageSize = Math.max(totalNews, pageSize);
+          console.log(
+            `DEBUG: Total news=${totalNews}, adjusting pageSize from ${pageSize} to ${actualPageSize}`,
+          );
+        }
+      }
+    } catch (error) {
+      console.warn('Could not get total count, using default pageSize:', error);
+    }
+  }
 
   const query = qs.stringify(
     {
@@ -69,7 +113,7 @@ export async function getPaginatedNews(
         },
       },
       sort: ['createdAt:desc', 'fecha:desc', 'id:desc'],
-      pagination: { page, pageSize: Math.min(pageSize, 20) },
+      pagination: { page, pageSize: Math.min(actualPageSize, 20) },
       filters: {
         publicado: { $eq: true },
         ...filters,
@@ -104,7 +148,14 @@ export async function getPaginatedNews(
     }
 
     const { data, meta } = await res.json();
-    return { noticias: data, pagination: meta.pagination };
+    const result = { noticias: data, pagination: meta.pagination };
+
+    // Guardar en cache solo si corresponde
+    if (cacheKey && shouldCache) {
+      newsPagesCache.set(cacheKey, result);
+    }
+
+    return result;
   } catch (error) {
     console.error('Error in getPaginatedNews:', error);
 
@@ -219,6 +270,11 @@ export function getImages(noticia: NewsItem) {
 }
 
 export async function getFeaturedNews(limit: number = 5): Promise<NewsItem[]> {
+  const cacheKey = `featured-${limit}`;
+
+  const cached = featuredNewsCache.get(cacheKey);
+  if (cached) return cached;
+
   const query = qs.stringify(
     {
       fields: [
@@ -274,7 +330,7 @@ export async function getFeaturedNews(limit: number = 5): Promise<NewsItem[]> {
 
     const { data } = await res.json();
 
-    return data.map((n: any) => ({
+    const result = data.map((n: any) => ({
       id: n.id,
       titulo: n.titulo,
       resumen: n.resumen,
@@ -285,6 +341,10 @@ export async function getFeaturedNews(limit: number = 5): Promise<NewsItem[]> {
       esImportante: n.esImportante,
       portada: n.portada,
     }));
+
+    // Guardar resultado en cache
+    featuredNewsCache.set(cacheKey, result);
+    return result;
   } catch (error) {
     console.error('Error in getFeaturedNews:', error);
     return [];
