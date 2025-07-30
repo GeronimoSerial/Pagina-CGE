@@ -44,7 +44,7 @@ export default function StaticNewsSection({
       </div>
 
       {pagination?.pageCount > 1 && (
-        <div className="flex justify-center items-center gap-4 pt-8">
+        <div className="flex justify-center items-center gap-3 pt-8 flex-wrap">
           {currentPage > 1 && (
             <Button asChild variant="outline">
               <Link href={`/noticias/page/${currentPage - 1}`}>
@@ -54,11 +54,50 @@ export default function StaticNewsSection({
             </Button>
           )}
 
-          <span className="px-4 py-2 text-sm text-gray-600">
-            Página {currentPage} de {Math.min(pagination.pageCount, 5)}
-          </span>
+          {currentPage > 3 && (
+            <>
+              <Button asChild variant="outline" size="sm">
+                <Link href="/noticias/page/1">1</Link>
+              </Button>
+              {currentPage > 4 && <span className="text-gray-400">...</span>}
+            </>
+          )}
 
-          {currentPage < Math.min(pagination.pageCount, 5) && (
+          {Array.from({ length: Math.min(pagination.pageCount, 5) }, (_, i) => {
+            const pageNum = Math.max(1, currentPage - 2) + i;
+            if (pageNum > pagination.pageCount) return null;
+            
+            const isCurrentPage = pageNum === currentPage;
+            
+            return (
+              <Button
+                key={pageNum}
+                asChild={!isCurrentPage}
+                variant={isCurrentPage ? "default" : "outline"}
+                size="sm"
+                className="min-w-[40px]"
+              >
+                {isCurrentPage ? (
+                  <span>{pageNum}</span>
+                ) : (
+                  <Link href={`/noticias/page/${pageNum}`}>{pageNum}</Link>
+                )}
+              </Button>
+            );
+          })}
+
+          {currentPage < pagination.pageCount - 2 && (
+            <>
+              {currentPage < pagination.pageCount - 3 && <span className="text-gray-400">...</span>}
+              <Button asChild variant="outline" size="sm">
+                <Link href={`/noticias/page/${pagination.pageCount}`}>
+                  {pagination.pageCount}
+                </Link>
+              </Button>
+            </>
+          )}
+
+          {currentPage < pagination.pageCount && (
             <Button asChild variant="outline">
               <Link href={`/noticias/page/${currentPage + 1}`}>
                 Siguiente

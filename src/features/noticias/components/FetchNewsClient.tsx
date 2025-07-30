@@ -5,27 +5,11 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import NewsGrid from './NewsGrid';
 import SimplePagination from './SimplePagination';
 import { NewsItem } from '@/shared/interfaces';
-import { resilientFetch } from '@/shared/lib/resilient-api';
 import { useResilientLoading } from '@/shared/hooks/use-resilient-loading';
-import { STRAPI_URL } from '@/shared/lib/config';
+import { fetchNewsService } from '../services/news';
+import { useDebounce } from '@/shared/hooks/use-debounce';
 
-function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-}
-
-export default function DynamicNewsClient() {
+export default function FetchNewsClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -61,58 +45,23 @@ export default function DynamicNewsClient() {
     maxRetries: 3,
   });
 
-  const fetchNoticias = useCallback(async () => {
-    setLoading('Filtrando noticias...');
+  const fetchNews = useCallback(async () => {
     try {
-      const params = new URLSearchParams({
-        'pagination[page]': String(currentPage),
-        'pagination[pageSize]': '6',
-        'sort[0]': 'createdAt:desc',
-        'sort[1]': 'fecha:desc',
-        'populate[portada][fields][0]': 'url',
-        'populate[portada][fields][1]': 'alternativeText',
-        'filters[publicado][$eq]': 'true',
-        ...(debouncedQ && { 'filters[titulo][$containsi]': debouncedQ }),
-        ...(categoria && { 'filters[categoria][$eq]': categoria }),
-        ...(desde && { 'filters[fecha][$gte]': desde }),
-        ...(hasta && { 'filters[fecha][$lte]': hasta }),
+      const { news, totalPages } = await fetchNewsService({
+        currentPage,
+        debouncedQ,
+        categoria,
+        desde,
+        hasta,
+        cacheBuster,
+        setLoading,
+        handleApiResponse,
       });
-
-      const url = `${STRAPI_URL}/api/noticias?${params.toString()}`;
-      const response = await resilientFetch(url, {
-        cacheKey: `dynamic-news-${cacheBuster}-${currentPage}`,
-        fallbackData: {
-          data: [],
-          meta: { pagination: { pageCount: 1 } },
-        },
-        timeout: 8000,
-        retries: 3,
-      });
-
-      const result = handleApiResponse(response, url);
-
-      if (result) {
-        const mapeadas: NewsItem[] = result.data.map((noticia: any) => ({
-          id: noticia.id,
-          autor: noticia.autor || 'Redacción CGE',
-          titulo: noticia.titulo,
-          resumen: noticia.resumen,
-          fecha: noticia.fecha,
-          categoria: noticia.categoria,
-          esImportante: noticia.esImportante || false,
-          slug: noticia.slug,
-          portada: noticia.portada,
-          imagen: noticia.imagen,
-        }));
-
-        setNews(mapeadas);
-        setTotalPages(result.meta?.pagination?.pageCount || 1);
-      } else {
-        // Si no hay resultado pero no es un error crítico, mantener estado actual
-        setNews([]);
-        setTotalPages(1);
-      }
+      setNews(news);
+      setTotalPages(totalPages);
     } catch (error: any) {
+      setNews([]);
+      setTotalPages(1);
       console.error('Error fetching noticias:', error);
     }
   }, [
@@ -127,8 +76,8 @@ export default function DynamicNewsClient() {
   ]);
 
   useEffect(() => {
-    fetchNoticias();
-  }, [fetchNoticias]);
+    fetchNews();
+  }, [fetchNews]);
 
   const handlePageChange = (newPage: number) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -160,7 +109,6 @@ export default function DynamicNewsClient() {
     );
   }
 
-  // Error states with recovery options
   if (loadingState.state === 'error' && !isFallback) {
     return (
       <div className="flex justify-center items-center py-12">

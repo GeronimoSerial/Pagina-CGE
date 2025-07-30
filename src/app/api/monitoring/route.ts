@@ -27,6 +27,21 @@ export async function GET() {
       featuredNews: featuredNewsCache.getStats(),
     };
 
+    // Métricas específicas para ISR
+    const newsPagesStats = newsPagesCache.getStats();
+    const isrMetrics = {
+      totalPagesInCache: newsPagesStats.size,
+      maxPagesCapacity: newsPagesStats.maxSize,
+      avgHitsPerPage: newsPagesStats.entries.length > 0 
+        ? newsPagesStats.entries.reduce((sum, entry) => sum + entry.hits, 0) / newsPagesStats.entries.length 
+        : 0,
+      mostAccessedPages: newsPagesStats.entries
+        .sort((a, b) => b.hits - a.hits)
+        .slice(0, 5)
+        .map(entry => ({ page: entry.key, hits: entry.hits, ageMinutes: Math.round(entry.age / 60000) })),
+      cacheStrategy: 'TTL diferenciado: 1h para páginas 1-3, 2h para páginas 4-10',
+    };
+
     let systemInfo = {};
     if (typeof process !== 'undefined' && process.memoryUsage) {
       const memUsage = process.memoryUsage();
@@ -49,6 +64,7 @@ export async function GET() {
           metrics: metrics,
           circuitBreakers: circuitBreakers,
           caches: cacheStats,
+          isr: isrMetrics,
           system: systemInfo,
         },
       },

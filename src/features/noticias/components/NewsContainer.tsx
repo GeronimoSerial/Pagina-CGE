@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import NewsSearch from './Search';
 import StaticNewsSection from './StaticNewsSection';
-import DynamicNewsClient from './DynamicNewsClient';
+import FetchNewsClient from './FetchNewsClient';
 import { NewsItem } from '@/shared/interfaces';
 
 interface NewsContainerProps {
@@ -52,7 +52,7 @@ export default function NewsContainer({
             </div>
           }
         >
-          <DynamicNewsClient />
+          <FetchNewsClient />
         </Suspense>
       )}
     </div>
