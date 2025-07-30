@@ -25,7 +25,7 @@ export default function StaticNewsSection({
 
   const regularNews =
     featuredNews.length > 0
-      ? noticias // Si las destacadas vienen por separado, todas las paginadas son "regulares"
+      ? noticias
       : noticias.filter((noticia: any) => !noticia.esImportante) || [];
 
   return (

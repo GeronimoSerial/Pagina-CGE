@@ -41,9 +41,9 @@ export const dynamic = 'force-static';
 export default async function NoticiasPage() {
   try {
     const [initialNoticias, categorias, featuredNews] = await Promise.all([
-      getPaginatedNews(1, 12), // Aumentamos a 12 para asegurar suficientes noticias regulares
+      getPaginatedNews(1, 12),
       getNewsCategories(),
-      getFeaturedNews(5).catch(() => []), // Fallback vacío si falla
+      getFeaturedNews(5).catch(() => []),
     ]);
 
     return (
@@ -78,7 +78,6 @@ export default async function NoticiasPage() {
     );
   } catch (error) {
     console.error('Error loading noticias page:', error);
-    // Fallback en caso de error completo
     return (
       <PageLayout
         pageType="wide"
