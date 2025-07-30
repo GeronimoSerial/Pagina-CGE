@@ -10,6 +10,8 @@ import {
 import { clearNavigationCache } from '@/features/tramites/services/docs-data';
 
 export async function POST(request: NextRequest) {
+  const startTime = Date.now();
+  
   try {
     const authHeader = request.headers.get('authorization');
     const userAgent = request.headers.get('user-agent');
@@ -33,28 +35,60 @@ export async function POST(request: NextRequest) {
 
     switch (model) {
       case 'noticia':
+        console.log('📄 Revalidating noticias after webhook...');
+        
+        // Limpiar caches de memoria SIEMPRE
         newsCache.clear();
         relatedCache.clear();
         newsPagesCache.clear();
         featuredNewsCache.clear();
+        
+        // Revalidar rutas principales SIEMPRE
         revalidatePath('/');
         revalidatePath('/noticias');
         revalidatePath('/noticias', 'layout');
 
-        for (let i = 1; i <= 5; i++) {
-          revalidatePath(`/noticias/page/${i}`);
-        }
-
-        for (let i = 1; i <= 5; i++) {
-          revalidatePath(`/noticias?page=${i}`);
+        // Estrategia inteligente basada en el tipo de operación
+        const operation = entry?.operation || 'update'; // 'create', 'update', 'delete'
+        
+        if (operation === 'create') {
+          // Nueva noticia: empuja TODAS las páginas existentes
+          console.log('📝 New noticia: revalidating first 3 pages + pattern (content shifts)');
+          for (let i = 1; i <= 3; i++) {
+            revalidatePath(`/noticias/page/${i}`);
+          }
+          revalidatePath('/noticias/page/[pageNumber]', 'page'); // Marca patrón como stale
+        } else if (operation === 'delete') {
+          // Noticia eliminada: puede afectar múltiples páginas (desplazamiento)
+          console.log('🗑️ Deleted noticia: revalidating first 5 pages + pattern');
+          for (let i = 1; i <= 5; i++) {
+            revalidatePath(`/noticias/page/${i}`);
+          }
+          revalidatePath('/noticias/page/[pageNumber]', 'page');
+        } else {
+          // Update: depende si cambió el orden (featured, fecha, etc.)
+          const isImportantChange = entry?.esImportante !== undefined || entry?.fecha !== undefined;
+          
+          if (isImportantChange) {
+            console.log('⭐ Important field changed: revalidating first 3 pages + pattern');
+            for (let i = 1; i <= 3; i++) {
+              revalidatePath(`/noticias/page/${i}`);
+            }
+          } else {
+            console.log('✏️ Content update: revalidating page 1 + pattern');
+            revalidatePath('/noticias/page/1');
+          }
+          
+          revalidatePath('/noticias/page/[pageNumber]', 'page');
         }
 
         if (entry?.slug) {
           revalidatePath(`/noticias/${entry.slug}`);
         }
 
+        const revalidationTime = Date.now() - startTime;
         console.log(
-          '✅ Revalidated noticias and related cache:',
+          `✅ Revalidated noticias (${operation}) in ${revalidationTime}ms:`,
           entry?.slug || 'all',
         );
         break;
@@ -118,11 +152,15 @@ export async function POST(request: NextRequest) {
         console.log('✅ Fallback webhook completed successfully');
     }
 
+    const totalTime = Date.now() - startTime;
+    console.log(`🕒 Total webhook processing time: ${totalTime}ms`);
+
     return NextResponse.json({
       success: true,
       revalidated: true,
       model,
       entry: entry?.slug,
+      processingTimeMs: totalTime,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

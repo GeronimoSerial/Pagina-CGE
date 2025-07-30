@@ -2,6 +2,7 @@ interface CacheEntry<T> {
   data: T;
   timestamp: number;
   hits: number;
+  customTtl?: number; 
 }
 
 class AggressiveCache<T> {
@@ -20,8 +21,8 @@ class AggressiveCache<T> {
 
     if (!entry) return null;
 
-    // Verificar TTL
-    if (Date.now() - entry.timestamp > this.ttl) {
+    const entryTtl = entry.customTtl || this.ttl;
+    if (Date.now() - entry.timestamp > entryTtl) {
       this.cache.delete(key);
       return null;
     }
@@ -31,7 +32,7 @@ class AggressiveCache<T> {
     return entry.data;
   }
 
-  set(key: string, data: T): void {
+  set(key: string, data: T, customTtl?: number): void {
     // LRU eviction si excede max size
     if (this.cache.size >= this.maxSize) {
       this.evictLeastUsed();
@@ -41,6 +42,7 @@ class AggressiveCache<T> {
       data,
       timestamp: Date.now(),
       hits: 1,
+      customTtl,
     });
   }
 

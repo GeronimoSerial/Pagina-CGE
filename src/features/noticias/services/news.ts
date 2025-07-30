@@ -1,4 +1,4 @@
-import { API_URL, PERFORMANCE_CONFIG } from '@/shared/lib/config';
+import { API_URL, PERFORMANCE_CONFIG, STRAPI_URL } from '@/shared/lib/config';
 import { NewsItem } from '@/shared/interfaces';
 import qs from 'qs';
 import { cfImages } from '@/shared/lib/cloudflare-images';
@@ -56,7 +56,8 @@ export async function getPaginatedNews(
   pageSize: number = 4,
   filters: Record<string, any> = {},
 ) {
-  const shouldCache = page <= 5 && Object.keys(filters).length === 0;
+ 
+  const shouldCache = (page <= 10 && Object.keys(filters).length === 0) || page <= 3;
   const cacheKey = shouldCache ? `page-${page}-${pageSize}` : null;
 
   if (cacheKey) {
@@ -164,8 +165,11 @@ export async function getPaginatedNews(
       result = { noticias: data, pagination: meta.pagination };
     }
 
+    // Caché más agresivo para páginas frecuentes con TTL diferenciado
     if (cacheKey && shouldCache && response.status === 'success') {
-      newsPagesCache.set(cacheKey, result);
+      // TTL diferenciado: páginas 1-3 más frecuentes (1h), páginas 4-10 menos frecuentes (2h)
+      const ttl = page <= 3 ? 3600000 : 7200000; // 1h vs 2h
+      newsPagesCache.set(cacheKey, result, ttl);
     }
 
     return result;
@@ -397,4 +401,87 @@ export async function getNewsCategories(): Promise<
       nombre: categoria,
     }),
   );
+}
+
+interface FetchNewsParams {
+  currentPage: number;
+  debouncedQ: string;
+  categoria: string;
+  desde: string;
+  hasta: string;
+  cacheBuster: string;
+  setLoading: (msg: string) => void;
+  handleApiResponse: (resp: any, url: string) => any;
+}
+
+export async function fetchNewsService({
+  currentPage,
+  debouncedQ,
+  categoria,
+  desde,
+  hasta,
+  cacheBuster,
+  setLoading,
+  handleApiResponse,
+}: FetchNewsParams): Promise<{ news: NewsItem[]; totalPages: number }> {
+  setLoading('Filtrando noticias...');
+  try {
+    const params = new URLSearchParams({
+      'pagination[page]': String(currentPage),
+      'pagination[pageSize]': '6',
+      'sort[0]': 'createdAt:desc',
+      'sort[1]': 'fecha:desc',
+      'populate[portada][fields][0]': 'url',
+      'populate[portada][fields][1]': 'alternativeText',
+      'filters[publicado][$eq]': 'true',
+      ...(debouncedQ && { 'filters[titulo][$containsi]': debouncedQ }),
+      ...(categoria && { 'filters[categoria][$eq]': categoria }),
+      ...(desde && { 'filters[fecha][$gte]': desde }),
+      ...(hasta && { 'filters[fecha][$lte]': hasta }),
+    });
+
+    const url = `${STRAPI_URL}/api/noticias?${params.toString()}`;
+    const response = await resilientFetch(url, {
+      cacheKey: `dynamic-news-${cacheBuster}-${currentPage}`,
+      fallbackData: {
+        data: [],
+        meta: { pagination: { pageCount: 1 } },
+      },
+      timeout: 8000,
+      retries: 3,
+    });
+
+    const result = handleApiResponse(response, url);
+
+    if (result) {
+      const news: NewsItem[] = result.data.map((noticia: any) => ({
+        id: noticia.id,
+        autor: noticia.autor || 'Redacción CGE',
+        titulo: noticia.titulo,
+        resumen: noticia.resumen,
+        fecha: noticia.fecha,
+        categoria: noticia.categoria,
+        esImportante: noticia.esImportante || false,
+        slug: noticia.slug,
+        portada: noticia.portada,
+        imagen: noticia.imagen,
+      }));
+
+      return {
+        news,
+        totalPages: result.meta?.pagination?.pageCount || 1,
+      };
+    } else {
+      return {
+        news: [],
+        totalPages: 1,
+      };
+    }
+  } catch (error: any) {
+    console.error('Error fetching noticias:', error);
+    return {
+      news: [],
+      totalPages: 1,
+    };
+  }
 }
