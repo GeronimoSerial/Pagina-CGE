@@ -23,7 +23,6 @@ export async function GET() {
       noticias: newsCache.getStats(),
       tramites: tramitesCache.getStats(),
       related: relatedCache.getStats(),
-      // Nuevos caches (Fase 2-3)
       newsPages: newsPagesCache.getStats(),
       featuredNews: featuredNewsCache.getStats(),
     };
@@ -83,12 +82,10 @@ export async function DELETE() {
   try {
     loadMonitor.reset();
 
-    // Limpiar caches existentes
     newsCache.clear();
     tramitesCache.clear();
     relatedCache.clear();
 
-    // Limpiar nuevos caches (Fase 2-3)
     newsPagesCache.clear();
     featuredNewsCache.clear();
 

@@ -51,7 +51,7 @@ export async function getPaginatedNews(
   pageSize: number = 4,
   filters: Record<string, any> = {},
 ) {
-  // Solo cachear páginas 1-5 sin filtros
+ 
   const shouldCache = page <= 5 && Object.keys(filters).length === 0;
   const cacheKey = shouldCache ? `page-${page}-${pageSize}` : null;
 
@@ -60,7 +60,7 @@ export async function getPaginatedNews(
     if (cached) return cached;
   }
 
-  // SMART PAGINATION: Para página 1, primero verificar total de noticias
+ 
   let actualPageSize = pageSize;
   if (page === 1 && Object.keys(filters).length === 0) {
     try {
@@ -78,8 +78,7 @@ export async function getPaginatedNews(
         const { meta } = await countRes.json();
         const totalNews = meta.pagination.total;
 
-        // Si el total es pequeño (ej: 11 noticias), obtener TODAS en página 1
-        // para evitar fragmentación innecesaria
+      
         if (totalNews <= pageSize + 3) {
           // Pequeño margen para evitar páginas con muy pocas noticias
           actualPageSize = Math.max(totalNews, pageSize);
@@ -150,7 +149,6 @@ export async function getPaginatedNews(
     const { data, meta } = await res.json();
     const result = { noticias: data, pagination: meta.pagination };
 
-    // Guardar en cache solo si corresponde
     if (cacheKey && shouldCache) {
       newsPagesCache.set(cacheKey, result);
     }

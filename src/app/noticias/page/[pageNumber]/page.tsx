@@ -9,9 +9,8 @@ import StaticNewsSection from '@/features/noticias/components/StaticNewsSection'
 
 export async function generateStaticParams() {
   try {
-    // Obtener el total de noticias para calcular páginas necesarias
     const { pagination } = await getPaginatedNews(1, 9);
-    const totalPages = Math.min(pagination.pageCount, 5); // Máximo 5 páginas
+    const totalPages = Math.min(pagination.pageCount, 5);
 
     console.log(
       `DEBUG: Generating static params for ${totalPages} pages (total news: ${pagination.total})`,
@@ -25,7 +24,6 @@ export async function generateStaticParams() {
     return params;
   } catch (error) {
     console.error('Error generating static params:', error);
-    // Fallback a páginas fijas
     return [
       { pageNumber: '1' },
       { pageNumber: '2' },
@@ -67,11 +65,9 @@ export default async function NoticiasPageNumber({ params }: PageProps) {
   const pageNum = parseInt(pageNumber);
 
   try {
-    // Primero obtener el total para validar si la página existe
     const testData = await getPaginatedNews(1, 9);
     const maxPages = Math.min(testData.pagination.pageCount, 5);
 
-    // Validar que el número de página esté en el rango permitido
     if (pageNum < 1 || pageNum > maxPages) {
       throw new Error(
         `Página ${pageNum} no encontrada. Solo hay ${maxPages} páginas disponibles.`,
@@ -79,9 +75,9 @@ export default async function NoticiasPageNumber({ params }: PageProps) {
     }
 
     const [initialNoticias, categorias, featuredNews] = await Promise.all([
-      getPaginatedNews(pageNum, 9), // Optimizado para VPS: 12 → 9 noticias
+      getPaginatedNews(pageNum, 9),
       getNewsCategories(),
-      pageNum === 1 ? getFeaturedNews(5) : Promise.resolve([]), // Solo página 1
+      pageNum === 1 ? getFeaturedNews(5) : Promise.resolve([]),
     ]);
 
     return (
@@ -99,13 +95,12 @@ export default async function NoticiasPageNumber({ params }: PageProps) {
         <StaticNewsSection
           initialData={initialNoticias}
           featuredNews={featuredNews}
-          currentPage={pageNum} // Nuevo prop simple
+          currentPage={pageNum}
         />
       </PageLayout>
     );
   } catch (error) {
     console.error('Error loading noticias page:', error);
-    // Reusar el fallback existente
     return (
       <PageLayout
         pageType="wide"

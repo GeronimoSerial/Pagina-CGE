@@ -10,13 +10,13 @@ interface StaticNewsSectionProps {
     pagination: any;
   };
   featuredNews?: NewsItem[];
-  currentPage?: number; // Nuevo prop opcional
+  currentPage?: number;
 }
 
 export default function StaticNewsSection({
   initialData,
   featuredNews = [],
-  currentPage = 1, // Default para backward compatibility
+  currentPage = 1,
 }: StaticNewsSectionProps) {
   const { noticias, pagination } = initialData;
 
@@ -25,14 +25,12 @@ export default function StaticNewsSection({
       ? featuredNews
       : noticias.filter((noticia: any) => noticia.esImportante) || [];
 
-  // FIXED: Excluir noticias destacadas de las regulares para evitar duplicación
   const featuredIds = finalFeaturedNews.map((item: any) => item.id);
   const regularNews = noticias.filter((noticia: any) => {
-    // Si tenemos featured news externas, excluir solo esas
     if (featuredNews.length > 0) {
       return !featuredIds.includes(noticia.id);
     }
-    // Si no hay featured news externas, excluir las marcadas como importantes
+
     return !noticia.esImportante;
   });
 
@@ -40,12 +38,11 @@ export default function StaticNewsSection({
     <div className="space-y-8">
       <div>
         <NewsGrid
-          featuredNews={currentPage === 1 ? finalFeaturedNews : []} // Solo mostrar en página 1
+          featuredNews={currentPage === 1 ? finalFeaturedNews : []}
           regularNews={regularNews}
         />
       </div>
 
-      {/* Navegación mejorada pero simple */}
       {pagination?.pageCount > 1 && (
         <div className="flex justify-center items-center gap-4 pt-8">
           {currentPage > 1 && (
