@@ -26,8 +26,11 @@ export default function NewsContainer({
   const hasQuery = searchParams.get('q');
   const hasCategory = searchParams.get('categoria');
   const hasDateFilter = searchParams.get('desde') || searchParams.get('hasta');
+  const hasPageFilter =
+    searchParams.get('page') && searchParams.get('page') !== '1';
 
-  const hasActiveFilters = hasQuery || hasCategory || hasDateFilter;
+  const hasActiveFilters =
+    hasQuery || hasCategory || hasDateFilter || hasPageFilter;
 
   return (
     <div className="px-6 mx-auto max-w-7xl">
@@ -39,7 +42,6 @@ export default function NewsContainer({
         <StaticNewsSection
           initialData={initialData}
           featuredNews={featuredNews}
-          currentPage={1}
         />
       ) : (
         <Suspense
