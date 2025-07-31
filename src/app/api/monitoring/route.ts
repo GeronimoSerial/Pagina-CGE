@@ -1,16 +1,10 @@
 import { NextResponse } from 'next/server';
 import { loadMonitor } from '@/shared/lib/load-monitor';
-import { apiCircuitBreaker } from '@/shared/lib/circuit-breaker';
 import { getAllCacheStats, clearAllCaches } from '@/shared/lib/unified-cache';
 
 export async function GET() {
   try {
     const metrics = loadMonitor.getMetrics();
-
-    const circuitBreakers = {
-      'noticias-api': apiCircuitBreaker.getStatus('noticias-api-1-4-0'),
-      'noticias-api-filtered': apiCircuitBreaker.getStatus('noticias-api-1-4-1'),
-    };
 
     const cacheStats = getAllCacheStats();
 
@@ -34,7 +28,6 @@ export async function GET() {
         loadTest: {
           summary: loadMonitor.getLoadReport(),
           metrics: metrics,
-          circuitBreakers: circuitBreakers,
           caches: cacheStats,
           system: systemInfo,
         },
