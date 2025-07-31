@@ -66,14 +66,14 @@ export default function StaticNewsSection({
           {Array.from({ length: Math.min(pagination.pageCount, 5) }, (_, i) => {
             const pageNum = Math.max(1, currentPage - 2) + i;
             if (pageNum > pagination.pageCount) return null;
-            
+
             const isCurrentPage = pageNum === currentPage;
-            
+
             return (
               <Button
                 key={pageNum}
                 asChild={!isCurrentPage}
-                variant={isCurrentPage ? "default" : "outline"}
+                variant={isCurrentPage ? 'default' : 'outline'}
                 size="sm"
                 className="min-w-[40px]"
               >
@@ -88,7 +88,9 @@ export default function StaticNewsSection({
 
           {currentPage < pagination.pageCount - 2 && (
             <>
-              {currentPage < pagination.pageCount - 3 && <span className="text-gray-400">...</span>}
+              {currentPage < pagination.pageCount - 3 && (
+                <span className="text-gray-400">...</span>
+              )}
               <Button asChild variant="outline" size="sm">
                 <Link href={`/noticias/page/${pagination.pageCount}`}>
                   {pagination.pageCount}

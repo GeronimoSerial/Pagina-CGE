@@ -132,9 +132,11 @@ class ResilientApi {
   ): Promise<Response> {
     const timeout = options.timeout || PERFORMANCE_CONFIG.API_TIMEOUT;
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    let timeoutId: NodeJS.Timeout | null = null;
 
     try {
+      timeoutId = setTimeout(() => controller.abort(), timeout);
+
       const response = await fetch(url, {
         ...options,
         signal: controller.signal,
@@ -146,10 +148,16 @@ class ResilientApi {
         },
       });
 
-      clearTimeout(timeoutId);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
       return response;
     } catch (error) {
-      clearTimeout(timeoutId);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
       throw error;
     }
   }

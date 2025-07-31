@@ -16,10 +16,9 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { formatDate } from '@/shared/lib/date-utils';
 import {
-  newsCache,
-  relatedCache,
+  contentCache,
   withCache,
-} from '@/shared/lib/aggressive-cache';
+} from '@/shared/lib/unified-cache';
 import { NewsItem } from '@/shared/interfaces';
 
 export const revalidate = 2592000; // 30 días
@@ -42,7 +41,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
 
-  const noticia = await withCache(newsCache, `metadata-${slug}`, () =>
+  const noticia = await withCache(contentCache, `metadata-${slug}`, () =>
     getNewsBySlug(slug),
   );
 
@@ -116,7 +115,7 @@ export default async function NoticiaPage({ params }: PageProps) {
   const { slug } = await params;
 
   const noticia: NewsItem | null = await withCache(
-    newsCache,
+    contentCache,
     `noticia-${slug}`,
     () => getNewsBySlug(slug),
   );
@@ -126,7 +125,7 @@ export default async function NoticiaPage({ params }: PageProps) {
   }
 
   const relatedFinal = await withCache(
-    relatedCache,
+    contentCache,
     `related-${noticia.categoria}-${slug}`,
     () => getRelatedNews(noticia.categoria, slug),
   ).catch(() => []);

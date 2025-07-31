@@ -8,6 +8,7 @@ import {
   SocialMediaSection,
 } from '@/shared/data/dynamic-client';
 import { getPaginatedNews } from '@/features/noticias/services/news';
+import { logger } from '@/shared/lib/logger';
 
 export const metadata: Metadata = {
   title: 'Consejo General de Educación (CGE)',
@@ -52,7 +53,12 @@ export default async function PagPrincipal() {
   try {
     latestNewsData = await getPaginatedNews(1, 4);
   } catch (error) {
-    console.error('Error loading home page news:', error);
+    logger.error('service', 'Failed to load news on homepage', {
+      error: error instanceof Error ? error.message : String(error),
+      page: 'homepage',
+      timestamp: new Date().toISOString(),
+    });
+
     latestNewsData = {
       noticias: [],
       pagination: { page: 1, pageCount: 0, pageSize: 4, total: 0 },

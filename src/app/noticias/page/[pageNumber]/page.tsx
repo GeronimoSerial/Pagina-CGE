@@ -67,7 +67,20 @@ export default async function NoticiasPageNumber({ params }: PageProps) {
     const [initialNoticias, categorias, featuredNews] = await Promise.all([
       getPaginatedNews(pageNum, 9),
       getNewsCategories(),
-      pageNum === 1 ? getFeaturedNews(5) : Promise.resolve([]),
+      pageNum === 1
+        ? getFeaturedNews(5).catch((error) => {
+            console.error(
+              '⚠️ Featured news fetch failed on paginated page:',
+              error,
+            );
+            if (process.env.NODE_ENV === 'production') {
+              console.warn(
+                'Failed to load featured news on page 1 in production',
+              );
+            }
+            return [];
+          })
+        : Promise.resolve([]),
     ]);
 
     if (initialNoticias.noticias.length === 0 && pageNum > 1) {
