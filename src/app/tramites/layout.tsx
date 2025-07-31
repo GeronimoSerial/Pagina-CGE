@@ -7,13 +7,13 @@ async function NavigationLoader() {
   const { getProceduresNavigation } = await import(
     '@/features/tramites/services/docs-data'
   );
-  const { withCache, tramitesCache } = await import(
-    '@/shared/lib/aggressive-cache'
+  const { withCache, contentCache } = await import(
+    '@/shared/lib/unified-cache'
   );
 
   try {
     const navigationSections = await withCache(
-      tramitesCache,
+      contentCache,
       'tramites-navigation',
       getProceduresNavigation,
     );

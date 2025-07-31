@@ -9,7 +9,7 @@ import remarkGfm from 'remark-gfm';
 import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
 import { Clock } from 'lucide-react';
 import Link from 'next/link';
-import { withCache, tramitesCache } from '@/shared/lib/aggressive-cache';
+import { withCache, contentCache } from '@/shared/lib/unified-cache';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -31,7 +31,7 @@ export default async function DocumentPage({ params }: PageProps) {
   const slug = (await params).slug;
 
   const article: Article | null = await withCache(
-    tramitesCache,
+    contentCache,
     `tramite-${slug}`,
     async () => await getProcedureBySlug(slug),
   );

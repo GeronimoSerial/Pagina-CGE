@@ -1,13 +1,7 @@
 import { NextResponse } from 'next/server';
 import { loadMonitor } from '@/shared/lib/load-monitor';
 import { apiCircuitBreaker } from '@/shared/lib/circuit-breaker';
-import {
-  newsCache,
-  tramitesCache,
-  relatedCache,
-  newsPagesCache,
-  featuredNewsCache,
-} from '@/shared/lib/aggressive-cache';
+import { getAllCacheStats, clearAllCaches } from '@/shared/lib/unified-cache';
 
 export async function GET() {
   try {
@@ -15,32 +9,10 @@ export async function GET() {
 
     const circuitBreakers = {
       'noticias-api': apiCircuitBreaker.getStatus('noticias-api-1-4-0'),
-      'noticias-api-filtered':
-        apiCircuitBreaker.getStatus('noticias-api-1-4-1'),
+      'noticias-api-filtered': apiCircuitBreaker.getStatus('noticias-api-1-4-1'),
     };
 
-    const cacheStats = {
-      noticias: newsCache.getStats(),
-      tramites: tramitesCache.getStats(),
-      related: relatedCache.getStats(),
-      newsPages: newsPagesCache.getStats(),
-      featuredNews: featuredNewsCache.getStats(),
-    };
-
-    // Métricas específicas para ISR
-    const newsPagesStats = newsPagesCache.getStats();
-    const isrMetrics = {
-      totalPagesInCache: newsPagesStats.size,
-      maxPagesCapacity: newsPagesStats.maxSize,
-      avgHitsPerPage: newsPagesStats.entries.length > 0 
-        ? newsPagesStats.entries.reduce((sum, entry) => sum + entry.hits, 0) / newsPagesStats.entries.length 
-        : 0,
-      mostAccessedPages: newsPagesStats.entries
-        .sort((a, b) => b.hits - a.hits)
-        .slice(0, 5)
-        .map(entry => ({ page: entry.key, hits: entry.hits, ageMinutes: Math.round(entry.age / 60000) })),
-      cacheStrategy: 'TTL diferenciado: 1h para páginas 1-3, 2h para páginas 4-10',
-    };
+    const cacheStats = getAllCacheStats();
 
     let systemInfo = {};
     if (typeof process !== 'undefined' && process.memoryUsage) {
@@ -64,7 +36,6 @@ export async function GET() {
           metrics: metrics,
           circuitBreakers: circuitBreakers,
           caches: cacheStats,
-          isr: isrMetrics,
           system: systemInfo,
         },
       },
@@ -97,13 +68,7 @@ export async function GET() {
 export async function DELETE() {
   try {
     loadMonitor.reset();
-
-    newsCache.clear();
-    tramitesCache.clear();
-    relatedCache.clear();
-
-    newsPagesCache.clear();
-    featuredNewsCache.clear();
+    clearAllCaches();
 
     return NextResponse.json(
       {

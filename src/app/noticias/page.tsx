@@ -7,6 +7,7 @@ import { PageLayout } from '@/shared/components/PageLayout';
 import { Metadata } from 'next';
 import NewsContainer from '@/features/noticias/components/NewsContainer';
 import { Suspense } from 'react';
+import { logger } from '@/shared/lib/logger';
 
 export const metadata: Metadata = {
   title: 'Noticias',
@@ -36,14 +37,22 @@ export const metadata: Metadata = {
 // ISR: Revalidar cada 30 días  api/revalidate se encarga
 export const revalidate = 2592000;
 
-export const dynamic = 'force-static';
-
 export default async function NoticiasPage() {
   try {
     const [initialNoticias, categorias, featuredNews] = await Promise.all([
       getPaginatedNews(1, 9),
       getNewsCategories(),
-      getFeaturedNews(5).catch(() => []),
+      getFeaturedNews(5).catch((error) => {
+        logger.error(
+          'service',
+          'Featured news fetch failed on main noticias page',
+          {
+            error: error instanceof Error ? error.message : String(error),
+            page: 'noticias',
+          },
+        );
+        return [];
+      }),
     ]);
 
     return (
