@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { resilientApi } from '@/shared/lib/resilient-api';
 
 export type LoadingState =
   | 'initial' // Carga normal
@@ -289,22 +288,12 @@ export function useResilientLoading(options: ResilientLoadingHookOptions = {}) {
           return response.data;
 
         case 'fallback':
-          if (response.fromCache) {
-            setOffline('Mostrando datos guardados');
-          } else {
-            setSuccess(true, 'Usando datos de respaldo');
-          }
+          setSuccess(true, 'Usando datos de respaldo');
           return response.data;
 
         case 'error':
         default:
-          // Check if the endpoint is throttled
-          if (url && resilientApi.isThrottled(url)) {
-            const waitTime = resilientApi.getWaitTime(url);
-            setThrottled(waitTime);
-          } else {
-            setError('Error al cargar los datos', true);
-          }
+          setError('Error al cargar los datos', true);
           return response.data || null;
       }
     },
