@@ -24,9 +24,7 @@ export default function StaticNewsSection({
       : noticias.filter((noticia: any) => noticia.esImportante) || [];
 
   const regularNews =
-    featuredNews.length > 0
-      ? noticias
-      : noticias.filter((noticia: any) => !noticia.esImportante) || [];
+    noticias.filter((noticia: any) => !noticia.esImportante) || [];
 
   return (
     <div className="space-y-8">
