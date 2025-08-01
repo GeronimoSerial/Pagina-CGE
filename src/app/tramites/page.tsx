@@ -1,21 +1,12 @@
 import { notFound } from 'next/navigation';
-import {
-  getProcedureBySlug,
-  Article,
-} from '@/features/tramites/services/docs-data';
-import ReactMarkdown from 'react-markdown';
-import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
+import { getProcedureBySlug } from '@/features/tramites/services/docs-data';
 import { Clock } from 'lucide-react';
-import { contentCache, withCache } from '@/shared/lib/unified-cache';
+import { HTMLContent } from '@/shared/components/HTMLContent';
 
 export const revalidate = 2592000; // 30 días
 
 export default async function IntroduccionPage() {
-  const article = await withCache(
-    contentCache,
-    'tramite-introduccion',
-    async (): Promise<Article | null> => getProcedureBySlug('introduccion'),
-  );
+  const article = await getProcedureBySlug('introduccion');
 
   if (!article) {
     notFound();
@@ -51,9 +42,10 @@ export default async function IntroduccionPage() {
 
           {/* Article Content */}
           <article className="max-w-none prose prose-lg">
-            <ReactMarkdown components={MarkdownComponent}>
-              {markdown}
-            </ReactMarkdown>
+            <HTMLContent
+              content={markdown}
+              className="max-w-none mb-8 prose prose-lg"
+            />
           </article>
         </div>
 

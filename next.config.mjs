@@ -20,6 +20,12 @@ const nextConfig = {
         port: '',
         pathname: '/cdn-cgi/image/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'devcms.geroserial.com',
+        port: '',
+        pathname: '/assets/**',
+      },
     ],
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 7200,

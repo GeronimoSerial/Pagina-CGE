@@ -1,6 +1,8 @@
-import { API_URL } from '@/shared/lib/config';
-import qs from 'qs';
+import directus from '@/shared/lib/directus';
+import { readItems } from '@directus/sdk';
+import { wrap } from 'module';
 
+// Interfaces equivalentes a las de docs-data.ts
 export interface NavSection {
   id: string;
   title: string;
@@ -31,77 +33,20 @@ export interface Article {
   content: ArticleSection[];
 }
 
-interface RawTramiteNav {
-  slug: string;
-  titulo: string;
-  categoria: string | null;
-}
 
-interface RawTramiteArticle {
-  id: string;
-  slug: string;
-  categoria: string;
-  titulo: string;
-  resumen: string;
-  updatedAt: string;
-  fecha: string;
-  contenido: string;
-}
-
-async function fetchAPI<T>(path: string, params: object = {}): Promise<T> {
-  const query = qs.stringify(params, { encodeValuesOnly: true });
-  const url = `${API_URL}${path}${query ? `?${query}` : ''}`;
-
-  try {
-    const res = await fetch(url);
-
-    if (!res.ok) {
-      throw new Error(`Error al obtener datos de la API: ${res.statusText}`);
-    }
-
-    const { data } = await res.json();
-    return data;
-  } catch (error) {
-    console.error('Error en fetchAPI:', error);
-    throw new Error('No se pudieron obtener los datos del servidor.');
-  }
-}
-
-const categoriaMap: Record<number, string> = {
-  1: 'Licencias por salud y/o maternidad',
-  2: 'Licencias extraordinarias',
-  3: 'Justificación de inasistencias',
-  4: 'Permisos',
-  5: 'Suplentes',
-  6: 'Traslados',
-  7: 'Salarios',
-};
-
-let navigationCache: NavSection[] | null = null;
-let cacheTimestamp = 0;
-// const CACHE_DURATION = 2592000;
-
-export function clearNavigationCache() {
-  navigationCache = null;
-  cacheTimestamp = 0;
-  console.log('🧹 Local navigation cache cleared');
-}
-
+// 1. Navegación de trámites agrupada por categoría
 export async function getProceduresNavigation(): Promise<NavSection[]> {
-  const params = {
-    fields: ['categoria', 'titulo', 'slug'],
-    sort: ['categoria:asc', 'titulo:asc'],
-    'pagination[pageSize]': 250,
-  };
-
-  const tramites: RawTramiteNav[] = await fetchAPI('/tramites', params);
-
+  const tramites = await directus.request(
+    readItems('tramites', {
+      fields: ['categoria', 'titulo', 'slug'],
+      sort: ['categoria', 'titulo'],
+      limit: 200,
+    })
+  );
   if (!tramites) return [];
-
   const grouped: Record<string, NavSection> = {};
-  tramites.forEach((t) => {
-    const catNumber = Number(t.categoria);
-    const cat = categoriaMap[catNumber] || 'General';
+  tramites.forEach((t: any) => {
+    const cat = t.categoria;
     if (!grouped[cat]) {
       grouped[cat] = {
         id: cat.toLowerCase().replace(/\s+/g, '-'),
@@ -115,100 +60,93 @@ export async function getProceduresNavigation(): Promise<NavSection[]> {
       href: `/tramites/${t.slug}`,
     });
   });
-
-  const sortedSections = Object.values(grouped)
-    .map((section) => ({
-      ...section,
-      items: section.items.sort((a, b) => a.title.localeCompare(b.title)),
-    }))
-    .sort((a, b) => {
-      if (a.title === 'General') return -1;
-      if (b.title === 'General') return 1;
-      return a.title.localeCompare(b.title);
-    });
-
-  navigationCache = sortedSections;
-
+  const sortedSections = Object.values(grouped).sort((a, b) => {
+    if (a.title === 'General') return -1;
+    if (b.title === 'General') return 1;
+    return a.title.localeCompare(b.title);
+  });
   return sortedSections;
 }
 
-export async function getProcedureBySlug(
-  slug: string,
-): Promise<Article | null> {
-  const params = {
-    'filters[slug][$eq]': slug,
-    populate: '*',
-  };
-  const tramites: RawTramiteArticle[] = await fetchAPI('/tramites', params);
-
-  if (!tramites || tramites.length === 0) {
-    return null;
-  }
-
+// 2. Obtener artículo/trámite por slug
+export async function getProcedureBySlug(slug: string): Promise<Article | null> {
+  const tramites = await directus.request(
+    readItems('tramites', {
+      filter: { slug: { _eq: slug } },
+      fields: [
+        'id',
+        'slug',
+        'categoria',
+        'titulo',
+        'resumen',
+        'date_updated',
+        'fecha',
+        'contenido',
+      ],
+      limit: 1,
+    })
+  );
+  if (!tramites || tramites.length === 0) return null;
   const t = tramites[0];
-  const catNumber = Number(t.categoria);
-  const category = categoriaMap[catNumber] || 'General';
 
   return {
     id: t.id,
     slug: t.slug,
-    category,
+    category: t.categoria,
     title: t.titulo,
     description: t.resumen,
-    lastUpdated: t.updatedAt || t.fecha,
+    lastUpdated: t.date_updated || t.fecha,
     content: wrapContentAsSection(t.contenido),
   };
 }
 
+// 3. Helper para parsear el contenido
 function wrapContentAsSection(contenido: string | null): ArticleSection[] {
   if (!contenido) return [];
   return [{ type: 'paragraph', content: contenido }];
 }
 
+// 4. Obtener todos los slugs
 export async function getAllProcedureSlugs(): Promise<string[]> {
-  const params = {
-    fields: ['slug'],
-    'pagination[pageSize]': 250,
-  };
-  const tramites: { slug: string }[] = await fetchAPI('/tramites', params);
-
+  const tramites = await directus.request(
+    readItems('tramites', {
+      fields: ['slug'],
+      limit: 200,
+    })
+  );
   if (!tramites) return [];
-
-  return tramites.map((t) => t.slug);
+  return tramites.map((t: any) => t.slug);
 }
 
+// 5. Obtener todos los trámites (para listados completos)
 export async function getAllProcedures(): Promise<any[]> {
-  const params = {
-    fields: [
-      'id',
-      'slug',
-      'categoria',
-      'titulo',
-      'resumen',
-      'updatedAt',
-      'fecha',
-      'contenido',
-    ],
-    sort: ['categoria:asc', 'titulo:asc'],
-    populate: '*',
-    'pagination[pageSize]': 250,
-  };
-  const tramites: RawTramiteArticle[] = await fetchAPI('/tramites', params);
-
+  const tramites = await directus.request(
+    readItems('tramites', {
+      fields: [
+        'id',
+        'slug',
+        'categoria',
+        'titulo',
+        'resumen',
+        'updatedAt',
+        'fecha',
+        'contenido',
+      ],
+      sort: ['categoria', 'titulo'],
+      limit: 200,
+    })
+  );
   if (!tramites) return [];
-
-  return tramites.map((t) => {
+  return tramites.map((t: any) => {
     const catNumber = Number(t.categoria);
-    const category = categoriaMap[catNumber] || 'General';
-
     return {
       id: t.id,
       slug: t.slug,
-      category,
+      categoria: t.categoria,
       title: t.titulo,
       description: t.resumen,
-      lastUpdated: t.updatedAt || t.fecha,
+      lastUpdated: t.date_updated || t.fecha,
       content: t.contenido,
     };
   });
-}
+} 

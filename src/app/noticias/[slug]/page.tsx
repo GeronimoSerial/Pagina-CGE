@@ -6,31 +6,30 @@ import {
   getRelatedNews,
   getAllNews,
 } from '@/features/noticias/services/news';
-import ReactMarkdown from 'react-markdown';
 import { notFound } from 'next/navigation';
 import { PhotoSwipeGallery } from '@/shared/data/dynamic-client';
-import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
-import remarkGfm from 'remark-gfm';
 import { Separador } from '@/shared/components/Separador';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { formatDate } from '@/shared/lib/date-utils';
-import {
-  contentCache,
-  withCache,
-} from '@/shared/lib/unified-cache';
 import { NewsItem } from '@/shared/interfaces';
+import { HTMLContent } from '@/shared/components/HTMLContent';
 
 export const revalidate = 2592000; // 30 días
 
 export async function generateStaticParams() {
   try {
-    const news = await getAllNews();
-    return news.slice(0, 50).map((noticia: { slug: string }) => ({
-      slug: noticia.slug,
-    }));
+    const noticias = await getAllNews();
+    return noticias
+      .filter(
+        (noticia) =>
+          typeof noticia.slug === 'string' && noticia.slug.length > 0,
+      )
+      .slice(0, 50)
+      .map((noticia) => ({ slug: noticia.slug }));
   } catch (error) {
     console.warn('Error generating static params for noticias:', error);
+    return [];
   }
 }
 
@@ -41,9 +40,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
 
-  const noticia = await withCache(contentCache, `metadata-${slug}`, () =>
-    getNewsBySlug(slug),
-  );
+  const noticia = await getNewsBySlug(slug);
 
   if (!noticia) return {};
 
@@ -114,21 +111,18 @@ interface PageProps {
 export default async function NoticiaPage({ params }: PageProps) {
   const { slug } = await params;
 
-  const noticia: NewsItem | null = await withCache(
-    contentCache,
-    `noticia-${slug}`,
-    () => getNewsBySlug(slug),
-  );
+  const noticia: NewsItem | null = await getNewsBySlug(slug).catch((error) => {
+    console.error('Error fetching news by slug:', error);
+    return null;
+  });
 
   if (!noticia) {
     return notFound();
   }
 
-  const relatedFinal = await withCache(
-    contentCache,
-    `related-${noticia.categoria}-${slug}`,
-    () => getRelatedNews(noticia.categoria, slug),
-  ).catch(() => []);
+  const relatedFinal = await getRelatedNews(noticia.categoria, slug).catch(
+    () => [],
+  );
 
   return (
     <div className="flex flex-col page-bg-white">
@@ -184,15 +178,13 @@ export default async function NoticiaPage({ params }: PageProps) {
                   />
                 )}
                 <div className="mb-8 max-w-none prose prose-lg">
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                    components={MarkdownComponent}
-                  >
-                    {noticia.contenido}
-                  </ReactMarkdown>
+                  <HTMLContent
+                    content={noticia.contenido}
+                    className="mb-8 max-w-none prose prose-lg"
+                  />
                 </div>
 
-                {noticia.imagen && noticia.imagen.length > 0 && (
+                {noticia.imagenes && noticia.imagenes.length > 0 && (
                   <>
                     <Separador titulo="Galería de imágenes" />
                     <PhotoSwipeGallery noticia={noticia} />
@@ -262,7 +254,7 @@ export default async function NoticiaPage({ params }: PageProps) {
                 <div className="space-y-1">
                   {relatedFinal.slice(0, 2).map((item: any) => (
                     <Link
-                      key={item.id}
+                      key={item.slug}
                       href={`/noticias/${item.slug}`}
                       className="block relative px-4 py-1 transition-all duration-300 ease-out group hover:text-slate-900"
                     >

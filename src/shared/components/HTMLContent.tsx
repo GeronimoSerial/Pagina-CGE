@@ -1,0 +1,116 @@
+'use client';
+import { useMemo } from 'react';
+import DOMPurify from 'dompurify';
+
+interface HTMLContentProps {
+  content: string;
+  className?: string;
+}
+
+export function HTMLContent({ content, className = '' }: HTMLContentProps) {
+  const tagClassMap: Record<string, string> = {
+    h1: 'text-3xl font-bold text-slate-900 mt-8 mb-4 border-b pb-1 border-slate-200',
+    h2: 'text-xl font-semibold mt-6 mb-3 text-slate-800',
+    h3: 'text-lg font-medium mt-6 mb-3 text-slate-700',
+    a: 'text-gray-800 underline hover:text-blue-800 hover:underline transition-colors font-medium',
+    img: 'rounded-xl shadow-xl my-8 w-full',
+    blockquote:
+      'border-l-4 border-slate-400 bg-slate-50 pl-5 py-3 my-8 italic rounded-r-lg text-slate-700',
+    code: 'bg-slate-100 px-2 py-0.5 rounded text-slate-700 font-mono text-sm',
+    pre: 'bg-slate-800 text-slate-100 rounded-xl p-5 overflow-x-auto my-8 shadow-md text-sm',
+    ul: 'list-disc pl-6 my-5 space-y-2 marker:text-slate-500',
+    ol: 'list-decimal pl-6 my-5 space-y-2 marker:text-slate-500',
+    li: 'mb-2 leading-relaxed',
+    table: 'min-w-full border border-slate-200 rounded-xl overflow-hidden',
+    th: 'border border-slate-200 px-5 py-3 bg-slate-100 text-left text-slate-700 font-medium',
+    td: 'border border-slate-200 px-5 py-3',
+    p: 'mb-6 text-slate-700 leading-relaxed text-lg',
+  };
+
+  // Función para inyectar clases a los tags permitidos
+  function addClassesToTags(html: string): string {
+    return html.replace(
+      /<(\/?)([a-zA-Z0-9]+)([^>]*)>/g,
+      (match, slash, tag, attrs) => {
+        const tagName = tag.toLowerCase();
+        if (slash) return match; // No modificar tags de cierre
+        if (tagClassMap[tagName]) {
+          // Si ya tiene class, agregar las nuevas
+          if (/class\s*=/.test(attrs)) {
+            return `<${tag}${attrs.replace(
+              /class\s*=\s*(["'])(.*?)\1/,
+              (m: string, q: string, c: string) =>
+                `class=${q}${c} ${tagClassMap[tagName]}${q}`,
+            )}>`;
+          } else {
+            return `<${tag}${attrs} class=\"${tagClassMap[tagName]}\">`;
+          }
+        }
+        return match;
+      },
+    );
+  }
+
+  const sanitizedContent = useMemo(() => {
+    if (typeof window !== 'undefined') {
+      let clean = DOMPurify.sanitize(content, {
+        ALLOWED_TAGS: [
+          'h1',
+          'h2',
+          'h3',
+          'h4',
+          'h5',
+          'h6',
+          'p',
+          'br',
+          'div',
+          'span',
+          'strong',
+          'em',
+          'b',
+          'i',
+          'u',
+          'ul',
+          'ol',
+          'li',
+          'a',
+          'img',
+          'blockquote',
+          'code',
+          'pre',
+          'table',
+          'thead',
+          'tbody',
+          'tr',
+          'td',
+          'th',
+        ],
+        ALLOWED_ATTR: [
+          'href',
+          'target',
+          'rel',
+          'src',
+          'alt',
+          'width',
+          'height',
+          'class',
+          'id',
+          'style',
+        ],
+        ALLOWED_URI_REGEXP:
+          /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|data):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+      });
+      clean = addClassesToTags(clean);
+      return clean;
+    }
+    return content;
+  }, [content]);
+
+  return (
+    <div
+      className={className}
+      dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+      // Los estilos de los tags se inyectan dinámicamente
+    />
+  );
+}
