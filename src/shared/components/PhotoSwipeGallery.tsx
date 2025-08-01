@@ -29,8 +29,8 @@ export default function PhotoSwipeGallery({ noticia }: PhotoSwipeGalleryProps) {
       className="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3"
       id="gallery--responsive-images"
     >
-      {noticia.imagen &&
-        noticia.imagen.length > 0 &&
+      {noticia.imagenes &&
+        noticia.imagenes.length > 0 &&
         getImages(noticia).map((img, index) => (
           <a
             href={img.url}

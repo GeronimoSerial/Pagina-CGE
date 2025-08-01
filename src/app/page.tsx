@@ -3,12 +3,8 @@ import QuickAccess from '@/features/home/components/QuickAccess';
 import { Separator } from '@radix-ui/react-separator';
 import { Separador } from '@/shared/components/Separador';
 import { Metadata } from 'next';
-import {
-  LatestNewsStatic,
-  SocialMediaSection,
-} from '@/shared/data/dynamic-client';
+import { LatestNews, SocialMediaSection } from '@/shared/data/dynamic-client';
 import { getPaginatedNews } from '@/features/noticias/services/news';
-import { logger } from '@/shared/lib/logger';
 
 export const metadata: Metadata = {
   title: 'Consejo General de Educación (CGE)',
@@ -53,11 +49,7 @@ export default async function PagPrincipal() {
   try {
     latestNewsData = await getPaginatedNews(1, 4);
   } catch (error) {
-    logger.error('service', 'Failed to load news on homepage', {
-      error: error instanceof Error ? error.message : String(error),
-      page: 'homepage',
-      timestamp: new Date().toISOString(),
-    });
+    console.error('Error fetching latest news:', error);
 
     latestNewsData = {
       noticias: [],
@@ -80,7 +72,7 @@ export default async function PagPrincipal() {
         <Separador />
 
         <section>
-          <LatestNewsStatic noticias={latestNewsData.noticias} />
+          <LatestNews noticias={latestNewsData.noticias} />
         </section>
 
         <Separador />

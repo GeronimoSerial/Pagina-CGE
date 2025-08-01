@@ -6,10 +6,10 @@ import {
 } from '@/features/tramites/services/docs-data';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { MarkdownComponent } from '@/shared/components/MarkdownComponent';
+
 import { Clock } from 'lucide-react';
 import Link from 'next/link';
-import { withCache, contentCache } from '@/shared/lib/unified-cache';
+import { HTMLContent } from '@/shared/components/HTMLContent';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -30,11 +30,7 @@ export const revalidate = 2592000; // 30 días
 export default async function DocumentPage({ params }: PageProps) {
   const slug = (await params).slug;
 
-  const article: Article | null = await withCache(
-    contentCache,
-    `tramite-${slug}`,
-    async () => await getProcedureBySlug(slug),
-  );
+  const article: Article | null = await getProcedureBySlug(slug);
 
   if (!article) {
     notFound();
@@ -71,12 +67,10 @@ export default async function DocumentPage({ params }: PageProps) {
 
           {/* Article Content */}
           <article className="max-w-none prose prose-lg">
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={MarkdownComponent}
-            >
-              {markdown}
-            </ReactMarkdown>
+            <HTMLContent
+              content={markdown}
+              className="max-w-none prose prose-lg"
+            />
           </article>
         </div>
 

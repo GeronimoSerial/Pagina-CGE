@@ -5,9 +5,8 @@ import {
 } from '@/features/noticias/services/news';
 import { PageLayout } from '@/shared/components/PageLayout';
 import { Metadata } from 'next';
-import NewsContainer from '@/features/noticias/components/NewsContainer';
+import NewsContainer from '@/features/noticias/components/structure/NewsContainer';
 import { Suspense } from 'react';
-import { logger } from '@/shared/lib/logger';
 
 export const metadata: Metadata = {
   title: 'Noticias',
@@ -43,14 +42,7 @@ export default async function NoticiasPage() {
       getPaginatedNews(1, 9),
       getNewsCategories(),
       getFeaturedNews(5).catch((error) => {
-        logger.error(
-          'service',
-          'Featured news fetch failed on main noticias page',
-          {
-            error: error instanceof Error ? error.message : String(error),
-            page: 'noticias',
-          },
-        );
+        console.error('Error fetching featured news:', error);
         return [];
       }),
     ]);

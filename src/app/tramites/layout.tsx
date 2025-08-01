@@ -7,16 +7,9 @@ async function NavigationLoader() {
   const { getProceduresNavigation } = await import(
     '@/features/tramites/services/docs-data'
   );
-  const { withCache, contentCache } = await import(
-    '@/shared/lib/unified-cache'
-  );
 
   try {
-    const navigationSections = await withCache(
-      contentCache,
-      'tramites-navigation',
-      getProceduresNavigation,
-    );
+    const navigationSections = await getProceduresNavigation();
 
     return <ResponsiveNav sections={navigationSections} />;
   } catch (error) {
