@@ -1,7 +1,7 @@
 import {
-  getPaginatedNews,
   getNewsCategories,
   getFeaturedNews,
+  fetchNewsPage,
 } from '@/features/noticias/services/news';
 import { PageLayout } from '@/shared/components/PageLayout';
 import { Metadata } from 'next';
@@ -33,19 +33,30 @@ export const metadata: Metadata = {
   },
 };
 
-// ISR: Revalidar cada 30 días  api/revalidate se encarga
-export const revalidate = 2592000;
+// ISR: Revalidar cada 5 minutos para sincronizar con la API
+export const revalidate = 300;
 
 export default async function NoticiasPage() {
   try {
     const [initialNoticias, categorias, featuredNews] = await Promise.all([
-      getPaginatedNews(1, 9),
+      fetchNewsPage(1), // Usar el servicio existente
       getNewsCategories(),
-      getFeaturedNews(5).catch((error) => {
+      getFeaturedNews(3).catch((error) => {
         console.error('Error fetching featured news:', error);
         return [];
       }),
     ]);
+
+    // Si no se pudieron obtener las noticias, mostrar error
+    if (!initialNoticias) {
+      throw new Error('No se pudieron cargar las noticias');
+    }
+
+    // Adaptar la estructura de datos para NewsContainer
+    const adaptedInitialData = {
+      noticias: initialNoticias.data,
+      pagination: initialNoticias.pagination,
+    };
 
     return (
       <PageLayout
@@ -70,7 +81,7 @@ export default async function NoticiasPage() {
           }
         >
           <NewsContainer
-            initialData={initialNoticias}
+            initialData={adaptedInitialData}
             categorias={categorias}
             featuredNews={featuredNews}
           />

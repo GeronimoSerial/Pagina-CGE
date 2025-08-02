@@ -46,7 +46,8 @@ export function RegularNewsCard({
               <div className="flex gap-1 items-center">
                 <Tag className="w-4 h-4" />
                 <span className="tracking-wide">
-                  {noticia.categoria ?? 'Redacción CGE'}
+                  {/* {noticia.categoria ?? 'Redacción CGE'} */}
+                  {noticia.id}
                 </span>
               </div>
             </div>

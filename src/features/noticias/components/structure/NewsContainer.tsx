@@ -3,7 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import NewsSearch from '../Search';
-import StaticNewsSection from './StaticNewsSection';
+import NewsSection from './NewsSection';
 import { NewsItem } from '@/shared/interfaces';
 
 interface NewsContainerProps {
@@ -35,10 +35,11 @@ export default function NewsContainer({
       </div>
 
       {!hasActiveFilters ? (
-        <StaticNewsSection
+        <NewsSection
           initialData={initialData}
           featuredNews={featuredNews}
           currentPage={1}
+          showCarousel={true}
         />
       ) : (
         <Suspense
