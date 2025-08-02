@@ -109,17 +109,18 @@ function buildDirectusUrl(page: number, pageSize: number, categoria: string | nu
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { page: string } }
+  { params }: { params: Promise< { page: string }> }
 ): Promise<NextResponse<ApiResponse | { error: string }>> {
   try {
     // 1. Validar parámetros
-    const page = validatePageNumber(params.page);
+    const { page } = await params;
+    const pageNum =  validatePageNumber(page);
     const { searchParams } = new URL(request.url);
     const pageSize = validatePageSize(searchParams.get('pageSize'));
     const categoria = validateCategory(searchParams.get('categoria'));
     
     // 2. Construir URL de Directus
-    const directusUrl = buildDirectusUrl(page, pageSize, categoria);
+    const directusUrl = buildDirectusUrl(pageNum, pageSize, categoria);
     
     // 3. Tags de caché dinámicos
     const cacheTags = [
@@ -168,12 +169,12 @@ export async function GET(
     const totalPages = Math.ceil(totalItems / pageSize);
     
     const paginationMeta = {
-      currentPage: page,
+      currentPage: pageNum,
       totalPages,
       totalItems,
       pageSize,
-      hasNextPage: page < totalPages,
-      hasPrevPage: page > 1,
+      hasNextPage: pageNum < totalPages,
+      hasPrevPage: pageNum > 1,
     };
     
     // 7. Respuesta final

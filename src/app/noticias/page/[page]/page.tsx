@@ -8,12 +8,13 @@ import { fetchNewsPage } from '@/features/noticias/services/news';
 export const revalidate = 600;
 
 interface NewsPageProps {
-  params: { page: string };
+  params: Promise<{ page: string }>;
 }
 
 // Generar parámetros estáticos para las primeras páginas
 export async function generateStaticParams() {
   // Generar las primeras 10 páginas estáticamente
+  // Páginas adicionales se generarán bajo demanda con ISR
   return Array.from({ length: 10 }, (_, i) => ({
     page: (i + 2).toString(), // Empezar desde página 2 (página 1 es /noticias)
   }));
@@ -63,27 +64,27 @@ export async function generateMetadata({
 
 export default async function NewsPagePaginated({ params }: NewsPageProps) {
   // Validar parámetro de página
-  const awaitedParams = await params;
-  const page = parseInt(awaitedParams.page, 10);
+  const { page } = await params;
+  const pageNum = parseInt(page, 10);
 
-  if (isNaN(page) || page < 1) {
+  if (isNaN(pageNum) || pageNum < 1) {
     notFound();
   }
 
   // Si es página 1, redirigir a /noticias
-  if (page === 1) {
+  if (pageNum === 1) {
     redirect('/noticias');
   }
 
   // Obtener datos de la API
-  const newsData = await fetchNewsPage(page);
+  const newsData = await fetchNewsPage(pageNum);
 
   if (!newsData) {
     notFound();
   }
 
   // Si la página solicitada excede el total de páginas disponibles
-  if (page > newsData.pagination.totalPages) {
+  if (pageNum > newsData.pagination.totalPages) {
     notFound();
   }
 
@@ -105,7 +106,7 @@ export default async function NewsPagePaginated({ params }: NewsPageProps) {
       <div className="px-6 mx-auto max-w-7xl">
         <NewsSection
           initialData={initialData}
-          currentPage={page}
+          currentPage={pageNum}
           showCarousel={false}
         />
       </div>
