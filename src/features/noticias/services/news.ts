@@ -157,23 +157,36 @@ export async function getNewsCategories(): Promise<Array<{ id: number; nombre: s
 
 // 8. Noticias destacadas (con fallback a Directus directo)
 export async function getFeaturedNews(count: number = 3): Promise<NewsItem[]> {
+  // Durante el build (when no window and not development), usar Directus SDK directamente
+  const isBuildTime = typeof window === 'undefined' && process.env.NODE_ENV !== 'development';
+  
+  if (isBuildTime) {
+    console.log('Build time detected, using Directus SDK directly for featured news');
+    return await getFeaturedNewsDirectus(count);
+  }
+
   try {
-    // Intentar usar la API unificada primero
+    // En runtime (development o production con window), usar API proxy para caché
     const getBaseUrl = () => {
       if (typeof window !== 'undefined') {
         return window.location.origin;
       }
       
       if (process.env.NODE_ENV === 'development') {
-        return process.env.NEXT_PUBLIC_DEV_URL || 'http://localhost:3000';
+        return process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
       }
       
-      return process.env.NEXT_PUBLIC_URL || 
+      return process.env.NEXT_PUBLIC_SITE_URL || 
              process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 
              'https://consejo.geroserial.com';
     };
     
     const baseUrl = getBaseUrl();
+    if (!baseUrl || baseUrl.includes('undefined')) {
+      console.warn('Base URL is undefined, using Directus SDK fallback');
+      return await getFeaturedNewsDirectus(count);
+    }
+    
     const response = await fetch(`${baseUrl}/api/noticias?type=featured&limit=${count}`, {
       next: { 
         revalidate: 600, // 10 minutos
@@ -181,7 +194,8 @@ export async function getFeaturedNews(count: number = 3): Promise<NewsItem[]> {
       },
       headers: {
         'Content-Type': 'application/json',
-      }
+      },
+      signal: AbortSignal.timeout(8000), // Timeout 8s
     });
     
     if (response.ok) {
@@ -207,17 +221,17 @@ export async function getFeaturedNews(count: number = 3): Promise<NewsItem[]> {
     }
     
     // Fallback: llamada directa a Directus si la API falla
-    console.warn('API unificada falló, usando fallback directo a Directus');
+    console.warn('API proxy falló, usando fallback directo a Directus SDK');
     return await getFeaturedNewsDirectus(count);
     
   } catch (error) {
-    console.error('Error fetching featured news via API, trying Directus fallback:', error);
+    console.error('Error fetching featured news via API proxy, trying Directus SDK fallback:', error);
     
-    // Fallback: llamada directa a Directus
+    // Fallback: llamada directa a Directus SDK
     try {
       return await getFeaturedNewsDirectus(count);
     } catch (fallbackError) {
-      console.error('Fallback to Directus also failed:', fallbackError);
+      console.error('Fallback to Directus SDK also failed:', fallbackError);
       return [];
     }
   }
@@ -277,12 +291,114 @@ interface ApiResponse {
 }
 
 export async function fetchNewsPage(page: number): Promise<ApiResponse | null> {
-  try {
-    const apiUrl =
-      process.env.NODE_ENV === 'production'
-        ? process.env.NEXT_PUBLIC_SITE_URL
-        : 'http://localhost:3000';
+  // Durante el build, usar Directus SDK directamente
+  const isBuildTime = typeof window === 'undefined' && process.env.NODE_ENV !== 'development';
+  
+  if (isBuildTime) {
+    console.log(`Build time detected, using Directus SDK directly for page ${page}`);
+    try {
+      const result = await getPaginatedNews(page, 6);
+      
+      // Adaptar formato de respuesta para compatibilidad
+      return {
+        data: result.noticias.map((n: any) => ({
+          id: n.id,
+          autor: 'Redacción CGE',
+          titulo: n.titulo,
+          resumen: n.resumen,
+          categoria: n.categoria,
+          esImportante: n.esImportante,
+          portada: n.portada ? {
+            url: `${directus.url}assets/${n.portada.id}?width=1200&height=630&fit=cover`,
+            title: n.portada.title,
+            width: n.portada.width,
+            height: n.portada.height,
+          } : { url: '' },
+          slug: n.slug,
+          contenido: n.resumen,
+          imagen: [],
+          publicado: true,
+          fecha: n.fecha,
+          metaTitle: n.titulo,
+          metaDescription: n.resumen,
+        })),
+        pagination: {
+          currentPage: page,
+          totalPages: result.pagination.pageCount,
+          totalItems: result.pagination.total || 0,
+          pageSize: 6,
+          hasNextPage: result.noticias.length === 6,
+          hasPrevPage: page > 1,
+        },
+        meta: {
+          timestamp: new Date().toISOString(),
+          cached: false,
+        },
+      };
+    } catch (error) {
+      console.error('Error fetching news page via Directus SDK:', error);
+      return null;
+    }
+  }
 
+  try {
+    // En runtime, usar API proxy para caché
+    const getBaseUrl = () => {
+      if (typeof window !== 'undefined') {
+        return window.location.origin;
+      }
+      
+      if (process.env.NODE_ENV === 'development') {
+        return process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+      }
+      
+      return process.env.NEXT_PUBLIC_SITE_URL || 
+             process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 
+             'https://consejo.geroserial.com';
+    };
+
+    const apiUrl = getBaseUrl();
+    if (!apiUrl || apiUrl.includes('undefined')) {
+      console.warn('Base URL is undefined, using Directus SDK fallback');
+      // Usar la misma lógica de arriba como fallback
+      const result = await getPaginatedNews(page, 6);
+      return {
+        data: result.noticias.map((n: any) => ({
+          id: n.id,
+          autor: 'Redacción CGE',
+          titulo: n.titulo,
+          resumen: n.resumen,
+          categoria: n.categoria,
+          esImportante: n.esImportante,
+          portada: n.portada ? {
+            url: `${directus.url}assets/${n.portada.id}?width=1200&height=630&fit=cover`,
+            title: n.portada.title,
+            width: n.portada.width,
+            height: n.portada.height,
+          } : { url: '' },
+          slug: n.slug,
+          contenido: n.resumen,
+          imagen: [],
+          publicado: true,
+          fecha: n.fecha,
+          metaTitle: n.titulo,
+          metaDescription: n.resumen,
+        })),
+        pagination: {
+          currentPage: page,
+          totalPages: result.pagination.pageCount,
+          totalItems: result.pagination.total || 0,
+          pageSize: 6,
+          hasNextPage: result.noticias.length === 6,
+          hasPrevPage: page > 1,
+        },
+        meta: {
+          timestamp: new Date().toISOString(),
+          cached: false,
+        },
+      };
+    }
+    
     const response = await fetch(
       `${apiUrl}/api/noticias/page/${page}?pageSize=6`,
       {
@@ -293,6 +409,7 @@ export async function fetchNewsPage(page: number): Promise<ApiResponse | null> {
         headers: {
           'Content-Type': 'application/json',
         },
+        signal: AbortSignal.timeout(8000), // Timeout 8s para build
       },
     );
 
@@ -305,7 +422,49 @@ export async function fetchNewsPage(page: number): Promise<ApiResponse | null> {
 
     return await response.json();
   } catch (error) {
-    console.error('Error fetching news page:', error);
-    return null;
+    console.error('Error fetching news page via API proxy, trying Directus SDK fallback:', error);
+    
+    // Fallback: usar Directus SDK
+    try {
+      const result = await getPaginatedNews(page, 6);
+      return {
+        data: result.noticias.map((n: any) => ({
+          id: n.id,
+          autor: 'Redacción CGE',
+          titulo: n.titulo,
+          resumen: n.resumen,
+          categoria: n.categoria,
+          esImportante: n.esImportante,
+          portada: n.portada ? {
+            url: `${directus.url}assets/${n.portada.id}?width=1200&height=630&fit=cover`,
+            title: n.portada.title,
+            width: n.portada.width,
+            height: n.portada.height,
+          } : { url: '' },
+          slug: n.slug,
+          contenido: n.resumen,
+          imagen: [],
+          publicado: true,
+          fecha: n.fecha,
+          metaTitle: n.titulo,
+          metaDescription: n.resumen,
+        })),
+        pagination: {
+          currentPage: page,
+          totalPages: result.pagination.pageCount,
+          totalItems: result.pagination.total || 0,
+          pageSize: 6,
+          hasNextPage: result.noticias.length === 6,
+          hasPrevPage: page > 1,
+        },
+        meta: {
+          timestamp: new Date().toISOString(),
+          cached: false,
+        },
+      };
+    } catch (fallbackError) {
+      console.error('Directus SDK fallback also failed:', fallbackError);
+      return null;
+    }
   }
 }
