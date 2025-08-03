@@ -4,6 +4,8 @@ import { Suspense } from 'react';
 import NewsSearch from '../Search';
 import NewsSection from './NewsSection';
 import { NewsItem } from '@/shared/interfaces';
+import SkeletonLoading from '@/shared/components/SkeletonComponent';
+import { Skeleton } from '@/shared/ui/skeleton';
 
 interface NewsContainerProps {
   initialData: {
@@ -22,7 +24,9 @@ export default function NewsContainer({
   return (
     <div className="px-6 mx-auto max-w-7xl">
       <div className="mb-8">
-        <Suspense fallback={<div>Cargando búsqueda...</div>}>
+        <Suspense
+          fallback={<div className="text-gray-50">Cargando buscador...</div>}
+        >
           <NewsSearch categorias={categorias} />
         </Suspense>
       </div>
