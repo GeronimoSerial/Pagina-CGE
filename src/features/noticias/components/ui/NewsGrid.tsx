@@ -1,6 +1,7 @@
 import { NewsItem } from '@/shared/interfaces';
 import NewsCard from './NewsCard';
 import { cn } from '@/shared/lib/utils';
+import { RegularNewsCard } from './RegularNewsCard';
 
 interface NewsGridProps {
   noticias: NewsItem[];
@@ -35,11 +36,7 @@ export default function NewsGrid({
       )}
     >
       {noticias.map((noticia, index) => (
-        <NewsCard
-          key={noticia.id}
-          noticia={noticia}
-          priority={priorityFirst && index < 3}
-        />
+        <RegularNewsCard key={noticia.id} noticia={noticia} index={index} />
       ))}
     </div>
   );

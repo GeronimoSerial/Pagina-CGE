@@ -424,7 +424,6 @@ export async function fetchNewsPage(page: number): Promise<ApiResponse | null> {
   }
 
   try {
-    // En runtime, usar API proxy para caché
     const getBaseUrl = () => {
       if (typeof window !== 'undefined') {
         return window.location.origin;
