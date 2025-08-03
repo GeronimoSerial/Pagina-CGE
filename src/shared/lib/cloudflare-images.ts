@@ -8,7 +8,7 @@ export const cfImages = (
   if (!url) return '';
 
   // Si la URL ya es completa, extraer solo el path
-  if (url.startsWith( DIRECTUS_URL )) {
+  if (url.startsWith(DIRECTUS_URL)) {
     const path = url.replace(DIRECTUS_URL, '');
     return `${DIRECTUS_URL}/cdn-cgi/image/width=${width},format=${format}${path}`;
   }

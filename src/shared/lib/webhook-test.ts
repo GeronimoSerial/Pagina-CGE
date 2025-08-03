@@ -21,7 +21,7 @@ export async function testWebhook({
   esImportante = false,
   titulo = 'Noticia de prueba',
   categoria = 'General',
-  baseUrl = ''
+  baseUrl = '',
 }: TestWebhookOptions) {
   const payload = {
     event,
@@ -32,8 +32,8 @@ export async function testWebhook({
       slug,
       esImportante,
       titulo,
-      categoria
-    }
+      categoria,
+    },
   };
 
   try {
@@ -41,22 +41,22 @@ export async function testWebhook({
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.REVALIDATE_SECRET_TOKEN}`
+        Authorization: `Bearer ${process.env.REVALIDATE_SECRET_TOKEN}`,
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     });
 
     const result = await response.json();
-    
+
     return {
       success: response.ok,
       status: response.status,
-      data: result
+      data: result,
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error desconocido'
+      error: error instanceof Error ? error.message : 'Error desconocido',
     };
   }
 }
@@ -68,16 +68,16 @@ export async function getWebhookStatus(baseUrl: string = '') {
   try {
     const response = await fetch(`${baseUrl}/api/revalidate`);
     const result = await response.json();
-    
+
     return {
       success: response.ok,
       status: response.status,
-      data: result
+      data: result,
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error desconocido'
+      error: error instanceof Error ? error.message : 'Error desconocido',
     };
   }
 }
@@ -88,22 +88,25 @@ export async function getWebhookStatus(baseUrl: string = '') {
 export async function getWebhookLogs(baseUrl: string = '', limit: number = 50) {
   try {
     const response = await fetch(`${baseUrl}/api/monitoring?limit=${limit}`, {
-      headers: process.env.NODE_ENV === 'production' ? {
-        'Authorization': `Bearer ${process.env.REVALIDATE_SECRET_TOKEN}`
-      } : {}
+      headers:
+        process.env.NODE_ENV === 'production'
+          ? {
+              Authorization: `Bearer ${process.env.REVALIDATE_SECRET_TOKEN}`,
+            }
+          : {},
     });
-    
+
     const result = await response.json();
-    
+
     return {
       success: response.ok,
       status: response.status,
-      data: result
+      data: result,
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error desconocido'
+      error: error instanceof Error ? error.message : 'Error desconocido',
     };
   }
 }
@@ -115,22 +118,25 @@ export async function clearWebhookLogs(baseUrl: string = '') {
   try {
     const response = await fetch(`${baseUrl}/api/monitoring`, {
       method: 'DELETE',
-      headers: process.env.NODE_ENV === 'production' ? {
-        'Authorization': `Bearer ${process.env.REVALIDATE_SECRET_TOKEN}`
-      } : {}
+      headers:
+        process.env.NODE_ENV === 'production'
+          ? {
+              Authorization: `Bearer ${process.env.REVALIDATE_SECRET_TOKEN}`,
+            }
+          : {},
     });
-    
+
     const result = await response.json();
-    
+
     return {
       success: response.ok,
       status: response.status,
-      data: result
+      data: result,
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Error desconocido'
+      error: error instanceof Error ? error.message : 'Error desconocido',
     };
   }
 }
@@ -192,7 +198,7 @@ curl -X GET ${baseUrl}/api/revalidate`,
 curl -X GET ${baseUrl}/api/monitoring${token ? ` \\\n  -H "Authorization: Bearer ${token}"` : ''}`,
 
   clearLogs: (baseUrl: string, token?: string) => `
-curl -X DELETE ${baseUrl}/api/monitoring${token ? ` \\\n  -H "Authorization: Bearer ${token}"` : ''}`
+curl -X DELETE ${baseUrl}/api/monitoring${token ? ` \\\n  -H "Authorization: Bearer ${token}"` : ''}`,
 };
 
 /**
@@ -201,7 +207,12 @@ curl -X DELETE ${baseUrl}/api/monitoring${token ? ` \\\n  -H "Authorization: Bea
 export function generateDirectusPayload(
   event: 'create' | 'update' | 'delete',
   id: string,
-  data: { slug?: string; esImportante?: boolean; titulo?: string; categoria?: string } = {}
+  data: {
+    slug?: string;
+    esImportante?: boolean;
+    titulo?: string;
+    categoria?: string;
+  } = {},
 ) {
   return {
     event,
@@ -209,8 +220,8 @@ export function generateDirectusPayload(
     keys: [id],
     payload: {
       id,
-      ...data
-    }
+      ...data,
+    },
   };
 }
 
@@ -221,6 +232,6 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     getWebhookStatus,
     getWebhookLogs,
     clearWebhookLogs,
-    curlCommands
+    curlCommands,
   };
 }

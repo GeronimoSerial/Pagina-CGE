@@ -20,11 +20,11 @@ let webhookLogs: WebhookLog[] = [];
  * Función auxiliar para registrar logs desde el webhook
  */
 export function logWebhookEvent(
-  event: string, 
-  slug?: string, 
-  paths: string[] = [], 
-  success: boolean = true, 
-  error?: string
+  event: string,
+  slug?: string,
+  paths: string[] = [],
+  success: boolean = true,
+  error?: string,
 ) {
   const log: WebhookLog = {
     timestamp: new Date().toISOString(),
@@ -32,22 +32,22 @@ export function logWebhookEvent(
     slug,
     paths,
     success,
-    ...(error && { error })
+    ...(error && { error }),
   };
-  
+
   webhookLogs.push(log);
-  
+
   // Mantener solo los últimos 1000 logs para evitar memory leaks
   if (webhookLogs.length > 1000) {
     webhookLogs = webhookLogs.slice(-1000);
   }
-  
+
   console.log('📝 Log de webhook registrado:', {
     event,
     slug,
     success,
     pathCount: paths.length,
-    timestamp: log.timestamp
+    timestamp: log.timestamp,
   });
 }
 
@@ -72,14 +72,14 @@ export function clearWebhookLogs(): number {
  */
 export function getWebhookLogStats() {
   const totalLogs = webhookLogs.length;
-  const successCount = webhookLogs.filter(log => log.success).length;
+  const successCount = webhookLogs.filter((log) => log.success).length;
   const errorCount = totalLogs - successCount;
   const lastUpdate = webhookLogs[webhookLogs.length - 1]?.timestamp;
-  
+
   return {
     totalLogs,
     successCount,
     errorCount,
-    lastUpdate
+    lastUpdate,
   };
 }

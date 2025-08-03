@@ -33,7 +33,6 @@ export interface Article {
   content: ArticleSection[];
 }
 
-
 // 1. Navegación de trámites agrupada por categoría
 export async function getProceduresNavigation(): Promise<NavSection[]> {
   const tramites = await directus.request(
@@ -41,7 +40,7 @@ export async function getProceduresNavigation(): Promise<NavSection[]> {
       fields: ['categoria', 'titulo', 'slug'],
       sort: ['categoria', 'titulo'],
       limit: 200,
-    })
+    }),
   );
   if (!tramites) return [];
   const grouped: Record<string, NavSection> = {};
@@ -69,7 +68,9 @@ export async function getProceduresNavigation(): Promise<NavSection[]> {
 }
 
 // 2. Obtener artículo/trámite por slug
-export async function getProcedureBySlug(slug: string): Promise<Article | null> {
+export async function getProcedureBySlug(
+  slug: string,
+): Promise<Article | null> {
   const tramites = await directus.request(
     readItems('tramites', {
       filter: { slug: { _eq: slug } },
@@ -84,7 +85,7 @@ export async function getProcedureBySlug(slug: string): Promise<Article | null> 
         'contenido',
       ],
       limit: 1,
-    })
+    }),
   );
   if (!tramites || tramites.length === 0) return null;
   const t = tramites[0];
@@ -112,7 +113,7 @@ export async function getAllProcedureSlugs(): Promise<string[]> {
     readItems('tramites', {
       fields: ['slug'],
       limit: 200,
-    })
+    }),
   );
   if (!tramites) return [];
   return tramites.map((t: any) => t.slug);
@@ -134,7 +135,7 @@ export async function getAllProcedures(): Promise<any[]> {
       ],
       sort: ['categoria', 'titulo'],
       limit: 200,
-    })
+    }),
   );
   if (!tramites) return [];
   return tramites.map((t: any) => {
@@ -149,4 +150,4 @@ export async function getAllProcedures(): Promise<any[]> {
       content: t.contenido,
     };
   });
-} 
+}

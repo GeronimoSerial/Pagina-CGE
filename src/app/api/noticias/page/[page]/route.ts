@@ -64,7 +64,7 @@ function validatePageNumber(page: string): number {
 
 function validatePageSize(pageSizeParam: string | null): number {
   if (!pageSizeParam) return 6; // Default
-  
+
   const pageSize = parseInt(pageSizeParam, 10);
   if (isNaN(pageSize) || pageSize < 1 || pageSize > 20) {
     throw new Error('Tamaño de página debe estar entre 1 y 20');
@@ -74,81 +74,92 @@ function validatePageSize(pageSizeParam: string | null): number {
 
 function validateCategory(categoria: string | null): string | null {
   if (!categoria) return null;
-  
+
   // Sanitizar categoría para prevenir inyección
   const sanitized = categoria.trim().replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s-_]/g, '');
   return sanitized || null;
 }
 
-function transformPortadaUrl(portada: DirectusNewsResponse['data'][0]['portada']): string | null {
+function transformPortadaUrl(
+  portada: DirectusNewsResponse['data'][0]['portada'],
+): string | null {
   if (!portada?.id) return null;
   return `${DIRECTUS_URL}/assets/${portada.id}?width=800&height=600&fit=cover`;
 }
 
-function buildDirectusUrl(page: number, pageSize: number, categoria: string | null): string {
+function buildDirectusUrl(
+  page: number,
+  pageSize: number,
+  categoria: string | null,
+): string {
   const url = new URL(`${DIRECTUS_URL}/items/noticias`);
-  
+
   // Parámetros básicos de paginación
   url.searchParams.set('page', page.toString());
   url.searchParams.set('limit', pageSize.toString());
   url.searchParams.set('sort', '-fecha,-id');
-  
+
   // Campos optimizados para listados
-  url.searchParams.set('fields', 'id,titulo,resumen,fecha,categoria,esImportante,slug,portada.id,portada.filename_disk,portada.title,portada.width,portada.height');
-  
+  url.searchParams.set(
+    'fields',
+    'id,titulo,resumen,fecha,categoria,esImportante,slug,portada.id,portada.filename_disk,portada.title,portada.width,portada.height',
+  );
+
   // Metadata para paginación
   url.searchParams.set('meta', 'total_count,filter_count');
-  
+
   // Filtro por categoría si se proporciona
   if (categoria) {
     url.searchParams.set('filter[categoria][_eq]', categoria);
   }
-  
+
   return url.toString();
 }
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise< { page: string }> }
+  { params }: { params: Promise<{ page: string }> },
 ): Promise<NextResponse<ApiResponse | { error: string }>> {
   try {
     // 1. Validar parámetros
     const { page } = await params;
-    const pageNum =  validatePageNumber(page);
+    const pageNum = validatePageNumber(page);
     const { searchParams } = new URL(request.url);
     const pageSize = validatePageSize(searchParams.get('pageSize'));
     const categoria = validateCategory(searchParams.get('categoria'));
-    
+
     // 2. Construir URL de Directus
     const directusUrl = buildDirectusUrl(pageNum, pageSize, categoria);
-    
+
     // 3. Tags de caché dinámicos
     const cacheTags = [
       'noticias',
       `noticias-page-${page}`,
-      categoria && `noticias-categoria-${categoria}`
+      categoria && `noticias-categoria-${categoria}`,
     ].filter(Boolean) as string[];
-    
+
     // 4. Fetch con ISR cache
     const response = await fetch(directusUrl, {
-      next: { 
+      next: {
         revalidate: 300, // 5 minutos
-        tags: cacheTags
+        tags: cacheTags,
       },
       headers: {
         'Content-Type': 'application/json',
-      }
+      },
     });
-    
+
     if (!response.ok) {
-      console.error(`Directus API error: ${response.status} ${response.statusText}`);
+      console.error(
+        `Directus API error: ${response.status} ${response.statusText}`,
+      );
       throw new Error(`Error del servidor de contenidos: ${response.status}`);
     }
-    
+
     const directusData: DirectusNewsResponse = await response.json();
-    
+
     // 5. Transformar datos
-    const transformedData = directusData.data.map(noticia => ({
+    const transformedData = directusData.data.map((noticia) => ({
       id: noticia.id,
       titulo: noticia.titulo,
       resumen: noticia.resumen,
@@ -156,18 +167,20 @@ export async function GET(
       categoria: noticia.categoria,
       esImportante: noticia.esImportante,
       slug: noticia.slug,
-      portada: noticia.portada ? {
-        url: transformPortadaUrl(noticia.portada) || '',
-        title: noticia.portada.title,
-        width: noticia.portada.width,
-        height: noticia.portada.height,
-      } : undefined,
+      portada: noticia.portada
+        ? {
+            url: transformPortadaUrl(noticia.portada) || '',
+            title: noticia.portada.title,
+            width: noticia.portada.width,
+            height: noticia.portada.height,
+          }
+        : undefined,
     }));
-    
+
     // 6. Calcular metadata de paginación
     const totalItems = directusData.meta.total_count;
     const totalPages = Math.ceil(totalItems / pageSize);
-    
+
     const paginationMeta = {
       currentPage: pageNum,
       totalPages,
@@ -176,7 +189,7 @@ export async function GET(
       hasNextPage: pageNum < totalPages,
       hasPrevPage: pageNum > 1,
     };
-    
+
     // 7. Respuesta final
     const apiResponse: ApiResponse = {
       data: transformedData,
@@ -186,25 +199,24 @@ export async function GET(
         cached: true, // ISR siempre cachea
       },
     };
-    
+
     return NextResponse.json(apiResponse);
-    
   } catch (error) {
     console.error('Error in noticias API:', error);
-    
+
     // Manejo específico de errores de validación
-    if (error instanceof Error && 
-        (error.message.includes('inválido') || error.message.includes('debe estar'))) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 }
-      );
+    if (
+      error instanceof Error &&
+      (error.message.includes('inválido') ||
+        error.message.includes('debe estar'))
+    ) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
-    
+
     // Error genérico del servidor
     return NextResponse.json(
       { error: 'Error interno del servidor' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
