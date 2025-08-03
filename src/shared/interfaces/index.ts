@@ -64,6 +64,7 @@ export interface NewsItem {
   slug: string;
   contenido: string;
   imagen: { url: string; width: number; height: number }[];
+  imagenes?: any[];
   publicado: boolean;
   fecha: string;
   createdAt?: string;

@@ -3,10 +3,7 @@ import QuickAccess from '@/features/home/components/QuickAccess';
 import { Separator } from '@radix-ui/react-separator';
 import { Separador } from '@/shared/components/Separador';
 import { Metadata } from 'next';
-import {
-  LatestNewsStatic,
-  SocialMediaSection,
-} from '@/shared/data/dynamic-client';
+import { LatestNews, SocialMediaSection } from '@/shared/data/dynamic-client';
 import { getPaginatedNews } from '@/features/noticias/services/news';
 
 export const metadata: Metadata = {
@@ -52,7 +49,8 @@ export default async function PagPrincipal() {
   try {
     latestNewsData = await getPaginatedNews(1, 4);
   } catch (error) {
-    console.error('Error loading home page news:', error);
+    console.error('Error fetching latest news:', error);
+
     latestNewsData = {
       noticias: [],
       pagination: { page: 1, pageCount: 0, pageSize: 4, total: 0 },
@@ -74,7 +72,7 @@ export default async function PagPrincipal() {
         <Separador />
 
         <section>
-          <LatestNewsStatic noticias={latestNewsData.noticias} />
+          <LatestNews noticias={latestNewsData.noticias} />
         </section>
 
         <Separador />

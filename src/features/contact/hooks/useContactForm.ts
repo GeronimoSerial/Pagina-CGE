@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { ContactForm } from '@/shared/interfaces';
 
@@ -16,10 +16,21 @@ export const useContactForm = () => {
   const [buttonState, setButtonState] = useState<
     'idle' | 'loading' | 'success'
   >('idle');
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const form = useForm<ContactForm>({
     defaultValues: { nombre: '', email: '', asunto: '', mensaje: '', area: '' },
   });
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    };
+  }, []);
 
   const onSubmit = async (data: ContactForm) => {
     setButtonState('loading');
@@ -46,9 +57,16 @@ export const useContactForm = () => {
         setError(null);
         form.reset();
         setButtonState('success');
-        setTimeout(() => {
+
+        // Clear any existing timeout
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+
+        timeoutRef.current = setTimeout(() => {
           setButtonState('idle');
           setSent(false);
+          timeoutRef.current = null;
         }, 5000);
       }
     } catch (error) {

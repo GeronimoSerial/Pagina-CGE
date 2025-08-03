@@ -11,3 +11,5 @@ export async function GET() {
   const data = JSON.parse(fileContents);
   return NextResponse.json(data);
 }
+
+export const revalidate = 86400; 

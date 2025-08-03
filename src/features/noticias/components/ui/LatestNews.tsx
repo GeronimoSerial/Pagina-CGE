@@ -1,14 +1,14 @@
 import React from 'react';
 import { Separator } from '@radix-ui/react-separator';
-import { RegularNewsCard } from './RegularNewsCard';
+import { NewsCard } from './NewsCard';
 import { NewsItem } from '@/shared/interfaces';
 import Link from 'next/link';
 
-interface LatestNewsStaticProps {
+interface LatestNewsProps {
   noticias: any[];
 }
 
-export default function LatestNewsStatic({ noticias }: LatestNewsStaticProps) {
+export default function LatestNews({ noticias }: LatestNewsProps) {
   const noticiasFormateadas: NewsItem[] = noticias
     .slice(0, 6)
     .map((noticia: any) => ({
@@ -22,7 +22,7 @@ export default function LatestNewsStatic({ noticias }: LatestNewsStaticProps) {
       slug: noticia.slug,
       portada: noticia.portada || { url: '' },
       imagen: noticia.imagen || [],
-      contenido: noticia.contenido || noticia.resumen || '',
+      contenido: '',
       publicado: true,
     }));
 
@@ -61,11 +61,7 @@ export default function LatestNewsStatic({ noticias }: LatestNewsStaticProps) {
           {noticiasFormateadas.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
               {noticiasFormateadas.map((noticia, index) => (
-                <RegularNewsCard
-                  key={noticia.id}
-                  noticia={noticia}
-                  index={index}
-                />
+                <NewsCard key={noticia.slug} noticia={noticia} index={index} />
               ))}
             </div>
           ) : (

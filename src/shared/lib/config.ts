@@ -1,8 +1,3 @@
-export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'https://devcms.geroserial.com/api';
-export const STRAPI_URL =
-  process.env.NEXT_PUBLIC_STRAPI_URL || 'https://devcms.geroserial.com';
-
 export const PERFORMANCE_CONFIG = {
   API_TIMEOUT: 5000,
   CRITICAL_API_TIMEOUT: 3000,
@@ -28,3 +23,6 @@ export const PERFORMANCE_CONFIG = {
     BURST_ALLOWANCE: 5,
   },
 };
+
+export const DIRECTUS_URL =
+  process.env.NEXT_PUBLIC_DIRECTUS_URL || 'https://devcms.geroserial.com';

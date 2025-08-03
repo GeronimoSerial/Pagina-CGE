@@ -6,7 +6,7 @@ import { NewsItem } from '@/shared/interfaces';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export function RegularNewsCard({
+export function NewsCard({
   noticia,
   index = 0,
 }: {
@@ -25,7 +25,7 @@ export function RegularNewsCard({
           <Image
             className="object-cover w-full h-48 transition-transform duration-500 "
             alt={noticia.titulo}
-            src={getCover({ noticia }) || ''}
+            src={getCover({ noticia }) || '/images/hero2.png'}
             width={1200}
             height={630}
             priority={isFirstImage}
