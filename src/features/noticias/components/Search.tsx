@@ -8,18 +8,20 @@ import {
   useNewsSearch,
   SearchParams,
 } from '@/features/noticias/hooks/useNewsSearch';
-import NewsResultsSkeleton from '@/features/noticias/components/NewsResultsSkeleton';
+import { useSearchCleaner } from '@/features/noticias/hooks/useSearchCleaner';
+import NewsResultsSkeleton from '@/features/noticias/components/ui/NewsResultsSkeleton';
+import { RegularNewsCard } from './ui/RegularNewsCard';
 
 interface NewsSearchProps {
   categorias: Array<{ id: number; nombre: string }>;
   onSearchResults?: (results: any) => void;
-  showResults?: boolean;
+  // showResults?: boolean;
 }
 
 export default function NewsSearch({
   categorias,
   onSearchResults,
-  showResults = false,
+  // showResults = false,
 }: NewsSearchProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -44,10 +46,23 @@ export default function NewsSearch({
   );
 
   // Mostrar resultados solo si showResults es true Y hay filtros activos
-  const shouldShowResults = showResults && hasActiveFilters;
+  const shouldShowResults = hasActiveFilters;
 
   // Determinar modo basado en props y filtros activos
   const currentSearchMode = shouldShowResults ? 'api' : 'navigation';
+
+  // Hook para limpiar filtros automáticamente
+  const { clearAllAndNavigate } = useSearchCleaner({
+    onClearFilters: () => {
+      setFiltros({
+        q: '',
+        categoria: '',
+        desde: '',
+        hasta: '',
+      });
+      clearResults();
+    },
+  });
 
   useEffect(() => {
     setFiltros({
@@ -180,20 +195,9 @@ export default function NewsSearch({
   };
 
   const clearAll = () => {
-    setFiltros({
-      q: '',
-      categoria: '',
-      desde: '',
-      hasta: '',
-    });
-
-    if (shouldShowResults) {
-      clearResults();
-      if (onSearchResults) {
-        onSearchResults(null);
-      }
-    } else {
-      router.push('/noticias');
+    clearAllAndNavigate();
+    if (onSearchResults) {
+      onSearchResults(null);
     }
   };
 
@@ -497,71 +501,18 @@ export default function NewsSearch({
                     'No se encontraron noticias que coincidan con tu búsqueda.'
                   )}
                 </p>
-                {results.meta.cached && (
+                {/* {results.meta.cached && (
                   <span className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">
-                    Cache
+                    
                   </span>
-                )}
+                )} */}
               </div>
 
               {/* Grid de noticias */}
               {results.data.length > 0 ? (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {results.data.map((noticia) => (
-                    <article
-                      key={noticia.id}
-                      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow border"
-                    >
-                      {/* Imagen */}
-                      {noticia.portada?.url && (
-                        <div className="aspect-video relative">
-                          <img
-                            src={noticia.portada.url}
-                            alt={noticia.portada.title || noticia.titulo}
-                            className="w-full h-full object-cover"
-                            loading="lazy"
-                          />
-                          {noticia.esImportante && (
-                            <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                              Importante
-                            </span>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Contenido */}
-                      <div className="p-4 space-y-3">
-                        {/* Categoría y fecha */}
-                        <div className="flex items-center justify-between text-xs text-slate-500">
-                          <span className="bg-slate-100 px-2 py-1 rounded">
-                            {noticia.categoria}
-                          </span>
-                          <time dateTime={noticia.fecha}>
-                            {new Date(noticia.fecha).toLocaleDateString(
-                              'es-AR',
-                            )}
-                          </time>
-                        </div>
-
-                        {/* Título */}
-                        <h3 className="font-semibold text-slate-900 line-clamp-2 leading-tight">
-                          {noticia.titulo}
-                        </h3>
-
-                        {/* Resumen */}
-                        <p className="text-slate-600 text-sm line-clamp-3">
-                          {noticia.resumen}
-                        </p>
-
-                        {/* Botón leer más */}
-                        <a
-                          href={`/noticias/${noticia.slug}`}
-                          className="inline-block text-[#3D8B37] text-sm font-medium hover:text-[#2d6b29] transition-colors"
-                        >
-                          Leer más →
-                        </a>
-                      </div>
-                    </article>
+                  {results.data.map((noticia: any) => (
+                    <RegularNewsCard key={noticia.id} noticia={noticia} />
                   ))}
                 </div>
               ) : (

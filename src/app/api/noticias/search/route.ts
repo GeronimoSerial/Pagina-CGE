@@ -309,4 +309,5 @@ export async function GET(request: NextRequest) {
 
 // Configuración de Next.js para el endpoint
 export const runtime = 'nodejs';
-export const revalidate = 60; // Cache de 60 segundos
+export const dynamic = 'force-dynamic'; 
+export const revalidate = 60; 

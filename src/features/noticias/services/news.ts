@@ -165,7 +165,11 @@ export async function getRelatedNews(categoria: string, excludeSlug?: string) {
 
 // 5. Portada (adaptado a Directus)
 export function getCover({ noticia }: any) {
-  const coverId = noticia.portada.id;
+
+  if (noticia.portada?.url) {
+    return cfImages(noticia.portada.url);
+  }
+  const coverId = noticia.portada?.id;
   if (!coverId) return null;
   return cfImages(`${directus.url}assets/${coverId}`, 1200, 'auto');
 }
