@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import NewsSearch from '../Search';
 import NewsSection from './NewsSection';
 import { NewsItem } from '@/shared/interfaces';
@@ -21,7 +22,9 @@ export default function NewsContainer({
   return (
     <div className="px-6 mx-auto max-w-7xl">
       <div className="mb-8">
-        <NewsSearch categorias={categorias} showResults={true} />
+        <Suspense fallback={<div>Cargando búsqueda...</div>}>
+          <NewsSearch categorias={categorias} />
+        </Suspense>
       </div>
 
       <NewsSection

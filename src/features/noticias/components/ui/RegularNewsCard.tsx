@@ -25,7 +25,7 @@ export function RegularNewsCard({
           <Image
             className="object-cover w-full h-48 transition-transform duration-500 "
             alt={noticia.titulo}
-            src={getCover({ noticia }) || ''}
+            src={getCover({ noticia }) || '/images/hero2.png'}
             width={1200}
             height={630}
             priority={isFirstImage}
@@ -46,8 +46,7 @@ export function RegularNewsCard({
               <div className="flex gap-1 items-center">
                 <Tag className="w-4 h-4" />
                 <span className="tracking-wide">
-                  {/* {noticia.categoria ?? 'Redacción CGE'} */}
-                  {noticia.id}
+                  {noticia.categoria ?? 'Redacción CGE'}
                 </span>
               </div>
             </div>
