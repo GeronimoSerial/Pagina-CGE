@@ -4,8 +4,6 @@ import { Suspense } from 'react';
 import NewsSearch from '../Search';
 import NewsSection from './NewsSection';
 import { NewsItem } from '@/shared/interfaces';
-import SkeletonLoading from '@/shared/components/SkeletonComponent';
-import { Skeleton } from '@/shared/ui/skeleton';
 
 interface NewsContainerProps {
   initialData: {

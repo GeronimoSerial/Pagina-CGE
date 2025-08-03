@@ -32,13 +32,13 @@ export const metadata: Metadata = {
   },
 };
 
-// ISR: Revalidar cada 5 minutos para sincronizar con la API
-export const revalidate = 300;
+// ISR: Revalidar cada 24 horas 
+export const revalidate = 86400;
 
 export default async function NoticiasPage() {
   try {
     const [initialNoticias, categorias, featuredNews] = await Promise.all([
-      fetchNewsPage(1), // Usar el servicio existente
+      fetchNewsPage(1),
       getNewsCategories(),
       getFeaturedNews(3).catch((error) => {
         console.error('Error fetching featured news:', error);
@@ -46,12 +46,10 @@ export default async function NoticiasPage() {
       }),
     ]);
 
-    // Si no se pudieron obtener las noticias, mostrar error
     if (!initialNoticias) {
       throw new Error('No se pudieron cargar las noticias');
     }
 
-    // Adaptar la estructura de datos para NewsContainer
     const adaptedInitialData = {
       noticias: initialNoticias.data,
       pagination: initialNoticias.pagination,

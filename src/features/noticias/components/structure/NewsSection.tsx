@@ -1,6 +1,6 @@
 import { NewsItem } from '@/shared/interfaces';
 import NewsCarousel from '../ui/NewsCarousel';
-import NewsGrid from '../ui/NewsGrid';
+import NewsGrid from './NewsGrid';
 import PaginationButton from '../ui/PaginationButton';
 
 interface NewsSectionProps {

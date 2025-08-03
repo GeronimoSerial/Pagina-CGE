@@ -27,7 +27,7 @@ interface DirectusNewsItem {
   };
 }
 
-// Rate limiting básico (en memoria - para VPS de bajos recursos)
+// Rate limiting básico 
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_MAX = 30; // 30 requests
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minuto

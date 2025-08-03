@@ -1,8 +1,7 @@
 import directus from '@/shared/lib/directus';
 import { readItems } from '@directus/sdk';
-import { wrap } from 'module';
 
-// Interfaces equivalentes a las de docs-data.ts
+
 export interface NavSection {
   id: string;
   title: string;

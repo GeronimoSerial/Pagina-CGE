@@ -11,16 +11,12 @@ interface NewsPageProps {
   params: Promise<{ page: string }>;
 }
 
-// Generar parámetros estáticos para las primeras páginas
 export async function generateStaticParams() {
-  // Generar las primeras 10 páginas estáticamente
-  // Páginas adicionales se generarán bajo demanda con ISR
   return Array.from({ length: 10 }, (_, i) => ({
     page: (i + 2).toString(), // Empezar desde página 2 (página 1 es /noticias)
   }));
 }
 
-// Metadata dinámico
 export async function generateMetadata({
   params,
 }: NewsPageProps): Promise<Metadata> {
@@ -63,7 +59,6 @@ export async function generateMetadata({
 }
 
 export default async function NewsPagePaginated({ params }: NewsPageProps) {
-  // Validar parámetro de página
   const { page } = await params;
   const pageNum = parseInt(page, 10);
 
@@ -71,19 +66,16 @@ export default async function NewsPagePaginated({ params }: NewsPageProps) {
     notFound();
   }
 
-  // Si es página 1, redirigir a /noticias
   if (pageNum === 1) {
     redirect('/noticias');
   }
 
-  // Obtener datos de la API
   const newsData = await fetchNewsPage(pageNum);
 
   if (!newsData) {
     notFound();
   }
 
-  // Si la página solicitada excede el total de páginas disponibles
   if (pageNum > newsData.pagination.totalPages) {
     notFound();
   }
