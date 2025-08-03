@@ -148,7 +148,7 @@ export const SocialMediaSection = dynamic(
   },
 );
 
-// PhotoSwipe Gallery - Optimización crítica para bundle de noticias
+// PhotoSwipe Gallery -
 export const PhotoSwipeGallery = dynamic(
   () => import('@/shared/components/PhotoSwipeGallery'),
   {

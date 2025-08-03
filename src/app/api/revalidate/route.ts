@@ -20,11 +20,11 @@ export async function POST(request: NextRequest) {
     // 1. Validar token
     const authHeader = request.headers.get('authorization');
     const expectedToken = process.env.REVALIDATE_SECRET_TOKEN;
-    
+
     if (!authHeader || !expectedToken) {
       return NextResponse.json({ error: 'Token requerido' }, { status: 401 });
     }
-    
+
     const token = authHeader.replace('Bearer ', '');
     if (token !== expectedToken) {
       return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
@@ -37,20 +37,20 @@ export async function POST(request: NextRequest) {
     }
 
     const body = JSON.parse(rawBody);
-    
+
     // 3. Normalizar formato (maneja el formato actual de Directus)
     let payload: WebhookPayload;
-    
+
     if (typeof body.event === 'string' && body.event.includes('"event"')) {
       // Formato con payload anidado como string
       const actualPayload = JSON.parse(body.event);
       const action = actualPayload.event.split('.').pop();
-      
+
       payload = {
         event: action as 'create' | 'update' | 'delete',
         collection: actualPayload.collection,
         keys: actualPayload.keys || [String(actualPayload.key)],
-        payload: actualPayload.payload
+        payload: actualPayload.payload,
       };
     } else {
       // Formato directo
@@ -59,14 +59,17 @@ export async function POST(request: NextRequest) {
 
     // 4. Validar colección
     if (payload.collection !== 'noticias') {
-      return NextResponse.json({ message: 'Evento ignorado - no es noticia' }, { status: 200 });
+      return NextResponse.json(
+        { message: 'Evento ignorado - no es noticia' },
+        { status: 200 },
+      );
     }
 
     const { event, payload: data } = payload;
     const slug = data?.slug;
     const esImportante = data?.esImportante;
     const categoria = data?.categoria;
-    
+
     const revalidated: string[] = [];
     const errors: string[] = [];
 
@@ -80,7 +83,9 @@ export async function POST(request: NextRequest) {
         }
         revalidated.push(`${type}:${target}`);
       } catch (error) {
-        errors.push(`Error en ${type} '${target}': ${error instanceof Error ? error.message : 'Error desconocido'}`);
+        errors.push(
+          `Error en ${type} '${target}': ${error instanceof Error ? error.message : 'Error desconocido'}`,
+        );
       }
     };
 
@@ -90,14 +95,14 @@ export async function POST(request: NextRequest) {
         await safeRevalidate('tag', 'noticias');
         await safeRevalidate('tag', 'noticias-paginated');
         await safeRevalidate('tag', 'noticias-page-1');
-        
+
         if (categoria) {
           await safeRevalidate('tag', `noticias-categoria-${categoria}`);
         }
         if (esImportante) {
           await safeRevalidate('tag', 'noticias-featured');
         }
-        
+
         await safeRevalidate('path', '/noticias');
         await safeRevalidate('path', '/noticias/page/1');
         await safeRevalidate('path', '/');
@@ -107,21 +112,21 @@ export async function POST(request: NextRequest) {
         if (slug) {
           await safeRevalidate('path', `/noticias/${slug}`);
         }
-        
+
         await safeRevalidate('tag', 'noticias');
         await safeRevalidate('tag', 'noticias-paginated');
-        
+
         for (let i = 1; i <= 3; i++) {
           await safeRevalidate('tag', `noticias-page-${i}`);
         }
-        
+
         if (categoria) {
           await safeRevalidate('tag', `noticias-categoria-${categoria}`);
         }
         if (esImportante) {
           await safeRevalidate('tag', 'noticias-featured');
         }
-        
+
         await safeRevalidate('path', '/noticias');
         await safeRevalidate('path', '/noticias/page/1');
         await safeRevalidate('path', '/');
@@ -131,55 +136,63 @@ export async function POST(request: NextRequest) {
         await safeRevalidate('tag', 'noticias');
         await safeRevalidate('tag', 'noticias-paginated');
         await safeRevalidate('tag', 'noticias-featured');
-        
+
         for (let i = 1; i <= 3; i++) {
           await safeRevalidate('tag', `noticias-page-${i}`);
         }
-        
+
         if (categoria) {
           await safeRevalidate('tag', `noticias-categoria-${categoria}`);
         }
-        
+
         await safeRevalidate('path', '/noticias');
         await safeRevalidate('path', '/noticias/page/1');
         await safeRevalidate('path', '/');
         break;
 
       default:
-        return NextResponse.json({ error: `Evento no soportado: ${event}` }, { status: 400 });
+        return NextResponse.json(
+          { error: `Evento no soportado: ${event}` },
+          { status: 400 },
+        );
     }
 
     // 7. Log del resultado
     const success = errors.length === 0;
-    
+
     logWebhookEvent(
       event,
       slug,
       revalidated,
       success,
-      success ? undefined : errors.join('; ')
+      success ? undefined : errors.join('; '),
     );
 
     // 8. Respuesta
-    return NextResponse.json({
-      success,
-      message: success 
-        ? `Revalidación exitosa para ${event}`
-        : `Revalidación con ${errors.length} errores`,
-      revalidated,
-      errors: errors.length > 0 ? errors : undefined,
-      timestamp: new Date().toISOString()
-    }, { 
-      status: success ? 200 : (revalidated.length > 0 ? 207 : 500)
-    });
-
+    return NextResponse.json(
+      {
+        success,
+        message: success
+          ? `Revalidación exitosa para ${event}`
+          : `Revalidación con ${errors.length} errores`,
+        revalidated,
+        errors: errors.length > 0 ? errors : undefined,
+        timestamp: new Date().toISOString(),
+      },
+      {
+        status: success ? 200 : revalidated.length > 0 ? 207 : 500,
+      },
+    );
   } catch (error) {
-    return NextResponse.json({
-      success: false,
-      error: 'Error interno del servidor',
-      message: error instanceof Error ? error.message : 'Error desconocido',
-      timestamp: new Date().toISOString()
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Error interno del servidor',
+        message: error instanceof Error ? error.message : 'Error desconocido',
+        timestamp: new Date().toISOString(),
+      },
+      { status: 500 },
+    );
   }
 }
 
@@ -189,6 +202,6 @@ export async function GET() {
     environment: process.env.NODE_ENV || 'development',
     timestamp: new Date().toISOString(),
     supportedEvents: ['create', 'update', 'delete'],
-    collection: 'noticias'
+    collection: 'noticias',
   });
 }

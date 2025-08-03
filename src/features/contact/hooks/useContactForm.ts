@@ -57,12 +57,12 @@ export const useContactForm = () => {
         setError(null);
         form.reset();
         setButtonState('success');
-        
+
         // Clear any existing timeout
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current);
         }
-        
+
         timeoutRef.current = setTimeout(() => {
           setButtonState('idle');
           setSent(false);
