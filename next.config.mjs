@@ -12,7 +12,13 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'cms.geroserial.com',
         port: '',
-        pathname: '/uploads/**',
+        pathname: '/assets/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cms.geroserial.com',
+        port: '',
+        pathname: '/cdn-cgi/image/**',
       },
       {
         protocol: 'https',
