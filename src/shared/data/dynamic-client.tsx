@@ -90,8 +90,8 @@ export const DocumentacionSection = dynamic(
 );
 
 // Componentes lazy para homepage optimization
-export const LatestNewsStatic = dynamic(
-  () => import('@/features/noticias/components/LatestNews'),
+export const LatestNews = dynamic(
+  () => import('@/features/noticias/components/ui/LatestNews'),
   {
     ssr: false,
     loading: () => (
@@ -148,7 +148,7 @@ export const SocialMediaSection = dynamic(
   },
 );
 
-// PhotoSwipe Gallery - Optimización crítica para bundle de noticias
+// PhotoSwipe Gallery -
 export const PhotoSwipeGallery = dynamic(
   () => import('@/shared/components/PhotoSwipeGallery'),
   {

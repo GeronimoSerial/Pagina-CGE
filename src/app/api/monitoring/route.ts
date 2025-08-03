@@ -1,113 +1,109 @@
-import { NextResponse } from 'next/server';
-import { loadMonitor } from '@/shared/lib/load-monitor';
-import { apiCircuitBreaker } from '@/shared/lib/circuit-breaker';
+import { NextRequest, NextResponse } from 'next/server';
 import {
-  newsCache,
-  tramitesCache,
-  relatedCache,
-} from '@/shared/lib/aggressive-cache';
+  getWebhookLogs,
+  clearWebhookLogs,
+  getWebhookLogStats,
+  logWebhookEvent,
+} from '@/shared/lib/webhook-logger';
 
-export async function GET() {
-  try {
-    const metrics = loadMonitor.getMetrics();
-
-    const circuitBreakers = {
-      'noticias-api': apiCircuitBreaker.getStatus('noticias-api-1-4-0'),
-      'noticias-api-filtered':
-        apiCircuitBreaker.getStatus('noticias-api-1-4-1'),
-    };
-
-    const cacheStats = {
-      noticias: newsCache.getStats(),
-      tramites: tramitesCache.getStats(),
-      related: relatedCache.getStats(),
-    };
-
-    let systemInfo = {};
-    if (typeof process !== 'undefined' && process.memoryUsage) {
-      const memUsage = process.memoryUsage();
-      systemInfo = {
-        memory: {
-          heapUsed: Math.round((memUsage.heapUsed / 1024 / 1024) * 100) / 100,
-          heapTotal: Math.round((memUsage.heapTotal / 1024 / 1024) * 100) / 100,
-          external: Math.round((memUsage.external / 1024 / 1024) * 100) / 100,
-        },
-        uptime: process.uptime(),
-      };
-    }
-
-    return NextResponse.json(
-      {
-        status: 'ok',
-        timestamp: new Date().toISOString(),
-        loadTest: {
-          summary: loadMonitor.getLoadReport(),
-          metrics: metrics,
-          circuitBreakers: circuitBreakers,
-          caches: cacheStats,
-          system: systemInfo,
-        },
-      },
-      {
-        status: 200,
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Content-Type': 'application/json',
-        },
-      },
-    );
-  } catch (error) {
-    console.error('Error in monitoring endpoint:', error);
-    return NextResponse.json(
-      {
-        status: 'error',
-        error: 'Failed to retrieve monitoring data',
-        timestamp: new Date().toISOString(),
-      },
-      {
-        status: 500,
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-        },
-      },
-    );
-  }
+interface WebhookLog {
+  timestamp: string;
+  event: string;
+  slug?: string;
+  paths: string[];
+  success: boolean;
+  error?: string;
 }
 
-export async function DELETE() {
-  try {
-    loadMonitor.reset();
+// Middleware para validar token en desarrollo
+function validateToken(request: NextRequest) {
+  if (process.env.NODE_ENV === 'production') {
+    const authHeader = request.headers.get('authorization');
+    const expectedToken = process.env.REVALIDATE_SECRET_TOKEN;
 
-    newsCache.clear();
-    tramitesCache.clear();
-    relatedCache.clear();
+    if (!authHeader || !expectedToken) {
+      return false;
+    }
 
+    const token = authHeader.replace('Bearer ', '');
+    return token === expectedToken;
+  }
+  return true;
+}
+
+export async function GET(request: NextRequest) {
+  if (!validateToken(request)) {
     return NextResponse.json(
-      {
-        status: 'ok',
-        message: 'Monitoring metrics and caches reset successfully',
-        timestamp: new Date().toISOString(),
-      },
-      {
-        status: 200,
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-        },
-      },
+      { error: 'Token de autorización requerido' },
+      { status: 401 },
     );
-  } catch (error) {
+  }
+
+  const url = new URL(request.url);
+  const limit = parseInt(url.searchParams.get('limit') || '50');
+
+  const logs = getWebhookLogs(limit);
+  const stats = getWebhookLogStats();
+
+  return NextResponse.json({
+    status: 'Monitoreo de webhook activo',
+    logs,
+    count: stats.totalLogs,
+    lastUpdate: stats.lastUpdate,
+    environment: process.env.NODE_ENV,
+    timestamp: new Date().toISOString(),
+    stats,
+  });
+}
+
+export async function DELETE(request: NextRequest) {
+  if (!validateToken(request)) {
     return NextResponse.json(
-      {
-        status: 'error',
-        error: 'Failed to reset metrics',
-        timestamp: new Date().toISOString(),
-      },
-      {
-        status: 500,
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-        },
-      },
+      { error: 'Token de autorización requerido' },
+      { status: 401 },
+    );
+  }
+
+  const previousCount = clearWebhookLogs();
+
+  console.log(`🧹 Logs de webhook limpiados (${previousCount} eventos)`);
+
+  return NextResponse.json({
+    message: 'Logs limpiados exitosamente',
+    previousCount,
+    timestamp: new Date().toISOString(),
+  });
+}
+
+export async function POST(request: NextRequest) {
+  if (!validateToken(request)) {
+    return NextResponse.json(
+      { error: 'Token de autorización requerido' },
+      { status: 401 },
+    );
+  }
+
+  try {
+    const body = await request.json();
+    const { event, slug, paths, success, error } = body;
+
+    // Usar la función del logger para registrar el evento
+    logWebhookEvent(event, slug, paths || [], success !== false, error);
+
+    const stats = getWebhookLogStats();
+
+    return NextResponse.json({
+      message: 'Log registrado exitosamente',
+      event,
+      slug,
+      success: success !== false,
+      totalLogs: stats.totalLogs,
+    });
+  } catch (error) {
+    console.error('Error registrando log de webhook:', error);
+    return NextResponse.json(
+      { error: 'Error registrando log' },
+      { status: 500 },
     );
   }
 }

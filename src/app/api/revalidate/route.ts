@@ -1,125 +1,207 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
-import {
-  newsCache,
-  tramitesCache,
-  relatedCache,
-} from '@/shared/lib/aggressive-cache';
-import { clearNavigationCache } from '@/features/tramites/services/docs-data';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { logWebhookEvent } from '@/shared/lib/webhook-logger';
+
+interface WebhookPayload {
+  event: 'create' | 'update' | 'delete';
+  collection: string;
+  keys: string[];
+  payload?: {
+    id: string;
+    slug?: string;
+    esImportante?: boolean;
+    titulo?: string;
+    categoria?: string;
+  };
+}
 
 export async function POST(request: NextRequest) {
   try {
+    // 1. Validar token
     const authHeader = request.headers.get('authorization');
-    const userAgent = request.headers.get('user-agent');
-    const body = await request.json();
-
-    console.log('🔔 Webhook received:', {
-      timestamp: new Date().toISOString(),
-      authHeader: authHeader ? 'Present' : 'Missing',
-      userAgent,
-      body: JSON.stringify(body, null, 2),
-      headers: Object.fromEntries(request.headers.entries()),
-    });
-
     const expectedToken = process.env.REVALIDATE_SECRET_TOKEN;
-    if (!expectedToken || authHeader !== `Bearer ${expectedToken}`) {
-      console.log('❌ Unauthorized webhook attempt');
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    if (!authHeader || !expectedToken) {
+      return NextResponse.json({ error: 'Token requerido' }, { status: 401 });
     }
 
-    const { model, entry } = body;
+    const token = authHeader.replace('Bearer ', '');
+    if (token !== expectedToken) {
+      return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
+    }
 
-    switch (model) {
-      case 'noticia':
-        newsCache.clear();
-        relatedCache.clear();
-        revalidatePath('/');
-        revalidatePath('/noticias');
+    // 2. Parsear payload
+    const rawBody = await request.text();
+    if (!rawBody?.trim()) {
+      return NextResponse.json({ error: 'Payload vacío' }, { status: 400 });
+    }
 
-        if (entry?.slug) {
-          revalidatePath(`/noticias/${entry.slug}`);
+    const body = JSON.parse(rawBody);
+
+    // 3. Normalizar formato 
+    let payload: WebhookPayload;
+
+    if (typeof body.event === 'string' && body.event.includes('"event"')) {
+      // Formato con payload anidado como string
+      const actualPayload = JSON.parse(body.event);
+      const action = actualPayload.event.split('.').pop();
+
+      payload = {
+        event: action as 'create' | 'update' | 'delete',
+        collection: actualPayload.collection,
+        keys: actualPayload.keys || [String(actualPayload.key)],
+        payload: actualPayload.payload,
+      };
+    } else {
+      // Formato directo
+      payload = body as WebhookPayload;
+    }
+
+    // 4. Validar colección
+    if (payload.collection !== 'noticias') {
+      return NextResponse.json(
+        { message: 'Evento ignorado - no es noticia' },
+        { status: 200 },
+      );
+    }
+
+    const { event, payload: data } = payload;
+    const slug = data?.slug;
+    const esImportante = data?.esImportante;
+    const categoria = data?.categoria;
+
+    const revalidated: string[] = [];
+    const errors: string[] = [];
+
+    // 5. Función helper para revalidar
+    const safeRevalidate = async (type: 'path' | 'tag', target: string) => {
+      try {
+        if (type === 'path') {
+          await revalidatePath(target);
+        } else {
+          await revalidateTag(target);
+        }
+        revalidated.push(`${type}:${target}`);
+      } catch (error) {
+        errors.push(
+          `Error en ${type} '${target}': ${error instanceof Error ? error.message : 'Error desconocido'}`,
+        );
+      }
+    };
+
+    // 6. Revalidar según evento
+    switch (event) {
+      case 'create':
+        await safeRevalidate('tag', 'noticias');
+        await safeRevalidate('tag', 'noticias-paginated');
+        await safeRevalidate('tag', 'noticias-page-1');
+
+        if (categoria) {
+          await safeRevalidate('tag', `noticias-categoria-${categoria}`);
+        }
+        if (esImportante) {
+          await safeRevalidate('tag', 'noticias-featured');
         }
 
-        console.log(
-          '✅ Revalidated noticias and related cache:',
-          entry?.slug || 'all',
-        );
+        await safeRevalidate('path', '/noticias');
+        await safeRevalidate('path', '/noticias/page/1');
+        await safeRevalidate('path', '/');
         break;
 
-      case 'tramite':
-        console.log('🔄 Processing tramite webhook...');
-
-        try {
-          tramitesCache.clear();
-          console.log('✅ Memory cache cleared');
-
-          clearNavigationCache();
-          console.log('✅ Local navigation cache cleared');
-        } catch (error) {
-          console.error('❌ Error clearing caches:', error);
+      case 'update':
+        if (slug) {
+          await safeRevalidate('path', `/noticias/${slug}`);
         }
 
-        try {
-          revalidatePath('/tramites');
-          console.log('✅ Revalidated /tramites');
+        await safeRevalidate('tag', 'noticias');
+        await safeRevalidate('tag', 'noticias-paginated');
 
-          revalidatePath('/tramites', 'layout');
-          console.log('✅ Revalidated /tramites layout');
-
-          if (entry?.slug) {
-            revalidatePath(`/tramites/${entry.slug}`);
-            console.log(`✅ Revalidated /tramites/${entry.slug}`);
-
-            revalidatePath(`/tramites/${entry.slug}`, 'layout');
-            console.log(`✅ Revalidated /tramites/${entry.slug} layout`);
-          }
-        } catch (error) {
-          console.error('❌ Error revalidating paths:', error);
-          throw error;
+        for (let i = 1; i <= 3; i++) {
+          await safeRevalidate('tag', `noticias-page-${i}`);
         }
 
-        console.log(
-          '✅ Tramite webhook completed successfully:',
-          entry?.slug || 'all',
-        );
+        if (categoria) {
+          await safeRevalidate('tag', `noticias-categoria-${categoria}`);
+        }
+        if (esImportante) {
+          await safeRevalidate('tag', 'noticias-featured');
+        }
+
+        await safeRevalidate('path', '/noticias');
+        await safeRevalidate('path', '/noticias/page/1');
+        await safeRevalidate('path', '/');
+        break;
+
+      case 'delete':
+        await safeRevalidate('tag', 'noticias');
+        await safeRevalidate('tag', 'noticias-paginated');
+        await safeRevalidate('tag', 'noticias-featured');
+
+        for (let i = 1; i <= 3; i++) {
+          await safeRevalidate('tag', `noticias-page-${i}`);
+        }
+
+        if (categoria) {
+          await safeRevalidate('tag', `noticias-categoria-${categoria}`);
+        }
+
+        await safeRevalidate('path', '/noticias');
+        await safeRevalidate('path', '/noticias/page/1');
+        await safeRevalidate('path', '/');
         break;
 
       default:
-        console.log('🔄 Processing unknown model webhook (fallback)...');
-
-        try {
-          newsCache.clear();
-          tramitesCache.clear();
-          relatedCache.clear();
-          clearNavigationCache();
-          console.log('✅ All caches cleared');
-
-          revalidatePath('/');
-          revalidatePath('/tramites', 'layout');
-          console.log('✅ All paths revalidated');
-        } catch (error) {
-          console.error('❌ Error in fallback revalidation:', error);
-          throw error;
-        }
-
-        console.log('✅ Fallback webhook completed successfully');
+        return NextResponse.json(
+          { error: `Evento no soportado: ${event}` },
+          { status: 400 },
+        );
     }
 
-    return NextResponse.json({
-      success: true,
-      revalidated: true,
-      model,
-      entry: entry?.slug,
-      timestamp: new Date().toISOString(),
-    });
-  } catch (error) {
-    console.error('❌ Webhook error:', error);
+    // 7. Log del resultado
+    const success = errors.length === 0;
+
+    logWebhookEvent(
+      event,
+      slug,
+      revalidated,
+      success,
+      success ? undefined : errors.join('; '),
+    );
+
+    // 8. Respuesta
     return NextResponse.json(
       {
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error',
+        success,
+        message: success
+          ? `Revalidación exitosa para ${event}`
+          : `Revalidación con ${errors.length} errores`,
+        revalidated,
+        errors: errors.length > 0 ? errors : undefined,
+        timestamp: new Date().toISOString(),
+      },
+      {
+        status: success ? 200 : revalidated.length > 0 ? 207 : 500,
+      },
+    );
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Error interno del servidor',
+        message: error instanceof Error ? error.message : 'Error desconocido',
+        timestamp: new Date().toISOString(),
       },
       { status: 500 },
     );
   }
+}
+
+export async function GET() {
+  return NextResponse.json({
+    status: 'Webhook activo',
+    environment: process.env.NODE_ENV || 'development',
+    timestamp: new Date().toISOString(),
+    supportedEvents: ['create', 'update', 'delete'],
+    collection: 'noticias',
+  });
 }
