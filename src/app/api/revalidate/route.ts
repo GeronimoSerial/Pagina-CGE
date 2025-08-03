@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
 
     const body = JSON.parse(rawBody);
 
-    // 3. Normalizar formato (maneja el formato actual de Directus)
+    // 3. Normalizar formato 
     let payload: WebhookPayload;
 
     if (typeof body.event === 'string' && body.event.includes('"event"')) {

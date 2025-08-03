@@ -28,8 +28,6 @@ function validateToken(request: NextRequest) {
     const token = authHeader.replace('Bearer ', '');
     return token === expectedToken;
   }
-
-  // En desarrollo, permitir acceso sin token
   return true;
 }
 

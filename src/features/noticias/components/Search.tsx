@@ -10,7 +10,7 @@ import {
 } from '@/features/noticias/hooks/useNewsSearch';
 import { useSearchCleaner } from '@/features/noticias/hooks/useSearchCleaner';
 import NewsResultsSkeleton from '@/features/noticias/components/ui/NewsResultsSkeleton';
-import { RegularNewsCard } from './ui/RegularNewsCard';
+import { NewsCard } from './ui/NewsCard';
 
 interface NewsSearchProps {
   categorias: Array<{ id: number; nombre: string }>;
@@ -487,7 +487,7 @@ export default function NewsSearch({
               {results.data.length > 0 ? (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {results.data.map((noticia: any) => (
-                    <RegularNewsCard key={noticia.id} noticia={noticia} />
+                    <NewsCard key={noticia.id} noticia={noticia} />
                   ))}
                 </div>
               ) : (

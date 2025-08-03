@@ -21,7 +21,6 @@ export default function PaginationButton({
 
   return (
     <div className={cn('flex flex-col items-center gap-6 mt-12', className)}>
-      {/* Información de página actual */}
       <div className="text-center">
         <p className="text-sm text-gray-600">
           Página <span className="font-bold text-[#3D8B37]">{currentPage}</span>{' '}
@@ -29,9 +28,7 @@ export default function PaginationButton({
         </p>
       </div>
 
-      {/* Controles de navegación */}
       <div className="flex items-center gap-3">
-        {/* Botón página anterior */}
         {hasPrevPage && (
           <Link
             href={prevPage === 1 ? '/noticias' : `/noticias/page/${prevPage}`}
@@ -55,7 +52,6 @@ export default function PaginationButton({
           </Link>
         )}
 
-        {/* Navegación numérica para dispositivos móviles */}
         <div className="flex sm:hidden items-center gap-1">
           {hasPrevPage && (
             <Link
@@ -80,7 +76,6 @@ export default function PaginationButton({
           )}
         </div>
 
-        {/* Botón página siguiente */}
         {hasNextPage && (
           <Link
             href={`/noticias/page/${nextPage}`}
@@ -105,10 +100,8 @@ export default function PaginationButton({
         )}
       </div>
 
-      {/* Navegación numérica para pantallas más grandes */}
       {totalPages > 1 && (
         <div className="hidden sm:flex items-center gap-1">
-          {/* Primera página */}
           {currentPage > 2 && (
             <>
               <Link
@@ -128,7 +121,6 @@ export default function PaginationButton({
             </>
           )}
 
-          {/* Página anterior */}
           {hasPrevPage && currentPage > 1 && (
             <Link
               href={prevPage === 1 ? '/noticias' : `/noticias/page/${prevPage}`}
@@ -138,12 +130,10 @@ export default function PaginationButton({
             </Link>
           )}
 
-          {/* Página actual */}
           <span className="px-3.5 py-1.5 text-sm font-medium bg-[#3D8B37] text-white rounded-md shadow-inner">
             {currentPage}
           </span>
 
-          {/* Página siguiente */}
           {hasNextPage && (
             <Link
               href={`/noticias/page/${nextPage}`}
@@ -153,7 +143,6 @@ export default function PaginationButton({
             </Link>
           )}
 
-          {/* Última página */}
           {currentPage < totalPages - 1 && (
             <>
               {currentPage < totalPages - 2 && (

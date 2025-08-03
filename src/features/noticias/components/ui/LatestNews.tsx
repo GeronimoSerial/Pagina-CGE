@@ -1,6 +1,6 @@
 import React from 'react';
 import { Separator } from '@radix-ui/react-separator';
-import { RegularNewsCard } from '../ui/RegularNewsCard';
+import { NewsCard } from './NewsCard';
 import { NewsItem } from '@/shared/interfaces';
 import Link from 'next/link';
 
@@ -61,11 +61,7 @@ export default function LatestNews({ noticias }: LatestNewsProps) {
           {noticiasFormateadas.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
               {noticiasFormateadas.map((noticia, index) => (
-                <RegularNewsCard
-                  key={noticia.slug}
-                  noticia={noticia}
-                  index={index}
-                />
+                <NewsCard key={noticia.slug} noticia={noticia} index={index} />
               ))}
             </div>
           ) : (

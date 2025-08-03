@@ -1,6 +1,5 @@
 /**
  * Utilidades para logging de webhook
- * Separado del route handler para evitar conflictos de Next.js
  */
 
 interface WebhookLog {
@@ -12,13 +11,10 @@ interface WebhookLog {
   error?: string;
 }
 
-// En un escenario real, esto iría a una base de datos o Redis
-// Por ahora usamos memoria del proceso (se pierde al reiniciar)
+
 let webhookLogs: WebhookLog[] = [];
 
-/**
- * Función auxiliar para registrar logs desde el webhook
- */
+
 export function logWebhookEvent(
   event: string,
   slug?: string,
@@ -37,7 +33,6 @@ export function logWebhookEvent(
 
   webhookLogs.push(log);
 
-  // Mantener solo los últimos 1000 logs para evitar memory leaks
   if (webhookLogs.length > 1000) {
     webhookLogs = webhookLogs.slice(-1000);
   }
