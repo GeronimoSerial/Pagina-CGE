@@ -6,7 +6,6 @@ import {
 import { PageLayout } from '@/shared/components/PageLayout';
 import { Metadata } from 'next';
 import NewsContainer from '@/features/noticias/components/structure/NewsContainer';
-import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Noticias',
@@ -70,22 +69,11 @@ export default async function NoticiasPage() {
         showInfoBar={true}
         basePath="/noticias"
       >
-        <Suspense
-          fallback={
-            <div className="flex justify-center items-center py-12">
-              <div className="flex flex-col items-center space-y-4">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3D8B37]"></div>
-                <div className="text-gray-500">Cargando...</div>
-              </div>
-            </div>
-          }
-        >
-          <NewsContainer
-            initialData={adaptedInitialData}
-            categorias={categorias}
-            featuredNews={featuredNews}
-          />
-        </Suspense>
+        <NewsContainer
+          initialData={adaptedInitialData}
+          categorias={categorias}
+          featuredNews={featuredNews}
+        />
       </PageLayout>
     );
   } catch (error) {

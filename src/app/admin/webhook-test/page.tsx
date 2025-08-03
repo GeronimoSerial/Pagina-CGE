@@ -1,13 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { testWebhook, getWebhookStatus, getWebhookLogs, clearWebhookLogs } from '@/shared/lib/webhook-test';
+import {
+  testWebhook,
+  getWebhookStatus,
+  getWebhookLogs,
+  clearWebhookLogs,
+} from '@/shared/lib/webhook-test';
 
 export default function WebhookTestPage() {
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [logs, setLogs] = useState<any>(null);
-  
+
   // Solo mostrar en desarrollo
   if (process.env.NODE_ENV === 'production') {
     return (
@@ -27,11 +32,13 @@ export default function WebhookTestPage() {
         slug: `test-${event}-${Date.now()}`,
         esImportante: event === 'create',
         titulo: `Noticia de prueba - ${event} - ${new Date().toLocaleString()}`,
-        categoria: 'Pruebas'
+        categoria: 'Pruebas',
       });
       setResult(result);
     } catch (error) {
-      setResult({ error: error instanceof Error ? error.message : 'Error desconocido' });
+      setResult({
+        error: error instanceof Error ? error.message : 'Error desconocido',
+      });
     }
     setLoading(false);
   };
@@ -42,7 +49,9 @@ export default function WebhookTestPage() {
       const result = await getWebhookStatus();
       setResult(result);
     } catch (error) {
-      setResult({ error: error instanceof Error ? error.message : 'Error desconocido' });
+      setResult({
+        error: error instanceof Error ? error.message : 'Error desconocido',
+      });
     }
     setLoading(false);
   };
@@ -53,7 +62,9 @@ export default function WebhookTestPage() {
       const result = await getWebhookLogs();
       setLogs(result);
     } catch (error) {
-      setLogs({ error: error instanceof Error ? error.message : 'Error desconocido' });
+      setLogs({
+        error: error instanceof Error ? error.message : 'Error desconocido',
+      });
     }
     setLoading(false);
   };
@@ -65,7 +76,9 @@ export default function WebhookTestPage() {
       setResult(result);
       setLogs(null);
     } catch (error) {
-      setResult({ error: error instanceof Error ? error.message : 'Error desconocido' });
+      setResult({
+        error: error instanceof Error ? error.message : 'Error desconocido',
+      });
     }
     setLoading(false);
   };
@@ -75,7 +88,7 @@ export default function WebhookTestPage() {
       <h1 className="text-3xl font-bold mb-8 text-green-800">
         🔧 Webhook Testing - Desarrollo
       </h1>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {/* Panel de pruebas */}
         <div className="bg-white p-6 rounded-lg shadow-md">
@@ -156,12 +169,25 @@ export default function WebhookTestPage() {
 
       {/* Información útil */}
       <div className="mt-8 bg-blue-50 p-6 rounded-lg">
-        <h3 className="text-lg font-semibold mb-3">ℹ️ Información de Configuración</h3>
+        <h3 className="text-lg font-semibold mb-3">
+          ℹ️ Información de Configuración
+        </h3>
         <div className="space-y-2 text-sm">
-          <p><strong>Endpoint:</strong> <code>/api/revalidate</code></p>
-          <p><strong>Monitoreo:</strong> <code>/api/monitoring</code></p>
-          <p><strong>Token:</strong> {process.env.REVALIDATE_SECRET_TOKEN ? '✅ Configurado' : '❌ No configurado'}</p>
-          <p><strong>Entorno:</strong> {process.env.NODE_ENV}</p>
+          <p>
+            <strong>Endpoint:</strong> <code>/api/revalidate</code>
+          </p>
+          <p>
+            <strong>Monitoreo:</strong> <code>/api/monitoring</code>
+          </p>
+          <p>
+            <strong>Token:</strong>{' '}
+            {process.env.REVALIDATE_SECRET_TOKEN
+              ? '✅ Configurado'
+              : '❌ No configurado'}
+          </p>
+          <p>
+            <strong>Entorno:</strong> {process.env.NODE_ENV}
+          </p>
         </div>
       </div>
 
