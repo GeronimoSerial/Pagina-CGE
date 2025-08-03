@@ -1,10 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { NewsItem } from '@/shared/interfaces';
-import { cn } from '@/shared/lib/utils';
+import { cn, formatDate } from '@/shared/lib/utils';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from '@/shared/ui/carousel';
+import { Card, CardContent } from '@/shared/ui/card';
+import { Separator } from '@/shared/ui/separator';
+import { getCover } from '@/features/noticias/services/news';
+import { CalendarDays, User, ArrowRight } from 'lucide-react';
+import { Separador } from '@/shared/components/Separador';
 
 interface NewsCarouselProps {
   featuredNews: NewsItem[];
@@ -16,208 +27,88 @@ interface NewsCarouselProps {
 export default function NewsCarousel({
   featuredNews,
   className,
-  autoPlay = true,
-  autoPlayInterval = 5000,
 }: NewsCarouselProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
   // Limitar a 3 noticias destacadas
   const limitedNews = featuredNews.slice(0, 3);
-
-  // Auto-play functionality
-  useEffect(() => {
-    if (!autoPlay || limitedNews.length <= 1) return;
-
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex === limitedNews.length - 1 ? 0 : prevIndex + 1,
-      );
-    }, autoPlayInterval);
-
-    return () => clearInterval(interval);
-  }, [autoPlay, autoPlayInterval, limitedNews.length]);
 
   // Si no hay noticias destacadas, no mostrar el carrusel
   if (!limitedNews || limitedNews.length === 0) {
     return null;
   }
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('es-AR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
-  const goToSlide = (index: number) => {
-    setCurrentIndex(index);
-  };
-
-  const goToPrevious = () => {
-    setCurrentIndex(
-      currentIndex === 0 ? limitedNews.length - 1 : currentIndex - 1,
-    );
-  };
-
-  const goToNext = () => {
-    setCurrentIndex(
-      currentIndex === limitedNews.length - 1 ? 0 : currentIndex + 1,
-    );
-  };
-
   return (
     <section className={cn('relative mb-12', className)}>
-      {/* Header */}
       <div className="mb-6">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center">
-          Noticias Destacadas
+          Destacadas
         </h2>
         <div className="mt-2 flex justify-center">
           <div className="w-24 h-1 bg-[#3D8B37]"></div>
         </div>
       </div>
-
-      {/* Carrusel */}
-      <div className="relative overflow-hidden rounded-lg shadow-lg bg-white">
-        {/* Slides */}
-        <div
-          className="flex transition-transform duration-500 ease-in-out"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-        >
-          {limitedNews.map((noticia, index) => (
-            <div key={noticia.id} className="w-full flex-shrink-0">
-              <Link href={`/noticias/${noticia.slug}`} className="block">
-                <div className="relative">
-                  {/* Imagen de fondo */}
-                  {noticia.portada?.url && (
-                    <div className="relative aspect-[21/9] md:aspect-[16/6] overflow-hidden">
-                      <Image
-                        src={noticia.portada.url}
-                        alt={noticia.titulo}
-                        fill
-                        className="object-cover"
-                        priority={index === 0}
-                        sizes="100vw"
-                      />
-                      {/* Overlay gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+      <Carousel className="mx-auto w-full overflow-x-hidden max-w-7xl">
+        <CarouselContent className="-ml-6 ">
+          {limitedNews.map((noticia) => (
+            <CarouselItem key={noticia.id} className="pl-6 basis-full">
+              <Card className="overflow-hidden border-0 shadow-2xl">
+                <div className="grid gap-0 lg:grid-cols-2">
+                  <div className="aspect-4/3 lg:aspect-auto overflow-hidden">
+                    <Image
+                      src={getCover({ noticia }) || ''}
+                      alt={noticia.titulo}
+                      className="object-cover w-full h-full transition-transform duration-500"
+                      width={1200}
+                      height={630}
+                      priority
+                    />
+                  </div>
+                  <CardContent className="flex flex-col justify-center p-8 bg-white lg:p-12">
+                    <div className="mb-4">
+                      <span className="inline-block px-3 py-1 text-xs font-medium tracking-wider text-white bg-green-800 rounded-full">
+                        {noticia.categoria}
+                      </span>
+                      <CalendarDays className="inline-block mr-1 ml-3 w-4 h-4 text-gray-500" />
+                      <span className="text-xs text-gray-500">
+                        {formatDate(noticia.fecha)}
+                      </span>
                     </div>
-                  )}
-
-                  {/* Contenido superpuesto */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
-                    <div className="max-w-4xl">
-                      {/* Categoría */}
-                      {noticia.categoria && (
-                        <span className="inline-block px-3 py-1 rounded-full bg-[#3D8B37] text-white text-sm font-medium mb-3 uppercase tracking-wider">
-                          {noticia.categoria}
-                        </span>
-                      )}
-
-                      {/* Título */}
-                      <h3 className="text-xl md:text-2xl lg:text-3xl font-bold mb-3 leading-tight">
+                    <Link href={`/noticias/${noticia.slug}`}>
+                      <h3 className="mb-4 font-serif text-2xl font-bold leading-tight text-gray-900 transition-colors cursor-pointer lg:text-3xl hover:text-green-900">
                         {noticia.titulo}
                       </h3>
-
-                      {/* Resumen */}
-                      {noticia.resumen && (
-                        <p className="text-base md:text-lg text-gray-200 mb-4 line-clamp-2 md:line-clamp-3">
-                          {noticia.resumen}
-                        </p>
-                      )}
-
-                      {/* Fecha */}
-                      <div className="flex items-center text-sm text-gray-300">
-                        <svg
-                          className="w-4 h-4 mr-2"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                        <time dateTime={noticia.fecha}>
-                          {formatDate(noticia.fecha)}
-                        </time>
+                    </Link>
+                    <p className="mb-6 text-lg font-light leading-relaxed text-gray-700">
+                      {noticia.resumen}
+                    </p>
+                    <Separator className="mb-6 bg-green-100" />
+                    <div className="flex justify-between items-center text-sm text-gray-600">
+                      <div className="flex items-center">
+                        <div className="flex justify-center items-center mr-3 w-8 h-8 bg-green-800 rounded-full">
+                          <User className="w-4 h-4 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-500">
+                            {noticia.autor ?? 'Redacción CGE'}
+                          </p>
+                        </div>
                       </div>
+                      <Link
+                        href={`/noticias/${noticia.slug}`}
+                        className="inline-flex gap-2 items-center hover:underline"
+                      >
+                        Leer más
+                        <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                      </Link>
                     </div>
-                  </div>
+                  </CardContent>
                 </div>
-              </Link>
-            </div>
+              </Card>
+            </CarouselItem>
           ))}
-        </div>
-
-        {/* Controles de navegación */}
-        {limitedNews.length > 1 && (
-          <>
-            {/* Botones anterior/siguiente */}
-            <button
-              onClick={goToPrevious}
-              className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors backdrop-blur-sm"
-              aria-label="Noticia anterior"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-
-            <button
-              onClick={goToNext}
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors backdrop-blur-sm"
-              aria-label="Siguiente noticia"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
-
-            {/* Indicadores */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-              {limitedNews.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  className={cn(
-                    'w-3 h-3 rounded-full transition-colors',
-                    index === currentIndex
-                      ? 'bg-white'
-                      : 'bg-white/50 hover:bg-white/70',
-                  )}
-                  aria-label={`Ir a noticia ${index + 1}`}
-                />
-              ))}
-            </div>
-          </>
-        )}
-      </div>
+        </CarouselContent>
+        <CarouselPrevious className="text-white bg-green-800/50" />
+        <CarouselNext className="text-white bg-green-800/50" />
+      </Carousel>
     </section>
   );
 }
