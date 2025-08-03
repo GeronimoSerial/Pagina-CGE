@@ -106,19 +106,8 @@ export default function NewsSearch({
 
   useEffect(() => {
     if (filtros.categoria) {
-      if (shouldShowResults) {
-        // Búsqueda automática por API cuando cambia categoría
-        const searchParams: SearchParams = {
-          categoria: filtros.categoria,
-          q: filtros.q || undefined,
-          desde: filtros.desde || undefined,
-          hasta: filtros.hasta || undefined,
-          page: 1,
-          pageSize: 6,
-        };
-        search(searchParams);
-      } else {
-        // Navegación automática (comportamiento original)
+      if (!shouldShowResults) {
+        // Solo navegación automática cuando NO está en modo búsqueda
         const params = new URLSearchParams();
         if (filtros.q) params.set('q', filtros.q);
         if (filtros.categoria) params.set('categoria', filtros.categoria);
@@ -127,18 +116,11 @@ export default function NewsSearch({
         params.set('page', '1');
         router.push(`/noticias?${params.toString()}`);
       }
+      // En modo API, no hacer búsqueda automática - esperar que el usuario presione buscar
     }
-  }, [
-    filtros.categoria,
-    filtros.q,
-    filtros.desde,
-    filtros.hasta,
-    router,
-    shouldShowResults,
-    search,
-  ]);
+  }, [filtros.categoria, router, shouldShowResults]);
 
-  // Efecto para ejecutar búsqueda automática al cargar página con filtros
+  // Efecto para ejecutar búsqueda automática SOLO al cargar página con filtros por primera vez
   useEffect(() => {
     if (shouldShowResults) {
       const hasActiveFilters =
@@ -156,14 +138,7 @@ export default function NewsSearch({
         search(searchParams);
       }
     }
-  }, [
-    shouldShowResults,
-    filtros.q,
-    filtros.categoria,
-    filtros.desde,
-    filtros.hasta,
-    search,
-  ]);
+  }, [shouldShowResults]); // Solo cuando cambia shouldShowResults, no cuando cambian los filtros
 
   const handleInputChange = (field: string, value: string) => {
     setFiltros({ ...filtros, [field]: value });
