@@ -166,7 +166,6 @@ export async function getRelatedNews(categoria: string, excludeSlug?: string) {
 
 // 5. Portada (adaptado a Directus)
 export function getCover({ noticia }: any) {
-
   if (noticia.portada?.url) {
     return cfImages(noticia.portada.url);
   }
@@ -354,7 +353,7 @@ export async function getFeaturedNews(count: number = 3): Promise<NewsItem[]> {
 
 export async function fetchNewsPage(page: number): Promise<ApiResponse | null> {
   // Durante el build, usar Directus SDK directamente
-  const isBuildTime = process.env.NEXT_PUBLIC_BUILD_TIME === 'true';
+  const isBuildTime = process.env.BUILD_TIME === 'true';
 
   if (isBuildTime) {
     console.log(
@@ -408,8 +407,6 @@ export async function fetchNewsPage(page: number): Promise<ApiResponse | null> {
   }
 
   try {
- 
-
     const apiUrl = getBaseUrl();
     if (!apiUrl || apiUrl.includes('undefined')) {
       console.warn('Base URL is undefined, using Directus SDK fallback');
