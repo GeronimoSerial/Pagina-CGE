@@ -15,7 +15,6 @@ import { Card, CardContent } from '@/shared/ui/card';
 import { Separator } from '@/shared/ui/separator';
 import { getCover } from '@/features/noticias/services/news';
 import { CalendarDays, User, ArrowRight } from 'lucide-react';
-import { Separador } from '@/shared/components/Separador';
 
 interface NewsCarouselProps {
   featuredNews: NewsItem[];

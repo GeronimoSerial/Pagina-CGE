@@ -241,9 +241,7 @@ async function getFeaturedNewsDirectus(count: number): Promise<NewsItem[]> {
     esImportante: n.esImportante,
     portada: n.portada
       ? {
-          url: cfImages(
-            `${directus.url}assets/${n.portada.id}?width=1200&height=630&fit=cover`,
-          ),
+          url: `${directus.url}assets/${n.portada.id}?width=1200&height=630&fit=cover`,
           title: n.portada.title,
           width: n.portada.width,
           height: n.portada.height,
@@ -390,7 +388,7 @@ export async function fetchNewsPage(page: number): Promise<ApiResponse | null> {
           esImportante: n.esImportante,
           portada: n.portada
             ? {
-                url: cfImages(`${directus.url}assets/${n.portada.id}`),
+                url: `${directus.url}assets/${n.portada.id}`,
                 title: n.portada.title,
                 width: n.portada.width,
                 height: n.portada.height,
@@ -523,7 +521,7 @@ export async function fetchNewsPage(page: number): Promise<ApiResponse | null> {
           esImportante: n.esImportante,
           portada: n.portada
             ? {
-                url: cfImages(`${directus.url}assets/${n.portada.id}`),
+                url: `${directus.url}assets/${n.portada.id}`,
                 title: n.portada.title,
                 width: n.portada.width,
                 height: n.portada.height,
