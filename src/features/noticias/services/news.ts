@@ -170,7 +170,7 @@ export function getCover({ noticia }: any) {
     return cfImages(noticia.portada.url);
   }
   const coverId = noticia.portada?.id;
-  if (!coverId) return null;
+  if (!coverId || !directus.url) return null;
   return cfImages(`${directus.url}assets/${coverId}`, 1200, 'auto');
 }
 
@@ -367,8 +367,7 @@ export async function getFeaturedNews(count: number = 3): Promise<NewsItem[]> {
 
 export async function fetchNewsPage(page: number): Promise<ApiResponse | null> {
   // Durante el build, usar Directus SDK directamente
-  const isBuildTime =
-    typeof window === 'undefined' && process.env.NODE_ENV !== 'development';
+  const isBuildTime = process.env.NEXT_PUBLIC_BUILD_TIME === 'true';
 
   if (isBuildTime) {
     console.log(

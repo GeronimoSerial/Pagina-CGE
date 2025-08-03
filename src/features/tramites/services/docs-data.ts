@@ -138,7 +138,6 @@ export async function getAllProcedures(): Promise<any[]> {
   );
   if (!tramites) return [];
   return tramites.map((t: any) => {
-    const catNumber = Number(t.categoria);
     return {
       id: t.id,
       slug: t.slug,
