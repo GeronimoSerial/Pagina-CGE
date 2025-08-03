@@ -11,16 +11,16 @@ import {
   CommonWebhookPayload,
 } from '@/shared/lib/webhook-common';
 
-interface WebhookPayload {
+interface TramiteWebhookPayload {
   event: 'create' | 'update' | 'delete';
   collection: string;
   keys: string[];
   payload?: {
     id: string;
     slug?: string;
-    esImportante?: boolean;
     titulo?: string;
     categoria?: string;
+    contenido?: string;
   };
 }
 
@@ -50,83 +50,89 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Validar que sea la colección correcta
-    if (!validateCollection(payload, 'noticias')) {
-      const ignored = createIgnoredResponse(payload.collection, 'noticias');
+    if (!validateCollection(payload, 'tramites')) {
+      const ignored = createIgnoredResponse(payload.collection, 'tramites');
       return NextResponse.json(ignored.body, { status: ignored.status });
     }
 
     const { event, payload: data } = payload;
     const slug = data?.slug;
-    const esImportante = data?.esImportante;
     const categoria = data?.categoria;
+    const titulo = data?.titulo;
 
     // Inicializar logger con métricas de tiempo
-    const logger = new WebhookOperationLogger('noticias', event, slug);
+    const logger = new WebhookOperationLogger('tramites', event, slug);
 
     // Función helper usando la utilidad común
     const safeRevalidate = async (type: 'path' | 'tag', target: string) => {
       return await safeRevalidateWithLogger(logger, type, target);
     };
 
-    // 6. Revalidar según evento
+    // 6. Revalidar según el tipo de evento
     switch (event) {
       case 'create':
-        await safeRevalidate('tag', 'noticias');
-        await safeRevalidate('tag', 'noticias-paginated');
-        await safeRevalidate('tag', 'noticias-page-1');
+        // Revalidar tags principales
+        await safeRevalidate('tag', 'tramites-all');
+        await safeRevalidate('tag', 'tramites-list');
+        await safeRevalidate('tag', 'tramites-navigation');
 
+        // Revalidar por categoría específica
         if (categoria) {
-          await safeRevalidate('tag', `noticias-categoria-${categoria}`);
-        }
-        if (esImportante) {
-          await safeRevalidate('tag', 'noticias-featured');
+          const categoriaSlug = categoria.toLowerCase().replace(/\s+/g, '-');
+          await safeRevalidate('tag', `tramites-categoria-${categoriaSlug}`);
+
+          // Especial atención a ISR
+          if (categoria.toLowerCase().includes('isr')) {
+            await safeRevalidate('tag', 'tramites-categoria-isr');
+          }
         }
 
-        await safeRevalidate('path', '/noticias');
-        await safeRevalidate('path', '/noticias/page/1');
-        await safeRevalidate('path', '/');
+        // Revalidar paths principales
+        await safeRevalidate('path', '/tramites');
         break;
 
       case 'update':
+        // Revalidar página específica
         if (slug) {
-          await safeRevalidate('path', `/noticias/${slug}`);
+          await safeRevalidate('tag', `tramites-page-${slug}`);
+          await safeRevalidate('path', `/tramites/${slug}`);
         }
 
-        await safeRevalidate('tag', 'noticias');
-        await safeRevalidate('tag', 'noticias-paginated');
+        // Revalidar tags principales
+        await safeRevalidate('tag', 'tramites-all');
+        await safeRevalidate('tag', 'tramites-list');
+        await safeRevalidate('tag', 'tramites-navigation');
 
-        for (let i = 1; i <= 3; i++) {
-          await safeRevalidate('tag', `noticias-page-${i}`);
-        }
-
+        // Revalidar por categoría
         if (categoria) {
-          await safeRevalidate('tag', `noticias-categoria-${categoria}`);
-        }
-        if (esImportante) {
-          await safeRevalidate('tag', 'noticias-featured');
+          const categoriaSlug = categoria.toLowerCase().replace(/\s+/g, '-');
+          await safeRevalidate('tag', `tramites-categoria-${categoriaSlug}`);
+
+          // Especial atención a ISR
+          if (categoria.toLowerCase().includes('isr')) {
+            await safeRevalidate('tag', 'tramites-categoria-isr');
+          }
         }
 
-        await safeRevalidate('path', '/noticias');
-        await safeRevalidate('path', '/noticias/page/1');
-        await safeRevalidate('path', '/');
+        await safeRevalidate('path', '/tramites');
         break;
 
       case 'delete':
-        await safeRevalidate('tag', 'noticias');
-        await safeRevalidate('tag', 'noticias-paginated');
-        await safeRevalidate('tag', 'noticias-featured');
-
-        for (let i = 1; i <= 3; i++) {
-          await safeRevalidate('tag', `noticias-page-${i}`);
-        }
+        // Revalidar todo cuando se elimina contenido
+        await safeRevalidate('tag', 'tramites-all');
+        await safeRevalidate('tag', 'tramites-list');
+        await safeRevalidate('tag', 'tramites-navigation');
 
         if (categoria) {
-          await safeRevalidate('tag', `noticias-categoria-${categoria}`);
+          const categoriaSlug = categoria.toLowerCase().replace(/\s+/g, '-');
+          await safeRevalidate('tag', `tramites-categoria-${categoriaSlug}`);
+
+          if (categoria.toLowerCase().includes('isr')) {
+            await safeRevalidate('tag', 'tramites-categoria-isr');
+          }
         }
 
-        await safeRevalidate('path', '/noticias');
-        await safeRevalidate('path', '/noticias/page/1');
-        await safeRevalidate('path', '/');
+        await safeRevalidate('path', '/tramites');
         break;
 
       default:
@@ -138,7 +144,12 @@ export async function POST(request: NextRequest) {
 
     // 7. Finalizar logger y crear respuesta usando utilidad común
     const result = logger.finish();
-    const response = createWebhookResponse('noticias', event, result);
+    const response = createWebhookResponse('trámite', event, result, {
+      event,
+      slug,
+      categoria,
+      titulo,
+    });
 
     return NextResponse.json(response.body, { status: response.status });
   } catch (error) {
@@ -156,10 +167,15 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   return NextResponse.json({
-    status: 'Webhook activo',
+    status: 'Webhook de trámites activo',
     environment: process.env.NODE_ENV || 'development',
     timestamp: new Date().toISOString(),
     supportedEvents: ['create', 'update', 'delete'],
-    collection: 'noticias',
+    collection: 'tramites',
+    specialCategories: ['ISR', 'General'],
+    endpoints: {
+      webhook: '/api/revalidateTramites',
+      monitoring: '/api/monitoring',
+    },
   });
 }
