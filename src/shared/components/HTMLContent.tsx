@@ -29,6 +29,7 @@ export function HTMLContent({ content, className = '' }: HTMLContentProps) {
       td: 'border border-slate-200 px-5 py-3',
       p: 'mb-6 text-slate-700 leading-relaxed text-lg',
     };
+    const classAttrRegex = /class\s*=\s*(['"])(.*?)\1/;
 
     function addClassesToTags(html: string): string {
       return html.replace(
@@ -36,17 +37,19 @@ export function HTMLContent({ content, className = '' }: HTMLContentProps) {
         (match, slash, tag, attrs) => {
           const tagName = tag.toLowerCase();
           if (slash) return match;
+
           if (tagClassMap[tagName]) {
-            if (/class\s*=/.test(attrs)) {
+            if (classAttrRegex.test(attrs)) {
               return `<${tag}${attrs.replace(
-                /class\s*=\s*(["'])(.*?)\1/,
+                classAttrRegex,
                 (m: string, q: string, c: string) =>
                   `class=${q}${c} ${tagClassMap[tagName]}${q}`,
               )}>`;
             } else {
-              return `<${tag}${attrs} class="${tagClassMap[tagName]}">`;
+              return `<${tag} ${attrs.trim()} class="${tagClassMap[tagName]}">`;
             }
           }
+
           return match;
         },
       );
