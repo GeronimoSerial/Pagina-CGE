@@ -2,6 +2,7 @@ import directus from '@/shared/lib/directus';
 import { readItems } from '@directus/sdk';
 import { NewsItem } from '@/shared/interfaces';
 import { cfImages } from '@/shared/lib/cloudflare-images';
+import { getBaseUrl } from '@/shared/lib/utils';
 
 // ------------> Directus SDK for News <------------
 // 1. Obtener todas las noticias (solo slugs)
@@ -278,8 +279,7 @@ interface ApiResponse {
 // 8. Noticias destacadas fetch API con fallback a Directus SDK
 export async function getFeaturedNews(count: number = 3): Promise<NewsItem[]> {
   // Durante el build usar Directus SDK directamente
-  const isBuildTime =
-    typeof window === 'undefined' && process.env.NODE_ENV !== 'development';
+  const isBuildTime = process.env.BUILD_TIME === 'true';
 
   if (isBuildTime) {
     console.log(
@@ -290,21 +290,8 @@ export async function getFeaturedNews(count: number = 3): Promise<NewsItem[]> {
 
   try {
     // En runtime, usar API proxy para caché
-    const getBaseUrl = () => {
-      if (typeof window !== 'undefined') {
-        return window.location.origin;
-      }
-
-      if (process.env.NODE_ENV === 'development') {
-        return process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-      }
-
-      return process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : 'https://consejo.geroserial.com';
-    };
-
     const baseUrl = getBaseUrl();
+
     if (!baseUrl || baseUrl.includes('undefined')) {
       console.warn('Base URL is undefined, using Directus SDK fallback');
       return await getFeaturedNewsDirectus(count);
@@ -421,19 +408,7 @@ export async function fetchNewsPage(page: number): Promise<ApiResponse | null> {
   }
 
   try {
-    const getBaseUrl = () => {
-      if (typeof window !== 'undefined') {
-        return window.location.origin;
-      }
-
-      if (process.env.NODE_ENV === 'development') {
-        return process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-      }
-
-      return process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : 'https://consejo.geroserial.com';
-    };
+ 
 
     const apiUrl = getBaseUrl();
     if (!apiUrl || apiUrl.includes('undefined')) {

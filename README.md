@@ -34,7 +34,7 @@ El sitio está diseñado para ser accesible, moderno y adaptable a distintos dis
   - **Gray Matter** y **Remark** para procesamiento de Markdown
 
 - **Backend**:
-  - **Strapi CMS** para la gestión de contenidos
+  - **Directus CMS** para la gestión de contenidos
   - **API REST** para comunicación frontend-backend
   - **Base de datos** para almacenamiento de contenido dinámico
 
@@ -48,9 +48,9 @@ El sitio está diseñado para ser accesible, moderno y adaptable a distintos dis
 │   └── organigrama/        # Fotos del personal
 ├── src/
 │   ├── app/                # Páginas y rutas de la aplicación
-│   │   ├── api/            # Rutas API para comunicación con Strapi
-│   │   ├── noticias/       # Página de noticias (generada desde Strapi)
-│   │   ├── tramites/       # Página de trámites (generada desde Strapi)
+│   │   ├── api/            # Rutas API para comunicación con Directus
+│   │   ├── noticias/       # Página de noticias (generada desde Directus)
+│   │   ├── tramites/       # Página de trámites (generada desde Directus)
 │   │   ├── accesibilidad/  # Página de accesibilidad
 │   │   ├── contacto/       # Página de contacto
 │   │   ├── documentacion/  # Sección de documentación
@@ -66,7 +66,7 @@ El sitio está diseñado para ser accesible, moderno y adaptable a distintos dis
 1. Clonar el repositorio:
 
 ```bash
-git clone [https://github.com/GeronimoSerial/Pagina-CGE]
+git clone https://github.com/GeronimoSerial/Pagina-CGE
 ```
 
 2. Instala las dependencias:
@@ -85,8 +85,8 @@ El sitio estará disponible en `http://localhost:3000`.
 
 ## 📦 Módulos y Secciones
 
-- **noticias/**: Noticias dinámicas gestionadas a través de Strapi CMS
-- **tramites/**: Trámites y procedimientos gestionados a través de Strapi CMS
+- **noticias/**: Noticias dinámicas gestionadas a través de Directus CMS
+- **tramites/**: Trámites y procedimientos gestionados a través de Directus CMS
 - **accesibilidad/**: Información sobre accesibilidad web
 - **contacto/**: Formulario de contacto
 - **documentacion/**: Documentos y recursos institucionales
@@ -96,7 +96,7 @@ El sitio estará disponible en `http://localhost:3000`.
 
 ## 🔍 Funcionalidades Destacadas
 
-- **Gestión de Contenidos**: Panel administrativo con Strapi para gestionar noticias y trámites
+- **Gestión de Contenidos**: Panel administrativo con Directus para gestionar noticias y trámites
 - **Contenido Dinámico**: Las secciones de noticias y trámites se generan automáticamente desde el backend
 - **Búsqueda integrada**
 - **Componentes UI personalizados**
@@ -106,35 +106,16 @@ El sitio estará disponible en `http://localhost:3000`.
 - Visualización de documentos
 - Interfaz adaptativa para dispositivos móviles
 
-# Arquitectura y Patrones Críticos
+# Arquitectura y Patrones Clave
 
-Este portal utiliza **Next.js 15.3.1 (App Router)**, **TypeScript**, **Tailwind CSS** y **Strapi CMS**. Está optimizado para VPS con generación estática, ISR y multi-caché.
+Este portal utiliza **Next.js 15.4.2 (App Router)**, **TypeScript**, **Tailwind CSS** y **Directus CMS**. Está optimizado para VPS con generación estática e ISR.
 
-## Estrategia de Caché Multi-Capa
-
-1. **Caché en Memoria Agresivo** (`src/shared/lib/aggressive-cache.ts`)
-   - Usa `withCache(noticiasCache, key, fetchFn)` en páginas individuales (`[slug]/page.tsx`).
-   - TTL: 24h para noticias, 30d para trámites.
-   - No usar en listados.
-
-2. **Next.js ISR + Revalidación On-Demand**
-   - Webhook `/api/revalidate` limpia RAM y ejecuta `revalidatePath()`.
-   - Intervalos: 1h home, 30d contenido.
-   - `revalidatePath()` debe funcionar inmediato y no entrar en conflicto con otros cachés.
-
-3. **Caché HTTP** (`next.config.mjs`)
-   - Assets: 1 año immutable.
-   - API: 30s-5min según tipo.
-
-## 📂 Estructura Clave
+## Estructura Clave
 
 - `src/app/`: Rutas, API, layout principal.
 - `src/features/`: Módulos de dominio (noticias, trámites, escuelas, etc).
-- `src/shared/`: UI, hooks, caché, utilidades.
-- `src/features/*/services/`: Llamadas directas a Strapi (sin caché).
-- `src/shared/lib/aggressive-cache.ts`: Lógica de caché en memoria.
-- `src/app/api/revalidate/route.ts`: Webhook para invalidación de caché.
-- `next.config.mjs`: Headers HTTP y CDN.
+- `src/shared/`: UI, hooks, utilidades.
+- `src/features/*/services/`: Llamadas directas a Directus.
 
 ## 🖥️ Comandos Clave
 
@@ -142,11 +123,6 @@ Este portal utiliza **Next.js 15.3.1 (App Router)**, **TypeScript**, **Tailwind 
 npm run build              # Build producción
 npm run format             # Formateo Prettier
 ```
-
-## 🛡️ Debug y Monitoreo
-
-- `/api/monitoring`: Estadísticas de caché y memoria.
-- `DELETE /api/monitoring`: Resetea métricas.
 
 ## 🏗️ Convenciones y Buenas Prácticas
 
@@ -156,24 +132,13 @@ npm run format             # Formateo Prettier
 - Estado server vía Server Components, client vía hooks.
 - Tailwind con `cn()` para clases condicionales.
 - Markdown en trámites con frontmatter y gray-matter.
-- Circuit breaker en `src/shared/lib/circuit-breaker.ts`.
-
-## 🧪 Ejemplos de Uso
 
 ## 🔑 Variables de Entorno
 
 ```bash
-NEXT_PUBLIC_STRAPI_URL= "strapi link"
-REVALIDATE_SECRET_TOKEN= "bearer token"
+NEXT_PUBLIC_DIRECTUS_URL= "directus link"
 ```
-
-## 📝 Notas y Solución de Problemas
-
-- Usa `/api/monitoring` para debug de caché y rendimiento.
-- Todo trámites es markdown con frontmatter.
-- La lógica de noticias destacadas (`esImportante`) es crítica para el carousel.
-- Circuit breaker para resiliencia API.
 
 ---
 
-Para consultas o sugerencias, utiliza la sección de contacto del portal web.
+Para consultas o sugerencias, utiliza la sección de [contacto](https://consejo.mec.gob.ar/contacto) del portal web.

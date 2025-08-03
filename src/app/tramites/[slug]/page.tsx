@@ -4,8 +4,7 @@ import {
   getAllProcedureSlugs,
   Article,
 } from '@/features/tramites/services/docs-data';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+
 
 import { Clock } from 'lucide-react';
 import Link from 'next/link';
