@@ -32,8 +32,8 @@ export const metadata: Metadata = {
   },
 };
 
-// ISR: Sin caché del navegador para contenido inmediato
-export const revalidate = 0;
+// ISR: Cache hasta invalidación por webhook
+export const revalidate = false;
 
 export default async function NoticiasPage() {
   try {

@@ -100,7 +100,7 @@ export async function GET(
     // 3. Fetch con ISR cache optimizado para featured news
     const response = await fetch(directusUrl, {
       next: {
-        revalidate: 0, // Sin caché del navegador
+        revalidate: false, // Cache hasta invalidación por webhook
         tags: ['noticias', 'noticias-destacadas'],
       },
       headers: {

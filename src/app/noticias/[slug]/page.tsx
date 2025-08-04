@@ -15,7 +15,7 @@ import { formatDate } from '@/shared/lib/date-utils';
 import { NewsItem } from '@/shared/interfaces';
 import { HTMLContent } from '@/shared/components/HTMLContent';
 
-export const revalidate = 0; 
+export const revalidate = false; // Cache controlado por webhooks 
 
 export async function generateStaticParams() {
   try {

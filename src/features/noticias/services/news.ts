@@ -13,7 +13,7 @@ export async function getAllNews() {
       {
         next: {
           tags: ['noticias', 'noticias-slugs'],
-          revalidate: 0, // Sin caché del navegador
+          revalidate: false, // Cache hasta invalidación por webhook
         },
       }
     );
@@ -51,7 +51,7 @@ export async function getPaginatedNews(
       {
         next: {
           tags: ['noticias', 'noticias-paginated'],
-          revalidate: 0, // Sin caché del navegador
+          revalidate: false, // Cache hasta invalidación por webhook
         },
       }
     );
@@ -102,7 +102,7 @@ export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
       {
         next: {
           tags: ['noticias', `noticia-${slug}`],
-          revalidate: 0, // Sin caché del navegador
+          revalidate: false, // Cache hasta invalidación por webhook
         },
       }
     );
@@ -153,7 +153,7 @@ export async function getRelatedNews(categoria: string, excludeSlug?: string) {
       {
         next: {
           tags: ['noticias', `noticias-categoria-${categoria}`],
-          revalidate: 0, // Sin caché del navegador
+          revalidate: false, // Cache hasta invalidación por webhook
         },
       }
     );
@@ -208,7 +208,7 @@ export async function getNewsCategories(): Promise<
       {
         next: {
           tags: ['noticias', 'noticias-categorias'],
-          revalidate: 0, // Sin caché del navegador
+          revalidate: false, // Cache hasta invalidación por webhook
         },
       }
     );
@@ -244,7 +244,7 @@ export async function getFeaturedNews(count: number = 3): Promise<NewsItem[]> {
       {
         next: {
           tags: ['noticias-featured'],
-          revalidate: 0, // Sin caché del navegador
+          revalidate: false, // Cache hasta invalidación por webhook
         },
       },
     );
@@ -311,7 +311,7 @@ export async function fetchNewsPage(page: number = 1, pageSize: number = 6): Pro
       {
         next: {
           tags: ['noticias-count'],
-          revalidate: 0, // Sin caché del navegador
+          revalidate: false, // Cache hasta invalidación por webhook
         },
       }
     );
@@ -330,7 +330,7 @@ export async function fetchNewsPage(page: number = 1, pageSize: number = 6): Pro
       {
         next: {
           tags: [`noticias-page-${page}`, 'noticias-list'],
-          revalidate: 0, // Sin caché del navegador
+          revalidate: false, // Cache hasta invalidación por webhook
         },
       }
     );
