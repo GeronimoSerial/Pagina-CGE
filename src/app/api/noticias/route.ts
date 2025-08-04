@@ -64,7 +64,6 @@ function validateParameters(searchParams: URLSearchParams) {
     throw new Error('Tipo de consulta debe ser: featured, paginated o all');
   }
 
-  // Validar parámetros específicos según el tipo
   let page = 1;
   let pageSize = 6;
   let limit = 3;
@@ -98,7 +97,6 @@ function validateParameters(searchParams: URLSearchParams) {
     }
   }
 
-  // Validar categoría
   const categoriaParam = searchParams.get('categoria');
   if (categoriaParam) {
     categoria = categoriaParam.trim().replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s-_]/g, '');
@@ -132,17 +130,14 @@ function buildDirectusUrl(
     url.searchParams.set('page', page.toString());
     url.searchParams.set('limit', pageSize.toString());
   } else if (type === 'all') {
-    // No aplicar filtros específicos, solo paginación si es necesaria
     if (page > 1 || pageSize !== 6) {
       url.searchParams.set('page', page.toString());
       url.searchParams.set('limit', pageSize.toString());
     }
   }
 
-  // Ordenamiento siempre por fecha más reciente
   url.searchParams.set('sort', '-fecha,-id');
 
-  // Campos optimizados
   url.searchParams.set(
     'fields',
     'id,titulo,resumen,fecha,categoria,esImportante,slug,portada.id,portada.filename_disk,portada.title,portada.width,portada.height',
@@ -151,11 +146,9 @@ function buildDirectusUrl(
   // Metadata para paginación y conteo
   url.searchParams.set('meta', 'total_count,filter_count');
 
-  // Filtro por categoría si se proporciona
   if (categoria) {
     const existingFilter = url.searchParams.get('filter');
     if (existingFilter) {
-      // Si ya hay filtros, agregar AND
       url.searchParams.set('filter[categoria][_eq]', categoria);
     } else {
       url.searchParams.set('filter[categoria][_eq]', categoria);
@@ -191,12 +184,10 @@ export async function GET(
       categoria && `noticias-categoria-${categoria}`,
     ].filter(Boolean) as string[];
 
-    // 4. Tiempo de revalidación - Sin caché para consultas inmediatas
-    
     // 5. Fetch con ISR cache
     const response = await fetch(directusUrl, {
       next: {
-        revalidate: false, // Cache hasta invalidación por webhook
+        revalidate: false,
         tags: cacheTags,
       },
       headers: {

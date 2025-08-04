@@ -4,8 +4,7 @@ import { PageLayout } from '@/shared/components/PageLayout';
 import NewsSection from '@/features/noticias/components/structure/NewsSection';
 import { fetchNewsPage } from '@/features/noticias/services/news';
 
-// ISR: Sin caché del navegador para contenido inmediato
-export const revalidate = false; // Cache controlado por webhooks
+export const revalidate = false;
 
 interface NewsPageProps {
   params: Promise<{ page: string }>;

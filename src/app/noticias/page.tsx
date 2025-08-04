@@ -32,7 +32,6 @@ export const metadata: Metadata = {
   },
 };
 
-// ISR: Cache hasta invalidación por webhook
 export const revalidate = false;
 
 export default async function NoticiasPage() {
