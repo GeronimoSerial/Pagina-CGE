@@ -141,7 +141,7 @@ export async function GET(
     // 4. Fetch con ISR cache
     const response = await fetch(directusUrl, {
       next: {
-        revalidate: 0, // Sin caché del navegador
+        revalidate: false, // Cache hasta invalidación por webhook
         tags: cacheTags,
       },
       headers: {

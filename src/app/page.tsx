@@ -41,7 +41,8 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 0; // Sin caché del navegador
+// ISR: Cache hasta invalidación por webhook
+export const revalidate = false; // Cache controlado por webhooks
 
 export default async function PagPrincipal() {
   let latestNewsData;

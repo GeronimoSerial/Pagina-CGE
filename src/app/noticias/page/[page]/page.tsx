@@ -5,7 +5,7 @@ import NewsSection from '@/features/noticias/components/structure/NewsSection';
 import { fetchNewsPage } from '@/features/noticias/services/news';
 
 // ISR: Sin caché del navegador para contenido inmediato
-export const revalidate = 0;
+export const revalidate = false; // Cache controlado por webhooks
 
 interface NewsPageProps {
   params: Promise<{ page: string }>;
