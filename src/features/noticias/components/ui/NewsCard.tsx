@@ -35,17 +35,15 @@ export function NewsCard({
         </div>
         <div className="p-6 flex flex-col justify-between h-[250px]">
           <div>
-            <div className="flex gap-4 items-center mb-4 text-sm text-gray-500">
-              <div className="flex gap-1 items-center">
-                <CalendarDays className="w-4 h-4" />
-                <span className="text-xs tracking-wide">
-                  {' '}
-                  {formatDate(noticia.fecha)}
-                </span>
+            <div className="flex items-center text-xs text-gray-500 gap-2 mb-3 overflow-hidden whitespace-nowrap">
+              <div className="flex items-center gap-1 shrink-0">
+                <CalendarDays className="w-3 h-3" />
+                <span className="truncate">{formatDate(noticia.fecha)}</span>
               </div>
-              <div className="flex gap-1 items-center">
-                <Tag className="w-4 h-4" />
-                <span className="tracking-wide">
+              <span className="text-gray-400">|</span>
+              <div className="flex items-center gap-1 min-w-0">
+                <Tag className="w-3 h-3 shrink-0" />
+                <span className="truncate">
                   {noticia.categoria ?? 'Redacción CGE'}
                 </span>
               </div>
