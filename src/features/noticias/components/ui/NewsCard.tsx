@@ -33,7 +33,7 @@ export function NewsCard({
           />
           <div className="absolute inset-0 transition-colors duration-300 bg-black/0 group-hover:bg-black/10" />
         </div>
-        <div className="p-6 flex flex-col justify-between h-[250px]">
+        <div className="p-6 flex flex-col justify-between h-[300px]">
           <div>
             <div className="flex items-center text-xs text-gray-500 gap-2 mb-3 overflow-hidden whitespace-nowrap">
               <div className="flex items-center gap-1 shrink-0">
@@ -54,7 +54,7 @@ export function NewsCard({
               </h4>
             </Link>
             <p
-              className="mb-4 text-sm leading-relaxed text-gray-600"
+              className="mb-4 text-sm leading-relaxed text-gray-600 line-clamp-3"
               title={noticia.resumen}
             >
               {noticia.resumen}
