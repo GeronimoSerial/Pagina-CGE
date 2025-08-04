@@ -15,7 +15,7 @@ export async function getAllNews() {
           tags: ['noticias', 'noticias-slugs'],
           revalidate: false, // Cache hasta invalidación por webhook
         },
-      }
+      },
     );
 
     if (!response.ok) {
@@ -39,13 +39,13 @@ export async function getPaginatedNews(
 ) {
   try {
     const offset = (page - 1) * pageSize;
-    
+
     // Construir filtros para URL
     let filterQuery = '';
     if (filters.categoria) {
       filterQuery = `&filter[categoria][_eq]=${encodeURIComponent(filters.categoria)}`;
     }
-    
+
     const response = await fetch(
       `${DIRECTUS_URL}/items/noticias?fields=id,titulo,resumen,fecha,categoria,esImportante,slug,portada.*&sort=-fecha,-id&limit=${Math.min(pageSize, 20)}&offset=${offset}${filterQuery}`,
       {
@@ -53,7 +53,7 @@ export async function getPaginatedNews(
           tags: ['noticias', 'noticias-paginated'],
           revalidate: false, // Cache hasta invalidación por webhook
         },
-      }
+      },
     );
 
     if (!response.ok) {
@@ -70,7 +70,7 @@ export async function getPaginatedNews(
     }
 
     const { data: noticias } = await response.json();
-    
+
     return {
       noticias: noticias || [],
       pagination: {
@@ -104,7 +104,7 @@ export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
           tags: ['noticias', `noticia-${slug}`],
           revalidate: false, // Cache hasta invalidación por webhook
         },
-      }
+      },
     );
 
     if (!response.ok) {
@@ -114,7 +114,7 @@ export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
 
     const { data: noticias } = await response.json();
     if (!noticias || noticias.length === 0) return null;
-    
+
     const n = noticias[0];
     return {
       id: n.id,
@@ -147,7 +147,7 @@ export async function getRelatedNews(categoria: string, excludeSlug?: string) {
     if (excludeSlug) {
       filterQuery += `&filter[slug][_neq]=${encodeURIComponent(excludeSlug)}`;
     }
-    
+
     const response = await fetch(
       `${DIRECTUS_URL}/items/noticias?${filterQuery}&fields=titulo,resumen,fecha,categoria,slug,portada.*&sort=-fecha&limit=2`,
       {
@@ -155,7 +155,7 @@ export async function getRelatedNews(categoria: string, excludeSlug?: string) {
           tags: ['noticias', `noticias-categoria-${categoria}`],
           revalidate: false, // Cache hasta invalidación por webhook
         },
-      }
+      },
     );
 
     if (!response.ok) {
@@ -210,7 +210,7 @@ export async function getNewsCategories(): Promise<
           tags: ['noticias', 'noticias-categorias'],
           revalidate: false, // Cache hasta invalidación por webhook
         },
-      }
+      },
     );
 
     if (!response.ok) {
@@ -220,7 +220,7 @@ export async function getNewsCategories(): Promise<
 
     const { data: noticias } = await response.json();
     if (!noticias) return [];
-    
+
     const categoriasUnicas = Array.from(
       new Set(noticias.map((item: any) => item.categoria).filter(Boolean)),
     );
@@ -287,7 +287,10 @@ export async function getFeaturedNews(count: number = 3): Promise<NewsItem[]> {
 }
 
 // 9. Fetch de página de noticias (fetch directo con estructura corregida)
-export async function fetchNewsPage(page: number = 1, pageSize: number = 6): Promise<{
+export async function fetchNewsPage(
+  page: number = 1,
+  pageSize: number = 6,
+): Promise<{
   data: NewsItem[];
   pagination: {
     currentPage: number;
@@ -304,7 +307,7 @@ export async function fetchNewsPage(page: number = 1, pageSize: number = 6): Pro
 } | null> {
   try {
     const offset = (page - 1) * pageSize;
-    
+
     // Primero obtener el total para la paginación
     const countResponse = await fetch(
       `${DIRECTUS_URL}/items/noticias?aggregate[count]=*`,
@@ -313,13 +316,13 @@ export async function fetchNewsPage(page: number = 1, pageSize: number = 6): Pro
           tags: ['noticias-count'],
           revalidate: false, // Cache hasta invalidación por webhook
         },
-      }
+      },
     );
-    
+
     if (!countResponse.ok) {
       throw new Error(`Error getting count: ${countResponse.status}`);
     }
-    
+
     const { data: countData } = await countResponse.json();
     const totalItems = countData?.[0]?.count || 0;
     const totalPages = Math.ceil(totalItems / pageSize);
@@ -332,7 +335,7 @@ export async function fetchNewsPage(page: number = 1, pageSize: number = 6): Pro
           tags: [`noticias-page-${page}`, 'noticias-list'],
           revalidate: false, // Cache hasta invalidación por webhook
         },
-      }
+      },
     );
 
     if (!response.ok) {
