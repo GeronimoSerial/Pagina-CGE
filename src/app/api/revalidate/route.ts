@@ -71,49 +71,93 @@ export async function POST(request: NextRequest) {
     // 6. Revalidar según evento
     switch (event) {
       case 'create':
+        // Tags generales que se usan en múltiples fetches
+        await safeRevalidate('tag', 'noticias');
+        await safeRevalidate('tag', 'noticias-slugs');
+        await safeRevalidate('tag', 'noticias-paginated');
+        await safeRevalidate('tag', 'noticias-categorias');
         await safeRevalidate('tag', 'noticias-count');
         await safeRevalidate('tag', 'noticias-list');
         await safeRevalidate('tag', 'noticias-page-1');
 
+        // Si es noticia importante, invalidar featured
         if (esImportante) {
           await safeRevalidate('tag', 'noticias-featured');
         }
 
+        // Si tiene categoría, invalidar noticias de esa categoría
+        if (categoria) {
+          await safeRevalidate('tag', `noticias-categoria-${categoria}`);
+        }
+
+        // Paths principales
         await safeRevalidate('path', '/noticias');
         await safeRevalidate('path', '/noticias/page/1');
         await safeRevalidate('path', '/');
         break;
 
       case 'update':
-        if (slug) {
-          await safeRevalidate('path', `/noticias/${slug}`);
-        }
-
+        // Tags generales
+        await safeRevalidate('tag', 'noticias');
+        await safeRevalidate('tag', 'noticias-slugs');
+        await safeRevalidate('tag', 'noticias-paginated');
+        await safeRevalidate('tag', 'noticias-categorias');
         await safeRevalidate('tag', 'noticias-count');
         await safeRevalidate('tag', 'noticias-list');
 
-        for (let i = 1; i <= 3; i++) {
+        // Tag específico de la noticia
+        if (slug) {
+          await safeRevalidate('tag', `noticia-${slug}`);
+          await safeRevalidate('path', `/noticias/${slug}`);
+        }
+
+        // Páginas de noticias (invalidar varias por si cambió de posición)
+        for (let i = 1; i <= 5; i++) {
           await safeRevalidate('tag', `noticias-page-${i}`);
         }
 
+        // Si es importante, invalidar featured
         if (esImportante) {
           await safeRevalidate('tag', 'noticias-featured');
         }
 
+        // Si tiene categoría, invalidar noticias de esa categoría
+        if (categoria) {
+          await safeRevalidate('tag', `noticias-categoria-${categoria}`);
+        }
+
+        // Paths principales
         await safeRevalidate('path', '/noticias');
         await safeRevalidate('path', '/noticias/page/1');
         await safeRevalidate('path', '/');
         break;
 
       case 'delete':
+        // Tags generales (todos porque se eliminó contenido)
+        await safeRevalidate('tag', 'noticias');
+        await safeRevalidate('tag', 'noticias-slugs');
+        await safeRevalidate('tag', 'noticias-paginated');
+        await safeRevalidate('tag', 'noticias-categorias');
         await safeRevalidate('tag', 'noticias-count');
         await safeRevalidate('tag', 'noticias-list');
         await safeRevalidate('tag', 'noticias-featured');
 
-        for (let i = 1; i <= 3; i++) {
+        // Tag específico de la noticia eliminada
+        if (slug) {
+          await safeRevalidate('tag', `noticia-${slug}`);
+        }
+
+        // Todas las páginas porque cambió la numeración
+        for (let i = 1; i <= 5; i++) {
           await safeRevalidate('tag', `noticias-page-${i}`);
         }
 
+        // Si tenía categoría, invalidar esa categoría
+        if (categoria) {
+          await safeRevalidate('tag', `noticias-categoria-${categoria}`);
+        }
+
+        // Paths principales
         await safeRevalidate('path', '/noticias');
         await safeRevalidate('path', '/noticias/page/1');
         await safeRevalidate('path', '/');
