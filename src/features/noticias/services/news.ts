@@ -5,162 +5,170 @@ import { cfImages } from '@/shared/lib/cloudflare-images';
 import { DIRECTUS_URL } from '@/shared/lib/config';
 
 // ------------> Directus SDK for News <------------
-// 1. Obtener todas las noticias (solo slugs)
+// 1. Obtener todas las noticias (solo slugs) - fetch directo con tags
 export async function getAllNews() {
-  const noticias = await directus.request(
-    readItems('noticias', {
-      fields: ['slug'],
-      limit: -1,
-    }),
-  );
+  try {
+    const response = await fetch(
+      `${DIRECTUS_URL}/items/noticias?fields=slug&limit=-1`,
+      {
+        next: {
+          tags: ['noticias', 'noticias-slugs'],
+          revalidate: 0, // Sin caché del navegador
+        },
+      }
+    );
 
-  return noticias;
+    if (!response.ok) {
+      console.error('Error fetching all news slugs:', response.statusText);
+      return [];
+    }
+
+    const { data: noticias } = await response.json();
+    return noticias || [];
+  } catch (error) {
+    console.error('Error in getAllNews:', error);
+    return [];
+  }
 }
 
-// 2. Noticias paginadas
+// 2. Noticias paginadas (fetch directo con tags)
 export async function getPaginatedNews(
   page: number = 1,
   pageSize: number = 4,
   filters: Record<string, any> = {},
 ) {
-  const filter = { ...filters };
-  const noticias = await directus.request(
-    readItems('noticias', {
-      fields: [
-        'titulo',
-        'resumen',
-        'fecha',
-        'categoria',
-        'esImportante',
-        'slug',
-        {
-          portada: [
-            'id',
-            'filename_disk',
-            'title',
-            'description',
-            'width',
-            'height',
-          ],
+  try {
+    const offset = (page - 1) * pageSize;
+    
+    // Construir filtros para URL
+    let filterQuery = '';
+    if (filters.categoria) {
+      filterQuery = `&filter[categoria][_eq]=${encodeURIComponent(filters.categoria)}`;
+    }
+    
+    const response = await fetch(
+      `${DIRECTUS_URL}/items/noticias?fields=id,titulo,resumen,fecha,categoria,esImportante,slug,portada.*&sort=-fecha,-id&limit=${Math.min(pageSize, 20)}&offset=${offset}${filterQuery}`,
+      {
+        next: {
+          tags: ['noticias', 'noticias-paginated'],
+          revalidate: 0, // Sin caché del navegador
         },
-        {
-          imagenes: [
-            {
-              directus_files_id: [
-                'id',
-                'filename_disk',
-                'filename_download',
-                'title',
-                'description',
-                'width',
-                'height',
-                'type',
-              ],
-            },
-          ],
-        },
-      ],
-      sort: ['-fecha', '-id'],
-      limit: Math.min(pageSize, 20),
-      page,
-      filter,
-    }),
-  );
-  return {
-    noticias,
-    pagination: {
-      page,
-      pageCount: noticias.length < pageSize ? page : page + 1,
-      pageSize,
-      total: undefined,
-    },
-  };
-}
+      }
+    );
 
-// 3. Obtener noticia por slug
-export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
-  const noticias = await directus.request(
-    readItems('noticias', {
-      filter: { slug: { _eq: slug } },
-      fields: [
-        '*',
-        {
-          portada: [
-            'id',
-            'filename_disk',
-            'title',
-            'description',
-            'width',
-            'height',
-          ],
+    if (!response.ok) {
+      console.error('Error fetching paginated news:', response.statusText);
+      return {
+        noticias: [],
+        pagination: {
+          page,
+          pageCount: 1,
+          pageSize,
+          total: 0,
         },
-        {
-          imagenes: [
-            {
-              directus_files_id: [
-                'id',
-                'filename_disk',
-                'filename_download',
-                'title',
-                'description',
-                'width',
-                'height',
-                'type',
-              ],
-            },
-          ],
-        },
-      ],
-      limit: 1,
-    }),
-  );
-  if (!noticias || noticias.length === 0) return null;
-  const n = noticias[0];
-  return {
-    id: n.id,
-    autor: n.autor || 'Redacción CGE',
-    titulo: n.titulo,
-    resumen: n.resumen,
-    categoria: n.categoria,
-    esImportante: n.esImportante,
-    portada: n.portada,
-    slug: n.slug,
-    contenido: n.contenido,
-    imagen: n.imagen,
-    imagenes: n.imagenes,
-    publicado: n.publicado,
-    fecha: n.fecha,
-    // createdAt: n.createdAt,
-    metaTitle: n.metaTitle || n.titulo,
-    metaDescription: n.metaDescription || n.resumen,
-  };
-}
+      };
+    }
 
-// 4. Noticias relacionadas
-export async function getRelatedNews(categoria: string, excludeSlug?: string) {
-  const filter: any = {
-    categoria: { _eq: categoria },
-  };
-  if (excludeSlug) {
-    filter.slug = { _neq: excludeSlug };
+    const { data: noticias } = await response.json();
+    
+    return {
+      noticias: noticias || [],
+      pagination: {
+        page,
+        pageCount: noticias.length < pageSize ? page : page + 1,
+        pageSize,
+        total: undefined,
+      },
+    };
+  } catch (error) {
+    console.error('Error in getPaginatedNews:', error);
+    return {
+      noticias: [],
+      pagination: {
+        page,
+        pageCount: 1,
+        pageSize,
+        total: 0,
+      },
+    };
   }
-  const noticias = await directus.request(
-    readItems('noticias', {
-      filter,
-      limit: 2,
-      fields: [
-        'titulo',
-        'resumen',
-        'fecha',
-        'categoria',
-        'slug',
-        { portada: ['id', 'filename_disk', 'title', 'description'] },
-      ],
-      // sort: ['-createdAt', '-fecha'],
-      sort: ['-fecha'],
-    }),
-  );
-  return noticias;
+}
+
+// 3. Obtener noticia por slug (fetch directo con tags)
+export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
+  try {
+    const response = await fetch(
+      `${DIRECTUS_URL}/items/noticias?filter[slug][_eq]=${encodeURIComponent(slug)}&fields=*,portada.*,imagenes.directus_files_id.*&limit=1`,
+      {
+        next: {
+          tags: ['noticias', `noticia-${slug}`],
+          revalidate: 0, // Sin caché del navegador
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.error('Error fetching news by slug:', response.statusText);
+      return null;
+    }
+
+    const { data: noticias } = await response.json();
+    if (!noticias || noticias.length === 0) return null;
+    
+    const n = noticias[0];
+    return {
+      id: n.id,
+      autor: n.autor || 'Redacción CGE',
+      titulo: n.titulo,
+      resumen: n.resumen,
+      categoria: n.categoria,
+      esImportante: n.esImportante,
+      portada: n.portada,
+      slug: n.slug,
+      contenido: n.contenido,
+      imagen: n.imagen,
+      imagenes: n.imagenes,
+      publicado: n.publicado,
+      fecha: n.fecha,
+      // createdAt: n.createdAt,
+      metaTitle: n.metaTitle || n.titulo,
+      metaDescription: n.metaDescription || n.resumen,
+    };
+  } catch (error) {
+    console.error('Error in getNewsBySlug:', error);
+    return null;
+  }
+}
+
+// 4. Noticias relacionadas (fetch directo con tags)
+export async function getRelatedNews(categoria: string, excludeSlug?: string) {
+  try {
+    let filterQuery = `filter[categoria][_eq]=${encodeURIComponent(categoria)}`;
+    if (excludeSlug) {
+      filterQuery += `&filter[slug][_neq]=${encodeURIComponent(excludeSlug)}`;
+    }
+    
+    const response = await fetch(
+      `${DIRECTUS_URL}/items/noticias?${filterQuery}&fields=titulo,resumen,fecha,categoria,slug,portada.*&sort=-fecha&limit=2`,
+      {
+        next: {
+          tags: ['noticias', `noticias-categoria-${categoria}`],
+          revalidate: 0, // Sin caché del navegador
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.error('Error fetching related news:', response.statusText);
+      return [];
+    }
+
+    const { data: noticias } = await response.json();
+    return noticias || [];
+  } catch (error) {
+    console.error('Error in getRelatedNews:', error);
+    return [];
+  }
 }
 
 // 5. Portada (adaptado a Directus)
@@ -190,25 +198,42 @@ export function getImages(noticia: NewsItem) {
   });
 }
 
-// 7. Categorías únicas
+// 7. Categorías únicas (fetch directo con tags)
 export async function getNewsCategories(): Promise<
   Array<{ id: number; nombre: string }>
 > {
-  const noticias = await directus.request(
-    readItems('noticias', {
-      fields: ['categoria'],
-      limit: -1,
-    }),
-  );
-  const categoriasUnicas = Array.from(
-    new Set(noticias.map((item: any) => item.categoria).filter(Boolean)),
-  );
-  return (categoriasUnicas as string[]).map(
-    (categoria: string, index: number) => ({
-      id: index + 1,
-      nombre: categoria,
-    }),
-  );
+  try {
+    const response = await fetch(
+      `${DIRECTUS_URL}/items/noticias?fields=categoria&limit=-1`,
+      {
+        next: {
+          tags: ['noticias', 'noticias-categorias'],
+          revalidate: 0, // Sin caché del navegador
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.error('Error fetching news categories:', response.statusText);
+      return [];
+    }
+
+    const { data: noticias } = await response.json();
+    if (!noticias) return [];
+    
+    const categoriasUnicas = Array.from(
+      new Set(noticias.map((item: any) => item.categoria).filter(Boolean)),
+    );
+    return (categoriasUnicas as string[]).map(
+      (categoria: string, index: number) => ({
+        id: index + 1,
+        nombre: categoria,
+      }),
+    );
+  } catch (error) {
+    console.error('Error in getNewsCategories:', error);
+    return [];
+  }
 }
 
 // 8. Noticias destacadas (fetch directo - estructura corregida)
