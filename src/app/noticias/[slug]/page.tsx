@@ -15,18 +15,18 @@ import { formatDate } from '@/shared/lib/date-utils';
 import { NewsItem } from '@/shared/interfaces';
 import { HTMLContent } from '@/shared/components/HTMLContent';
 
-export const revalidate = 0; // Sin caché del navegador
+export const revalidate = 0; 
 
 export async function generateStaticParams() {
   try {
     const noticias = await getAllNews();
     return noticias
       .filter(
-        (noticia) =>
+        (noticia: any) =>
           typeof noticia.slug === 'string' && noticia.slug.length > 0,
       )
       .slice(0, 50)
-      .map((noticia) => ({ slug: noticia.slug }));
+      .map((noticia: any) => ({ slug: noticia.slug }));
   } catch (error) {
     console.warn('Error generating static params for noticias:', error);
     return [];
