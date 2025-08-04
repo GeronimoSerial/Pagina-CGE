@@ -71,13 +71,10 @@ export async function POST(request: NextRequest) {
     // 6. Revalidar según evento
     switch (event) {
       case 'create':
-        await safeRevalidate('tag', 'noticias');
-        await safeRevalidate('tag', 'noticias-paginated');
+        await safeRevalidate('tag', 'noticias-count');
+        await safeRevalidate('tag', 'noticias-list');
         await safeRevalidate('tag', 'noticias-page-1');
 
-        if (categoria) {
-          await safeRevalidate('tag', `noticias-categoria-${categoria}`);
-        }
         if (esImportante) {
           await safeRevalidate('tag', 'noticias-featured');
         }
@@ -92,16 +89,13 @@ export async function POST(request: NextRequest) {
           await safeRevalidate('path', `/noticias/${slug}`);
         }
 
-        await safeRevalidate('tag', 'noticias');
-        await safeRevalidate('tag', 'noticias-paginated');
+        await safeRevalidate('tag', 'noticias-count');
+        await safeRevalidate('tag', 'noticias-list');
 
         for (let i = 1; i <= 3; i++) {
           await safeRevalidate('tag', `noticias-page-${i}`);
         }
 
-        if (categoria) {
-          await safeRevalidate('tag', `noticias-categoria-${categoria}`);
-        }
         if (esImportante) {
           await safeRevalidate('tag', 'noticias-featured');
         }
@@ -112,16 +106,12 @@ export async function POST(request: NextRequest) {
         break;
 
       case 'delete':
-        await safeRevalidate('tag', 'noticias');
-        await safeRevalidate('tag', 'noticias-paginated');
+        await safeRevalidate('tag', 'noticias-count');
+        await safeRevalidate('tag', 'noticias-list');
         await safeRevalidate('tag', 'noticias-featured');
 
         for (let i = 1; i <= 3; i++) {
           await safeRevalidate('tag', `noticias-page-${i}`);
-        }
-
-        if (categoria) {
-          await safeRevalidate('tag', `noticias-categoria-${categoria}`);
         }
 
         await safeRevalidate('path', '/noticias');

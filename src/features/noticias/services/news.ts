@@ -2,7 +2,7 @@ import directus from '@/shared/lib/directus';
 import { readItems } from '@directus/sdk';
 import { NewsItem } from '@/shared/interfaces';
 import { cfImages } from '@/shared/lib/cloudflare-images';
-import { getBaseUrl } from '@/shared/lib/utils';
+import { DIRECTUS_URL } from '@/shared/lib/config';
 
 // ------------> Directus SDK for News <------------
 // 1. Obtener todas las noticias (solo slugs)
@@ -23,7 +23,6 @@ export async function getPaginatedNews(
   pageSize: number = 4,
   filters: Record<string, any> = {},
 ) {
-  // Adaptar filtros a Directus (sin publicado)
   const filter = { ...filters };
   const noticias = await directus.request(
     readItems('noticias', {
@@ -212,52 +211,58 @@ export async function getNewsCategories(): Promise<
   );
 }
 
-// 8. Noticias destacadas (con Directus SDK)
-async function getFeaturedNewsDirectus(count: number): Promise<NewsItem[]> {
-  const noticias = await directus.request(
-    readItems('noticias', {
-      filter: { esImportante: { _eq: true } },
-      fields: [
-        'id',
-        'titulo',
-        'resumen',
-        'fecha',
-        'categoria',
-        'esImportante',
-        'slug',
-        { portada: ['id', 'filename_disk', 'title', 'width', 'height'] },
-      ],
-      limit: count,
-      sort: ['-fecha', '-id'],
-    }),
-  );
+// 8. Noticias destacadas (fetch directo - estructura corregida)
+export async function getFeaturedNews(count: number = 3): Promise<NewsItem[]> {
+  try {
+    const response = await fetch(
+      `${DIRECTUS_URL}/items/noticias?filter[esImportante][_eq]=true&fields=id,titulo,resumen,fecha,categoria,esImportante,slug,portada.*&sort=-fecha,-id&limit=${count}`,
+      {
+        next: {
+          tags: ['noticias-featured'],
+          revalidate: 0, // Sin caché del navegador
+        },
+      },
+    );
 
-  return noticias.map((n: any) => ({
-    id: n.id,
-    autor: 'Redacción CGE',
-    titulo: n.titulo,
-    resumen: n.resumen,
-    categoria: n.categoria,
-    esImportante: n.esImportante,
-    portada: n.portada
-      ? {
-          url: `${directus.url}assets/${n.portada.id}?width=1200&height=630&fit=cover`,
-          title: n.portada.title,
-          width: n.portada.width,
-          height: n.portada.height,
-        }
-      : { url: '' }, // Proporcionar fallback para cumplir con el tipo NewsItem
-    slug: n.slug,
-    contenido: n.resumen,
-    imagen: [],
-    publicado: true,
-    fecha: n.fecha,
-    metaTitle: n.titulo,
-    metaDescription: n.resumen,
-  }));
+    if (!response.ok) {
+      console.error('Error fetching featured news:', response.statusText);
+      return [];
+    }
+
+    const { data: noticias } = await response.json();
+    if (!noticias) return [];
+
+    return noticias.map((n: any) => ({
+      id: n.id,
+      autor: 'Redacción CGE',
+      titulo: n.titulo,
+      resumen: n.resumen,
+      categoria: n.categoria,
+      esImportante: n.esImportante,
+      portada: n.portada
+        ? {
+            url: `${DIRECTUS_URL}/assets/${n.portada.id}`,
+            title: n.portada.title || n.portada.filename_download,
+            width: n.portada.width,
+            height: n.portada.height,
+          }
+        : { url: '' },
+      slug: n.slug,
+      contenido: n.resumen,
+      imagen: [],
+      publicado: true,
+      fecha: n.fecha,
+      metaTitle: n.titulo,
+      metaDescription: n.resumen,
+    }));
+  } catch (error) {
+    console.error('Error fetching featured news:', error);
+    return [];
+  }
 }
 
-interface ApiResponse {
+// 9. Fetch de página de noticias (fetch directo con estructura corregida)
+export async function fetchNewsPage(page: number = 1, pageSize: number = 6): Promise<{
   data: NewsItem[];
   pagination: {
     currentPage: number;
@@ -271,198 +276,38 @@ interface ApiResponse {
     timestamp: string;
     cached: boolean;
   };
-}
-
-// ------------> API Proxy for News <----------------------------------
-
-// 8. Noticias destacadas fetch API con fallback a Directus SDK
-export async function getFeaturedNews(count: number = 3): Promise<NewsItem[]> {
-  // Durante el build usar Directus SDK directamente
-  const isBuildTime = process.env.BUILD_TIME === 'true';
-
-  if (isBuildTime) {
-    console.log(
-      'Build time detected, using Directus SDK directly for featured news',
-    );
-    return await getFeaturedNewsDirectus(count);
-  }
-
+} | null> {
   try {
-    // En runtime, usar API proxy para caché
-    const baseUrl = getBaseUrl();
-
-    if (!baseUrl || baseUrl.includes('undefined')) {
-      console.warn('Base URL is undefined, using Directus SDK fallback');
-      return await getFeaturedNewsDirectus(count);
-    }
-
-    const response = await fetch(
-      `${baseUrl}/api/noticias?type=featured&limit=${count}`,
+    const offset = (page - 1) * pageSize;
+    
+    // Primero obtener el total para la paginación
+    const countResponse = await fetch(
+      `${DIRECTUS_URL}/items/noticias?aggregate[count]=*`,
       {
         next: {
-          revalidate: 600, // 10 minutos
-          tags: ['noticias-destacadas', 'noticias-featured'],
+          tags: ['noticias-count'],
+          revalidate: 0, // Sin caché del navegador
         },
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        signal: AbortSignal.timeout(8000), // Timeout 8s
-      },
+      }
     );
-
-    if (response.ok) {
-      const apiData = await response.json();
-
-      // Transformar a NewsItem[]
-      return apiData.data.map((noticia: any) => ({
-        id: noticia.id,
-        autor: 'Redacción CGE',
-        titulo: noticia.titulo,
-        resumen: noticia.resumen,
-        categoria: noticia.categoria,
-        esImportante: noticia.esImportante,
-        portada: noticia.portada,
-        slug: noticia.slug,
-        contenido: noticia.resumen,
-        imagen: [],
-        publicado: true,
-        fecha: noticia.fecha,
-        metaTitle: noticia.titulo,
-        metaDescription: noticia.resumen,
-      }));
+    
+    if (!countResponse.ok) {
+      throw new Error(`Error getting count: ${countResponse.status}`);
     }
+    
+    const { data: countData } = await countResponse.json();
+    const totalItems = countData?.[0]?.count || 0;
+    const totalPages = Math.ceil(totalItems / pageSize);
 
-    // Fallback: llamada directa a Directus si la API falla
-    console.warn('API proxy falló, usando fallback directo a Directus SDK');
-    return await getFeaturedNewsDirectus(count);
-  } catch (error) {
-    console.error(
-      'Error fetching featured news via API proxy, trying Directus SDK fallback:',
-      error,
-    );
-
-    // Fallback: llamada directa a Directus SDK
-    try {
-      return await getFeaturedNewsDirectus(count);
-    } catch (fallbackError) {
-      console.error('Fallback to Directus SDK also failed:', fallbackError);
-      return [];
-    }
-  }
-}
-
-export async function fetchNewsPage(page: number): Promise<ApiResponse | null> {
-  // Durante el build, usar Directus SDK directamente
-  const isBuildTime = process.env.BUILD_TIME === 'true';
-
-  if (isBuildTime) {
-    console.log(
-      `Build time detected, using Directus SDK directly for page ${page}`,
-    );
-    try {
-      const result = await getPaginatedNews(page, 6);
-
-      // Adaptar formato de respuesta para compatibilidad
-      return {
-        data: result.noticias.map((n: any) => ({
-          id: n.id,
-          autor: 'Redacción CGE',
-          titulo: n.titulo,
-          resumen: n.resumen,
-          categoria: n.categoria,
-          esImportante: n.esImportante,
-          portada: n.portada
-            ? {
-                url: `${directus.url}assets/${n.portada.id}`,
-                title: n.portada.title,
-                width: n.portada.width,
-                height: n.portada.height,
-              }
-            : { url: '' },
-          slug: n.slug,
-          contenido: n.resumen,
-          imagen: [],
-          publicado: true,
-          fecha: n.fecha,
-          metaTitle: n.titulo,
-          metaDescription: n.resumen,
-        })),
-        pagination: {
-          currentPage: page,
-          totalPages: result.pagination.pageCount,
-          totalItems: result.pagination.total || 0,
-          pageSize: 6,
-          hasNextPage: result.noticias.length === 6,
-          hasPrevPage: page > 1,
-        },
-        meta: {
-          timestamp: new Date().toISOString(),
-          cached: false,
-        },
-      };
-    } catch (error) {
-      console.error('Error fetching news page via Directus SDK:', error);
-      return null;
-    }
-  }
-
-  try {
-    const apiUrl = getBaseUrl();
-    if (!apiUrl || apiUrl.includes('undefined')) {
-      console.warn('Base URL is undefined, using Directus SDK fallback');
-      // Usar la misma lógica de arriba como fallback
-      const result = await getPaginatedNews(page, 6);
-      return {
-        data: result.noticias.map((n: any) => ({
-          id: n.id,
-          autor: 'Redacción CGE',
-          titulo: n.titulo,
-          resumen: n.resumen,
-          categoria: n.categoria,
-          esImportante: n.esImportante,
-          portada: n.portada
-            ? {
-                url: cfImages(`${directus.url}assets/${n.portada.id}`),
-                title: n.portada.title,
-                width: n.portada.width,
-                height: n.portada.height,
-              }
-            : { url: '' },
-          slug: n.slug,
-          contenido: n.resumen,
-          imagen: [],
-          publicado: true,
-          fecha: n.fecha,
-          metaTitle: n.titulo,
-          metaDescription: n.resumen,
-        })),
-        pagination: {
-          currentPage: page,
-          totalPages: result.pagination.pageCount,
-          totalItems: result.pagination.total || 0,
-          pageSize: 6,
-          hasNextPage: result.noticias.length === 6,
-          hasPrevPage: page > 1,
-        },
-        meta: {
-          timestamp: new Date().toISOString(),
-          cached: false,
-        },
-      };
-    }
-
+    // Obtener las noticias de la página
     const response = await fetch(
-      `${apiUrl}/api/noticias/page/${page}?pageSize=6`,
+      `${DIRECTUS_URL}/items/noticias?fields=id,titulo,resumen,fecha,categoria,esImportante,slug,portada.*&sort=-fecha,-id&limit=${pageSize}&offset=${offset}`,
       {
         next: {
-          revalidate: 300, // 5 minutos
-          tags: [`noticias`, `noticias-page-${page}`],
+          tags: [`noticias-page-${page}`, 'noticias-list'],
+          revalidate: 0, // Sin caché del navegador
         },
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        signal: AbortSignal.timeout(8000), // Timeout 8s para build
-      },
+      }
     );
 
     if (!response.ok) {
@@ -472,56 +317,49 @@ export async function fetchNewsPage(page: number): Promise<ApiResponse | null> {
       throw new Error(`API Error: ${response.status}`);
     }
 
-    return await response.json();
-  } catch (error) {
-    console.error(
-      'Error fetching news page via API proxy, trying Directus SDK fallback:',
-      error,
-    );
+    const { data: noticias } = await response.json();
 
-    // Fallback: usar Directus SDK
-    try {
-      const result = await getPaginatedNews(page, 6);
-      return {
-        data: result.noticias.map((n: any) => ({
-          id: n.id,
-          autor: 'Redacción CGE',
-          titulo: n.titulo,
-          resumen: n.resumen,
-          categoria: n.categoria,
-          esImportante: n.esImportante,
-          portada: n.portada
-            ? {
-                url: `${directus.url}assets/${n.portada.id}`,
-                title: n.portada.title,
-                width: n.portada.width,
-                height: n.portada.height,
-              }
-            : { url: '' },
-          slug: n.slug,
-          contenido: n.resumen,
-          imagen: [],
-          publicado: true,
-          fecha: n.fecha,
-          metaTitle: n.titulo,
-          metaDescription: n.resumen,
-        })),
-        pagination: {
-          currentPage: page,
-          totalPages: result.pagination.pageCount,
-          totalItems: result.pagination.total || 0,
-          pageSize: 6,
-          hasNextPage: result.noticias.length === 6,
-          hasPrevPage: page > 1,
-        },
-        meta: {
-          timestamp: new Date().toISOString(),
-          cached: false,
-        },
-      };
-    } catch (fallbackError) {
-      console.error('Directus SDK fallback also failed:', fallbackError);
-      return null;
-    }
+    const transformedData = noticias.map((n: any) => ({
+      id: n.id,
+      autor: 'Redacción CGE',
+      titulo: n.titulo,
+      resumen: n.resumen,
+      categoria: n.categoria,
+      esImportante: n.esImportante,
+      portada: n.portada
+        ? {
+            url: `${DIRECTUS_URL}/assets/${n.portada.id}`,
+            title: n.portada.title || n.portada.filename_download,
+            width: n.portada.width,
+            height: n.portada.height,
+          }
+        : { url: '' },
+      slug: n.slug,
+      contenido: n.resumen,
+      imagen: [],
+      publicado: true,
+      fecha: n.fecha,
+      metaTitle: n.titulo,
+      metaDescription: n.resumen,
+    }));
+
+    return {
+      data: transformedData,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalItems,
+        pageSize,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+      },
+      meta: {
+        timestamp: new Date().toISOString(),
+        cached: true,
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching news page:', error);
+    return null;
   }
 }

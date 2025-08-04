@@ -191,13 +191,12 @@ export async function GET(
       categoria && `noticias-categoria-${categoria}`,
     ].filter(Boolean) as string[];
 
-    // 4. Tiempo de revalidación según el tipo
-    const revalidateTime = type === 'featured' ? 600 : 300; // 10min featured, 5min otros
-
+    // 4. Tiempo de revalidación - Sin caché para consultas inmediatas
+    
     // 5. Fetch con ISR cache
     const response = await fetch(directusUrl, {
       next: {
-        revalidate: revalidateTime,
+        revalidate: 0, // Sin caché del navegador
         tags: cacheTags,
       },
       headers: {

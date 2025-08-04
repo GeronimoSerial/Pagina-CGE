@@ -141,7 +141,7 @@ export async function GET(
     // 4. Fetch con ISR cache
     const response = await fetch(directusUrl, {
       next: {
-        revalidate: 300, // 5 minutos
+        revalidate: 0, // Sin caché del navegador
         tags: cacheTags,
       },
       headers: {

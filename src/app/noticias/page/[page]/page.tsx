@@ -4,8 +4,8 @@ import { PageLayout } from '@/shared/components/PageLayout';
 import NewsSection from '@/features/noticias/components/structure/NewsSection';
 import { fetchNewsPage } from '@/features/noticias/services/news';
 
-// ISR: Revalidar cada 10 minutos
-export const revalidate = 600;
+// ISR: Sin caché del navegador para contenido inmediato
+export const revalidate = 0;
 
 interface NewsPageProps {
   params: Promise<{ page: string }>;
