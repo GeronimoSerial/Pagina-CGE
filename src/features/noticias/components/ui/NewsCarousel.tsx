@@ -51,7 +51,7 @@ export default function NewsCarousel({
             <CarouselItem key={noticia.id} className="pl-6 basis-full">
               <Card className="overflow-hidden border-0 shadow-2xl">
                 <div className="grid gap-0 lg:grid-cols-2">
-                  <div className="aspect-4/3 lg:aspect-auto overflow-hidden">
+                  <div className="aspect-[4/3] lg:h-[400px] overflow-hidden">
                     <Image
                       src={getCover({ noticia }) || ''}
                       alt={noticia.titulo}
