@@ -46,8 +46,8 @@ export default function PhotoSwipeGallery({ noticia }: PhotoSwipeGalleryProps) {
               alt={img.alt || 'Imagen de la noticia'}
               className="object-cover w-full h-48 rounded-lg transition-transform duration-300 ease-in-out transform group-hover:scale-105"
             />
-            <div className="flex absolute inset-0 justify-center items-center bg-black bg-opacity-25 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
-              <span className="text-lg font-bold text-white">Ampliar</span>
+            <div className="flex absolute inset-0 justify-center items-center backdrop-blur-xs bg-black/20 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
+              <span className="text-2xl font-bold text-white">Ampliar</span>
             </div>
           </a>
         ))}
