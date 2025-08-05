@@ -80,6 +80,12 @@ export async function POST(request: NextRequest) {
         await safeRevalidate('tag', 'noticias-list');
         await safeRevalidate('tag', 'noticias-page-1');
 
+        // Tags dinámicos de tipo para endpoint principal
+        const noticiasTypes = ['featured', 'paginated', 'all'];
+        for (const type of noticiasTypes) {
+          await safeRevalidate('tag', `noticias-${type}`);
+        }
+
         // Si es noticia importante, invalidar featured
         if (esImportante) {
           await safeRevalidate('tag', 'noticias-featured');
