@@ -71,21 +71,16 @@ export async function POST(request: NextRequest) {
     // 6. Revalidar según el tipo de evento
     switch (event) {
       case 'create':
+        // Revalidar página específica si tiene slug
+        if (slug) {
+          await safeRevalidate('tag', `tramites-page-${slug}`);
+          await safeRevalidate('path', `/tramites/${slug}`);
+        }
+
         // Revalidar tags principales
         await safeRevalidate('tag', 'tramites-all');
         await safeRevalidate('tag', 'tramites-list');
         await safeRevalidate('tag', 'tramites-navigation');
-
-        // Revalidar por categoría específica
-        if (categoria) {
-          const categoriaSlug = categoria.toLowerCase().replace(/\s+/g, '-');
-          await safeRevalidate('tag', `tramites-categoria-${categoriaSlug}`);
-
-          // Especial atención a ISR
-          if (categoria.toLowerCase().includes('isr')) {
-            await safeRevalidate('tag', 'tramites-categoria-isr');
-          }
-        }
 
         // Revalidar paths principales
         await safeRevalidate('path', '/tramites');
@@ -103,34 +98,21 @@ export async function POST(request: NextRequest) {
         await safeRevalidate('tag', 'tramites-list');
         await safeRevalidate('tag', 'tramites-navigation');
 
-        // Revalidar por categoría
-        if (categoria) {
-          const categoriaSlug = categoria.toLowerCase().replace(/\s+/g, '-');
-          await safeRevalidate('tag', `tramites-categoria-${categoriaSlug}`);
-
-          // Especial atención a ISR
-          if (categoria.toLowerCase().includes('isr')) {
-            await safeRevalidate('tag', 'tramites-categoria-isr');
-          }
-        }
-
+        // Revalidar paths principales
         await safeRevalidate('path', '/tramites');
         break;
 
       case 'delete':
+        // Revalidar página específica si tiene slug
+        if (slug) {
+          await safeRevalidate('tag', `tramites-page-${slug}`);
+          await safeRevalidate('path', `/tramites/${slug}`);
+        }
+
         // Revalidar todo cuando se elimina contenido
         await safeRevalidate('tag', 'tramites-all');
         await safeRevalidate('tag', 'tramites-list');
         await safeRevalidate('tag', 'tramites-navigation');
-
-        if (categoria) {
-          const categoriaSlug = categoria.toLowerCase().replace(/\s+/g, '-');
-          await safeRevalidate('tag', `tramites-categoria-${categoriaSlug}`);
-
-          if (categoria.toLowerCase().includes('isr')) {
-            await safeRevalidate('tag', 'tramites-categoria-isr');
-          }
-        }
 
         await safeRevalidate('path', '/tramites');
         break;
