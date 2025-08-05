@@ -5,7 +5,6 @@ import {
   Article,
 } from '@/features/tramites/services/docs-data';
 
-
 import { Clock } from 'lucide-react';
 import Link from 'next/link';
 import { HTMLContent } from '@/shared/components/HTMLContent';
@@ -24,7 +23,7 @@ export async function generateStaticParams() {
   }
 }
 
-export const revalidate = 2592000; // 30 días
+export const revalidate = false;
 
 export default async function DocumentPage({ params }: PageProps) {
   const slug = (await params).slug;
