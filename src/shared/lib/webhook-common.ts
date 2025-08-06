@@ -10,7 +10,34 @@ export interface CommonWebhookPayload {
   event: 'create' | 'update' | 'delete';
   collection: string;
   keys: string[];
+  slug?: string; 
   payload?: Record<string, any>;
+}
+
+/**
+ * Extraer la acción (create/update/delete) del evento de Directus
+ */
+export function extractActionFromEvent(
+  event: string,
+): 'create' | 'update' | 'delete' | null {
+  if (event.endsWith('.items.create')) {
+    return 'create';
+  }
+  if (event.endsWith('.items.update')) {
+    return 'update';
+  }
+  if (event.endsWith('.items.delete')) {
+    return 'delete';
+  }
+  return null;
+}
+
+/**
+ * Extraer la colección del evento de Directus
+ */
+export function extractCollectionFromEvent(event: string): string | null {
+  const match = event.match(/^([^.]+)\.items\./);
+  return match ? match[1] : null;
 }
 
 /**
@@ -37,15 +64,34 @@ export async function parseWebhookPayload(
   request: NextRequest,
 ): Promise<CommonWebhookPayload> {
   const rawBody = await request.text();
+
   if (!rawBody?.trim()) {
     throw new Error('Payload vacío o inválido');
   }
 
   const body = JSON.parse(rawBody);
 
-  // Normalizar formato del payload
+  // Detectar formato de Directus moderno
+  if (body.event && body.event.includes('.items.')) {
+    const action = extractActionFromEvent(body.event);
+    const collection =
+      extractCollectionFromEvent(body.event) || body.collection;
+
+    if (!action) {
+      throw new Error(`Formato de evento no soportado: ${body.event}`);
+    }
+
+    return {
+      event: action,
+      collection,
+      keys: body.keys || [],
+      slug: body.slug,
+      payload: body.payload || body,
+    };
+  }
+
+  // Formato con payload anidado como string (legacy)
   if (typeof body.event === 'string' && body.event.includes('"event"')) {
-    // Formato con payload anidado como string
     const actualPayload = JSON.parse(body.event);
     const action = actualPayload.event.split('.').pop();
 
@@ -53,11 +99,12 @@ export async function parseWebhookPayload(
       event: action as 'create' | 'update' | 'delete',
       collection: actualPayload.collection,
       keys: actualPayload.keys || [String(actualPayload.key)],
+      slug: actualPayload.slug,
       payload: actualPayload.payload,
     };
   }
 
-  // Formato directo
+  // Formato directo simple (fallback)
   return body as CommonWebhookPayload;
 }
 
