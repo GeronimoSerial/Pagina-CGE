@@ -57,9 +57,9 @@ export async function generateMetadata({
       description: noticia.resumen || noticia.titulo,
       url: url,
       type: 'article',
-      publishedTime: noticia.fecha,
-      modifiedTime: noticia.fecha,
-      expirationTime: noticia.fecha,
+      publishedTime: noticia.createdAt,
+      modifiedTime: noticia.lastUpdated,
+      expirationTime: noticia.lastUpdated,
       authors: ['Consejo General de Educación'],
       tags: [noticia.categoria],
       images: getCover({ noticia }) || [],
@@ -104,15 +104,13 @@ export default async function NoticiaPage({ params }: PageProps) {
     () => [],
   );
 
-  const date = new Date(noticia.fecha);
-  const ISOdate = date.toISOString();
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
     headline: noticia.titulo,
     description: noticia.resumen || noticia.titulo,
-    datePublished: ISOdate,
-    dateModified: ISOdate,
+    datePublished: noticia.createdAt,
+    dateModified: noticia.lastUpdated,
     author: {
       '@type': 'Person',
       name: noticia.autor || 'Redacción CGE',
@@ -157,7 +155,7 @@ export default async function NoticiaPage({ params }: PageProps) {
                     <div className="flex items-center">
                       <CalendarDays className="mr-2 w-4 h-4" />
                       <span className="text-xs tracking-wide">
-                        {formatDate(noticia.fecha)}
+                        {formatDate(noticia.createdAt || noticia.fecha)}
                       </span>
                     </div>
                     <div className="flex items-center">
