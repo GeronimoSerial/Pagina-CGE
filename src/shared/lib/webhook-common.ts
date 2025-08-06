@@ -15,32 +15,6 @@ export interface CommonWebhookPayload {
 }
 
 /**
- * Extract the action (create/update/delete) from Directus event
- */
-export function extractActionFromEvent(
-  event: string,
-): 'create' | 'update' | 'delete' | null {
-  if (event.endsWith('.items.create')) {
-    return 'create';
-  }
-  if (event.endsWith('.items.update')) {
-    return 'update';
-  }
-  if (event.endsWith('.items.delete')) {
-    return 'delete';
-  }
-  return null;
-}
-
-/**
- * Extraer la colección del evento de Directus
- */
-export function extractCollectionFromEvent(event: string): string | null {
-  const match = event.match(/^([^.]+)\.items\./);
-  return match ? match[1] : null;
-}
-
-/**
  * Validar el token de autorización del webhook
  */
 export async function validateWebhookAuth(
@@ -66,46 +40,41 @@ export async function parseWebhookPayload(
   const rawBody = await request.text();
 
   if (!rawBody?.trim()) {
-    throw new Error('Payload vacío o inválido');
+    throw new Error('Payload vacío');
   }
 
-  const body = JSON.parse(rawBody);
+  let body = JSON.parse(rawBody.trim());
+  
+  // Si es string, parsearlo una vez más
+  if (typeof body === 'string') {
+    body = JSON.parse(body);
+  }
 
-  // Detectar formato de Directus moderno
-  if (body.event && body.event.includes('.items.')) {
-    const action = extractActionFromEvent(body.event);
-    const collection =
-      extractCollectionFromEvent(body.event) || body.collection;
-
-    if (!action) {
-      throw new Error(`Formato de evento no soportado: ${body.event}`);
+  // Extraer slug del payload si existe
+  let slug: string | undefined;
+  let payloadData: any = {};
+  
+  if (body.payload) {
+    if (typeof body.payload === 'string') {
+      try {
+        payloadData = JSON.parse(body.payload);
+      } catch {
+        payloadData = {};
+      }
+    } else {
+      payloadData = body.payload;
     }
-
-    return {
-      event: action,
-      collection,
-      keys: body.keys || [],
-      slug: body.slug,
-      payload: body.payload || body,
-    };
+    slug = payloadData.slug;
   }
 
-  // Formato con payload anidado como string (legacy)
-  if (typeof body.event === 'string' && body.event.includes('"event"')) {
-    const actualPayload = JSON.parse(body.event);
-    const action = actualPayload.event.split('.').pop();
-
-    return {
-      event: action as 'create' | 'update' | 'delete',
-      collection: actualPayload.collection,
-      keys: actualPayload.keys || [String(actualPayload.key)],
-      slug: actualPayload.slug,
-      payload: actualPayload.payload,
-    };
-  }
-
-  // Formato directo simple (fallback)
-  return body as CommonWebhookPayload;
+  return {
+    event: body.event?.includes('create') ? 'create' : 
+           body.event?.includes('delete') ? 'delete' : 'update',
+    collection: body.collection || '',
+    keys: body.keys || [],
+    slug,
+    payload: payloadData,
+  };
 }
 
 /**
