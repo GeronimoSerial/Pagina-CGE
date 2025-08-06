@@ -36,6 +36,36 @@ export default async function DocumentPage({ params }: PageProps) {
 
   const markdown = article.content?.[0]?.content || '';
 
+  const date = new Date(article.lastUpdated);
+  const isoDate = date.toISOString();
+
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.description,
+    datePublished: isoDate,
+    dateModified: isoDate,
+    author: {
+      '@type': 'Organization',
+      name: 'Consejo General de Educación',
+      url: 'https://www.consejo.mec.gob.ar',
+    },
+    image: 'https://consejo.mec.gob.ar/og-tramites.webp',
+    publisher: {
+      '@type': 'Organization',
+      name: 'Consejo General de Educación',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://consejo.mec.gob.ar/logo.png',
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://consejo.mec.gob.ar/tramites/${slug}`,
+    },
+  };
+
   return (
     <div className="min-h-screen">
       <main className="flex-1 lg:overflow-y-auto">
@@ -99,13 +129,20 @@ export default async function DocumentPage({ params }: PageProps) {
           </div>
         </footer>
       </main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData),
+        }}
+      />
     </div>
   );
 }
 
 export async function generateMetadata({ params }: PageProps) {
-  const article = await getProcedureBySlug((await params).slug);
-  const slug = (await params).slug;
+  const { slug } = await params;
+  const article = await getProcedureBySlug(slug);
+
   if (!article) {
     return {
       title: 'Página no encontrada',
@@ -129,6 +166,14 @@ export async function generateMetadata({ params }: PageProps) {
       expirationTime: article.lastUpdated,
       authors: ['Consejo General de Educación'],
       tags: [article.category],
+      images: [
+        {
+          url: 'https://consejo.mec.gob.ar/og-tramites.webp',
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
     },
   };
 }
