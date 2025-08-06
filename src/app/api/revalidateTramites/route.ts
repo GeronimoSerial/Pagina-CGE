@@ -12,9 +12,13 @@ import {
 } from '@/shared/lib/webhook-common';
 
 interface TramiteWebhookPayload {
-  event: 'create' | 'update' | 'delete';
-  collection: string;
+  event:
+    | 'tramites.items.create'
+    | 'tramites.items.update'
+    | 'tramites.items.delete';
+  collection: 'tramites';
   keys: string[];
+  slug?: string; // Puede venir directamente en el payload principal
   payload?: {
     id: string;
     slug?: string;
@@ -56,7 +60,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { event, payload: data } = payload;
-    const slug = data?.slug;
+    const slug = payload.slug || data?.slug;
     const categoria = data?.categoria;
     const titulo = data?.titulo;
 
@@ -68,7 +72,7 @@ export async function POST(request: NextRequest) {
       return await safeRevalidateWithLogger(logger, type, target);
     };
 
-    // 6. Revalidar según el tipo de evento
+    // Revalidar según el tipo de evento
     switch (event) {
       case 'create':
         // Revalidar página específica si tiene slug
@@ -124,7 +128,7 @@ export async function POST(request: NextRequest) {
         );
     }
 
-    // 7. Finalizar logger y crear respuesta usando utilidad común
+    // Finalizar logger y crear respuesta usando utilidad común
     const result = logger.finish();
     const response = createWebhookResponse('trámite', event, result, {
       event,
@@ -152,7 +156,11 @@ export async function GET() {
     status: 'Webhook de trámites activo',
     environment: process.env.NODE_ENV || 'development',
     timestamp: new Date().toISOString(),
-    supportedEvents: ['create', 'update', 'delete'],
+    supportedEvents: [
+      'tramites.items.create',
+      'tramites.items.update',
+      'tramites.items.delete',
+    ],
     collection: 'tramites',
     specialCategories: ['ISR', 'General'],
     endpoints: {
