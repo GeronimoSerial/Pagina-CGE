@@ -1,5 +1,5 @@
 /**
- * Utilidades comunes para webhooks de revalidación
+ * Common utilities for revalidation webhooks
  */
 
 import { NextRequest } from 'next/server';
@@ -15,7 +15,7 @@ export interface CommonWebhookPayload {
 }
 
 /**
- * Validar el token de autorización del webhook
+ * Validate the authorization token for the webhook
  */
 export async function validateWebhookAuth(
   request: NextRequest,
@@ -32,7 +32,7 @@ export async function validateWebhookAuth(
 }
 
 /**
- * Parsear y normalizar el payload del webhook
+ * Parse and normalize the webhook payload
  */
 export async function parseWebhookPayload(
   request: NextRequest,
@@ -45,12 +45,12 @@ export async function parseWebhookPayload(
 
   let body = JSON.parse(rawBody.trim());
   
-  // Si es string, parsearlo una vez más
+  // If it's a string, parse it once more
   if (typeof body === 'string') {
     body = JSON.parse(body);
   }
 
-  // Extraer slug del payload si existe
+  // Extract slug from payload if it exists
   let slug: string | undefined;
   let payloadData: any = {};
   
@@ -78,7 +78,7 @@ export async function parseWebhookPayload(
 }
 
 /**
- * Validar que el payload pertenece a la colección esperada
+ * Validate that the payload belongs to the expected collection
  */
 export function validateCollection(
   payload: CommonWebhookPayload,
@@ -88,7 +88,7 @@ export function validateCollection(
 }
 
 /**
- * Crear respuesta de error estándar para webhooks
+ * Create a standardized error response for webhooks
  */
 export function createErrorResponse(message: string, status: number = 400) {
   return {
@@ -98,7 +98,7 @@ export function createErrorResponse(message: string, status: number = 400) {
 }
 
 /**
- * Crear respuesta de colección ignorada
+ * Create a response for ignored collections
  */
 export function createIgnoredResponse(
   collection: string,
@@ -114,7 +114,7 @@ export function createIgnoredResponse(
 }
 
 /**
- * Función helper mejorada para revalidar con métricas
+ * Helper function to revalidate with metrics
  */
 export async function safeRevalidateWithLogger(
   logger: WebhookOperationLogger,
@@ -151,7 +151,7 @@ export async function safeRevalidateWithLogger(
         );
         return false;
       }
-      // Breve pausa antes del retry
+      // Brief pause before retry
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
   }
@@ -159,7 +159,7 @@ export async function safeRevalidateWithLogger(
 }
 
 /**
- * Crear respuesta estándar de webhook con métricas
+ * Create a standardized webhook response with metrics
  */
 export function createWebhookResponse(
   webhookType: string,
