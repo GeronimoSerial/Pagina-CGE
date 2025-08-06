@@ -1,5 +1,4 @@
 import directus from '@/shared/lib/directus';
-import { readItems } from '@directus/sdk';
 import { NewsItem } from '@/shared/interfaces';
 import { cfImages } from '@/shared/lib/cloudflare-images';
 import { DIRECTUS_URL } from '@/shared/lib/config';

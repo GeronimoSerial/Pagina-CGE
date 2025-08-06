@@ -96,7 +96,7 @@ export async function GET(
     const response = await fetch(directusUrl, {
       next: {
         revalidate: false, // Cache hasta invalidación por webhook
-        tags: ['noticias', 'noticias-destacadas'],
+        tags: ['noticias', 'noticias-featured'],
       },
       headers: {
         'Content-Type': 'application/json',
