@@ -12,9 +12,13 @@ import {
 } from '@/shared/lib/webhook-common';
 
 interface WebhookPayload {
-  event: 'create' | 'update' | 'delete';
-  collection: string;
+  event:
+    | 'noticias.items.create'
+    | 'noticias.items.update'
+    | 'noticias.items.delete';
+  collection: 'noticias';
   keys: string[];
+  slug?: string;
   payload?: {
     id: string;
     slug?: string;
@@ -56,7 +60,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { event, payload: data } = payload;
-    const slug = data?.slug;
+    const slug = payload.slug || data?.slug;
     const esImportante = data?.esImportante;
     const categoria = data?.categoria;
 
@@ -68,7 +72,7 @@ export async function POST(request: NextRequest) {
       return await safeRevalidateWithLogger(logger, type, target);
     };
 
-    // 6. Revalidar según evento
+    // Revalidar según evento
     switch (event) {
       case 'create':
         // Tags generales que se usan en múltiples fetches
@@ -79,6 +83,12 @@ export async function POST(request: NextRequest) {
         await safeRevalidate('tag', 'noticias-count');
         await safeRevalidate('tag', 'noticias-list');
         await safeRevalidate('tag', 'noticias-page-1');
+
+        // Tags dinámicos de tipo para endpoint principal
+        const noticiasTypes = ['featured', 'paginated', 'all'];
+        for (const type of noticiasTypes) {
+          await safeRevalidate('tag', `noticias-${type}`);
+        }
 
         // Si es noticia importante, invalidar featured
         if (esImportante) {
@@ -170,7 +180,7 @@ export async function POST(request: NextRequest) {
         );
     }
 
-    // 7. Finalizar logger y crear respuesta usando utilidad común
+    // Finalizar logger y crear respuesta usando utilidad común
     const result = logger.finish();
     const response = createWebhookResponse('noticias', event, result);
 
@@ -193,7 +203,11 @@ export async function GET() {
     status: 'Webhook activo',
     environment: process.env.NODE_ENV || 'development',
     timestamp: new Date().toISOString(),
-    supportedEvents: ['create', 'update', 'delete'],
+    supportedEvents: [
+      'noticias.items.create',
+      'noticias.items.update',
+      'noticias.items.delete',
+    ],
     collection: 'noticias',
   });
 }

@@ -1,7 +1,7 @@
 import React, { ReactNode, Suspense } from 'react';
 import { ResponsiveNav } from '@/features/tramites/navigation/responsive-nav';
 
-export const revalidate = 2592000; // 30 días
+export const revalidate = false; // 30 días
 
 async function NavigationLoader() {
   const { getProceduresNavigation } = await import(

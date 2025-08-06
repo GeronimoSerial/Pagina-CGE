@@ -37,7 +37,7 @@ export async function getProceduresNavigation(): Promise<NavSection[]> {
     {
       next: {
         tags: ['tramites-all', 'tramites-navigation'],
-        revalidate: 2592000, // 30 días
+        revalidate: false,
       },
     },
   );
@@ -84,7 +84,7 @@ export async function getProcedureBySlug(
       {
         next: {
           tags: ['tramites-all', `tramites-page-${slug}`],
-          revalidate: 2592000, // 30 días
+          revalidate: false,
         },
       },
     );
@@ -119,7 +119,6 @@ function wrapContentAsSection(contenido: string | null): ArticleSection[] {
   if (!contenido) return [];
   return [{ type: 'paragraph', content: contenido }];
 }
-
 // 4. Obtener todos los slugs
 export async function getAllProcedureSlugs(): Promise<string[]> {
   try {
@@ -128,7 +127,7 @@ export async function getAllProcedureSlugs(): Promise<string[]> {
       {
         next: {
           tags: ['tramites-all', 'tramites-list'],
-          revalidate: 2592000, // 30 días
+          revalidate: false,
         },
       },
     );
@@ -151,11 +150,11 @@ export async function getAllProcedureSlugs(): Promise<string[]> {
 export async function getAllProcedures(): Promise<any[]> {
   try {
     const response = await fetch(
-      `${DIRECTUS_URL}/items/tramites?fields=id,slug,categoria,titulo,resumen,updatedAt,fecha,contenido&sort=categoria,titulo&limit=200`,
+      `${DIRECTUS_URL}/items/tramites?fields=id,slug,categoria,titulo,resumen,date_updated,fecha,contenido&sort=categoria,titulo&limit=200`,
       {
         next: {
           tags: ['tramites-all', 'tramites-list'],
-          revalidate: 2592000, // 30 días
+          revalidate: false,
         },
       },
     );
