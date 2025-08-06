@@ -14,7 +14,7 @@ import Image from 'next/image';
 import { formatDate } from '@/shared/lib/date-utils';
 import { NewsItem } from '@/shared/interfaces';
 import { HTMLContent } from '@/shared/components/HTMLContent';
-
+import { SITE_URL } from '@/shared/lib/config';
 export const revalidate = false;
 
 export async function generateStaticParams() {
@@ -114,7 +114,7 @@ export default async function NoticiaPage({ params }: PageProps) {
     author: {
       '@type': 'Person',
       name: noticia.autor || 'Redacción CGE',
-      url: 'https://www.consejo.mec.gob.ar',
+      url: SITE_URL,
     },
     image: getCover({ noticia }) || [],
     publisher: {
@@ -122,12 +122,12 @@ export default async function NoticiaPage({ params }: PageProps) {
       name: 'Consejo General de Educación',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://www.consejo.mec.gob.ar/images/logo.png',
+        url: `${SITE_URL}/images/logo.png`,
       },
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://www.consejo.mec.gob.ar/noticias/${slug}`,
+      '@id': `${SITE_URL}/noticias/${slug}`,
     },
   };
 
