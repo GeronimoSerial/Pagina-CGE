@@ -2,5 +2,4 @@ export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://consejo.mec
 export const DIRECTUS_URL =
   process.env.NEXT_PUBLIC_DIRECTUS_URL || 'https://devcms.geroserial.com';
 
-
-
+export const FALLBACK_IMAGE_NEWS = '/public/og-noticias.webp';

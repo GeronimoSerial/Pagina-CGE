@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DIRECTUS_URL } from '@/shared/lib/config';
+import { FALLBACK_IMAGE_NEWS } from '@/shared/lib/config';
 
 interface SearchParams {
   q?: string;
@@ -254,7 +255,7 @@ export async function GET(request: NextRequest) {
         width: noticia.portada.width || 0,
         height: noticia.portada.height || 0,
       }
-        : { url: '/images/header-noticias.webp', filename: '', title: '', width: 0, height: 0 },
+        : { url: FALLBACK_IMAGE_NEWS, filename: '', title: '', width: 0, height: 0 },
     }));
 
     // Calcular paginación
