@@ -9,6 +9,7 @@ import { Clock } from 'lucide-react';
 import Link from 'next/link';
 import { HTMLContent } from '@/shared/components/HTMLContent';
 import { formatDate } from '@/shared/lib/date-utils';
+import { SITE_URL } from '@/shared/lib/config';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -47,20 +48,20 @@ export default async function DocumentPage({ params }: PageProps) {
     author: {
       '@type': 'Organization',
       name: 'Consejo General de Educación',
-      url: 'https://www.consejo.mec.gob.ar',
+      url: SITE_URL,
     },
-    image: 'https://consejo.mec.gob.ar/og-tramites.webp',
+    image: `${SITE_URL}/og-tramites.webp`,
     publisher: {
       '@type': 'Organization',
       name: 'Consejo General de Educación',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://consejo.mec.gob.ar/logo.png',
+        url: `${SITE_URL}/logo.png`,
       },
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://consejo.mec.gob.ar/tramites/${slug}`,
+      '@id': `${SITE_URL}/tramites/${slug}`,
     },
   };
 
@@ -162,7 +163,7 @@ export async function generateMetadata({ params }: PageProps) {
       tags: [article.category],
       images: [
         {
-          url: 'https://consejo.mec.gob.ar/og-tramites.webp',
+          url: `${SITE_URL}/og-tramites.webp`,
           width: 1200,
           height: 630,
           alt: article.title,
