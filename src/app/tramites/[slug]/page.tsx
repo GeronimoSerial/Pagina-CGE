@@ -8,6 +8,7 @@ import {
 import { Clock } from 'lucide-react';
 import Link from 'next/link';
 import { HTMLContent } from '@/shared/components/HTMLContent';
+import { formatDate } from '@/shared/lib/date-utils';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -36,16 +37,13 @@ export default async function DocumentPage({ params }: PageProps) {
 
   const markdown = article.content?.[0]?.content || '';
 
-  const date = new Date(article.lastUpdated);
-  const isoDate = date.toISOString();
-
   const structuredData = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': 'HowTo',
     headline: article.title,
     description: article.description,
-    datePublished: isoDate,
-    dateModified: isoDate,
+    datePublished: article.date,
+    dateModified: article.lastUpdated,
     author: {
       '@type': 'Organization',
       name: 'Consejo General de Educación',
@@ -78,11 +76,7 @@ export default async function DocumentPage({ params }: PageProps) {
               </span>
               <div className="flex items-center text-sm text-gray-500">
                 <Clock className="mr-1 w-4 h-4" />
-                {new Date(article.lastUpdated).toLocaleDateString('es-ES', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
+                {formatDate(article.lastUpdated)}
               </div>
             </div>
             <h1 className="mb-4 text-3xl md:text-4xl font-bold text-gray-900">
@@ -161,7 +155,7 @@ export async function generateMetadata({ params }: PageProps) {
       description: article.description,
       url: url,
       type: 'article',
-      publishedTime: article.lastUpdated,
+      publishedTime: article.date,
       modifiedTime: article.lastUpdated,
       expirationTime: article.lastUpdated,
       authors: ['Consejo General de Educación'],
