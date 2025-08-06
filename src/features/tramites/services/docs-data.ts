@@ -25,6 +25,7 @@ export interface Article {
   slug: string;
   category: string;
   title: string;
+  date?: string;
   description: string;
   lastUpdated: string;
   content: ArticleSection[];
@@ -80,7 +81,7 @@ export async function getProcedureBySlug(
 ): Promise<Article | null> {
   try {
     const response = await fetch(
-      `${DIRECTUS_URL}/items/tramites?filter[slug][_eq]=${slug}&fields=id,slug,categoria,titulo,resumen,contenido,date_updated,fecha&limit=1`,
+      `${DIRECTUS_URL}/items/tramites?filter[slug][_eq]=${slug}&fields=id,slug,categoria,titulo,resumen,contenido,date_updated,date_created,fecha&limit=1`,
       {
         next: {
           tags: ['tramites-all', `tramites-page-${slug}`],
@@ -106,6 +107,7 @@ export async function getProcedureBySlug(
       title: t.titulo,
       description: t.resumen,
       lastUpdated: t.date_updated || t.fecha,
+      date: t.date_created,
       content: wrapContentAsSection(t.contenido),
     };
   } catch (error) {
