@@ -45,23 +45,6 @@ export async function generateMetadata({
   if (!noticia) return {};
 
   const url = `/noticias/${slug}`;
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'NewsArticle',
-    headline: noticia.titulo,
-    description: noticia.resumen || noticia.titulo,
-    datePublished: noticia.fecha,
-    dateModified: noticia.fecha,
-    author: {
-      '@type': 'Organization',
-      name: 'Consejo General de Educación',
-    },
-    image: noticia.portada,
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': url,
-    },
-  };
 
   const metadata = {
     title: noticia.titulo,
@@ -79,10 +62,7 @@ export async function generateMetadata({
       expirationTime: noticia.fecha,
       authors: ['Consejo General de Educación'],
       tags: [noticia.categoria],
-      images: noticia.portada ? [noticia.portada] : [],
-    },
-    other: {
-      'script:ld+json': JSON.stringify(structuredData),
+      images: getCover({ noticia }) || [],
     },
   };
 
@@ -123,6 +103,35 @@ export default async function NoticiaPage({ params }: PageProps) {
   const relatedFinal = await getRelatedNews(noticia.categoria, slug).catch(
     () => [],
   );
+
+  const date = new Date(noticia.fecha);
+  const fechaISO = date.toISOString();
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: noticia.titulo,
+    description: noticia.resumen || noticia.titulo,
+    datePublished: fechaISO,
+    dateModified: fechaISO,
+    author: {
+      '@type': 'Person',
+      name: noticia.autor || 'Redacción CGE',
+      url: 'https://www.consejo.mec.gob.ar',
+    },
+    image: getCover({ noticia }) || [],
+    publisher: {
+      '@type': 'Organization',
+      name: 'Consejo General de Educación',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.consejo.mec.gob.ar/images/logo.png',
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://www.consejo.mec.gob.ar/noticias/${slug}`,
+    },
+  };
 
   return (
     <div className="flex flex-col page-bg-white">
@@ -280,6 +289,12 @@ export default async function NoticiaPage({ params }: PageProps) {
           </div>
         </aside>
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData),
+        }}
+      />
     </div>
   );
 }
