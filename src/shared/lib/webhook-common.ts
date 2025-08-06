@@ -15,7 +15,7 @@ export interface CommonWebhookPayload {
 }
 
 /**
- * Extraer la acción (create/update/delete) del evento de Directus
+ * Extract the action (create/update/delete) from Directus event
  */
 export function extractActionFromEvent(
   event: string,
