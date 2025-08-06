@@ -129,7 +129,8 @@ export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
       imagenes: n.imagenes,
       publicado: n.publicado,
       fecha: n.fecha,
-      // createdAt: n.createdAt,
+      createdAt: n.date_created,
+      lastUpdated: n.date_updated || n.date_created,
       metaTitle: n.metaTitle || n.titulo,
       metaDescription: n.metaDescription || n.resumen,
     };

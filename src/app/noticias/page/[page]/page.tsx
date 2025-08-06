@@ -12,7 +12,7 @@ interface NewsPageProps {
 
 export async function generateStaticParams() {
   return Array.from({ length: 10 }, (_, i) => ({
-    page: (i + 2).toString(), // Empezar desde página 2 (página 1 es /noticias)
+    page: (i + 2).toString(), 
   }));
 }
 
