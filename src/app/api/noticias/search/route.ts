@@ -27,7 +27,7 @@ interface DirectusNewsItem {
   };
 }
 
-// Rate limiting básico 
+// Rate limiting básico
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_MAX = 30; // 30 requests
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minuto
@@ -151,12 +151,6 @@ function buildDirectusUrl(params: SearchParams): string {
   return url.toString();
 }
 
-function transformPortadaUrl(
-  portada: DirectusNewsItem['portada'],
-): string | null {
-  if (!portada?.id) return null;
-  return `${DIRECTUS_URL}/assets/${portada.id}?width=800&height=600&fit=cover&quality=80`;
-}
 
 export async function GET(request: NextRequest) {
   try {
@@ -252,14 +246,15 @@ export async function GET(request: NextRequest) {
       categoria: noticia.categoria,
       esImportante: noticia.esImportante,
       slug: noticia.slug,
-      portada: noticia.portada
+      portada: noticia.portada 
         ? {
-            url: transformPortadaUrl(noticia.portada),
-            title: noticia.portada.title,
-            width: noticia.portada.width,
-            height: noticia.portada.height,
-          }
-        : null,
+        url: `${DIRECTUS_URL}/assets/${noticia.portada.id}`,
+        filename: noticia.portada.filename_disk,
+        title: noticia.portada.title || '',
+        width: noticia.portada.width || 0,
+        height: noticia.portada.height || 0,
+      }
+        : { url: '/images/header-noticias.webp', filename: '', title: '', width: 0, height: 0 },
     }));
 
     // Calcular paginación
@@ -309,5 +304,5 @@ export async function GET(request: NextRequest) {
 
 // Configuración de Next.js para el endpoint
 export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic'; 
-export const revalidate = 60; 
+export const dynamic = 'force-dynamic';
+export const revalidate = 60;
