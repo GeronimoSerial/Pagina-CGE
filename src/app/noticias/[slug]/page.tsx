@@ -105,14 +105,14 @@ export default async function NoticiaPage({ params }: PageProps) {
   );
 
   const date = new Date(noticia.fecha);
-  const fechaISO = date.toISOString();
+  const ISOdate = date.toISOString();
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
     headline: noticia.titulo,
     description: noticia.resumen || noticia.titulo,
-    datePublished: fechaISO,
-    dateModified: fechaISO,
+    datePublished: ISOdate,
+    dateModified: ISOdate,
     author: {
       '@type': 'Person',
       name: noticia.autor || 'Redacción CGE',
