@@ -32,6 +32,18 @@ const nextConfig = {
         port: '',
         pathname: '/assets/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'consejo.geroserial.com',
+        port: '',
+        pathname: '/cdn-cgi/image/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'consejo.geroserial.com',
+        port: '',
+        pathname: '/assets/**',
+      },
     ],
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 7200,
@@ -53,15 +65,6 @@ const nextConfig = {
       },
       {
         source: '/_next/image(.*)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
-        source: '/api/escuelas(.*)',
         headers: [
           {
             key: 'Cache-Control',
