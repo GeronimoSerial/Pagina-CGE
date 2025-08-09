@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { NewsItem } from '@/shared/interfaces';
-import { cn, formatDate } from '@/shared/lib/utils';
+import { cn } from '@/shared/lib/utils';
+import { formatDate } from '@/shared/lib/date-utils';
 import {
   Carousel,
   CarouselContent,

@@ -10,7 +10,7 @@ export interface CommonWebhookPayload {
   event: 'create' | 'update' | 'delete';
   collection: string;
   keys: string[];
-  slug?: string; 
+  slug?: string;
   payload?: Record<string, any>;
 }
 
@@ -44,7 +44,7 @@ export async function parseWebhookPayload(
   }
 
   let body = JSON.parse(rawBody.trim());
-  
+
   // If it's a string, parse it once more
   if (typeof body === 'string') {
     body = JSON.parse(body);
@@ -53,7 +53,7 @@ export async function parseWebhookPayload(
   // Extract slug from payload if it exists
   let slug: string | undefined;
   let payloadData: any = {};
-  
+
   if (body.payload) {
     if (typeof body.payload === 'string') {
       try {
@@ -68,8 +68,11 @@ export async function parseWebhookPayload(
   }
 
   return {
-    event: body.event?.includes('create') ? 'create' : 
-           body.event?.includes('delete') ? 'delete' : 'update',
+    event: body.event?.includes('create')
+      ? 'create'
+      : body.event?.includes('delete')
+        ? 'delete'
+        : 'update',
     collection: body.collection || '',
     keys: body.keys || [],
     slug,

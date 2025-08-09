@@ -152,7 +152,6 @@ function buildDirectusUrl(params: SearchParams): string {
   return url.toString();
 }
 
-
 export async function GET(request: NextRequest) {
   try {
     // Obtener IP para rate limiting
@@ -247,15 +246,21 @@ export async function GET(request: NextRequest) {
       categoria: noticia.categoria,
       esImportante: noticia.esImportante,
       slug: noticia.slug,
-      portada: noticia.portada 
+      portada: noticia.portada
         ? {
-        url: `${DIRECTUS_URL}/assets/${noticia.portada.id}`,
-        filename: noticia.portada.filename_disk,
-        title: noticia.portada.title || '',
-        width: noticia.portada.width || 0,
-        height: noticia.portada.height || 0,
-      }
-        : { url: FALLBACK_IMAGE_NEWS, filename: '', title: '', width: 0, height: 0 },
+            url: `${DIRECTUS_URL}/assets/${noticia.portada.id}`,
+            filename: noticia.portada.filename_disk,
+            title: noticia.portada.title || '',
+            width: noticia.portada.width || 0,
+            height: noticia.portada.height || 0,
+          }
+        : {
+            url: FALLBACK_IMAGE_NEWS,
+            filename: '',
+            title: '',
+            width: 0,
+            height: 0,
+          },
     }));
 
     // Calcular paginación

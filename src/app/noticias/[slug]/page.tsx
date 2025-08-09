@@ -155,7 +155,7 @@ export default async function NoticiaPage({ params }: PageProps) {
                     <div className="flex items-center">
                       <CalendarDays className="mr-2 w-4 h-4" />
                       <span className="text-xs tracking-wide">
-                        {formatDate(noticia.createdAt || noticia.fecha)}
+                        {formatDate(noticia.fecha || noticia.createdAt || '')}
                       </span>
                     </div>
                     <div className="flex items-center">
