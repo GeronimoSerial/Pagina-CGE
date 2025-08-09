@@ -46,7 +46,7 @@ export async function getPaginatedNews(
     }
 
     const response = await fetch(
-      `${DIRECTUS_URL}/items/noticias?fields=id,titulo,resumen,fecha,categoria,esImportante,slug,portada.*&sort=-fecha,-id&limit=${Math.min(pageSize, 20)}&offset=${offset}${filterQuery}`,
+      `${DIRECTUS_URL}/items/noticias?fields=id,titulo,resumen,date_created,date_updated,fecha,categoria,esImportante,slug,portada.*&sort=-fecha,-id&limit=${Math.min(pageSize, 20)}&offset=${offset}${filterQuery}`,
       {
         next: {
           tags: ['noticias', 'noticias-paginated'],
@@ -240,7 +240,7 @@ export async function getNewsCategories(): Promise<
 export async function getFeaturedNews(count: number = 3): Promise<NewsItem[]> {
   try {
     const response = await fetch(
-      `${DIRECTUS_URL}/items/noticias?filter[esImportante][_eq]=true&fields=id,titulo,resumen,fecha,categoria,esImportante,slug,portada.*&sort=-fecha,-id&limit=${count}`,
+      `${DIRECTUS_URL}/items/noticias?filter[esImportante][_eq]=true&fields=id,titulo,resumen,fecha,date_created,date_updated,categoria,esImportante,slug,portada.*&sort=-fecha,-id&limit=${count}`,
       {
         next: {
           tags: ['noticias-featured'],
@@ -277,6 +277,8 @@ export async function getFeaturedNews(count: number = 3): Promise<NewsItem[]> {
       imagen: [],
       publicado: true,
       fecha: n.fecha,
+      createdAt: n.date_created,
+      lastUpdated: n.date_updated || n.date_created,
       metaTitle: n.titulo,
       metaDescription: n.resumen,
     }));
@@ -329,7 +331,7 @@ export async function fetchNewsPage(
 
     // Obtener las noticias de la página
     const response = await fetch(
-      `${DIRECTUS_URL}/items/noticias?fields=id,titulo,resumen,fecha,categoria,esImportante,slug,portada.*&sort=-fecha,-id&limit=${pageSize}&offset=${offset}`,
+      `${DIRECTUS_URL}/items/noticias?fields=id,titulo,resumen,fecha,date_created,date_updated,categoria,esImportante,slug,portada.*&sort=-fecha,-id&limit=${pageSize}&offset=${offset}`,
       {
         next: {
           tags: [`noticias-page-${page}`, 'noticias-list'],
@@ -367,6 +369,8 @@ export async function fetchNewsPage(
       imagen: [],
       publicado: true,
       fecha: n.fecha,
+      createdAt: n.date_created,
+      lastUpdated: n.date_updated || n.date_created,
       metaTitle: n.titulo,
       metaDescription: n.resumen,
     }));

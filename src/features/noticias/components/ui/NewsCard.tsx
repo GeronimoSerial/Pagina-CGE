@@ -1,11 +1,10 @@
 import { Card, CardContent } from '@/shared/ui/card';
-import { formatDate } from '@/shared/lib/date-utils';
 import { ArrowRight, CalendarDays, Tag } from 'lucide-react';
 import { getCover } from '@/features/noticias/services/news';
 import { NewsItem } from '@/shared/interfaces';
 import Image from 'next/image';
 import Link from 'next/link';
-
+import { formatDate } from '@/shared/lib/date-utils';
 export function NewsCard({
   noticia,
   index = 0,
@@ -38,7 +37,9 @@ export function NewsCard({
             <div className="flex items-center text-xs text-gray-500 gap-2 mb-3 overflow-hidden whitespace-nowrap">
               <div className="flex items-center gap-1 shrink-0">
                 <CalendarDays className="w-3 h-3" />
-                <span className="truncate">{formatDate(noticia.fecha)}</span>
+                <span className="truncate">
+                  {formatDate(noticia.fecha || '')}
+                </span>
               </div>
               <span className="text-gray-400">|</span>
               <div className="flex items-center gap-1 min-w-0">

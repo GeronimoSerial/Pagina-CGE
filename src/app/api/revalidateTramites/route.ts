@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     if (!(await validateWebhookAuth(request))) {
       return NextResponse.json(
         { error: 'Token de autorización requerido o inválido' },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
           error: 'Payload inválido',
           message: error instanceof Error ? error.message : 'Error de parseo',
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
           message: `Evento ignorado - colección '${payload.collection}' no es 'tramites'`,
           collection: payload.collection,
         },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -66,7 +66,6 @@ export async function POST(request: NextRequest) {
     // Inicializar logger con métricas de tiempo
     const logger = new WebhookOperationLogger('tramites', event, slug);
 
- 
     const safeRevalidate = async (type: 'path' | 'tag', target: string) => {
       return await safeRevalidateWithLogger(logger, type, target);
     };
@@ -118,13 +117,13 @@ export async function POST(request: NextRequest) {
       default:
         return NextResponse.json(
           { error: `Evento no soportado: ${event}` },
-          { status: 400 }
+          { status: 400 },
         );
     }
 
     // Finalizar logger y crear respuesta
     const result = logger.finish();
-    
+
     return NextResponse.json({
       success: true,
       collection: 'tramites',
@@ -134,7 +133,6 @@ export async function POST(request: NextRequest) {
       duration: result.totalDuration,
       timestamp: new Date().toISOString(),
     });
-
   } catch (error) {
     return NextResponse.json(
       {
@@ -143,7 +141,7 @@ export async function POST(request: NextRequest) {
         message: error instanceof Error ? error.message : 'Error desconocido',
         timestamp: new Date().toISOString(),
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
