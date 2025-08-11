@@ -1,11 +1,10 @@
 import { Card, CardContent } from '@/shared/ui/card';
-import { formatDate } from '@/shared/lib/date-utils';
 import { ArrowRight, CalendarDays, Tag } from 'lucide-react';
 import { getCover } from '@/features/noticias/services/news';
 import { NewsItem } from '@/shared/interfaces';
 import Image from 'next/image';
 import Link from 'next/link';
-
+import { formatDate } from '@/shared/lib/date-utils';
 export function NewsCard({
   noticia,
   index = 0,
@@ -33,19 +32,19 @@ export function NewsCard({
           />
           <div className="absolute inset-0 transition-colors duration-300 bg-black/0 group-hover:bg-black/10" />
         </div>
-        <div className="p-6 flex flex-col justify-between h-[250px]">
+        <div className="p-6 flex flex-col justify-between h-[300px]">
           <div>
-            <div className="flex gap-4 items-center mb-4 text-sm text-gray-500">
-              <div className="flex gap-1 items-center">
-                <CalendarDays className="w-4 h-4" />
-                <span className="text-xs tracking-wide">
-                  {' '}
-                  {formatDate(noticia.fecha)}
+            <div className="flex items-center text-xs text-gray-500 gap-2 mb-3 overflow-hidden whitespace-nowrap">
+              <div className="flex items-center gap-1 shrink-0">
+                <CalendarDays className="w-3 h-3" />
+                <span className="truncate">
+                  {formatDate(noticia.fecha || '')}
                 </span>
               </div>
-              <div className="flex gap-1 items-center">
-                <Tag className="w-4 h-4" />
-                <span className="tracking-wide">
+              <span className="text-gray-400">|</span>
+              <div className="flex items-center gap-1 min-w-0">
+                <Tag className="w-3 h-3 shrink-0" />
+                <span className="truncate">
                   {noticia.categoria ?? 'Redacción CGE'}
                 </span>
               </div>
@@ -56,7 +55,7 @@ export function NewsCard({
               </h4>
             </Link>
             <p
-              className="mb-4 text-sm leading-relaxed text-gray-600"
+              className="mb-4 text-sm leading-relaxed text-gray-600 line-clamp-3"
               title={noticia.resumen}
             >
               {noticia.resumen}

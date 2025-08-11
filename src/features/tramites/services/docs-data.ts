@@ -1,5 +1,4 @@
-import directus from '@/shared/lib/directus';
-import { readItems } from '@directus/sdk';
+import { DIRECTUS_URL } from '@/shared/lib/config';
 
 export interface NavSection {
   id: string;
@@ -26,6 +25,7 @@ export interface Article {
   slug: string;
   category: string;
   title: string;
+  date?: string;
   description: string;
   lastUpdated: string;
   content: ArticleSection[];
@@ -34,11 +34,11 @@ export interface Article {
 // 1. Navegación de trámites agrupada por categoría
 export async function getProceduresNavigation(): Promise<NavSection[]> {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_DIRECTUS_URL}/items/tramites?fields=categoria,titulo,slug&sort=categoria,titulo&limit=200`,
+    `${DIRECTUS_URL}/items/tramites?fields=categoria,titulo,slug&sort=categoria,titulo&limit=200`,
     {
       next: {
         tags: ['tramites-all', 'tramites-navigation'],
-        revalidate: 2592000, // 30 días
+        revalidate: false,
       },
     },
   );
@@ -81,11 +81,11 @@ export async function getProcedureBySlug(
 ): Promise<Article | null> {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_DIRECTUS_URL}/items/tramites?filter[slug][_eq]=${slug}&fields=id,slug,categoria,titulo,resumen,contenido,date_updated,fecha&limit=1`,
+      `${DIRECTUS_URL}/items/tramites?filter[slug][_eq]=${slug}&fields=id,slug,categoria,titulo,resumen,contenido,date_updated,date_created,fecha&limit=1`,
       {
         next: {
           tags: ['tramites-all', `tramites-page-${slug}`],
-          revalidate: 2592000, // 30 días
+          revalidate: false,
         },
       },
     );
@@ -107,6 +107,7 @@ export async function getProcedureBySlug(
       title: t.titulo,
       description: t.resumen,
       lastUpdated: t.date_updated || t.fecha,
+      date: t.date_created,
       content: wrapContentAsSection(t.contenido),
     };
   } catch (error) {
@@ -120,16 +121,15 @@ function wrapContentAsSection(contenido: string | null): ArticleSection[] {
   if (!contenido) return [];
   return [{ type: 'paragraph', content: contenido }];
 }
-
 // 4. Obtener todos los slugs
 export async function getAllProcedureSlugs(): Promise<string[]> {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_DIRECTUS_URL}/items/tramites?fields=slug&limit=200`,
+      `${DIRECTUS_URL}/items/tramites?fields=slug&limit=200`,
       {
         next: {
           tags: ['tramites-all', 'tramites-list'],
-          revalidate: 2592000, // 30 días
+          revalidate: false,
         },
       },
     );
@@ -152,11 +152,11 @@ export async function getAllProcedureSlugs(): Promise<string[]> {
 export async function getAllProcedures(): Promise<any[]> {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_DIRECTUS_URL}/items/tramites?fields=id,slug,categoria,titulo,resumen,updatedAt,fecha,contenido&sort=categoria,titulo&limit=200`,
+      `${DIRECTUS_URL}/items/tramites?fields=id,slug,categoria,titulo,resumen,date_updated,fecha,contenido&sort=categoria,titulo&limit=200`,
       {
         next: {
           tags: ['tramites-all', 'tramites-list'],
-          revalidate: 2592000, // 30 días
+          revalidate: false,
         },
       },
     );

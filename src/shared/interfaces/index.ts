@@ -68,6 +68,7 @@ export interface NewsItem {
   publicado: boolean;
   fecha: string;
   createdAt?: string;
+  lastUpdated?: string;
   metaTitle?: string;
   metaDescription?: string;
 }

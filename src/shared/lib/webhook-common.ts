@@ -1,5 +1,5 @@
 /**
- * Utilidades comunes para webhooks de revalidación
+ * Common utilities for revalidation webhooks
  */
 
 import { NextRequest } from 'next/server';
@@ -10,11 +10,12 @@ export interface CommonWebhookPayload {
   event: 'create' | 'update' | 'delete';
   collection: string;
   keys: string[];
+  slug?: string;
   payload?: Record<string, any>;
 }
 
 /**
- * Validar el token de autorización del webhook
+ * Validate the authorization token for the webhook
  */
 export async function validateWebhookAuth(
   request: NextRequest,
@@ -31,38 +32,56 @@ export async function validateWebhookAuth(
 }
 
 /**
- * Parsear y normalizar el payload del webhook
+ * Parse and normalize the webhook payload
  */
 export async function parseWebhookPayload(
   request: NextRequest,
 ): Promise<CommonWebhookPayload> {
   const rawBody = await request.text();
+
   if (!rawBody?.trim()) {
-    throw new Error('Payload vacío o inválido');
+    throw new Error('Empty webhook payload');
   }
 
-  const body = JSON.parse(rawBody);
+  let body = JSON.parse(rawBody.trim());
 
-  // Normalizar formato del payload
-  if (typeof body.event === 'string' && body.event.includes('"event"')) {
-    // Formato con payload anidado como string
-    const actualPayload = JSON.parse(body.event);
-    const action = actualPayload.event.split('.').pop();
-
-    return {
-      event: action as 'create' | 'update' | 'delete',
-      collection: actualPayload.collection,
-      keys: actualPayload.keys || [String(actualPayload.key)],
-      payload: actualPayload.payload,
-    };
+  // If it's a string, parse it once more
+  if (typeof body === 'string') {
+    body = JSON.parse(body);
   }
 
-  // Formato directo
-  return body as CommonWebhookPayload;
+  // Extract slug from payload if it exists
+  let slug: string | undefined;
+  let payloadData: any = {};
+
+  if (body.payload) {
+    if (typeof body.payload === 'string') {
+      try {
+        payloadData = JSON.parse(body.payload);
+      } catch {
+        payloadData = {};
+      }
+    } else {
+      payloadData = body.payload;
+    }
+    slug = payloadData.slug;
+  }
+
+  return {
+    event: body.event?.includes('create')
+      ? 'create'
+      : body.event?.includes('delete')
+        ? 'delete'
+        : 'update',
+    collection: body.collection || '',
+    keys: body.keys || [],
+    slug,
+    payload: payloadData,
+  };
 }
 
 /**
- * Validar que el payload pertenece a la colección esperada
+ * Validate that the payload belongs to the expected collection
  */
 export function validateCollection(
   payload: CommonWebhookPayload,
@@ -72,7 +91,7 @@ export function validateCollection(
 }
 
 /**
- * Crear respuesta de error estándar para webhooks
+ * Create a standardized error response for webhooks
  */
 export function createErrorResponse(message: string, status: number = 400) {
   return {
@@ -82,7 +101,7 @@ export function createErrorResponse(message: string, status: number = 400) {
 }
 
 /**
- * Crear respuesta de colección ignorada
+ * Create a response for ignored collections
  */
 export function createIgnoredResponse(
   collection: string,
@@ -98,7 +117,7 @@ export function createIgnoredResponse(
 }
 
 /**
- * Función helper mejorada para revalidar con métricas
+ * Helper function to revalidate with metrics
  */
 export async function safeRevalidateWithLogger(
   logger: WebhookOperationLogger,
@@ -135,7 +154,7 @@ export async function safeRevalidateWithLogger(
         );
         return false;
       }
-      // Breve pausa antes del retry
+      // Brief pause before retry
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
   }
@@ -143,7 +162,7 @@ export async function safeRevalidateWithLogger(
 }
 
 /**
- * Crear respuesta estándar de webhook con métricas
+ * Create a standardized webhook response with metrics
  */
 export function createWebhookResponse(
   webhookType: string,

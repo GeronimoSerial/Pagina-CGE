@@ -4,8 +4,7 @@ import { PageLayout } from '@/shared/components/PageLayout';
 import NewsSection from '@/features/noticias/components/structure/NewsSection';
 import { fetchNewsPage } from '@/features/noticias/services/news';
 
-// ISR: Revalidar cada 10 minutos
-export const revalidate = 600;
+export const revalidate = false;
 
 interface NewsPageProps {
   params: Promise<{ page: string }>;
@@ -13,7 +12,7 @@ interface NewsPageProps {
 
 export async function generateStaticParams() {
   return Array.from({ length: 10 }, (_, i) => ({
-    page: (i + 2).toString(), // Empezar desde página 2 (página 1 es /noticias)
+    page: (i + 2).toString(),
   }));
 }
 

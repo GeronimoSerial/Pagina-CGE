@@ -67,20 +67,16 @@ function transformPortadaUrl(
 function buildDirectusUrl(limit: number): string {
   const url = new URL(`${DIRECTUS_URL}/items/noticias`);
 
-  // Filtrar solo noticias destacadas
   url.searchParams.set('filter[esImportante][_eq]', 'true');
 
-  // Parámetros de paginación y ordenamiento
   url.searchParams.set('limit', limit.toString());
   url.searchParams.set('sort', '-fecha,-id');
 
-  // Campos optimizados para carousel
   url.searchParams.set(
     'fields',
     'id,titulo,resumen,fecha,categoria,esImportante,slug,portada.id,portada.filename_disk,portada.title,portada.width,portada.height',
   );
 
-  // Metadata para contar total
   url.searchParams.set('meta', 'total_count,filter_count');
 
   return url.toString();
@@ -94,14 +90,13 @@ export async function GET(
     const { searchParams } = new URL(request.url);
     const limit = validateLimit(searchParams.get('limit'));
 
-    // 2. Construir URL de Directus
     const directusUrl = buildDirectusUrl(limit);
 
     // 3. Fetch con ISR cache optimizado para featured news
     const response = await fetch(directusUrl, {
       next: {
-        revalidate: 600, // 10 minutos - más frecuente para destacadas
-        tags: ['noticias', 'noticias-destacadas'],
+        revalidate: false, // Cache hasta invalidación por webhook
+        tags: ['noticias', 'noticias-featured'],
       },
       headers: {
         'Content-Type': 'application/json',

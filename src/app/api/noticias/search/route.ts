@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DIRECTUS_URL } from '@/shared/lib/config';
+import { FALLBACK_IMAGE_NEWS } from '@/shared/lib/config';
 
 interface SearchParams {
   q?: string;
@@ -27,7 +28,7 @@ interface DirectusNewsItem {
   };
 }
 
-// Rate limiting básico 
+// Rate limiting básico
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_MAX = 30; // 30 requests
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minuto
@@ -151,13 +152,6 @@ function buildDirectusUrl(params: SearchParams): string {
   return url.toString();
 }
 
-function transformPortadaUrl(
-  portada: DirectusNewsItem['portada'],
-): string | null {
-  if (!portada?.id) return null;
-  return `${DIRECTUS_URL}/assets/${portada.id}?width=800&height=600&fit=cover&quality=80`;
-}
-
 export async function GET(request: NextRequest) {
   try {
     // Obtener IP para rate limiting
@@ -254,12 +248,19 @@ export async function GET(request: NextRequest) {
       slug: noticia.slug,
       portada: noticia.portada
         ? {
-            url: transformPortadaUrl(noticia.portada),
-            title: noticia.portada.title,
-            width: noticia.portada.width,
-            height: noticia.portada.height,
+            url: `${DIRECTUS_URL}/assets/${noticia.portada.id}`,
+            filename: noticia.portada.filename_disk,
+            title: noticia.portada.title || '',
+            width: noticia.portada.width || 0,
+            height: noticia.portada.height || 0,
           }
-        : null,
+        : {
+            url: FALLBACK_IMAGE_NEWS,
+            filename: '',
+            title: '',
+            width: 0,
+            height: 0,
+          },
     }));
 
     // Calcular paginación
@@ -309,5 +310,5 @@ export async function GET(request: NextRequest) {
 
 // Configuración de Next.js para el endpoint
 export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic'; 
-export const revalidate = 60; 
+export const dynamic = 'force-dynamic';
+export const revalidate = 60;
