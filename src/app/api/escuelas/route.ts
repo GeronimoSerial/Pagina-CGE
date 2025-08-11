@@ -12,4 +12,5 @@ export async function GET() {
   return NextResponse.json(data);
 }
 
-export const revalidate = 86400; 
+// Reducir el tiempo de revalidación a 5 minutos
+export const revalidate = 300;

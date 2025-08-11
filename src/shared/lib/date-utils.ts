@@ -15,15 +15,15 @@ export const formatDate = (
   const dateObj = typeof date === 'string' ? createLocalDate(date) : date;
 
   if (isNaN(dateObj.getTime())) {
-    console.warn('Fecha inválida proporcionada:', date);
-    return 'Fecha inválida';
+    console.warn('Invalid date provided:', date);
+    return 'Invalid Date';
   }
 
   const defaultOptions: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-    timeZone: 'America/Argentina/Buenos_Aires', 
+    timeZone: 'America/Argentina/Buenos_Aires',
   };
 
   return new Intl.DateTimeFormat('es-ES', {
@@ -53,10 +53,9 @@ export const formatDateNumeric = (date: string | Date): string => {
 export const formatDateWithTime = (date: string | Date): string => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
 
-  // Verificar que la fecha sea válida
   if (isNaN(dateObj.getTime())) {
-    console.warn('Fecha inválida proporcionada:', date);
-    return 'Fecha inválida';
+    console.warn('Invalid date provided:', date);
+    return 'Invalid Date';
   }
 
   return new Intl.DateTimeFormat('es-ES', {
