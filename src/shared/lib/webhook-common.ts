@@ -40,7 +40,7 @@ export async function parseWebhookPayload(
   const rawBody = await request.text();
 
   if (!rawBody?.trim()) {
-    throw new Error('Payload vacío');
+    throw new Error('Empty webhook payload');
   }
 
   let body = JSON.parse(rawBody.trim());
