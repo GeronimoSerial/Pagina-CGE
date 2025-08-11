@@ -386,6 +386,69 @@
       "type": "resolución",
       "date": "2024",
       "downloadUrl": "https://geronimoserial.github.io/pdf-cge/Res.195.pdf"
+    },
+    {
+      "id": "53",
+      "title": "Decreto 2745/2014 - Licencia especial para estudios ginecológicos",
+      "description": "Otorga un día de licencia especial a mujeres dentro de la administración pública, con el objeto de facilitar la realización de estudios ginecológicos.",
+      "category": "normativas",
+      "type": "decreto",
+      "date": "2014",
+      "downloadUrl": "https://geronimoserial.github.io/pdf-cge/Licencia_Estudios_Ginecologicos.pdf"
+    },
+    {
+      "id": "54",
+      "title": "Decreto 1914/2020 - Licencia por violencia de género",
+      "description": "Establece licencias especiales para trabajadoras de la administración pública provincial en casos de violencia de género, con el objetivo de proteger y acompañar a la persona afectada.",
+      "category": "normativas",
+      "type": "decreto",
+      "date": "2020",
+      "downloadUrl": "https://geronimoserial.github.io/pdf-cge/Decreto_N%C2%B0_1914-20_VIOLENCIA_DE_GENERO.pdf"
+    },
+    {
+      "id": "55",
+      "title": "Planillas de baja - Circular 17/2010",
+      "description": "Brinda instrucciones para la tramitación de donaciones de inmuebles al Estado provincial, el procedimiento para su registro en inventario y la utilización de la planilla de baja correspondiente.",
+      "category": "circulares",
+      "type": "circular",
+      "date": "2010",
+      "downloadUrl": "https://geronimoserial.github.io/pdf-cge/Planilla_de_baja.pdf"
+    },
+    {
+      "id": "56",
+      "title": "Inasistencia Gremial - No cómputo de inasistencia a representantes gremiales",
+      "description": "Establece que no se computará inasistencia a los representantes gremiales y/o asociaciones gremiales cuando asistan a reuniones o congresos vinculantes.",
+      "category": "licencias",
+      "type": "licencia especial",
+      "date": "2024",
+      "downloadUrl": "https://geronimoserial.github.io/pdf-cge/Inasistencia_Gremiales.pdf"
+    },
+    {
+      "id": "57",
+      "title": "Resolución N° 5417-24 - Guía de orientación ante discriminación y violencias de género u orientación sexual",
+      "description": "Proporciona lineamientos para la orientación y abordaje de situaciones de discriminación y violencias relacionadas con género y orientación sexual.",
+      "category": "guías",
+      "type": "resolución",
+      "date": "2024",
+      "downloadUrl": "https://geronimoserial.github.io/pdf-cge/Resolucion_N_5417-24.pdf"
+    },
+    {
+      "id": "58",
+      "title": "Formulario - Declaración Jurada para Trámite de Salario Familiar y Asignaciones",
+      "description": "Formulario utilizado para gestionar trámites relacionados con salario familiar, asignaciones y beneficios sociales del personal.",
+      "category": "formularios",
+      "type": "formulario",
+      "date": "2024",
+      "downloadUrl": "https://geronimoserial.github.io/pdf-cge/Salario_Familiar.pdf"
+    },
+    {
+      "id": "59",
+      "title": "Resolución Ministerial N° 3956 - Hora Ampliada de la Jornada Escolar",
+      "description": "Establece la ampliación del horario de la jornada escolar para mejorar la cobertura educativa.",
+      "category": "normativas",
+      "type": "resolución",
+      "date": "2024",
+      "downloadUrl": "https://geronimoserial.github.io/pdf-cge/RMN_3956_HORA_AMPLIADA.pdf"
     }
   ]
 }
