@@ -2,7 +2,7 @@ import { DIRECTUS_URL } from './config';
 
 export const cfImages = (
   url: string,
-  width: number = 800,
+  width: number = 1200,
   format: string = 'auto',
 ) => {
   if (!url) return '';

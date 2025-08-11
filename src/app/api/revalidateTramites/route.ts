@@ -4,17 +4,18 @@ import {
   validateWebhookAuth,
   parseWebhookPayload,
   validateCollection,
-  createErrorResponse,
-  createIgnoredResponse,
   safeRevalidateWithLogger,
-  createWebhookResponse,
   CommonWebhookPayload,
 } from '@/shared/lib/webhook-common';
 
 interface TramiteWebhookPayload {
-  event: 'create' | 'update' | 'delete';
-  collection: string;
+  event:
+    | 'tramites.items.create'
+    | 'tramites.items.update'
+    | 'tramites.items.delete';
+  collection: 'tramites';
   keys: string[];
+  slug?: string;
   payload?: {
     id: string;
     slug?: string;
@@ -28,111 +29,89 @@ export async function POST(request: NextRequest) {
   try {
     // 1. Validar token de autorización
     if (!(await validateWebhookAuth(request))) {
-      const error = createErrorResponse(
-        'Token de autorización requerido o inválido',
-        401,
+      return NextResponse.json(
+        { error: 'Token de autorización requerido o inválido' },
+        { status: 401 },
       );
-      return NextResponse.json(error.body, { status: error.status });
     }
 
-    // 2. Parsear y validar payload
+    // 2. Parsear payload
     let payload: CommonWebhookPayload;
     try {
       payload = await parseWebhookPayload(request);
     } catch (error) {
-      const errorResponse = createErrorResponse(
-        error instanceof Error ? error.message : 'Error al parsear payload',
-        400,
+      return NextResponse.json(
+        {
+          error: 'Payload inválido',
+          message: error instanceof Error ? error.message : 'Error de parseo',
+        },
+        { status: 400 },
       );
-      return NextResponse.json(errorResponse.body, {
-        status: errorResponse.status,
-      });
     }
 
     // 3. Validar que sea la colección correcta
     if (!validateCollection(payload, 'tramites')) {
-      const ignored = createIgnoredResponse(payload.collection, 'tramites');
-      return NextResponse.json(ignored.body, { status: ignored.status });
+      return NextResponse.json(
+        {
+          message: `Evento ignorado - colección '${payload.collection}' no es 'tramites'`,
+          collection: payload.collection,
+        },
+        { status: 200 },
+      );
     }
 
     const { event, payload: data } = payload;
-    const slug = data?.slug;
-    const categoria = data?.categoria;
-    const titulo = data?.titulo;
+    const slug = payload.slug;
 
     // Inicializar logger con métricas de tiempo
     const logger = new WebhookOperationLogger('tramites', event, slug);
 
-    // Función helper usando la utilidad común
     const safeRevalidate = async (type: 'path' | 'tag', target: string) => {
       return await safeRevalidateWithLogger(logger, type, target);
     };
 
-    // 6. Revalidar según el tipo de evento
     switch (event) {
       case 'create':
-        // Revalidar tags principales
+        // Tags utilizados en los servicios reales
         await safeRevalidate('tag', 'tramites-all');
-        await safeRevalidate('tag', 'tramites-list');
         await safeRevalidate('tag', 'tramites-navigation');
+        await safeRevalidate('tag', 'tramites-list');
 
-        // Revalidar por categoría específica
-        if (categoria) {
-          const categoriaSlug = categoria.toLowerCase().replace(/\s+/g, '-');
-          await safeRevalidate('tag', `tramites-categoria-${categoriaSlug}`);
-
-          // Especial atención a ISR
-          if (categoria.toLowerCase().includes('isr')) {
-            await safeRevalidate('tag', 'tramites-categoria-isr');
-          }
-        }
-
-        // Revalidar paths principales
         await safeRevalidate('path', '/tramites');
+        await safeRevalidate('path', '/');
         break;
 
       case 'update':
-        // Revalidar página específica
+        // Tags generales
+        await safeRevalidate('tag', 'tramites-all');
+        await safeRevalidate('tag', 'tramites-navigation');
+        await safeRevalidate('tag', 'tramites-list');
+
+        // Tag específico del trámite
         if (slug) {
           await safeRevalidate('tag', `tramites-page-${slug}`);
           await safeRevalidate('path', `/tramites/${slug}`);
         }
 
-        // Revalidar tags principales
-        await safeRevalidate('tag', 'tramites-all');
-        await safeRevalidate('tag', 'tramites-list');
-        await safeRevalidate('tag', 'tramites-navigation');
-
-        // Revalidar por categoría
-        if (categoria) {
-          const categoriaSlug = categoria.toLowerCase().replace(/\s+/g, '-');
-          await safeRevalidate('tag', `tramites-categoria-${categoriaSlug}`);
-
-          // Especial atención a ISR
-          if (categoria.toLowerCase().includes('isr')) {
-            await safeRevalidate('tag', 'tramites-categoria-isr');
-          }
-        }
-
+        // Paths principales
         await safeRevalidate('path', '/tramites');
+        await safeRevalidate('path', '/');
         break;
 
       case 'delete':
-        // Revalidar todo cuando se elimina contenido
+        // Tags generales (todos porque se eliminó contenido)
         await safeRevalidate('tag', 'tramites-all');
-        await safeRevalidate('tag', 'tramites-list');
         await safeRevalidate('tag', 'tramites-navigation');
+        await safeRevalidate('tag', 'tramites-list');
 
-        if (categoria) {
-          const categoriaSlug = categoria.toLowerCase().replace(/\s+/g, '-');
-          await safeRevalidate('tag', `tramites-categoria-${categoriaSlug}`);
-
-          if (categoria.toLowerCase().includes('isr')) {
-            await safeRevalidate('tag', 'tramites-categoria-isr');
-          }
+        // Tag específico del trámite eliminado
+        if (slug) {
+          await safeRevalidate('tag', `tramites-page-${slug}`);
         }
 
+        // Paths principales
         await safeRevalidate('path', '/tramites');
+        await safeRevalidate('path', '/');
         break;
 
       default:
@@ -142,16 +121,18 @@ export async function POST(request: NextRequest) {
         );
     }
 
-    // 7. Finalizar logger y crear respuesta usando utilidad común
+    // Finalizar logger y crear respuesta
     const result = logger.finish();
-    const response = createWebhookResponse('trámite', event, result, {
+
+    return NextResponse.json({
+      success: true,
+      collection: 'tramites',
       event,
       slug,
-      categoria,
-      titulo,
+      operations: result.operations.length,
+      duration: result.totalDuration,
+      timestamp: new Date().toISOString(),
     });
-
-    return NextResponse.json(response.body, { status: response.status });
   } catch (error) {
     return NextResponse.json(
       {
@@ -170,12 +151,11 @@ export async function GET() {
     status: 'Webhook de trámites activo',
     environment: process.env.NODE_ENV || 'development',
     timestamp: new Date().toISOString(),
-    supportedEvents: ['create', 'update', 'delete'],
+    supportedEvents: [
+      'tramites.items.create',
+      'tramites.items.update',
+      'tramites.items.delete',
+    ],
     collection: 'tramites',
-    specialCategories: ['ISR', 'General'],
-    endpoints: {
-      webhook: '/api/revalidateTramites',
-      monitoring: '/api/monitoring',
-    },
   });
 }

@@ -14,19 +14,19 @@ import Image from 'next/image';
 import { formatDate } from '@/shared/lib/date-utils';
 import { NewsItem } from '@/shared/interfaces';
 import { HTMLContent } from '@/shared/components/HTMLContent';
-
-export const revalidate = 2592000; // 30 días
+import { SITE_URL } from '@/shared/lib/config';
+export const revalidate = false;
 
 export async function generateStaticParams() {
   try {
     const noticias = await getAllNews();
     return noticias
       .filter(
-        (noticia) =>
+        (noticia: any) =>
           typeof noticia.slug === 'string' && noticia.slug.length > 0,
       )
       .slice(0, 50)
-      .map((noticia) => ({ slug: noticia.slug }));
+      .map((noticia: any) => ({ slug: noticia.slug }));
   } catch (error) {
     console.warn('Error generating static params for noticias:', error);
     return [];
@@ -45,23 +45,6 @@ export async function generateMetadata({
   if (!noticia) return {};
 
   const url = `/noticias/${slug}`;
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'NewsArticle',
-    headline: noticia.titulo,
-    description: noticia.resumen || noticia.titulo,
-    datePublished: noticia.fecha,
-    dateModified: noticia.fecha,
-    author: {
-      '@type': 'Organization',
-      name: 'Consejo General de Educación',
-    },
-    image: noticia.portada,
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': url,
-    },
-  };
 
   const metadata = {
     title: noticia.titulo,
@@ -74,15 +57,12 @@ export async function generateMetadata({
       description: noticia.resumen || noticia.titulo,
       url: url,
       type: 'article',
-      publishedTime: noticia.fecha,
-      modifiedTime: noticia.fecha,
-      expirationTime: noticia.fecha,
+      publishedTime: noticia.createdAt,
+      modifiedTime: noticia.lastUpdated,
+      expirationTime: noticia.lastUpdated,
       authors: ['Consejo General de Educación'],
       tags: [noticia.categoria],
-      images: noticia.portada ? [noticia.portada] : [],
-    },
-    other: {
-      'script:ld+json': JSON.stringify(structuredData),
+      images: getCover({ noticia }) || [],
     },
   };
 
@@ -124,6 +104,33 @@ export default async function NoticiaPage({ params }: PageProps) {
     () => [],
   );
 
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: noticia.titulo,
+    description: noticia.resumen || noticia.titulo,
+    datePublished: noticia.createdAt,
+    dateModified: noticia.lastUpdated,
+    author: {
+      '@type': 'Person',
+      name: noticia.autor || 'Redacción CGE',
+      url: SITE_URL,
+    },
+    image: getCover({ noticia }) || [],
+    publisher: {
+      '@type': 'Organization',
+      name: 'Consejo General de Educación',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${SITE_URL}/images/logo.png`,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${SITE_URL}/noticias/${slug}`,
+    },
+  };
+
   return (
     <div className="flex flex-col page-bg-white">
       <div className="flex flex-1">
@@ -148,7 +155,7 @@ export default async function NoticiaPage({ params }: PageProps) {
                     <div className="flex items-center">
                       <CalendarDays className="mr-2 w-4 h-4" />
                       <span className="text-xs tracking-wide">
-                        {formatDate(noticia.fecha)}
+                        {formatDate(noticia.fecha || noticia.createdAt || '')}
                       </span>
                     </div>
                     <div className="flex items-center">
@@ -261,7 +268,7 @@ export default async function NoticiaPage({ params }: PageProps) {
                       <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-green-800 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out origin-center"></div>
 
                       <div className="ml-3">
-                        <div className="mb-2 text-sm font-medium leading-snug transition-transform duration-300 ease-out text-slate-800 group-hover:text-green-800 group-hover:translate-x-1">
+                        <div className="mb-2 text-sm font-medium leading-snug transition-transform duration-300 ease-out text-slate-800 group-hover:text-green-800 group-hover:translate-x-1 line-clamp-2">
                           {item.titulo}
                         </div>
                         <div className="pr-2 text-xs leading-relaxed transition-colors duration-300 text-slate-500 group-hover:text-black">
@@ -280,6 +287,12 @@ export default async function NoticiaPage({ params }: PageProps) {
           </div>
         </aside>
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData),
+        }}
+      />
     </div>
   );
 }

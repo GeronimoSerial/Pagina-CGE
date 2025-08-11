@@ -1,7 +1,7 @@
 //Pagina principal para la sección de escuelas
 import { Metadata } from 'next';
 import { SchoolsClient } from '@/shared/data/dynamic-client';
-import { ContentPageLayout } from '@/shared/components/PageLayout';
+import { PageLayout } from '@/shared/components/PageLayout';
 
 export const metadata: Metadata = {
   title: 'Escuelas',
@@ -28,13 +28,19 @@ export const metadata: Metadata = {
 
 export default function Escuelas() {
   return (
-    <ContentPageLayout
-      title="Escuelas"
-      description="Instituciones dependientes del Consejo General de Educación."
+    <PageLayout
+      pageType="wide"
+      hero={{
+        title: 'Escuelas',
+        description:
+          'Instituciones dependientes del Consejo General de Educación de Corrientes.',
+      }}
+      showSeparator={true}
+      showInfoBar={true}
       showFAQ={true}
       basePath="/escuelas"
     >
       <SchoolsClient />
-    </ContentPageLayout>
+    </PageLayout>
   );
 }

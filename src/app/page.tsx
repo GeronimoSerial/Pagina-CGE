@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 3600;
+export const revalidate = false;
 
 export default async function PagPrincipal() {
   let latestNewsData;

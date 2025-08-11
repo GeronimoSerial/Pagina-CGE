@@ -32,8 +32,7 @@ export const metadata: Metadata = {
   },
 };
 
-// ISR: Revalidar cada 24 horas 
-export const revalidate = 86400;
+export const revalidate = false;
 
 export default async function NoticiasPage() {
   try {

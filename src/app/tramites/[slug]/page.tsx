@@ -5,10 +5,11 @@ import {
   Article,
 } from '@/features/tramites/services/docs-data';
 
-
 import { Clock } from 'lucide-react';
 import Link from 'next/link';
 import { HTMLContent } from '@/shared/components/HTMLContent';
+import { formatDate } from '@/shared/lib/date-utils';
+import { SITE_URL } from '@/shared/lib/config';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -24,7 +25,7 @@ export async function generateStaticParams() {
   }
 }
 
-export const revalidate = 2592000; // 30 días
+export const revalidate = false;
 
 export default async function DocumentPage({ params }: PageProps) {
   const slug = (await params).slug;
@@ -36,6 +37,33 @@ export default async function DocumentPage({ params }: PageProps) {
   }
 
   const markdown = article.content?.[0]?.content || '';
+
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    headline: article.title,
+    description: article.description,
+    datePublished: article.date,
+    dateModified: article.lastUpdated,
+    author: {
+      '@type': 'Organization',
+      name: 'Consejo General de Educación',
+      url: SITE_URL,
+    },
+    image: `${SITE_URL}/og-tramites.webp`,
+    publisher: {
+      '@type': 'Organization',
+      name: 'Consejo General de Educación',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${SITE_URL}/logo.png`,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${SITE_URL}/tramites/${slug}`,
+    },
+  };
 
   return (
     <div className="min-h-screen">
@@ -49,11 +77,7 @@ export default async function DocumentPage({ params }: PageProps) {
               </span>
               <div className="flex items-center text-sm text-gray-500">
                 <Clock className="mr-1 w-4 h-4" />
-                {new Date(article.lastUpdated).toLocaleDateString('es-ES', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
+                {formatDate(article.lastUpdated)}
               </div>
             </div>
             <h1 className="mb-4 text-3xl md:text-4xl font-bold text-gray-900">
@@ -100,13 +124,20 @@ export default async function DocumentPage({ params }: PageProps) {
           </div>
         </footer>
       </main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData),
+        }}
+      />
     </div>
   );
 }
 
 export async function generateMetadata({ params }: PageProps) {
-  const article = await getProcedureBySlug((await params).slug);
-  const slug = (await params).slug;
+  const { slug } = await params;
+  const article = await getProcedureBySlug(slug);
+
   if (!article) {
     return {
       title: 'Página no encontrada',
@@ -125,11 +156,19 @@ export async function generateMetadata({ params }: PageProps) {
       description: article.description,
       url: url,
       type: 'article',
-      publishedTime: article.lastUpdated,
+      publishedTime: article.date,
       modifiedTime: article.lastUpdated,
       expirationTime: article.lastUpdated,
       authors: ['Consejo General de Educación'],
       tags: [article.category],
+      images: [
+        {
+          url: `${SITE_URL}/og-tramites.webp`,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
     },
   };
 }
