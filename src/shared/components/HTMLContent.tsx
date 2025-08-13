@@ -11,25 +11,25 @@ export function HTMLContent({ content, className = '' }: HTMLContentProps) {
   const [sanitizedContent, setSanitizedContent] = useState('');
 
   useEffect(() => {
-    const tagClassMap: Record<string, string> = {
-      h1: 'text-3xl font-bold text-gray-900 mt-8 mb-4 border-b pb-1 border-gray-200',
-      h2: 'text-2xl font-semibold mt-6 mb-3 text-gray-900',
-      h3: 'text-xl font-medium mt-6 mb-3 text-gray-900',
+     const tagClassMap: Record<string, string> = {
+      h1: 'text-3xl font-bold text-slate-900 mt-8 mb-4 border-b pb-1 border-slate-200',
+      h2: 'text-2xl font-semibold mt-6 mb-3 text-slate-900',
+      h3: 'text-xl font-medium mt-6 mb-3 text-slate-900',
       a: 'text-gray-800 underline hover:text-blue-800 hover:underline transition-colors font-medium',
       img: 'rounded-xl shadow-xl my-8 w-full',
       blockquote:
-        'border-l-4 border-gray-400 bg-gray-50 pl-5 py-3 my-8 italic rounded-r-lg text-gray-700',
-      code: 'bg-gray-100 px-2 py-0.5 rounded text-gray-700 font-mono text-sm',
-      pre: 'bg-gray-800 text-gray-100 rounded-xl p-5 overflow-x-auto my-8 shadow-md text-sm',
-      ul: 'list-disc pl-6 my-5 space-y-2 marker:text-gray-500',
-      ol: 'list-decimal pl-6 my-5 space-y-2 marker:text-gray-500',
+        'border-l-4 border-slate-400 bg-slate-50 pl-5 py-3 my-8 italic rounded-r-lg text-slate-700',
+      code: 'bg-slate-100 px-2 py-0.5 rounded text-slate-700 font-mono text-sm',
+      pre: 'bg-slate-800 text-slate-100 rounded-xl p-5 overflow-x-auto my-8 shadow-md text-sm',
+      ul: 'list-disc pl-6 my-5 space-y-2 marker:text-slate-500',
+      ol: 'list-decimal pl-6 my-5 space-y-2 marker:text-slate-500',
       li: 'mb-2 leading-relaxed',
-      table: 'min-w-full border border-gray-200 rounded-xl overflow-hidden',
-      th: 'border border-gray-200 px-5 py-3 bg-gray-100 text-left text-gray-700 font-medium',
-      td: 'border border-gray-200 px-5 py-3',
-      p: 'mb-6 text-gray-700 leading-relaxed text-lg',
-      b: 'font-bold text-gray-900',
-      strong: 'font-bold text-gray-900'
+      table: 'min-w-full border border-slate-200 rounded-xl overflow-hidden',
+      th: 'border border-slate-200 px-5 py-3 bg-slate-100 text-left text-slate-700 font-medium',
+      td: 'border border-slate-200 px-5 py-3',
+      p: 'mb-6 text-slate-800 leading-relaxed text-lg',
+      b: 'font-bold text-slate-900',
+      strong: 'font-bold text-slate-900'
     };
     const classAttrRegex = /class\s*=\s*(['"])(.*?)\1/;
 
