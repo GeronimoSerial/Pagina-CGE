@@ -1,10 +1,17 @@
-import React from 'react';
+'use client';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Separator } from '@/shared/ui/separator';
 import { Facebook, Instagram, Mail, MapPin, Phone } from 'lucide-react';
 import Image from 'next/image';
 
 const Footer = () => {
+  const path = usePathname();
+
+  if (path.startsWith('/tramites')) {
+    return null;
+  }
+
   return (
     <footer className="bg-linear-to-br from-[#3D8B37] to-[#2D6A27] text-white py-16">
       <div className="container mx-auto px-4 md:px-6">
@@ -161,8 +168,7 @@ const Footer = () => {
                 <Phone size={16} className="mr-2 text-white/70" />
                 <a
                   title="Enviar un mensaje por WhatsApp"
-                  href="https://wa.me/5403794424264?text=Hola%2C%20me%20comunico%20con%20el%20Consejo%20para%20realizar%20una%20consulta.%20Agradecer%C3%ADa%20su%20orientaci%C3%B3n.%20Muchas%20gracias.
-"
+                  href="https://wa.me/5403794424264?text=Hola%2C%20me%20comunico%20con%20el%20Consejo%20para%20realizar%20una%20consulta.%20Agradecer%C3%ADa%20su%20orientaci%C3%B3n.%20Muchas%20gracias."
                 >
                   +54 (379) 442-4264
                 </a>
