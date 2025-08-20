@@ -11,7 +11,7 @@ export function HTMLContent({ content, className = '' }: HTMLContentProps) {
   const [sanitizedContent, setSanitizedContent] = useState('');
 
   useEffect(() => {
-     const tagClassMap: Record<string, string> = {
+    const tagClassMap: Record<string, string> = {
       h1: 'text-3xl font-bold text-slate-900 mt-8 mb-4 border-b pb-1 border-slate-200',
       h2: 'text-2xl font-semibold mt-6 mb-3 text-slate-900',
       h3: 'text-xl font-medium mt-6 mb-3 text-slate-900',
@@ -29,7 +29,7 @@ export function HTMLContent({ content, className = '' }: HTMLContentProps) {
       td: 'border border-slate-200 px-5 py-3',
       p: 'mb-6 text-slate-800 leading-relaxed text-lg',
       b: 'font-bold text-slate-900',
-      strong: 'font-bold text-slate-900'
+      strong: 'font-bold text-slate-900',
     };
     const classAttrRegex = /class\s*=\s*(['"])(.*?)\1/;
 
