@@ -25,7 +25,7 @@ export const SectionItem = memo(
         className={`
         group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm 
         transition-all duration-200 ease-in-out
-        focus:outline-none focus:ring-2 focus:ring-green-500/50
+        focus:outline-none focus:ring-2 
         ${
           isActive
             ? 'bg-green-800 text-white shadow-md'
@@ -37,7 +37,7 @@ export const SectionItem = memo(
         <ChevronRight
           className={`
           w-4 h-4 transition-transform duration-200 flex-shrink-0
-          ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-green-600'}
+          ${isActive ? 'text-white' : 'text-gray-400'}
         `}
         />
         <span
@@ -84,10 +84,10 @@ export const Section = memo(
           className={`
           w-full flex items-center justify-between px-3 py-3 rounded-lg text-left 
           transition-all duration-200 ease-in-out group
-          focus:outline-none focus:ring-2 focus:ring-green-500/50
+          focus:outline-none focus:ring-2 focus:ring-transparent
           ${
             isOpen
-              ? 'bg-green-50 text-green-700 border-l-4 border-green-600'
+              ? 'bg-green-50 text-green-800 border-l-4 border-green-600'
               : 'text-gray-800 hover:bg-gray-100 '
           }
         `}
