@@ -138,7 +138,11 @@ const DocumentationSection = () => {
                       className="flex gap-2 items-center w-full text-sm hover:bg-[#3D8B37] hover:text-white transition-colors"
                       asChild
                     >
-                      <a href={doc.downloadUrl} target="_blank" rel="noopener noreferrer">
+                      <a
+                        href={doc.downloadUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <Download className="w-3 h-3" />
                         Descargar
                       </a>
@@ -224,7 +228,11 @@ const DocumentationSection = () => {
                         className="flex gap-2 items-center w-full text-sm hover:bg-[#3D8B37] hover:text-white transition-colors"
                         asChild
                       >
-                        <a href={doc.downloadUrl} target='_blank' rel="noopener noreferrer">
+                        <a
+                          href={doc.downloadUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           <Download className="w-3 h-3" />
                           Descargar
                         </a>

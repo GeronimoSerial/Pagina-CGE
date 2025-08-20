@@ -28,7 +28,7 @@ export const SectionItem = memo(
         focus:outline-none focus:ring-2 focus:ring-green-500/50
         ${
           isActive
-            ? 'bg-green-600 text-white shadow-md'
+            ? 'bg-green-800 text-white shadow-md'
             : 'text-gray-700 hover:bg-green-50 hover:text-green-700'
         }
       `}
@@ -88,7 +88,7 @@ export const Section = memo(
           ${
             isOpen
               ? 'bg-green-50 text-green-700 border-l-4 border-green-600'
-              : 'text-gray-800 hover:bg-gray-100 hover:text-green-600'
+              : 'text-gray-800 hover:bg-gray-100 '
           }
         `}
           aria-expanded={isOpen}
@@ -101,11 +101,6 @@ export const Section = memo(
             {section.title}
           </span>
           <div className="flex items-center gap-2 flex-shrink-0">
-            {filteredItems.length > 0 && (
-              <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                {filteredItems.length}
-              </span>
-            )}
             <ChevronDown
               className={`w-5 h-5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
             />
