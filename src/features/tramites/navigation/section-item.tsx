@@ -41,7 +41,7 @@ export const SectionItem = memo(
         `}
         />
         <span
-          className="truncate flex-1"
+          className="flex-1"
           title={item.title}
           dangerouslySetInnerHTML={{
             __html: getHighlightedText ? getHighlightedText(item) : item.title,
@@ -95,7 +95,7 @@ export const Section = memo(
           aria-controls={`section-${section.id}`}
         >
           <span
-            className="font-semibold text-base truncate flex-1"
+            className="font-semibold text-base flex-1"
             title={section.title}
           >
             {section.title}
