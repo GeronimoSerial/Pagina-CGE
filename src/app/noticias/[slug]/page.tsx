@@ -202,7 +202,7 @@ export default async function NoticiaPage({ params }: PageProps) {
           </div>
         </main>
 
-        <aside className="hidden overflow-hidden sticky top-[85px] mt-16 mr-4 mb-3 w-72 lg:h-[500px] border-t-2 border-r border-b border-l shadow-lg backdrop-blur-xs transition-all duration-500 ease-out border-slate-200 border-t-slate-300 shadow-slate-200/50 lg:block bg-white/95">
+        <aside className="hidden overflow-hidden sticky top-[85px] mt-16 mr-4 mb-3 w-72 lg:h-[550px] border-t-2 border-r border-b border-l shadow-lg backdrop-blur-xs transition-all duration-500 ease-out border-slate-200 border-t-slate-300 shadow-slate-200/50 lg:block bg-white/95">
           <div className="flex flex-col h-full">
             <div className="px-2 py-6">
               <h3 className="px-4 mb-3 text-sm font-semibold tracking-widest text-black ">
