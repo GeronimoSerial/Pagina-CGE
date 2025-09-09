@@ -11,7 +11,13 @@ export function ResponsiveNav({ sections }: { sections: NavSection[] }) {
       <MobileMenu sections={sections} />
 
       {/* Contenedor para la versión de escritorio del sidebar */}
-      <aside className="hidden lg:block sticky top-20 h-screen overflow-y-auto bg-white border-r border-gray-200">
+      <aside
+        className="hidden lg:block sticky bg-white border-r border-gray-200"
+        style={{
+          top: 'var(--header-height)',
+          height: 'calc(100vh - var(--header-height))',
+        }}
+      >
         <Sidebar sections={sections} />
       </aside>
     </>

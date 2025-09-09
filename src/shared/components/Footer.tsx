@@ -1,10 +1,18 @@
-import React from 'react';
+'use client';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Separator } from '@/shared/ui/separator';
 import { Facebook, Instagram, Mail, MapPin, Phone } from 'lucide-react';
 import Image from 'next/image';
+import { MAIL_CONTACT, WHATSAPP_CONTACT } from '../lib/config';
 
 const Footer = () => {
+  const path = usePathname();
+
+  if (path.startsWith('/tramites') || path === '/noticias') {
+    return null;
+  }
+
   return (
     <footer className="bg-linear-to-br from-[#3D8B37] to-[#2D6A27] text-white py-16">
       <div className="container mx-auto px-4 md:px-6">
@@ -147,7 +155,7 @@ const Footer = () => {
               </p>
               <p className="text-sm text-white/80 flex items-center">
                 <a
-                  href="mailto:cge@mec.gob.ar?subject=Consulta&body=Hola, me gustaría realizar una consulta..."
+                  href={MAIL_CONTACT}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center"
@@ -161,8 +169,7 @@ const Footer = () => {
                 <Phone size={16} className="mr-2 text-white/70" />
                 <a
                   title="Enviar un mensaje por WhatsApp"
-                  href="https://wa.me/5403794424264?text=Hola%2C%20me%20comunico%20con%20el%20Consejo%20para%20realizar%20una%20consulta.%20Agradecer%C3%ADa%20su%20orientaci%C3%B3n.%20Muchas%20gracias.
-"
+                  href={WHATSAPP_CONTACT}
                 >
                   +54 (379) 442-4264
                 </a>

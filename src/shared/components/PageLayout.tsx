@@ -71,13 +71,13 @@ export function PageLayout({
   const layout = pageType
     ? getPageLayout(pageType)
     : getLayoutClasses({ container: containerType, background, spacing });
-
+  const isNoticias = basePath === '/noticias';
   return (
     <main className={cn(layout.background, className)}>
-      {hero && (
+      {hero && !isNoticias && (
         <HeroSection title={hero.title} description={hero.description} />
       )}
-      {showInfoBar && <InfoBar basePath={basePath} />}
+      {showInfoBar && !isNoticias && <InfoBar basePath={basePath} />}
 
       <section className={cn(layout.section, sectionClassName)}>
         <div className={layout.container}>{children}</div>
