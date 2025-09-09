@@ -40,7 +40,7 @@ export default function NewsCarousel({
     <section className={cn('relative mb-12', className)}>
       <div className="mb-6">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center">
-          Destacadas
+          Noticias Destacadas
         </h2>
         <div className="mt-2 flex justify-center">
           <div className="w-24 h-1 bg-[#3D8B37]"></div>
