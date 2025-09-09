@@ -79,7 +79,7 @@ h4 {
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
-  font-size: 90%;
+  /* font-size: 90%; */ 
 }
 
 /* Corregir cursor pointer en botones y elementos interactivos */

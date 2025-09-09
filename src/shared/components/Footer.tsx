@@ -8,7 +8,7 @@ import Image from 'next/image';
 const Footer = () => {
   const path = usePathname();
 
-  if (path.startsWith('/tramites')) {
+  if (path.startsWith('/tramites') || path === '/noticias') {
     return null;
   }
 
