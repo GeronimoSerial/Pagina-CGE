@@ -15,6 +15,8 @@ import { formatDate } from '@/shared/lib/date-utils';
 import { NewsItem } from '@/shared/interfaces';
 import { HTMLContent } from '@/shared/components/HTMLContent';
 import { SITE_URL } from '@/shared/lib/config';
+import { VideoGallery } from '@/shared/data/dynamic-client';
+
 export const revalidate = false;
 
 export async function generateStaticParams() {
@@ -195,6 +197,12 @@ export default async function NoticiaPage({ params }: PageProps) {
                   <>
                     <Separador titulo="Galería de imágenes" />
                     <PhotoSwipeGallery noticia={noticia} />
+                  </>
+                )}
+                {noticia.videos && noticia.videos.length > 0 && (
+                  <>
+                    <Separador titulo="Galería de videos" />
+                    <VideoGallery noticia={noticia} />
                   </>
                 )}
               </div>
