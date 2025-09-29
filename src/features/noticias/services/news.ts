@@ -97,7 +97,7 @@ export async function getPaginatedNews(
 export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
   try {
     const response = await fetch(
-      `${DIRECTUS_URL}/items/noticias?filter[slug][_eq]=${encodeURIComponent(slug)}&fields=*,portada.*,imagenes.directus_files_id.*&limit=1`,
+      `${DIRECTUS_URL}/items/noticias?filter[slug][_eq]=${encodeURIComponent(slug)}&fields=*,portada.*,imagenes.directus_files_id.*,videos.directus_files_id.*&limit=1`,
       {
         next: {
           tags: ['noticias', `noticia-${slug}`],
@@ -127,6 +127,7 @@ export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
       contenido: n.contenido,
       imagen: n.imagen,
       imagenes: n.imagenes,
+      videos: n.videos,
       publicado: n.publicado,
       fecha: n.fecha,
       createdAt: n.date_created,
@@ -194,6 +195,43 @@ export function getImages(noticia: NewsItem) {
       alt: file.title || file.filename_download || '',
       width: file.width,
       height: file.height,
+    };
+  });
+}
+
+//8. Videos 
+export function getVideos(noticia: NewsItem) {
+  if (!Array.isArray(noticia.videos) || noticia.videos.length === 0) {
+    return [];
+  }
+
+  return noticia.videos.map((video: any) => {
+    const file = video.directus_files_id;
+    
+    // Generar URL del video
+    const videoUrl = `${directus.url}assets/${file.id}`;
+    
+    // Generar thumbnail - usar primera frame del video o imagen de placeholder
+    let thumbnailUrl = '';
+    
+    // Intentar generar thumbnail desde el video (si Directus lo soporta)
+    if (file.type && file.type.startsWith('video/')) {
+      // Usar transformación de Directus para generar thumbnail del video
+      thumbnailUrl = `${directus.url}assets/${file.id}?fit=cover&width=400&height=225&format=webp&quality=80`;
+    } else {
+      // Fallback a imagen placeholder
+      thumbnailUrl = '/images/video-placeholder.jpg';
+    }
+
+    return {
+      url: videoUrl,
+      title: file.title || file.filename_download || 'Video sin título',
+      width: file.width || 1920,
+      height: file.height || 1080,
+      duration: file.duration || 0,
+      type: file.type || 'video/mp4',
+      filesize: file.filesize || 0,
+      thumbnail: thumbnailUrl,
     };
   });
 }

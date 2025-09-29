@@ -172,3 +172,28 @@ export const PhotoSwipeGallery = dynamic(
     ),
   },
 );
+
+export const VideoGallery = dynamic(
+  () => import('@/shared/components/VideoGallery'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3">
+        {Array(3)
+          .fill(0)
+          .map((_, i) => (
+            <div
+              key={i}
+              className="h-48 bg-gray-200 rounded-lg animate-pulse relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse" />
+              <div className="absolute bottom-4 left-4 right-4">
+                <div className="h-4 bg-white/20 rounded mb-2 animate-pulse" />
+                <div className="h-3 bg-white/10 rounded animate-pulse" />
+              </div>
+            </div>
+          ))}
+      </div>
+    ),
+  },
+);

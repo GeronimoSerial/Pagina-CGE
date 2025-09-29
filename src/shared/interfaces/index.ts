@@ -65,6 +65,7 @@ export interface NewsItem {
   contenido: string;
   imagen: { url: string; width: number; height: number }[];
   imagenes?: any[];
+  videos?: any[];
   publicado: boolean;
   fecha: string;
   createdAt?: string;
@@ -72,3 +73,15 @@ export interface NewsItem {
   metaTitle?: string;
   metaDescription?: string;
 }
+
+export interface Video {
+  url: string,
+  title: string,
+  thumbnail?: string,
+  width: number,
+  height: number,
+  duration?: number,
+  type: string, 
+  filesize: number,
+}
+
