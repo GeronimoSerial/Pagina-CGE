@@ -5,7 +5,7 @@ const SocialMediaSection = ({
   facebookUrl = 'https://facebook.com/ConsejoGeneralEducacion',
   instagramUrl = 'https://instagram.com/consejogeneral',
   title = 'Seguinos en redes sociales',
-  description = 'Mantente conectado y recibí las últimas actualizaciones a través de nuestras redes sociales',
+  description = 'Mantenete conectado y recibí las últimas actualizaciones a través de nuestras redes sociales',
 }: SocialMediaProps) => {
   return (
     <section className="relative overflow-hidden bg-gray-50 to-white">
