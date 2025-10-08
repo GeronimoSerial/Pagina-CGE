@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { CalendarDays, Pencil } from 'lucide-react';
+import { CalendarDays, Pencil, Download, FileText } from 'lucide-react';
 import {
   getNewsBySlug,
   getCover,
@@ -7,7 +7,7 @@ import {
   getAllNews,
 } from '@/features/noticias/services/news';
 import { notFound } from 'next/navigation';
-import { PhotoSwipeGallery } from '@/shared/data/dynamic-client';
+import { PhotoSwipeGallery, VideoGallery } from '@/shared/data/dynamic-client';
 import { Separador } from '@/shared/components/Separador';
 import type { Metadata } from 'next';
 import Image from 'next/image';
@@ -15,7 +15,14 @@ import { formatDate } from '@/shared/lib/date-utils';
 import { NewsItem } from '@/shared/interfaces';
 import { HTMLContent } from '@/shared/components/HTMLContent';
 import { SITE_URL } from '@/shared/lib/config';
-import { VideoGallery } from '@/shared/data/dynamic-client';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/shared/ui/card';
+import { Button } from '@/shared/ui/button';
 
 export const revalidate = false;
 
@@ -45,7 +52,6 @@ export async function generateMetadata({
   const noticia = await getNewsBySlug(slug);
 
   if (!noticia) return {};
-
   const url = `/noticias/${slug}`;
 
   const metadata = {
@@ -132,6 +138,11 @@ export default async function NoticiaPage({ params }: PageProps) {
       '@id': `${SITE_URL}/noticias/${slug}`,
     },
   };
+  const documentosConId =
+    noticia?.documentos?.map((doc, idx) => ({
+      id: idx + 1,
+      ...doc,
+    })) || [];
 
   return (
     <div className="flex flex-col page-bg-white">
@@ -192,6 +203,56 @@ export default async function NoticiaPage({ params }: PageProps) {
                     className="mb-8 max-w-none prose prose-lg"
                   />
                 </div>
+                {documentosConId && documentosConId.length > 0 && (
+                  <>
+                    <Separador titulo="Documentos adjuntos" />
+                    <div className="grid grid-cols-1 gap-4 mb-8 sm:grid-cols-2 lg:grid-cols-3">
+                      {documentosConId.map((doc) => (
+                        <Card
+                          key={doc.id}
+                          className="flex overflow-hidden flex-col h-full rounded-lg border border-gray-200 transition-shadow hover:shadow-md"
+                        >
+                          <CardHeader className="px-4 pt-3 pb-2">
+                            <div className="flex justify-between items-start">
+                              <div className="flex gap-2 items-center">
+                                <FileText className="w-5 h-5 text-green-800" />
+                              </div>
+                              {doc.fecha && (
+                                <span className="text-xs text-gray-500">
+                                  {formatDate(doc.fecha)}
+                                </span>
+                              )}
+                            </div>
+                          </CardHeader>
+                          <CardContent className="grow px-4 py-2">
+                            <CardTitle
+                              className="mb-1 text-lg font-semibold line-clamp-2"
+                              title={doc.nombre}
+                            >
+                              {doc.nombre}
+                            </CardTitle>
+                          </CardContent>
+                          <CardFooter className="px-4 py-3">
+                            <Button
+                              variant="outline"
+                              className="flex gap-2 items-center w-full text-sm hover:bg-[#3D8B37] hover:text-white transition-colors"
+                              asChild
+                            >
+                              <a
+                                href={doc.enlace}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Download className="w-3 h-3" />
+                                Descargar
+                              </a>
+                            </Button>
+                          </CardFooter>
+                        </Card>
+                      ))}
+                    </div>
+                  </>
+                )}
 
                 {noticia.imagenes && noticia.imagenes.length > 0 && (
                   <>
