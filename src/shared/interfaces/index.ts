@@ -53,6 +53,14 @@ export interface Supervisor {
   nombre: string;
 }
 
+export interface Document {
+  id?: number;
+  nombre: string;
+  enlace: string;
+  descripcion?: string;
+  fecha?: string;
+}
+
 export interface NewsItem {
   id: number;
   autor?: string;
@@ -66,6 +74,7 @@ export interface NewsItem {
   imagen: { url: string; width: number; height: number }[];
   imagenes?: any[];
   videos?: any[];
+  documentos?: Document[];
   publicado: boolean;
   fecha: string;
   createdAt?: string;
