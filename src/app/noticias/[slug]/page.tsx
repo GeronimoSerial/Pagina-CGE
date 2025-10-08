@@ -207,9 +207,16 @@ export default async function NoticiaPage({ params }: PageProps) {
                           className="flex overflow-hidden flex-col h-full rounded-lg border border-gray-200 transition-shadow hover:shadow-md"
                         >
                           <CardContent className="grow px-4 py-4">
-                            <div className="flex gap-2 items-start mb-2">
+                            <div className="flex justify-end mb-2">
+                              {doc.fecha && (
+                                <span className="text-xs text-gray-500">
+                                  {formatDate(doc.fecha)}
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex gap-2 items-start">
                               <FileText className="w-6 h-6 text-green-800 flex-shrink-0" />
-                              <h3 className="text-base font-semibold text-gray-800 line-clamp-2">
+                              <h3 className="text-base font-semibold text-gray-800 line-clamp-2 flex-1">
                                 {doc.nombre}
                               </h3>
                             </div>
