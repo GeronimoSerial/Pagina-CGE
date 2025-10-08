@@ -133,7 +133,7 @@ export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
       createdAt: n.date_created,
       lastUpdated: n.date_updated || n.date_created,
       metaTitle: n.metaTitle || n.titulo,
-      documentos: n.documentos || null,
+      documentos: n.documentos || [],
       metaDescription: n.metaDescription || n.resumen,
     };
   } catch (error) {
