@@ -1,9 +1,9 @@
 datasource db {
-    url      = env("DATABASE_URL")
     provider = "postgresql"
+    url      = env("DATABASE_URL")
+    schemas  = ["vacantes", "institucional", "rrhh"]
 }
 
 generator client {
     provider = "prisma-client-js"
-    output   = "../src/generated/prisma"
 }
