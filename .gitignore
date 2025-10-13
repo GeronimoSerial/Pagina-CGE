@@ -45,3 +45,4 @@ public/prueba
 pnpm-lock.yaml
 .windsurf/rules/
 src/app/api/webhook-test
+/generated/prisma
