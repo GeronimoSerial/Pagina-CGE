@@ -449,6 +449,78 @@
       "type": "resolución",
       "date": "2024",
       "downloadUrl": "https://geronimoserial.github.io/pdf-cge/RMN_3956_HORA_AMPLIADA.pdf"
+    },
+    {
+      "id": "60",
+      "title": "Ley 26.965 - Educación en Contexto de Encierro",
+      "description": "Reconoce y garantiza el derecho a la educación de las personas privadas de libertad, estableciendo la organización del servicio educativo en contextos de encierro.",
+      "category": "normativas",
+      "type": "ley",
+      "date": "27/07/2011",
+      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/LEY%2026965%20-%20EDUCACION%20EN%20CONTEXTO%20DE%20ENCIERRO.pdf"
+    },
+    {
+      "id": "61",
+      "title": "Ley Provincial 4917 - Jubilaciones",
+      "description": "Establece el régimen de jubilaciones y pensiones para el personal comprendido en la administración pública provincial.",
+      "category": "normativas",
+      "type": "ley",
+      "date": "15/12/2018",
+      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/Ley%20Provincial%204917%20Jubilaciones.pdf"
+    },
+    {
+      "id": "62",
+      "title": "Ley 6244 - Imposición de Nombre",
+      "description": "Regula el proceso de selección y asignación de nombres a los establecimientos públicos dependientes del Estado Provincial que solo posean designación numérica o carezcan de denominación.",
+      "category": "normativas",
+      "type": "ley",
+      "date": "12/06/2013",
+      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/Ley%206244%20Imposicion%20Nombre.pdf"
+    },
+    {
+      "id": "63",
+      "title": "Resolución Ministerial Nº 284/15 - Criterios Organizativos de la Modalidad EDyH Nivel Inicial y Primario",
+      "description": "Establece los criterios organizativos para la Modalidad de Educación Domiciliaria y Hospitalaria en los niveles Inicial y Primario.",
+      "category": "normativas",
+      "type": "resolución",
+      "date": "10/03/2015",
+      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/Res.%20Min.%20Nº%20284-15%20Criterios%20organizativos%20de%20la%20Modalidad%20EDyH%20Nivel%20Inicial%20y%20Primario.pdf"
+    },
+    {
+      "id": "64",
+      "title": "Resolución Ministerial Nº 2513/19 - Protocolo de Ingreso de Docentes de Apoyo a la Integración Escolar",
+      "description": "Aprueba el protocolo para el ingreso y desempeño de los Docentes de Apoyo a la Integración Escolar en los distintos niveles educativos.",
+      "category": "normativas",
+      "type": "resolución",
+      "date": "05/09/2019",
+      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/2019-Res.%20Min.%20N°2513-19%20Protocolo%20de%20Ingreso%20Docentes%20de%20Apoyo%20a%20la%20Integración%20Escolar.pdf"
+    },
+    {
+      "id": "65",
+      "title": "Resolución Ministerial Nº 3956/22 - Jornada Laboral de 25 Horas Semanales",
+      "description": "Dispone la implementación de una jornada laboral de 25 horas semanales para el personal docente, estableciendo su alcance y criterios de aplicación.",
+      "category": "normativas",
+      "type": "resolución",
+      "date": "22/12/2022",
+      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/2022-Res.%20Min.%20N°3956-22_Jornada%20Laboral%2025h%20semanales.pdf"
+    },
+    {
+      "id": "66",
+      "title": "Instructivo para Solicitud de Traslado Transitorio",
+      "description": "Brinda las pautas y procedimientos para la solicitud de traslado transitorio del personal docente dentro del sistema educativo provincial.",
+      "category": "guias",
+      "type": "instructivo",
+      "date": "03/02/2021",
+      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/Instruct%20para%20Solic%20de%20Trasl%20Transitorio.pdf"
+    },
+    {
+      "id": "67",
+      "title": "Ceremonial y Protocolo - Ministerio de Educación",
+      "description": "Documento guía que establece normas de ceremonial, protocolo y precedencia institucional para actos oficiales y eventos organizados por el Ministerio de Educación.",
+      "category": "guias",
+      "type": "manual",
+      "date": "14/09/2018",
+      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/Ceremonial%20y%20Protocolo%20Ministerio%20Educacion.pdf"
     }
   ]
 }
