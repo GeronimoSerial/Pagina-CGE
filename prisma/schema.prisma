@@ -92,6 +92,7 @@ model edificio {
   id_domicilio      Int
   domicilio         domicilio           @relation(fields: [id_domicilio], references: [id_domicilio], onDelete: NoAction, onUpdate: NoAction, map: "fk_edificio_domicilio")
   edificio_conexion edificio_conexion[]
+  edificio_escuela  edificio_escuela[]
 
   @@index([id_domicilio], map: "idx_edificio_domicilio")
   @@schema("infraestructura")
@@ -183,6 +184,7 @@ model escuela {
   created_at           DateTime               @default(now()) @db.Timestamptz(6)
   updated_at           DateTime               @default(now()) @db.Timestamptz(6)
   usuario_escuela      usuario_escuela[]
+  edificio_escuela     edificio_escuela[]
   ambito_escuela       ambito_escuela?        @relation(fields: [id_ambito], references: [id_ambito], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_ambito")
   escuela              escuela?               @relation("escuelaToescuela", fields: [cabecera_id], references: [id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_cabecera")
   other_escuela        escuela[]              @relation("escuelaToescuela")
@@ -503,4 +505,14 @@ model vacante {
   @@index([estado], map: "idx_vacante_estado")
   @@index([id_escuela, estado], map: "ix_vacante_estado_escuela")
   @@schema("vacantes")
+}
+
+model edificio_escuela {
+  id_edificio Int
+  id_escuela  Int
+  edificio    edificio @relation(fields: [id_edificio], references: [id_edificio], onDelete: NoAction, onUpdate: NoAction, map: "fk_ee_edificio")
+  escuela     escuela  @relation(fields: [id_escuela], references: [id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_ee_escuela")
+
+  @@id([id_edificio, id_escuela], map: "pk_edificio_escuela")
+  @@schema("infraestructura")
 }
