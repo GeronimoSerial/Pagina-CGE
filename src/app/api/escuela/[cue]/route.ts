@@ -1,4 +1,4 @@
-import { getEscuelasByCue } from '@/services/escuelas';
+import { getEscuelasPorCue } from '@/services/escuelas';
 import { NextResponse } from 'next/server';
 
 
@@ -10,7 +10,7 @@ export async function GET(
     const cue = BigInt(cueString);
 
     try {
-        const data = await getEscuelasByCue(cue);
+        const data = await getEscuelasPorCue(cue);
         
         // Serializar BigInt a string para JSON
         const jsonString = JSON.stringify(
