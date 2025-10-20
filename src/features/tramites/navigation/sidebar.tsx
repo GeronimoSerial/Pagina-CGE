@@ -73,10 +73,10 @@ export function Sidebar({ sections = [], onLinkClick }: SidebarProps) {
     <div className="h-full bg-white flex flex-col">
       <div className="flex-shrink-0 p-4 border-b border-gray-200 bg-white">
         <div className="mb-4 hidden lg:block">
-          <h2 className="text-xl font-bold text-gray-900">
+          {/* <h2 className="text-xl font-bold text-gray-900">
             Consejo General de Educación
-          </h2>
-          <p className="text-sm text-gray-600">Guía de Trámites</p>
+          </h2> */}
+          {/* <p className="text-sm text-gray-600">Guía de Trámites</p> */}
         </div>
 
         <div className="relative">
