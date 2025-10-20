@@ -60,6 +60,7 @@ export default function NewsCarousel({
                         height={630}
                         priority
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 50vw"
+                        unoptimized
                       />
                     </div>
                   </div>
