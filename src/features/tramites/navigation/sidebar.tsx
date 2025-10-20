@@ -72,10 +72,6 @@ export function Sidebar({ sections = [], onLinkClick }: SidebarProps) {
   return (
     <div className="h-full bg-white flex flex-col">
       <div className="flex-shrink-0 p-4 border-b border-gray-200 bg-white">
-        <div className="mb-4 hidden lg:block">
-
-        </div>
-
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-600" />
           <input

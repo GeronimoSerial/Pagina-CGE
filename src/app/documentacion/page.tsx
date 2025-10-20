@@ -32,7 +32,6 @@ export default function Documentacion() {
       title="Documentación"
       description="Encontrá todos los documentos, formularios y normativas necesarias para tus trámites"
       showFAQ={true}
-      // showInfoBar={true}
       basePath="/documentacion"
     >
       <DocumentacionSection />
