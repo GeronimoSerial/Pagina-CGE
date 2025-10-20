@@ -1,5 +1,6 @@
 import directus from '@/shared/lib/directus';
 import { NewsItem } from '@/shared/interfaces';
+import { cfImages } from '@/shared/lib/cloudflare-images';
 import { DIRECTUS_URL } from '@/shared/lib/config';
 
 // ------------> Directus SDK for News <------------
@@ -173,18 +174,18 @@ export async function getRelatedNews(categoria: string, excludeSlug?: string) {
 }
 
 // 5. Portada (adaptado a Directus)
-// Retorna URL directa sin cfImages para evitar doble transformación con Next.js Image
+// Usa Cloudflare CDN para optimización. Next.js Image debe tener unoptimized={true}
 export function getCover({ noticia }: any) {
   if (noticia.portada?.url) {
-    return noticia.portada.url;
+    return cfImages(noticia.portada.url, 1200, 'auto');
   }
   const coverId = noticia.portada?.id;
   if (!coverId || !directus.url) return null;
-  return `${directus.url}assets/${coverId}`;
+  return cfImages(`${directus.url}assets/${coverId}`, 1200, 'auto');
 }
 
 // 6. Imágenes (adaptado a Directus)
-// Retorna URLs directas sin cfImages para evitar doble transformación con Next.js Image
+// Usa Cloudflare CDN para optimización de galería
 export function getImages(noticia: NewsItem) {
   if (!Array.isArray(noticia.imagenes) || noticia.imagenes.length === 0) {
     return [];
@@ -193,7 +194,7 @@ export function getImages(noticia: NewsItem) {
   return noticia.imagenes.map((img: any) => {
     const file = img.directus_files_id;
     return {
-      url: `${directus.url}assets/${file.id}`,
+      url: cfImages(`${directus.url}assets/${file.id}`, 1200, 'auto'),
       alt: file.title || file.filename_download || '',
       width: file.width,
       height: file.height,
