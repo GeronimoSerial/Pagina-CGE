@@ -195,6 +195,7 @@ export default async function NoticiaPage({ params }: PageProps) {
                     width={1200}
                     height={630}
                     priority
+                    unoptimized
                   />
                 )}
                 <div className="mb-8 max-w-none prose prose-lg">

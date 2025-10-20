@@ -29,6 +29,7 @@ export function NewsCard({
             height={630}
             priority={isFirstImage}
             loading={isFirstImage ? 'eager' : 'lazy'}
+            unoptimized
           />
           <div className="absolute inset-0 transition-colors duration-300 bg-black/0 group-hover:bg-black/10" />
         </div>
