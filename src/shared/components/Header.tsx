@@ -4,7 +4,17 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu } from 'lucide-react';
+import {
+  Menu,
+  Home,
+  Newspaper,
+  School,
+  MessageCircle,
+  FileText,
+  ClipboardList,
+  Building,
+  Phone,
+} from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -22,14 +32,14 @@ import {
 import { Button } from '@/shared/ui/button';
 
 const navLinks = [
-  { href: '/', label: 'Inicio' },
-  { href: '/noticias', label: 'Noticias' },
-  { href: '/escuelas', label: 'Escuelas' },
-  { href: '/chatbot', label: 'Chat Normativo' },
-  { href: '/documentacion', label: 'Documentación' },
-  { href: '/tramites', label: 'Trámites' },
-  { href: '/institucional', label: 'Institución' },
-  { href: '/contacto', label: 'Contacto' },
+  { href: '/', label: 'Inicio', icon: Home },
+  { href: '/noticias', label: 'Noticias', icon: Newspaper },
+  { href: '/escuelas', label: 'Escuelas', icon: School },
+  { href: '/chatbot', label: 'Chat Normativo', icon: MessageCircle },
+  { href: '/documentacion', label: 'Documentación', icon: FileText },
+  { href: '/tramites', label: 'Trámites', icon: ClipboardList },
+  { href: '/institucional', label: 'Institución', icon: Building },
+  { href: '/contacto', label: 'Contacto', icon: Phone },
 ];
 
 const Header = () => {
@@ -65,7 +75,6 @@ const Header = () => {
             </div>
           </Link>
 
-          {/* Navegación Desktop */}
           <NavigationMenu className="hidden lg:flex">
             <NavigationMenuList>
               {navLinks.map((link) => (
@@ -81,7 +90,6 @@ const Header = () => {
             </NavigationMenuList>
           </NavigationMenu>
 
-          {/* Menú Mobile */}
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild className="lg:hidden">
               <Button
@@ -100,20 +108,24 @@ const Header = () => {
                 <SheetTitle className="text-left">Navegación</SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-2 mt-6">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`px-4 py-3 text-sm font-medium rounded-md transition-colors ${
-                      pathname === link.href
-                        ? 'bg-[#2D6628] text-white'
-                        : 'text-gray-900 hover:bg-gray-100'
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                {navLinks.map((link) => {
+                  const IconComponent = link.icon;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={`flex items-center gap-3 px-2 py-3 text-sm font-medium rounded-md transition-colors ${
+                        pathname === link.href
+                          ? 'bg-[#2D6628] text-white'
+                          : 'text-gray-900 hover:bg-gray-100'
+                      }`}
+                    >
+                      <IconComponent className="h-4 w-4" />
+                      {link.label}
+                    </Link>
+                  );
+                })}
               </nav>
             </SheetContent>
           </Sheet>
