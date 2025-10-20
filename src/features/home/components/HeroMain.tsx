@@ -9,7 +9,7 @@ const HeroMain = () => {
     <div className="relative w-full h-[520px] md:h-[600px] bg-[#F7FAF9] overflow-hidden flex items-center">
       <div className="absolute inset-0 w-full h-full">
         <Image
-          src="/images/hero3.png"
+          src="/images/hero-v2.png"
           alt="Imagen de fondo principal"
           fill
           quality={100}
@@ -19,7 +19,7 @@ const HeroMain = () => {
       </div>
       <div className="block md:hidden absolute inset-0 w-full h-full">
         <Image
-          src="/images/heromobile.png"
+          src="/images/heromobile-v2.png"
           alt="Imagen de fondo principal para móviles"
           fill
           quality={100}
