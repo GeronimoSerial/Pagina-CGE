@@ -149,7 +149,7 @@ export default async function NoticiaPage({ params }: PageProps) {
       <div className="flex flex-1">
         <main className="flex-1 transition-all duration-300">
           <div className="wide-container section-spacing">
-            <nav className="flex items-center  text-sm text-gray-500">
+            <nav className="flex items-center text-sm text-gray-500">
               <Link href="/" className="hover:text-green-800">
                 Inicio
               </Link>
