@@ -28,12 +28,12 @@
   --institutional-green-foreground: 115 44% 38%;
 
   /* Header Heights */
-  --header-height: 4rem; /* 64px para mobile */
+  --header-height: 3.5rem; /* 56px - h-14 */
 }
 
 @media (min-width: 640px) {
   :root {
-    --header-height: 5rem; /* 80px para sm+ */
+    --header-height: 3.5rem; /* 56px - h-14 (mismo en todos los tamaños) */
   }
 }
 
