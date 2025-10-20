@@ -30,11 +30,11 @@ const HeroMain = () => {
 
       <div className="relative z-10 h-full w-full max-w-7xl mx-auto px-8 md:px-12 lg:px-20 flex flex-col justify-center">
         <div className="max-w-2xl animate-fade-in-up">
-          <h1 className="mt-16 text-2xl md:text-4xl lg:text-5xl font-extrabold text-white mb-4 leading-tight">
+          <h1 className="mt-16 text-2xl md:text-3xl lg:text-4xl font-extrabold text-white mb-4 leading-tight">
             Consejo General de Educación
           </h1>
 
-          <p className="text-md md:text-xl text-white mb-8 font-medium text-balance">
+          <p className="text-md md:text-xl text-gray-300 mb-8 font-medium text-balance">
             Gestión y acompañamiento pedagógico integral en la educación
             inicial, primaria y de adultos de nuestra provincia.
           </p>
