@@ -148,7 +148,7 @@ export default function VideoGallery({ noticia }: VideoGalleryProps) {
 
     if (currentVideoIndex !== null) {
       document.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden'; 
+      document.body.style.overflow = 'hidden';
     }
 
     return () => {
@@ -271,9 +271,9 @@ export default function VideoGallery({ noticia }: VideoGalleryProps) {
                   currentVideo.thumbnail || '/images/video-placeholder.jpg'
                 }
                 controls
-                autoPlay={isMobile} 
+                autoPlay={isMobile}
                 muted={isMobile}
-                playsInline={!isMobile} 
+                playsInline={!isMobile}
                 className={`w-full ${isMobile ? 'h-full object-contain' : 'aspect-video'}`}
                 onError={(e) => {
                   console.error('Error loading video:', e);
@@ -290,10 +290,8 @@ export default function VideoGallery({ noticia }: VideoGalleryProps) {
                 Tu navegador no soporta el elemento de video.
               </video>
 
-             
               {!isMobile && videos.length > 1 && (
                 <>
-                  
                   <button
                     onClick={goToPrevious}
                     className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white rounded-full p-2 transition-all"
@@ -314,7 +312,6 @@ export default function VideoGallery({ noticia }: VideoGalleryProps) {
                     </svg>
                   </button>
 
-             
                   <button
                     onClick={goToNext}
                     className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white rounded-full p-2 transition-all"
@@ -341,7 +338,6 @@ export default function VideoGallery({ noticia }: VideoGalleryProps) {
             {!isMobile && videos.length > 1 && (
               <div className="flex justify-center mt-4 space-x-2 overflow-x-auto pb-2">
                 {videos.map((video, index) => {
-                  
                   const cachedThumbnail = getCachedThumbnail(video.url);
                   const displayThumbnail =
                     cachedThumbnail ||

@@ -149,7 +149,7 @@ export default async function NoticiaPage({ params }: PageProps) {
       <div className="flex flex-1">
         <main className="flex-1 transition-all duration-300">
           <div className="wide-container section-spacing">
-            <nav className="flex items-center element-spacing text-sm text-gray-500">
+            <nav className="flex items-center text-sm text-gray-500">
               <Link href="/" className="hover:text-green-800">
                 Inicio
               </Link>
@@ -164,7 +164,7 @@ export default async function NoticiaPage({ params }: PageProps) {
             <article className="element-spacing bg-white rounded-xl shadow-xs">
               <div className="p-6 sm:p-8">
                 <header className="mb-8">
-                  <div className="flex flex-wrap gap-4 items-center mb-4 text-sm text-gray-500">
+                  <div className="flex flex-wrap gap-4 items-center mb-2 text-sm text-gray-500">
                     <div className="flex items-center">
                       <CalendarDays className="mr-2 w-4 h-4" />
                       <span className="text-xs tracking-wide">
@@ -179,7 +179,7 @@ export default async function NoticiaPage({ params }: PageProps) {
                       {noticia.categoria}
                     </span>
                   </div>
-                  <h1 className="mb-6 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
+                  <h1 className="mb-6 text-2xl font-bold leading-tight text-gray-900 sm:text-3xl lg:text-4xl">
                     {noticia.titulo}
                   </h1>
                   <p className="text-xl leading-relaxed text-gray-600">

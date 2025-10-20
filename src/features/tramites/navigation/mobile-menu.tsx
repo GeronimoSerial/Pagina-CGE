@@ -19,7 +19,7 @@ export function MobileMenu({ sections }: MobileMenuProps) {
   return (
     <>
       {/* Mobile Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-4 py-4 bg-white border-b border-gray-200 lg:hidden shadow-md">
+      <header className="fixed top-0 left-0 right-0 z-50 px-4 py-2 bg-white border-b border-gray-200 lg:hidden shadow-md">
         <div className="flex justify-between items-center">
           <div>
             <h2 className="text-lg font-bold text-gray-900">
@@ -49,7 +49,7 @@ export function MobileMenu({ sections }: MobileMenuProps) {
         style={{ paddingTop: '80px' }}
       >
         <div className="p-4">
-          <div className="mb-6">
+          <div className="">
             <Link
               href="/"
               onClick={closeMenu}

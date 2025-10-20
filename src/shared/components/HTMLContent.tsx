@@ -27,7 +27,7 @@ export function HTMLContent({ content, className = '' }: HTMLContentProps) {
       table: 'min-w-full border border-slate-200 rounded-xl overflow-hidden',
       th: 'border border-slate-200 px-5 py-3 bg-slate-100 text-left text-slate-700 font-medium',
       td: 'border border-slate-200 px-5 py-3',
-      p: 'mb-6 text-slate-800 leading-relaxed text-lg',
+      p: 'mb-6 text-slate-800 leading-relaxed text-base',
       b: 'font-bold text-slate-900',
       strong: 'font-bold text-slate-900',
     };

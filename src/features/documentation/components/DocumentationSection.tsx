@@ -83,7 +83,7 @@ const DocumentationSection = () => {
   };
 
   return (
-    <section id="documentacion" className="py-8 w-full">
+    <section id="documentacion" className="w-full">
       <div className="container px-4 mx-auto max-w-7xl">
         {/* Encabezado */}
         {/* Últimos documentos añadidos */}
