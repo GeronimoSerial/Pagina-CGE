@@ -84,13 +84,12 @@ export interface NewsItem {
 }
 
 export interface Video {
-  url: string,
-  title: string,
-  thumbnail?: string,
-  width: number,
-  height: number,
-  duration?: number,
-  type: string, 
-  filesize: number,
+  url: string;
+  title: string;
+  thumbnail?: string;
+  width: number;
+  height: number;
+  duration?: number;
+  type: string;
+  filesize: number;
 }
-

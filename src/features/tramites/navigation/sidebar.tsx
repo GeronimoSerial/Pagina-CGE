@@ -72,15 +72,8 @@ export function Sidebar({ sections = [], onLinkClick }: SidebarProps) {
   return (
     <div className="h-full bg-white flex flex-col">
       <div className="flex-shrink-0 p-4 border-b border-gray-200 bg-white">
-        <div className="mb-4 hidden lg:block">
-          <h2 className="text-xl font-bold text-gray-900">
-            Consejo General de Educación
-          </h2>
-          <p className="text-sm text-gray-600">Guía de Trámites</p>
-        </div>
-
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-600" />
           <input
             type="text"
             placeholder="Buscar trámites..."
@@ -88,7 +81,7 @@ export function Sidebar({ sections = [], onLinkClick }: SidebarProps) {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="
               w-full pl-10 pr-10 py-2.5 rounded-lg border border-gray-300
-              bg-gray-50 text-base text-gray-900 placeholder:text-gray-500
+              bg-gray-50 text-sm text-gray-900 placeholder:text-gray-500
               focus:outline-none focus:ring-2 focus:border-transparent
               transition-all duration-200
             "

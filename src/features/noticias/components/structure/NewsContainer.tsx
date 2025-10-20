@@ -21,7 +21,7 @@ export default function NewsContainer({
 }: NewsContainerProps) {
   return (
     <div className="px-6 mx-auto max-w-7xl">
-      <div className="mb-8">
+      <div className="mb-6">
         <Suspense
           fallback={<div className="text-gray-50">Cargando buscador...</div>}
         >

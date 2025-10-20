@@ -200,7 +200,7 @@ export function getImages(noticia: NewsItem) {
   });
 }
 
-//8. Videos 
+//8. Videos
 export function getVideos(noticia: NewsItem) {
   if (!Array.isArray(noticia.videos) || noticia.videos.length === 0) {
     return [];
@@ -208,13 +208,13 @@ export function getVideos(noticia: NewsItem) {
 
   return noticia.videos.map((video: any) => {
     const file = video.directus_files_id;
-    
+
     // Generar URL del video
     const videoUrl = `${directus.url}assets/${file.id}`;
-    
+
     // Generar thumbnail - usar primera frame del video o imagen de placeholder
     let thumbnailUrl = '';
-    
+
     // Intentar generar thumbnail desde el video (si Directus lo soporta)
     if (file.type && file.type.startsWith('video/')) {
       // Usar transformación de Directus para generar thumbnail del video

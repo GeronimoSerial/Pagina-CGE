@@ -1,5 +1,11 @@
 import { Card, CardContent } from '@/shared/ui/card';
-import { FileText, School, BookOpen, BotMessageSquare } from 'lucide-react';
+import {
+  FileText,
+  School,
+  BookOpen,
+  BotMessageSquare,
+  ClipboardList,
+} from 'lucide-react';
 import { QuickAccessItemProps } from '@/shared/interfaces';
 
 const QuickAccessItem = ({
@@ -36,14 +42,14 @@ interface QuickAccessProps {
 const QuickAccess = ({ items = [] }: QuickAccessProps) => {
   const defaultItems: QuickAccessItemProps[] = [
     {
-      icon: <FileText size={24} />,
+      icon: <ClipboardList size={24} />,
       title: 'Trámites',
       description:
         'Acceda a información útil para gestionar trámites administrativos',
       href: '/tramites',
     },
     {
-      icon: <BookOpen size={24} />,
+      icon: <FileText size={24} />,
       title: 'Documentación',
       description:
         'Consulte normativa, reglamentos y documentación oficial correspondiente al Consejo General de Educación',
@@ -51,9 +57,9 @@ const QuickAccess = ({ items = [] }: QuickAccessProps) => {
     },
     {
       icon: <BotMessageSquare size={24} />,
-      title: 'Asistente Virtual',
+      title: 'Chat Normativo',
       description:
-        'Interactúe con el chatbot oficial del Consejo General de Educación para consultar normativa educativa vigente.',
+        'Interactúe con el chat oficial del Consejo General de Educación para consultar normativa educativa vigente.',
       href: '/chatbot',
     },
     {
