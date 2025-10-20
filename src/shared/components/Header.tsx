@@ -53,6 +53,7 @@ const Header = () => {
           <Link
             href="/"
             className="flex items-center flex-shrink-0 min-w-0 focus:outline-none focus:ring-2 focus:ring-[#2D6628] rounded-lg p-1"
+            aria-label="Ir al inicio"
           >
             <div className="relative w-9 h-9 flex-shrink-0 bg-white rounded-full border border-gray-200">
               <Image
