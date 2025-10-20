@@ -70,7 +70,7 @@ const Header = () => {
             <NavigationMenuList>
               {navLinks.map((link) => (
                 <NavigationMenuItem key={link.href}>
-                  <Link href={link.href} legacyBehavior passHref>
+                  <Link href={link.href} passHref>
                     <NavigationMenuLink
                       className={navigationMenuTriggerStyle()}
                       active={pathname === link.href}
