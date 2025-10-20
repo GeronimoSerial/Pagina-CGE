@@ -64,8 +64,8 @@ const Header = () => {
                 priority
               />
             </div>
-            <div className="ml-3 flex flex-col min-w-0 max-w-[180px] md:max-w-none">
-              <span className="text-sm font-semibold text-gray-600 leading-tight truncate">
+            <div className="ml-3 flex flex-col min-w-0 sm:max-w-[180px] md:max-w-none">
+              <span className="text-sm font-semibold text-gray-600 sm:leading-tight sm:truncate">
                 Consejo General de Educación
               </span>
               <span className="text-xs font-semibold text-gray-500">
