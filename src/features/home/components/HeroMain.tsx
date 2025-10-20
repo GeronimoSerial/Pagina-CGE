@@ -30,11 +30,11 @@ const HeroMain = () => {
 
       <div className="relative z-10 h-full w-full max-w-7xl mx-auto px-8 md:px-12 lg:px-20 flex flex-col justify-center">
         <div className="max-w-2xl animate-fade-in-up">
-          <h1 className="mt-16 text-2xl md:text-4xl lg:text-5xl font-extrabold text-[#214e56] mb-4 md:text-balance leading-tight">
-            Consejo General de Educación de Corrientes
+          <h1 className="mt-16 text-2xl md:text-4xl lg:text-5xl font-extrabold text-white mb-4 leading-tight">
+            Consejo General de Educación
           </h1>
 
-          <p className="text-md md:text-xl text-[#214e56] mb-8 font-medium text-balance">
+          <p className="text-md md:text-xl text-white mb-8 font-medium text-balance">
             Gestión y acompañamiento pedagógico integral en la educación
             inicial, primaria y de adultos de nuestra provincia.
           </p>
@@ -50,7 +50,7 @@ const HeroMain = () => {
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
           <ChevronDown
-            className="w-8 h-8 text-green-800 animate-bounce"
+            className="w-8 h-8 text-white animate-bounce"
             style={{ textShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)' }}
           />
         </div>
