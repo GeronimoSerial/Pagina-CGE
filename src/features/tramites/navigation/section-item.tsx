@@ -23,7 +23,7 @@ export const SectionItem = memo(
         onClick={onLinkClick}
         prefetch={true}
         className={`
-        group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm 
+        group flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs
         transition-all duration-200 ease-in-out
         focus:outline-none focus:ring-2 
         ${
@@ -82,7 +82,7 @@ export const Section = memo(
           type="button"
           onClick={handleToggle}
           className={`
-          w-full flex items-center justify-between px-3 py-3 rounded-lg text-left 
+          w-full flex items-center justify-between px-3 py-3 rounded-lg text-left
           transition-all duration-200 ease-in-out group
           focus:outline-none focus:ring-2 focus:ring-transparent
           ${
@@ -94,10 +94,7 @@ export const Section = memo(
           aria-expanded={isOpen}
           aria-controls={`section-${section.id}`}
         >
-          <span
-            className="font-semibold text-base flex-1"
-            title={section.title}
-          >
+          <span className="font-semibold text-sm flex-1" title={section.title}>
             {section.title}
           </span>
           <div className="flex items-center gap-2 flex-shrink-0">

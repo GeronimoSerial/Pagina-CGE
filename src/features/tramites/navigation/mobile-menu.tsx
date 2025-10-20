@@ -49,7 +49,7 @@ export function MobileMenu({ sections }: MobileMenuProps) {
         style={{ paddingTop: '80px' }}
       >
         <div className="p-4">
-          <div className="mb-6">
+          <div className="">
             <Link
               href="/"
               onClick={closeMenu}
