@@ -34,10 +34,10 @@ import { Button } from '@/shared/ui/button';
 const navLinks = [
   { href: '/', label: 'Inicio', icon: Home },
   { href: '/noticias', label: 'Noticias', icon: Newspaper },
-  { href: '/escuelas', label: 'Escuelas', icon: School },
-  { href: '/chatbot', label: 'Chat Normativo', icon: MessageCircle },
-  { href: '/documentacion', label: 'Documentación', icon: FileText },
   { href: '/tramites', label: 'Trámites', icon: ClipboardList },
+  { href: '/documentacion', label: 'Documentos', icon: FileText },
+  { href: '/chatbot', label: 'Chat Normativo', icon: MessageCircle },
+  { href: '/escuelas', label: 'Escuelas', icon: School },
   { href: '/institucional', label: 'Institución', icon: Building },
   { href: '/contacto', label: 'Contacto', icon: Phone },
 ];
@@ -49,13 +49,12 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm">
       <div className="container px-4 mx-auto sm:px-6">
-        <div className="flex justify-between items-center h-14">
+        <div className="flex justify-between items-center h-14 flex-wrap md:flex-nowrap">
           <Link
             href="/"
-            className="flex items-center focus:outline-hidden focus:ring-2 focus:ring-[#2D6628] rounded-lg p-1"
-            aria-label="Ir al inicio - Consejo General de Educación de Corrientes"
+            className="flex items-center flex-shrink min-w-0 focus:outline-none focus:ring-2 focus:ring-[#2D6628] rounded-lg p-1"
           >
-            <div className="relative w-9 h-9 bg-white rounded-full border border-gray-200">
+            <div className="relative w-9 h-9 flex-shrink-0 bg-white rounded-full border border-gray-200">
               <Image
                 src="/images/logo.png"
                 alt="Logo CGE"
@@ -65,8 +64,8 @@ const Header = () => {
                 priority
               />
             </div>
-            <div className="ml-3 flex flex-col">
-              <span className="text-sm font-semibold text-gray-600">
+            <div className="ml-3 flex flex-col min-w-0 max-w-[180px] md:max-w-none">
+              <span className="text-sm font-semibold text-gray-600 leading-tight truncate">
                 Consejo General de Educación
               </span>
               <span className="text-xs font-semibold text-gray-500">
