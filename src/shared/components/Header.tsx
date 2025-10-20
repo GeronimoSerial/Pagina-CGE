@@ -81,7 +81,10 @@ const Header = () => {
                 <NavigationMenuItem key={link.href}>
                   <NavigationMenuLink
                     asChild
-                    className={navigationMenuTriggerStyle()}
+                    className={
+                      navigationMenuTriggerStyle() +
+                      (pathname === link.href ? ' bg-[#2D6628] text-white' : '')
+                    }
                   >
                     <Link href={link.href}>{link.label}</Link>
                   </NavigationMenuLink>
