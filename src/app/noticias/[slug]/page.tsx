@@ -179,7 +179,7 @@ export default async function NoticiaPage({ params }: PageProps) {
                       {noticia.categoria}
                     </span>
                   </div>
-                  <h1 className="mb-6 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
+                  <h1 className="mb-6 text-2xl font-bold leading-tight text-gray-900 sm:text-3xl lg:text-4xl">
                     {noticia.titulo}
                   </h1>
                   <p className="text-xl leading-relaxed text-gray-600">
