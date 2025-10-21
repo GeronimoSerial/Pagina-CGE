@@ -68,9 +68,9 @@ export default async function DocumentPage({ params }: PageProps) {
   return (
     <div className="min-h-screen">
       <main className="flex-1 lg:overflow-y-auto">
-        <div className="px-6 py-8 mx-auto max-w-4xl lg:px-8 lg:py-12">
+        <div className="content-container section-spacing">
           {/* Article Header */}
-          <header className="mb-8">
+          <header className="element-spacing">
             <div className="flex items-center mb-4">
               <span className="inline-flex items-center px-3 py-1 mr-3 text-xs font-medium text-white bg-green-800 rounded-full">
                 {article.category}
