@@ -13,7 +13,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ title, description }: HeroSectionProps) {
   return (
-    <div className="bg-linear-to-br from-[#3D8B37] to-[#2D6A27] text-white  shadow-xl  h-[230px] flex items-center justify-center overflow-hidden relative">
+    <div className="bg-linear-to-br from-[#1a4e0f] to-[#1a4e0f] text-white  shadow-xl  h-[230px] flex items-center justify-center overflow-hidden relative">
       <div className="flex absolute inset-0 flex-wrap justify-center items-center pointer-events-none">
         {[...Array(18)].map((_, i) => {
           const iconSize = 24;
