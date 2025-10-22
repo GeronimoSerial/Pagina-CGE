@@ -20,7 +20,11 @@ export function NewsCard({
       className="overflow-hidden bg-white rounded-xl border-none transition-all duration-300 group shadow-md hover:shadow-lg"
     >
       <CardContent className="p-0">
-        <Link href={`/noticias/${noticia.slug}`} prefetch={false}>
+        <Link
+          href={`/noticias/${noticia.slug}`}
+          prefetch={false}
+          aria-label={noticia.titulo}
+        >
           <div className="overflow-hidden relative rounded-t-xl">
             <Image
               className="object-cover w-full h-48 transition-transform duration-500 "
