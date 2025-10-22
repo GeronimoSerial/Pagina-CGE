@@ -20,19 +20,25 @@ export function NewsCard({
       className="overflow-hidden bg-white rounded-xl border-none transition-all duration-300 group shadow-md hover:shadow-lg"
     >
       <CardContent className="p-0">
-        <div className="overflow-hidden relative rounded-t-xl">
-          <Image
-            className="object-cover w-full h-48 transition-transform duration-500 "
-            alt={noticia.titulo}
-            src={getCover({ noticia }) || '/images/hero2.png'}
-            width={1200}
-            height={630}
-            priority={isFirstImage}
-            loading={isFirstImage ? 'eager' : 'lazy'}
-            unoptimized
-          />
-          <div className="absolute inset-0 transition-colors duration-300 bg-black/0 group-hover:bg-black/10" />
-        </div>
+        <Link
+          href={`/noticias/${noticia.slug}`}
+          prefetch={false}
+          aria-label={noticia.titulo}
+        >
+          <div className="overflow-hidden relative rounded-t-xl">
+            <Image
+              className="object-cover w-full h-48 transition-transform duration-500 "
+              alt={noticia.titulo}
+              src={getCover({ noticia }) || '/images/hero2.png'}
+              width={1200}
+              height={630}
+              priority={isFirstImage}
+              loading={isFirstImage ? 'eager' : 'lazy'}
+              unoptimized
+            />
+            <div className="absolute inset-0 transition-colors duration-300 bg-black/0 group-hover:bg-black/10" />
+          </div>
+        </Link>
         <div className="p-6 flex flex-col justify-between h-[300px]">
           <div>
             <div className="flex items-center text-xs text-gray-500 gap-2 mb-3 overflow-hidden whitespace-nowrap">
@@ -65,6 +71,7 @@ export function NewsCard({
           <div className="flex items-center text-sm font-medium text-gray-900 transition-colors duration-200 hover:text-green-900">
             <Link
               href={`/noticias/${noticia.slug}`}
+              prefetch={false}
               className="inline-flex gap-2 items-center hover:underline"
             >
               Leer más
