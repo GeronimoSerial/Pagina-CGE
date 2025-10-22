@@ -83,7 +83,13 @@ const Header = () => {
                     asChild
                     className={
                       navigationMenuTriggerStyle() +
-                      (pathname === link.href ? ' bg-[#2D6628] text-white' : '')
+                      ((
+                        link.href === '/'
+                          ? pathname === link.href
+                          : pathname.startsWith(link.href)
+                      )
+                        ? ' bg-[#2D6628] text-white'
+                        : '')
                     }
                   >
                     <Link href={link.href}>{link.label}</Link>
@@ -119,7 +125,11 @@ const Header = () => {
                       href={link.href}
                       onClick={() => setIsMenuOpen(false)}
                       className={`flex items-center gap-3 px-2 py-3 text-sm font-medium rounded-md transition-colors ${
-                        pathname === link.href
+                        (
+                          link.href === '/'
+                            ? pathname === link.href
+                            : pathname.startsWith(link.href)
+                        )
                           ? 'bg-[#2D6628] text-white'
                           : 'text-gray-900 hover:bg-gray-100'
                       }`}
