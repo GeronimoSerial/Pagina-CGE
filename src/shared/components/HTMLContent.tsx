@@ -7,7 +7,6 @@ interface HTMLContentProps {
   className?: string;
 }
 
-// Configuración de sanitización reutilizable
 const SANITIZE_CONFIG = {
   ALLOWED_TAGS: [
     'h1',
@@ -56,7 +55,6 @@ const SANITIZE_CONFIG = {
     /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|data):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
 };
 
-// Mapa de clases CSS por etiqueta
 const TAG_CLASS_MAP: Record<string, string> = {
   h1: 'text-3xl font-bold text-slate-900 mt-8 mb-4 border-b pb-1 border-slate-200',
   h2: 'text-2xl font-semibold mt-6 mb-3 text-slate-900',
@@ -79,7 +77,6 @@ const TAG_CLASS_MAP: Record<string, string> = {
   strong: 'font-bold text-slate-900',
 };
 
-// Función para envolver tablas con contenedor responsivo
 const wrapTablesWithResponsiveContainer = (html: string): string => {
   const tableRegex = /<table[^>]*>[\s\S]*?<\/table>/gi;
   return html.replace(
@@ -88,26 +85,23 @@ const wrapTablesWithResponsiveContainer = (html: string): string => {
   );
 };
 
-// Función para agregar clases a las etiquetas HTML
 const addClassesToTags = (html: string): string => {
   const classAttrRegex = /class\s*=\s*(['"])(.*?)\1/;
 
   return html.replace(
-    /<(\/)?([a-zA-Z0-9]+)([^>]*)>/g, // ✅ Corregido: \/? en lugar de \/_
+    /<(\/)?([a-zA-Z0-9]+)([^>]*)>/g, 
     (match, slash, tag, attrs) => {
       const tagName = tag.toLowerCase();
-      if (slash) return match; // Tag de cierre
+      if (slash) return match;
 
       if (TAG_CLASS_MAP[tagName]) {
         if (classAttrRegex.test(attrs)) {
-          // Agregar clases a atributo class existente
           return `<${tag}${attrs.replace(
             classAttrRegex,
             (m: string, q: string, c: string) =>
               `class=${q}${c} ${TAG_CLASS_MAP[tagName]}${q}`,
           )}>`;
         } else {
-          // Crear nuevo atributo class
           return `<${tag}${attrs ? ' ' : ''}${attrs.trim()} class="${TAG_CLASS_MAP[tagName]}">`;
         }
       }
@@ -117,12 +111,10 @@ const addClassesToTags = (html: string): string => {
   );
 };
 
-// Función para agregar rel="noopener noreferrer" a enlaces con target="_blank"
 const secureLinkTargets = (html: string): string => {
   return html.replace(
     /<a\s+([^>]*target=["']_blank["'][^>]*)>/gi,
     (match, attrs) => {
-      // Si ya tiene rel, agregar noopener noreferrer
       if (/rel\s*=\s*["'][^"']*["']/i.test(attrs)) {
         return match.replace(
           /rel\s*=\s*["']([^"']*)["']/i,
@@ -134,7 +126,6 @@ const secureLinkTargets = (html: string): string => {
           },
         );
       } else {
-        // Si no tiene rel, agregarlo
         return `<a ${attrs} rel="noopener noreferrer">`;
       }
     },
@@ -145,20 +136,13 @@ export function HTMLContent({ content, className = '' }: HTMLContentProps) {
   const [finalSanitizedContent, setFinalSanitizedContent] = useState('');
 
   useEffect(() => {
-    // ✅ Una sola sanitización al inicio para limpiar el contenido original
     let clean = DOMPurify.sanitize(content, SANITIZE_CONFIG);
 
-    // Agregar clases CSS a las etiquetas
     clean = addClassesToTags(clean);
 
-    // Asegurar enlaces con target="_blank" tengan rel="noopener noreferrer"
     clean = secureLinkTargets(clean);
 
-    // Envolver tablas con contenedor responsivo
     clean = wrapTablesWithResponsiveContainer(clean);
-
-    // ✅ No se necesita segunda sanitización: el HTML ya está limpio y solo agregamos
-    // elementos seguros (divs con clases) y atributos rel seguros a los enlaces
 
     setFinalSanitizedContent(clean);
   }, [content]);
