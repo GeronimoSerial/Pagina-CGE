@@ -198,12 +198,10 @@ export default async function NoticiaPage({ params }: PageProps) {
                     unoptimized
                   />
                 )}
-                <div className="mb-8 max-w-none prose prose-lg">
-                  <HTMLContent
-                    content={noticia.contenido}
-                    className="mb-8 max-w-none prose prose-lg"
-                  />
-                </div>
+                <HTMLContent
+                  content={noticia.contenido}
+                  className="mb-8 max-w-none prose prose-lg"
+                />
                 {documentosConId && documentosConId.length > 0 && (
                   <>
                     <Separador titulo="Documentos adjuntos" />
