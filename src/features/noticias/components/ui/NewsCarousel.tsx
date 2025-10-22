@@ -51,7 +51,11 @@ export default function NewsCarousel({
               <Card className="overflow-hidden border-0 h-full">
                 <div className="flex flex-col lg:grid lg:grid-cols-2 lg:gap-0 h-full">
                   <div className="relative w-full">
-                    <Link href={`/noticias/${noticia.slug}`} prefetch={false}>
+                    <Link
+                      href={`/noticias/${noticia.slug}`}
+                      prefetch={false}
+                      aria-label={noticia.titulo}
+                    >
                       <div className="aspect-[16/9] sm:aspect-[4/3] lg:aspect-auto lg:h-full overflow-hidden">
                         <Image
                           src={getCover({ noticia }) || ''}
