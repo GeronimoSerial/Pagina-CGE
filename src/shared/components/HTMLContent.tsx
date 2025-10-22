@@ -24,9 +24,10 @@ export function HTMLContent({ content, className = '' }: HTMLContentProps) {
       ul: 'list-disc pl-6 my-5 space-y-2 marker:text-slate-500',
       ol: 'list-decimal pl-6 my-5 space-y-2 marker:text-slate-500',
       li: 'mb-2 leading-relaxed',
-      table: 'min-w-full border border-slate-200 rounded-xl overflow-hidden',
-      th: 'border border-slate-200 px-5 py-3 bg-slate-100 text-left text-slate-700 font-medium',
-      td: 'border border-slate-200 px-5 py-3',
+      table:
+        'w-full border border-slate-200 rounded-xl overflow-hidden text-sm sm:text-base',
+      th: 'border border-slate-200 px-2 py-1.5 sm:px-4 sm:py-2.5 bg-slate-100 text-left text-slate-700 font-medium',
+      td: 'border border-slate-200 px-2 py-1.5 sm:px-4 sm:py-2.5',
       p: 'mb-6 text-slate-800 leading-relaxed text-base',
       b: 'font-bold text-slate-900',
       strong: 'font-bold text-slate-900',
@@ -109,10 +110,20 @@ export function HTMLContent({ content, className = '' }: HTMLContentProps) {
     setSanitizedContent(clean);
   }, [content]);
 
+  const wrapTablesWithResponsiveContainer = (html: string): string => {
+    const tableRegex = /<table[^>]*>[\s\S]*?<\/table>/gi;
+    return html.replace(
+      tableRegex,
+      '<div class="overflow-x-auto -mx-6 sm:-mx-8 my-6"><div class="inline-block min-w-full px-6 sm:px-8">$&</div></div>',
+    );
+  };
+
+  const processedContent = wrapTablesWithResponsiveContainer(sanitizedContent);
+
   return (
     <div
       className={className}
-      dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+      dangerouslySetInnerHTML={{ __html: processedContent }}
     />
   );
 }
