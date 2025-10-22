@@ -51,18 +51,20 @@ export default function NewsCarousel({
               <Card className="overflow-hidden border-0 h-full">
                 <div className="flex flex-col lg:grid lg:grid-cols-2 lg:gap-0 h-full">
                   <div className="relative w-full">
-                    <div className="aspect-[16/9] sm:aspect-[4/3] lg:aspect-auto lg:h-full overflow-hidden">
-                      <Image
-                        src={getCover({ noticia }) || ''}
-                        alt={noticia.titulo}
-                        className="object-cover w-full h-full transition-transform duration-500 hover:scale-105"
-                        width={1200}
-                        height={630}
-                        priority
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 50vw"
-                        unoptimized
-                      />
-                    </div>
+                    <Link href={`/noticias/${noticia.slug}`} prefetch={false}>
+                      <div className="aspect-[16/9] sm:aspect-[4/3] lg:aspect-auto lg:h-full overflow-hidden">
+                        <Image
+                          src={getCover({ noticia }) || ''}
+                          alt={noticia.titulo}
+                          className="object-cover w-full h-full transition-transform duration-500 hover:scale-105"
+                          width={1200}
+                          height={630}
+                          priority
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 50vw"
+                          unoptimized
+                        />
+                      </div>
+                    </Link>
                   </div>
 
                   <CardContent className="flex flex-col justify-between p-6 sm:p-8 lg:p-12 bg-white min-h-[300px] lg:min-h-[400px]">
@@ -105,6 +107,7 @@ export default function NewsCarousel({
                         </div>
                         <Link
                           href={`/noticias/${noticia.slug}`}
+                          prefetch={false}
                           className="inline-flex gap-2 items-center text-green-800 hover:text-green-900 hover:underline font-medium transition-colors group flex-shrink-0"
                         >
                           Leer más
