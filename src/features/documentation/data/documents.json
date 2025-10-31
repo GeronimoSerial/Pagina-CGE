@@ -521,6 +521,24 @@
       "type": "manual",
       "date": "14/09/2018",
       "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/Ceremonial%20y%20Protocolo%20Ministerio%20Educacion.pdf"
+    },
+    {
+      "id": "68",
+      "title": "Concepto Profesional Docente - CGE",
+      "description": "Hoja de Concepto Profesional para el Docente. Documento oficial emitido por el Consejo General de Educación.",
+      "category": "formularios",
+      "type": "manual",
+      "date": "20/11/2017",
+      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/CONCEPTO%20Docente%202017.doc"
+    },
+    {
+      "id": "69",
+      "title": "Concepto Profesional Directivos - CGE",
+      "description": "Hoja de Concepto Profesional para Directivos. Documento oficial emitido por el Consejo General de Educación.",
+      "category": "formularios",
+      "type": "manual",
+      "date": "20/11/2017",
+      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/CONCEPTO%20Directora%202017.doc"
     }
   ]
 }
