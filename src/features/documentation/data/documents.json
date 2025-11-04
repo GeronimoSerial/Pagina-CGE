@@ -497,12 +497,12 @@
     },
     {
       "id": "65",
-      "title": "Resolución Ministerial Nº 3956/22 - Jornada Laboral de 25 Horas Semanales",
-      "description": "Dispone la implementación de una jornada laboral de 25 horas semanales para el personal docente, estableciendo su alcance y criterios de aplicación.",
+      "title": "Resolución Ministerial Nº 3957/22 - Marco Pedagógico e Institucional de Extensión Horaria",
+      "description": "Establece el marco pedagógico e institucional para la implementación de la extensión de la jornada horaria en las instituciones educativas.",
       "category": "normativas",
       "type": "resolución",
       "date": "22/12/2022",
-      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/2022-Res.%20Min.%20N°3956-22_Jornada%20Laboral%2025h%20semanales.pdf"
+      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/2022-Res.%20Min.%20N°3957-22_Marco%20Pedagógico%20e%20Institucional%20de%20extensión%20horaria.pdf"
     },
     {
       "id": "66",
@@ -539,6 +539,24 @@
       "type": "manual",
       "date": "20/11/2017",
       "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/CONCEPTO%20Directora%202017.doc"
+    },
+    {
+      "id": "70",
+      "title": "Ley N° 6494 - Feriado por Fundación de Localidades",
+      "description": "Declara Feriado Provincial en cada localidad de la Provincia de Corrientes el día de su fundación, con alcance para la administración pública y el sector educativo.",
+      "category": "normativas",
+      "type": "ley",
+      "date": "29/09/2021",
+      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/2021-Ley%20N°6494-21_Feriado%20por%20fundación%20de%20cada%20localidad.pdf"
+    },
+    {
+      "id": "71",
+      "title": "Decreto N° 2580/86 - Calendario de Feriados por Fundación de Localidades",
+      "description": "Establece el calendario y la reglamentación para la aplicación de la Ley N° 6494, fijando las fechas de feriado en cada localidad de la provincia por su aniversario fundacional.",
+      "category": "normativas",
+      "type": "decreto",
+      "date": "19/06/1986",
+      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/2021-Decreto%20N°2580-21_Calendario%20feriados%20de%20fundación%20de%20localidades.pdf"
     }
   ]
 }
