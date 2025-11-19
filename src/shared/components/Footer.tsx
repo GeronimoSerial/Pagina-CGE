@@ -9,7 +9,11 @@ import { MAIL_CONTACT, WHATSAPP_CONTACT } from '../lib/config';
 const Footer = () => {
   const path = usePathname();
 
-  if (path.startsWith('/tramites') || path === '/noticias') {
+  if (
+    path.startsWith('/tramites') ||
+    path === '/noticias' ||
+    path === '/reunion_noviembre'
+  ) {
     return null;
   }
 
