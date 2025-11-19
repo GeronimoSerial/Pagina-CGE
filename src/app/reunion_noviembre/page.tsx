@@ -54,7 +54,7 @@ export default function ReunionNoviembrePage() {
         <header className="text-center mb-16 pt-8">
           <Badge
             variant="default"
-            className="mb-3 text-lg tracking-wide uppercase"
+            className="mb-3 text-md tracking-wide uppercase"
           >
             <CalendarIcon className="w-4 h-4 mr-2" />
             Noviembre
@@ -68,7 +68,7 @@ export default function ReunionNoviembrePage() {
           <div className="mt-6 inline-flex items-center text-slate-600 font-medium bg-slate-100/50 px-4 py-2 rounded-lg border border-slate-200">
             <ClockIcon className="w-4 h-4 mr-2 text-slate-500" />
             <span className="text-sm">
-              Horario General: <strong>08:30 a 12:00</strong>
+              Horario General: <strong>08:30 a 13:00</strong>
             </span>
           </div>
         </header>
@@ -82,17 +82,17 @@ export default function ReunionNoviembrePage() {
             </CardHeader>
             <CardContent className="pt-8">
               <TimelineItem
-                time="08:30 – 10:30"
-                title="Tratamiento de Expedientes"
-                details={<p>Revisión y despacho de la mesa de entradas.</p>}
-                badgeColor="green"
-              />
-              <TimelineItem
-                time="10:30 – 12:00"
-                title="Reunión con Sanidad"
+                time="08:30 -> 9:15"
+                title="Reunión con Sanidad Escolar"
                 details={
                   <p>Coordinación de protocolos y recursos sanitarios.</p>
                 }
+                badgeColor="green"
+              />
+              <TimelineItem
+                time="09:15hs -> 13:00hs"
+                title="Tratamiento de Expedientes"
+                details={<p>Revisión y despacho de la mesa de entradas.</p>}
                 badgeColor="green"
               />
             </CardContent>
@@ -107,7 +107,7 @@ export default function ReunionNoviembrePage() {
             </CardHeader>
             <CardContent className="pt-8">
               <TimelineItem
-                time="08:30 – 11:30"
+                time="08:30 -> 11:30"
                 title="Desayuno de Trabajo en Esteros"
                 details={
                   <ul className="list-disc list-inside space-y-1">
@@ -118,7 +118,7 @@ export default function ReunionNoviembrePage() {
                 badgeColor="green"
               />
               <TimelineItem
-                time="11:30 – 12:00"
+                time="11:30 -> 12:00"
                 title="Cierre Operativo"
                 details={<p>Balance y planificación de la jornada.</p>}
                 badgeColor="green"
@@ -135,13 +135,13 @@ export default function ReunionNoviembrePage() {
             </CardHeader>
             <CardContent className="pt-8">
               <TimelineItem
-                time="08:30 – 10:00"
+                time="08:30 -> 10:00"
                 title="Tratamiento de Expedientes"
                 details={<p>Seguimiento de casos pendientes.</p>}
                 badgeColor="green"
               />
               <TimelineItem
-                time="10:00 – 12:00"
+                time="10:00 -> 12:00"
                 title="Presentación Reglamento Interno"
                 details={
                   <p>Versión final del reglamento interno de escuelas.</p>
@@ -182,7 +182,7 @@ export default function ReunionNoviembrePage() {
                 badgeColor="green"
               />
               <TimelineItem
-                time="09:30 – 11:00"
+                time="09:30 -> 11:00"
                 title="Tratamiento de Expedientes"
                 details={
                   <p>Cierre de la semana con expedientes prioritarios.</p>
