@@ -1,10 +1,9 @@
-'use client';
 import { Button } from '@/shared/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronDown } from 'lucide-react';
 
-const HeroMain = () => {
+export default function HeroMain() {
   return (
     <div className="relative w-full h-[520px] md:h-[600px] bg-[#F7FAF9] overflow-hidden flex items-center">
       <div className="absolute inset-0 w-full h-full">
@@ -47,7 +46,6 @@ const HeroMain = () => {
           </Button>
         </div>
 
-        {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
           <ChevronDown
             className="w-8 h-8 text-white animate-bounce"
@@ -57,6 +55,4 @@ const HeroMain = () => {
       </div>
     </div>
   );
-};
-
-export default HeroMain;
+}
