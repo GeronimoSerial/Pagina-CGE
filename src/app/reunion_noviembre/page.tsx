@@ -68,7 +68,7 @@ export default function ReunionNoviembrePage() {
           <div className="mt-6 inline-flex items-center text-slate-600 font-medium bg-slate-100/50 px-4 py-2 rounded-lg border border-slate-200">
             <ClockIcon className="w-4 h-4 mr-2 text-slate-500" />
             <span className="text-sm">
-              Horario General: <strong>08:30 a 13:00</strong>
+              Horario General: <strong>08:00 a 13:00</strong>
             </span>
           </div>
         </header>
