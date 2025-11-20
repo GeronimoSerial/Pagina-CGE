@@ -32,7 +32,7 @@ export default function AgendaInstitucional() {
   // Datos estructurados para facilitar la edición
   const agendaData: AgendaDia[] = [
     {
-      dia: 'Martes',
+      dia: 'Martes 25/11',
       eventos: [
         {
           hora: '08:00 – 08:30',
@@ -55,7 +55,7 @@ export default function AgendaInstitucional() {
       ],
     },
     {
-      dia: 'Miércoles',
+      dia: 'Miércoles 26/11',
       eventos: [
         {
           hora: '08:30 – 11:30',
@@ -68,7 +68,7 @@ export default function AgendaInstitucional() {
       ],
     },
     {
-      dia: 'Jueves',
+      dia: 'Jueves 27/11',
       eventos: [
         {
           hora: '08:00 – 08:30',
@@ -87,7 +87,7 @@ export default function AgendaInstitucional() {
       ],
     },
     {
-      dia: 'Viernes',
+      dia: 'Viernes 28/11',
       eventos: [
         {
           hora: '08:30 – 09:30',
