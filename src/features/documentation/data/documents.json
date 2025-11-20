@@ -523,24 +523,6 @@
       "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/Ceremonial%20y%20Protocolo%20Ministerio%20Educacion.pdf"
     },
     {
-      "id": "68",
-      "title": "Concepto Profesional Docente - CGE",
-      "description": "Hoja de Concepto Profesional para el Docente. Documento oficial emitido por el Consejo General de Educación.",
-      "category": "formularios",
-      "type": "manual",
-      "date": "20/11/2017",
-      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/CONCEPTO%20Docente%202017.doc"
-    },
-    {
-      "id": "69",
-      "title": "Concepto Profesional Directivos - CGE",
-      "description": "Hoja de Concepto Profesional para Directivos. Documento oficial emitido por el Consejo General de Educación.",
-      "category": "formularios",
-      "type": "manual",
-      "date": "20/11/2017",
-      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/CONCEPTO%20Directora%202017.doc"
-    },
-    {
       "id": "70",
       "title": "Ley N° 6494 - Feriado por Fundación de Localidades",
       "description": "Declara Feriado Provincial en cada localidad de la Provincia de Corrientes el día de su fundación, con alcance para la administración pública y el sector educativo.",
@@ -557,6 +539,15 @@
       "type": "decreto",
       "date": "19/06/1986",
       "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/decreto%20feriados%20dia%20de%20fundacion.pdf"
+    },
+    {
+      "id": "72",
+      "title": "Concepto Profesional - CGE",
+      "description": "Hoja de Concepto Profesional para Docentes y Directivos. Documento oficial emitido por el Consejo General de Educación.",
+      "category": "formularios",
+      "type": "manual",
+      "date": "20/11/2025",
+      "downloadUrl": "https://consejogeneralctes.github.io/pdf-cge/concepto_profesional_2025.docx"
     }
   ]
 }
