@@ -1,12 +1,10 @@
 import React from 'react';
 import {
-  CalendarDays,
   Clock,
   MapPin,
   Coffee,
   FileText,
   Users,
-  Laptop,
   Info,
   GraduationCap,
   ExternalLink,
@@ -14,11 +12,25 @@ import {
 import { Card } from '@/shared/ui/card';
 import { Badge } from '@/shared/ui/badge';
 
-// Simulando componentes de shadcn/ui para portabilidad inmediata
+// Interfaces para el tipado
+interface AgendaEvento {
+  hora: string;
+  titulo: string;
+  icon: React.ReactNode;
+  tipo: string;
+  descripcion?: string;
+  link?: string;
+  detalles?: string[];
+}
+
+interface AgendaDia {
+  dia: string;
+  eventos: AgendaEvento[];
+}
 
 export default function AgendaInstitucional() {
   // Datos estructurados para facilitar la edición
-  const agendaData = [
+  const agendaData: AgendaDia[] = [
     {
       dia: 'Martes',
       eventos: [
