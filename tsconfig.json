@@ -11,7 +11,8 @@
       "@interfaces/*": ["src/interfaces/*"],
       "@modules/*": ["src/modules/*"],
       "@types/*": ["types/*"],
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["src/utils/*"],
+      "@dashboard/*": ["src/features/dashboard/*"]
     },
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
