@@ -1,7 +1,7 @@
 "use server";
 
 import pool from "../lib/db";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+
 import {
   AsistenciaDiaria,
   AusenteDiario,
@@ -714,44 +714,7 @@ export async function getEmpleadosProblematicos(): Promise<
 // =====================================================
 
 async function getCurrentUserEmail(): Promise<string> {
-  const { userId } = await auth();
-  if (!userId) {
-    return "sistema";
-  }
-
-  try {
-    const client = await clerkClient();
-    const user = await client.users.getUser(userId);
-
-    // Prioridad 1: Username
-    if (user.username) {
-      return user.username;
-    }
-
-    // Prioridad 2: Email primario
-    const primaryEmail = user.emailAddresses.find(
-      (e: any) => e.id === user.primaryEmailAddressId
-    );
-    if (primaryEmail?.emailAddress) {
-      return primaryEmail.emailAddress;
-    }
-
-    // Prioridad 3: Primer email disponible
-    if (user.emailAddresses.length > 0) {
-      return user.emailAddresses[0].emailAddress;
-    }
-
-    // Prioridad 4: firstName
-    if (user.firstName) {
-      return user.firstName;
-    }
-
-    // Fallback: userId
-    return userId;
-  } catch (error) {
-    // Si hay error al obtener el usuario, retornar el userId
-    return userId;
-  }
+  return "sistema";
 }
 
 // =====================================================

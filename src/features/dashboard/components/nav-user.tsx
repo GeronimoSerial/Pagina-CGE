@@ -27,14 +27,17 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@dashboard/components/sidebar"
-import { useClerk, useUser } from "@clerk/nextjs"
-
 export function NavUser() {
   const { isMobile } = useSidebar()
-  const { user } = useUser()
-  const { signOut, openUserProfile } = useClerk()
-
-  if (!user) return null
+  
+  // Static user for build without Clerk
+  const user = {
+    fullName: "Administrador",
+    imageUrl: "", // Empty or a placeholder URL
+    primaryEmailAddress: {
+      emailAddress: "admin@cge.gob.ar"
+    }
+  }
 
   return (
     <SidebarMenu>
@@ -79,7 +82,7 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => openUserProfile()}>
+              <DropdownMenuItem>
                 <IconUserCircle />
                 Mi cuenta
               </DropdownMenuItem>
@@ -93,7 +96,7 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => signOut()}>
+            <DropdownMenuItem>
               <IconLogout />
               Cerrar sesión
             </DropdownMenuItem>
