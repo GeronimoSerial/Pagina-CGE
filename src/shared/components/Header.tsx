@@ -46,6 +46,10 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
+  if (pathname.startsWith('/dashboard')) {
+    return null;
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm">
       <div className="container px-4 mx-auto sm:px-6">

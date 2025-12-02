@@ -1,17 +1,9 @@
-import './index.css';
-import Footer from '@/shared/components/Footer';
-import { Lora, Inter } from 'next/font/google';
+import type { Metadata } from 'next';
 
-import metadata from './metadata';
-import Header from '@/shared/components/Header';
-
-export { metadata };
-
-const inter = Inter({ subsets: ['latin'] });
-const lora = Lora({
-  subsets: ['latin'],
-  variable: '--font-lora',
-});
+export const metadata: Metadata = {
+  title: 'CGE - Consejo General de Educación',
+  description: 'Consejo General de Educación de Entre Ríos',
+};
 
 export default function RootLayout({
   children,
@@ -19,13 +11,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={`${lora.variable} antialiased`}>
-      <body className={`${inter.className} antialiased`}>
-        <Header />
-
-        <div id="root">{children}</div>
-        <Footer />
-      </body>
+    <html lang="es">
+      <body>{children}</body>
     </html>
   );
 }

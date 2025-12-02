@@ -1,3 +1,5 @@
+import './dashboard.css';
+
 import { AppSidebar } from "@dashboard/components/app-sidebar";
 import { SiteHeader } from "@dashboard/components/site-header";
 import { SidebarInset, SidebarProvider } from "@dashboard/components/sidebar";

@@ -12,7 +12,7 @@ const Footer = () => {
   if (
     path.startsWith('/tramites') ||
     path === '/noticias' ||
-    path === '/reunion_noviembre'
+    path.startsWith('/dashboard')
   ) {
     return null;
   }
