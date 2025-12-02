@@ -1,0 +1,381 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../generated/prisma"
+  previewFeatures = ["views"]
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["huella", "public"]
+}
+
+model auditoria {
+  id           BigInt    @id
+  dia          DateTime? @db.Timestamp(6)
+  hora         DateTime? @db.Time(6)
+  tipo         String?
+  interno      String?
+  usuario      String?
+  nombre       String?
+  operado_por  String?
+  ts_operacion DateTime? @db.Timestamp(6)
+
+  @@schema("huella")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model config_jornada {
+  id                                   Int       @id @default(autoincrement())
+  legajo                               String    @unique @db.VarChar(20)
+  horas_jornada                        Int       @default(8)
+  descripcion                          String?   @db.VarChar(50)
+  vigente_desde                        DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Date
+  created_at                           DateTime? @default(now()) @db.Timestamp(6)
+  updated_at                           DateTime? @default(now()) @db.Timestamp(6)
+  legajo_config_jornada_legajoTolegajo legajo    @relation("config_jornada_legajoTolegajo", fields: [legajo], references: [cod], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([legajo], map: "idx_config_jornada_legajo")
+  @@schema("huella")
+}
+
+model dias_no_laborables {
+  fecha       DateTime @id @db.Date
+  descripcion String?
+
+  @@schema("huella")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model excepciones_asistencia {
+  id                                           Int       @id @default(autoincrement())
+  legajo                                       String    @db.VarChar(20)
+  fecha_inicio                                 DateTime  @db.Date
+  fecha_fin                                    DateTime  @db.Date
+  tipo                                         String    @db.VarChar(30)
+  descripcion                                  String?   @db.VarChar(255)
+  created_by                                   String    @db.VarChar(100)
+  created_at                                   DateTime? @default(now()) @db.Timestamp(6)
+  updated_at                                   DateTime? @default(now()) @db.Timestamp(6)
+  legajo_excepciones_asistencia_legajoTolegajo legajo    @relation("excepciones_asistencia_legajoTolegajo", fields: [legajo], references: [cod], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([fecha_inicio, fecha_fin], map: "idx_excepciones_fechas")
+  @@index([legajo], map: "idx_excepciones_legajo")
+  @@schema("huella")
+}
+
+model feriados {
+  id          Int       @id @default(autoincrement())
+  fecha       DateTime  @unique @db.Date
+  descripcion String    @db.VarChar(100)
+  tipo        String?   @default("nacional") @db.VarChar(20)
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  updated_at  DateTime? @default(now()) @db.Timestamp(6)
+
+  @@index([fecha], map: "idx_feriados_fecha")
+  @@schema("huella")
+}
+
+model legajo {
+  cod                                                          String                   @id
+  nombre                                                       String?
+  area                                                         String?
+  turno                                                        String?
+  estado                                                       String?
+  inactivo                                                     Boolean?
+  fecha_ingreso                                                DateTime?                @db.Date
+  dni                                                          String?
+  email                                                        String?
+  config_jornada_config_jornada_legajoTolegajo                 config_jornada?          @relation("config_jornada_legajoTolegajo")
+  excepciones_asistencia_excepciones_asistencia_legajoTolegajo excepciones_asistencia[] @relation("excepciones_asistencia_legajoTolegajo")
+  whitelist_empleados_whitelist_empleados_legajoTolegajo       whitelist_empleados?     @relation("whitelist_empleados_legajoTolegajo")
+
+  @@schema("huella")
+}
+
+model marcas {
+  id        BigInt   @id
+  legajo    String
+  tipo      String?
+  sensor    Int?
+  ts        DateTime @db.Timestamp(6)
+  duplicado Boolean  @default(false)
+  origen    String?  @default("reloj")
+
+  @@index([legajo, ts], map: "idx_marcacion_legajo_dia")
+  @@schema("huella")
+}
+
+model trabaja_finde {
+  legajo  String   @id
+  sabado  Boolean? @default(false)
+  domingo Boolean? @default(false)
+
+  @@schema("huella")
+}
+
+model whitelist_empleados {
+  id                                        Int       @id @default(autoincrement())
+  legajo                                    String    @unique @db.VarChar(20)
+  motivo                                    String    @db.VarChar(255)
+  created_by                                String    @db.VarChar(100)
+  created_at                                DateTime? @default(now()) @db.Timestamp(6)
+  activo                                    Boolean?  @default(true)
+  legajo_whitelist_empleados_legajoTolegajo legajo    @relation("whitelist_empleados_legajoTolegajo", fields: [legajo], references: [cod], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([activo], map: "idx_whitelist_activo")
+  @@index([legajo], map: "idx_whitelist_legajo")
+  @@schema("huella")
+}
+
+view v_ausentes_diarios {
+  legajo String?
+  nombre String?
+  dia    DateTime? @db.Date
+
+  @@schema("huella")
+}
+
+view v_marcaciones_unificadas {
+  id        BigInt?
+  legajo    String?
+  ts        DateTime? @db.Timestamp(6)
+  tipo      String?
+  sensor    Int?
+  origen    String?
+  duplicado Boolean?
+
+  @@schema("huella")
+}
+
+view v_dias_con_marca {
+  dia DateTime? @db.Date
+
+  @@schema("huella")
+}
+
+view v_estadisticas_diarias {
+  dia       DateTime? @db.Date
+  presentes BigInt?
+  ausentes  BigInt?
+
+  @@schema("huella")
+}
+
+view v_reporte_liquidacion {
+  legajo                  String?
+  nombre                  String?
+  area                    String?
+  turno                   String?
+  dni                     String?
+  mes                     DateTime? @db.Date
+  dias_trabajados         BigInt?
+  total_horas             Decimal?  @db.Decimal
+  promedio_horas_dia      Decimal?  @db.Decimal
+  dias_ausente            BigInt?
+  dias_incompletos        BigInt?
+  primer_dia_trabajado    DateTime? @db.Date
+  ultimo_dia_trabajado    DateTime? @db.Date
+  fecha_ingreso           DateTime? @db.Date
+  estado                  String?
+  horas_jornada           Int?
+  horas_esperadas         BigInt?
+  porcentaje_cumplimiento Decimal?  @db.Decimal
+  categoria_horas         String?
+
+  @@schema("huella")
+}
+
+view v_empleados_problematicos {
+  legajo                  String?
+  nombre                  String?
+  area                    String?
+  turno                   String?
+  dni                     String?
+  horas_jornada           Int?
+  total_ausencias         BigInt?
+  dias_trabajados         BigInt?
+  total_horas             Decimal? @db.Decimal
+  dias_incompletos        BigInt?
+  total_dias_habiles      BigInt?
+  horas_esperadas         BigInt?
+  porcentaje_cumplimiento Decimal? @db.Decimal
+  problema_ausencias      Boolean?
+  problema_cumplimiento   Boolean?
+  problema_incompletos    Boolean?
+  score_severidad         Decimal? @db.Decimal
+  cantidad_problemas      Int?
+
+  @@schema("huella")
+}
+
+view v_excepciones_asistencia {
+  id             Int?
+  legajo         String?   @db.VarChar(20)
+  nombre         String?
+  area           String?
+  fecha_inicio   DateTime? @db.Date
+  fecha_fin      DateTime? @db.Date
+  tipo           String?   @db.VarChar(30)
+  descripcion    String?   @db.VarChar(255)
+  created_by     String?   @db.VarChar(100)
+  created_at     DateTime? @db.Timestamp(6)
+  updated_at     DateTime? @db.Timestamp(6)
+  dias_excepcion Int?
+
+  @@schema("huella")
+}
+
+view v_whitelist_empleados {
+  id         Int?
+  legajo     String?   @db.VarChar(20)
+  nombre     String?
+  area       String?
+  turno      String?
+  motivo     String?   @db.VarChar(255)
+  created_by String?   @db.VarChar(100)
+  created_at DateTime? @db.Timestamp(6)
+  activo     Boolean?
+
+  @@schema("huella")
+}
+
+view v_empleados_activos {
+  legajo String?
+
+  @@schema("huella")
+}
+
+view v_asistencia_diaria {
+  legajo           String?
+  nombre           String?
+  dia              DateTime? @db.Date
+  entrada          DateTime? @db.Timestamp(6)
+  salida           DateTime? @db.Timestamp(6)
+  horas_trabajadas Decimal?  @db.Decimal
+  total_marcas     BigInt?
+
+  @@schema("huella")
+}
+
+view v_marcaciones_incompletas {
+  legajo   String?
+  nombre   String?
+  dia      DateTime? @db.Date
+  entradas BigInt?
+  salidas  BigInt?
+
+  @@schema("huella")
+}
+
+view v_dias_sin_actividad {
+  dia DateTime? @db.Date
+
+  @@schema("huella")
+}
+
+view v_auditoria_operaciones {
+  id          BigInt?
+  fecha       DateTime? @db.Timestamp(6)
+  hora        DateTime? @db.Time(6)
+  tipo        String?
+  detalle     String?
+  empleado    String?
+  operado_por String?
+
+  @@schema("huella")
+}
+
+view v_marcaciones_diarias {
+  legajo        String?
+  nombre        String?
+  dia           DateTime? @db.Date
+  primera_marca DateTime? @db.Timestamp(6)
+  ultima_marca  DateTime? @db.Timestamp(6)
+  total_marcas  BigInt?
+
+  @@schema("huella")
+}
+
+view v_empleado_detalle {
+  legajo        String?
+  nombre        String?
+  area          String?
+  turno         String?
+  estado        String?
+  fecha_ingreso DateTime? @db.Date
+  dni           String?
+  email         String?
+  inactivo      Boolean?
+
+  @@schema("huella")
+}
+
+view v_resumen_mensual_empleado {
+  legajo             String?
+  nombre             String?
+  mes                DateTime? @db.Date
+  dias_trabajados    BigInt?
+  total_horas        Decimal?  @db.Decimal
+  promedio_horas_dia Decimal?  @db.Decimal
+  total_marcas       Decimal?  @db.Decimal
+
+  @@schema("huella")
+}
+
+view v_promedio_horas_diario {
+  dia                    DateTime? @db.Date
+  promedio_horas         Decimal?  @db.Decimal
+  empleados_con_registro BigInt?
+
+  @@schema("huella")
+}
+
+view v_detalle_diario_empleado {
+  legajo           String?
+  nombre           String?
+  area             String?
+  turno            String?
+  dia              DateTime? @db.Date
+  dia_semana       String?
+  entrada          DateTime? @db.Timestamp(6)
+  salida           DateTime? @db.Timestamp(6)
+  horas_trabajadas Decimal?  @db.Decimal
+  total_marcas     BigInt?
+  tipo_jornada     String?
+
+  @@schema("huella")
+}
+
+view v_meses_disponibles {
+  mes        DateTime? @db.Date
+  mes_nombre String?
+
+  @@schema("huella")
+}
+
+view v_empleados_con_jornada {
+  legajo        String?
+  nombre        String?
+  area          String?
+  turno         String?
+  dni           String?
+  estado        String?
+  inactivo      Boolean?
+  horas_jornada Int?
+  tipo_jornada  String?
+  vigente_desde DateTime? @db.Date
+  en_whitelist  Boolean?
+
+  @@schema("huella")
+}
+
+view v_feriados {
+  id          Int?
+  fecha       DateTime? @db.Date
+  descripcion String?   @db.VarChar(100)
+  tipo        String?   @db.VarChar(20)
+  dia_semana  String?
+  anio        Decimal?  @db.Decimal
+
+  @@schema("huella")
+}
