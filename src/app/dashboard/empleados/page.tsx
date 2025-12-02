@@ -1,10 +1,13 @@
-import { getListaEmpleados } from "@dashboard/actions/actions";
-import { EmployeesTable } from "@dashboard/components/employees-table";
+import { connection } from 'next/server';
+import { getListaEmpleados } from '@dashboard/actions/actions';
+import { EmployeesTable } from '@dashboard/components/employees-table';
 
-// Lista de empleados cambia raramente - cachear por 1 hora
-export const revalidate = 3600;
+// MIGRATED: Using connection() to signal dynamic rendering
 
 export default async function EmpleadosPage() {
+  // Signal dynamic rendering
+  await connection();
+
   const empleados = await getListaEmpleados();
 
   return (

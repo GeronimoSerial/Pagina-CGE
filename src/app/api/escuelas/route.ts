@@ -12,5 +12,5 @@ export async function GET() {
   return NextResponse.json(data);
 }
 
-// Reducir el tiempo de revalidación a 5 minutos
-export const revalidate = 300;
+// MIGRATED: Removed export const revalidate = 300 (incompatible with Cache Components)
+// Route Handlers are dynamic by default with Cache Components

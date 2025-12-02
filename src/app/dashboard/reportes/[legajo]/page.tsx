@@ -1,18 +1,17 @@
-import { notFound } from "next/navigation";
-import Link from "next/link";
+import { notFound } from 'next/navigation';
+import { connection } from 'next/server';
+import Link from 'next/link';
 import {
   getEmpleadoDetalle,
   getDetalleDiarioEmpleado,
   getMesesDisponibles,
-} from "@dashboard/actions/actions";
-import { EmployeeDailyReportTable } from "@dashboard/components/employee-daily-report-table";
-import { Button } from "@/shared/ui/button";
-import { IconArrowLeft, IconUser } from "@tabler/icons-react";
-import { translateMonthName } from "@dashboard/lib/utils";
+} from '@dashboard/actions/actions';
+import { EmployeeDailyReportTable } from '@dashboard/components/employee-daily-report-table';
+import { Button } from '@/shared/ui/button';
+import { IconArrowLeft, IconUser } from '@tabler/icons-react';
+import { translateMonthName } from '@dashboard/lib/utils';
 
-// Reporte individual por mes es relativamente estático - cachear por 5 minutos
-export const revalidate = 300;
-export const dynamicParams = true;
+// MIGRATED: Using connection() to signal dynamic rendering for dynamic route
 
 export default async function ReporteEmpleadoPage({
   params,
@@ -21,22 +20,25 @@ export default async function ReporteEmpleadoPage({
   params: Promise<{ legajo: string }>;
   searchParams: Promise<{ mes?: string }>;
 }) {
+  // Signal dynamic rendering for this dynamic route
+  await connection();
+
   const { legajo } = await params;
   const search = await searchParams;
   const meses = await getMesesDisponibles();
 
   // Obtener el mes seleccionado o el más reciente
-  const mesSeleccionado = search?.mes || (meses.length > 0 ? meses[0].mes : "");
+  const mesSeleccionado = search?.mes || (meses.length > 0 ? meses[0].mes : '');
 
   if (!mesSeleccionado) {
     notFound();
   }
 
   // Calcular el rango del mes
-  const [year, month] = mesSeleccionado.split("-").map(Number);
-  const startDate = `${year}-${String(month).padStart(2, "0")}-01`;
+  const [year, month] = mesSeleccionado.split('-').map(Number);
+  const startDate = `${year}-${String(month).padStart(2, '0')}-01`;
   const lastDay = new Date(year, month, 0).getDate();
-  const endDate = `${year}-${String(month).padStart(2, "0")}-${lastDay}`;
+  const endDate = `${year}-${String(month).padStart(2, '0')}-${lastDay}`;
 
   const [empleado, detalle] = await Promise.all([
     getEmpleadoDetalle(legajo),
@@ -80,24 +82,24 @@ export default async function ReporteEmpleadoPage({
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-lg border p-4">
           <p className="text-sm text-muted-foreground">DNI</p>
-          <p className="text-lg font-medium">{empleado.dni || "-"}</p>
+          <p className="text-lg font-medium">{empleado.dni || '-'}</p>
         </div>
         <div className="rounded-lg border p-4">
           <p className="text-sm text-muted-foreground">Área</p>
-          <p className="text-lg font-medium">{empleado.area || "-"}</p>
+          <p className="text-lg font-medium">{empleado.area || '-'}</p>
         </div>
         <div className="rounded-lg border p-4">
           <p className="text-sm text-muted-foreground">Turno</p>
-          <p className="text-lg font-medium">{empleado.turno || "-"}</p>
+          <p className="text-lg font-medium">{empleado.turno || '-'}</p>
         </div>
         <div className="rounded-lg border p-4">
           <p className="text-sm text-muted-foreground">Fecha de Ingreso</p>
           <p className="text-lg font-medium">
             {empleado.fechaingreso
               ? new Date(
-                  empleado.fechaingreso + "T12:00:00"
-                ).toLocaleDateString("es-AR")
-              : "-"}
+                  empleado.fechaingreso + 'T12:00:00',
+                ).toLocaleDateString('es-AR')
+              : '-'}
           </p>
         </div>
       </div>

@@ -427,7 +427,11 @@ export async function fetchNewsPage(
         hasPrevPage: page > 1,
       },
       meta: {
-        timestamp: new Date().toISOString(),
+        // Derive a stable timestamp from Directus data when possible. Avoid
+        // using `new Date()` before accessing uncached request data to
+        // comply with Next.js 16 cache components prerender rules.
+        timestamp:
+          noticias?.[0]?.date_updated || noticias?.[0]?.date_created || '',
         cached: true,
       },
     };

@@ -3,7 +3,8 @@ import { getProcedureBySlug } from '@/features/tramites/services/docs-data';
 import { Clock } from 'lucide-react';
 import { HTMLContent } from '@/shared/components/HTMLContent';
 
-export const revalidate = false;
+// MIGRATED: Removed export const revalidate = false (incompatible with Cache Components)
+// Content is now dynamic by default - add "use cache" if caching is needed
 
 export default async function IntroduccionPage() {
   const article = await getProcedureBySlug('introduccion');

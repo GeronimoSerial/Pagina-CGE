@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { connection } from 'next/server';
 import { DIRECTUS_URL } from '@/shared/lib/config';
 
 interface DirectusNewsResponse {
@@ -161,6 +162,9 @@ function buildDirectusUrl(
 export async function GET(
   request: NextRequest,
 ): Promise<NextResponse<UnifiedNewsResponse | { error: string }>> {
+  // Signal that this route needs dynamic rendering (must be before try block)
+  await connection();
+
   try {
     // 1. Validar y extraer parámetros
     const { searchParams } = new URL(request.url);

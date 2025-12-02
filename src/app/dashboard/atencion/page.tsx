@@ -1,10 +1,13 @@
-import { EmpleadosProblematicosTable } from "@dashboard/components/empleados-problematicos-table";
-import { getEmpleadosProblematicos } from "@dashboard/actions/actions";
+import { connection } from 'next/server';
+import { EmpleadosProblematicosTable } from '@dashboard/components/empleados-problematicos-table';
+import { getEmpleadosProblematicos } from '@dashboard/actions/actions';
 
-// Empleados problemáticos cambian moderadamente - cachear por 5 minutos
-export const revalidate = 300;
+// MIGRATED: Using connection() to signal dynamic rendering
 
 export default async function AtencionPage() {
+  // Signal dynamic rendering
+  await connection();
+
   const empleados = await getEmpleadosProblematicos();
 
   return (

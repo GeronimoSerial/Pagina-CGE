@@ -4,7 +4,8 @@ import { PageLayout } from '@/shared/components/PageLayout';
 import NewsSection from '@/features/noticias/components/structure/NewsSection';
 import { fetchNewsPage } from '@/features/noticias/services/news';
 
-export const revalidate = false;
+// MIGRATED: Removed export const revalidate = false (incompatible with Cache Components)
+// Content is now dynamic by default - add "use cache" if caching is needed
 
 interface NewsPageProps {
   params: Promise<{ page: string }>;

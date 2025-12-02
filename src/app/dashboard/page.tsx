@@ -1,7 +1,8 @@
-import { DaysList } from "@dashboard/components/days-list";
-import { AttendanceChart } from "@dashboard/components/attendance-chart";
-import { HoursChart } from "@dashboard/components/hours-chart";
-import { DashboardStatsCards } from "@dashboard/components/dashboard-stats-cards";
+import { connection } from 'next/server';
+import { DaysList } from '@dashboard/components/days-list';
+import { AttendanceChart } from '@dashboard/components/attendance-chart';
+import { HoursChart } from '@dashboard/components/hours-chart';
+import { DashboardStatsCards } from '@dashboard/components/dashboard-stats-cards';
 import {
   getDiasSinActividad,
   getDiasConMarca,
@@ -9,17 +10,19 @@ import {
   getEstadisticasDiarias,
   getPromedioHorasDiario,
   getEmpleadosProblematicos,
-} from "@dashboard/actions/actions";
+} from '@dashboard/actions/actions';
 import {
   getArgentinaDate,
   formatDateArg,
   getFirstOfMonthArg,
-} from "@dashboard/lib/utils";
+} from '@dashboard/lib/utils';
 
-// Panel general con datos del día actual - cachear por 1 minuto
-export const revalidate = 60;
+// MIGRATED: Using connection() to signal dynamic rendering before Date access
 
 export default async function Page() {
+  // Signal dynamic rendering before accessing current time
+  await connection();
+
   const today = getArgentinaDate();
   const firstOfMonth = getFirstOfMonthArg();
   const startDate = formatDateArg(firstOfMonth);
@@ -55,11 +58,11 @@ export default async function Page() {
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-semibold md:text-2xl">Panel General</h1>
         <p className="text-sm text-muted-foreground">
-          {today.toLocaleDateString("es-AR", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
+          {today.toLocaleDateString('es-AR', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
           })}
         </p>
       </div>

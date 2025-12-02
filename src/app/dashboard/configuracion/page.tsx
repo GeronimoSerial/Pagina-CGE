@@ -1,3 +1,4 @@
+import { connection } from 'next/server';
 import {
   getFeriados,
   getAniosFeriados,
@@ -5,25 +6,34 @@ import {
   getExcepciones,
   getWhitelist,
   getListaEmpleados,
-} from "@dashboard/actions/actions";
-import { getArgentinaYear } from "@dashboard/lib/utils";
-import { ConfiguracionClient } from "./configuracion-client";
+} from '@dashboard/actions/actions';
+import { getArgentinaYear } from '@dashboard/lib/utils';
+import { ConfiguracionClient } from './configuracion-client';
 
-// Configuración cambia esporádicamente - cachear por 1 hora
-export const revalidate = 3600;
+// MIGRATED: Removed export const revalidate = 3600 (incompatible with Cache Components)
+// Using connection() to signal dynamic rendering before Date access
 
 export default async function ConfiguracionPage() {
+  // Signal dynamic rendering before accessing current time
+  await connection();
+
   const anioActual = getArgentinaYear();
 
-  const [feriados, aniosFeriados, empleados, excepciones, whitelist, listaEmpleados] =
-    await Promise.all([
-      getFeriados(anioActual),
-      getAniosFeriados(),
-      getEmpleadosConJornada(),
-      getExcepciones(),
-      getWhitelist(),
-      getListaEmpleados(),
-    ]);
+  const [
+    feriados,
+    aniosFeriados,
+    empleados,
+    excepciones,
+    whitelist,
+    listaEmpleados,
+  ] = await Promise.all([
+    getFeriados(anioActual),
+    getAniosFeriados(),
+    getEmpleadosConJornada(),
+    getExcepciones(),
+    getWhitelist(),
+    getListaEmpleados(),
+  ]);
 
   // Si no hay años, usar el actual
   const aniosDisponibles =

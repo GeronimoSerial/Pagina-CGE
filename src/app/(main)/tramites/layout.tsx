@@ -1,12 +1,12 @@
 import React, { ReactNode, Suspense } from 'react';
 import { ResponsiveNav } from '@/features/tramites/navigation/responsive-nav';
 
-export const revalidate = false; // 30 días
+// MIGRATED: Removed export const revalidate = false (incompatible with Cache Components)
+// Content is now dynamic by default - add "use cache" if caching is needed
 
 async function NavigationLoader() {
-  const { getProceduresNavigation } = await import(
-    '@/features/tramites/services/docs-data'
-  );
+  const { getProceduresNavigation } =
+    await import('@/features/tramites/services/docs-data');
 
   try {
     const navigationSections = await getProceduresNavigation();

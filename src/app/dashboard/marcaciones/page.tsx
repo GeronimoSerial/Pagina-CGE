@@ -1,14 +1,14 @@
-import { DailyMarksTable } from "@dashboard/components/daily-marks-table";
-import { DateFilter } from "@dashboard/components/date-filter";
-import { getMarcacionesDiarias } from "@dashboard/actions/actions";
+import { connection } from 'next/server';
+import { DailyMarksTable } from '@dashboard/components/daily-marks-table';
+import { DateFilter } from '@dashboard/components/date-filter';
+import { getMarcacionesDiarias } from '@dashboard/actions/actions';
 import {
   getArgentinaDate,
   formatDateArg,
   getFirstOfMonthArg,
-} from "@dashboard/lib/utils";
+} from '@dashboard/lib/utils';
 
-// Marcaciones diarias cambian frecuentemente - cachear por 1 minuto
-export const revalidate = 60;
+// MIGRATED: Using connection() to signal dynamic rendering before Date access
 
 function getDefaultRange() {
   const today = getArgentinaDate();
@@ -24,6 +24,9 @@ export default async function Page({
 }: {
   searchParams: Promise<{ start?: string; end?: string }>;
 }) {
+  // Signal dynamic rendering before accessing current time
+  await connection();
+
   const params = await searchParams;
   const defaults = getDefaultRange();
   const startDate = params?.start ?? defaults.start;

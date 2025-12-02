@@ -25,7 +25,8 @@ export async function generateStaticParams() {
   }
 }
 
-export const revalidate = false;
+// MIGRATED: Removed export const revalidate = false (incompatible with Cache Components)
+// Content is now dynamic by default - add "use cache" if caching is needed
 
 export default async function DocumentPage({ params }: PageProps) {
   const slug = (await params).slug;

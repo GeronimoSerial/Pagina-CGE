@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { connection } from 'next/server';
 import {
   getWebhookLogs,
   clearWebhookLogs,
@@ -16,7 +17,10 @@ interface WebhookLog {
 }
 
 // Middleware para validar token en desarrollo
-function validateToken(request: NextRequest) {
+async function validateToken(request: NextRequest) {
+  // Signal that this route needs dynamic rendering
+  await connection();
+
   if (process.env.NODE_ENV === 'production') {
     const authHeader = request.headers.get('authorization');
     const expectedToken = process.env.REVALIDATE_SECRET_TOKEN;
@@ -32,7 +36,7 @@ function validateToken(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  if (!validateToken(request)) {
+  if (!(await validateToken(request))) {
     return NextResponse.json(
       { error: 'Token de autorización requerido' },
       { status: 401 },
@@ -57,7 +61,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  if (!validateToken(request)) {
+  if (!(await validateToken(request))) {
     return NextResponse.json(
       { error: 'Token de autorización requerido' },
       { status: 401 },
@@ -76,7 +80,7 @@ export async function DELETE(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  if (!validateToken(request)) {
+  if (!(await validateToken(request))) {
     return NextResponse.json(
       { error: 'Token de autorización requerido' },
       { status: 401 },

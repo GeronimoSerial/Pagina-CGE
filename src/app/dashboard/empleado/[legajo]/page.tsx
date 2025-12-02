@@ -1,5 +1,6 @@
-import { notFound } from "next/navigation";
-import Link from "next/link";
+import { notFound } from 'next/navigation';
+import { connection } from 'next/server';
+import Link from 'next/link';
 import {
   getEmpleadoDetalle,
   getAsistenciaPorEmpleado,
@@ -7,24 +8,22 @@ import {
   getResumenMensualEmpleado,
   getExcepciones,
   isEmpleadoInWhitelist,
-} from "@dashboard/actions/actions";
-import { MonthlyCalendar } from "@dashboard/components/monthly-calendar";
-import { EmployeeStatsCards } from "@dashboard/components/employee-stats-cards";
-import { EmployeeAttendanceTable } from "@dashboard/components/employee-attendance-table";
-import { DateFilter } from "@dashboard/components/date-filter";
-import { Button } from "@/shared/ui/button";
-import { Badge } from "@/shared/ui/badge";
-import { parseDateString } from "@dashboard/lib/utils";
+} from '@dashboard/actions/actions';
+import { MonthlyCalendar } from '@dashboard/components/monthly-calendar';
+import { EmployeeStatsCards } from '@dashboard/components/employee-stats-cards';
+import { EmployeeAttendanceTable } from '@dashboard/components/employee-attendance-table';
+import { DateFilter } from '@dashboard/components/date-filter';
+import { Button } from '@/shared/ui/button';
+import { Badge } from '@/shared/ui/badge';
+import { parseDateString } from '@dashboard/lib/utils';
 import {
   IconArrowLeft,
   IconUser,
   IconShieldCheck,
   IconBeach,
-} from "@tabler/icons-react";
+} from '@tabler/icons-react';
 
-// Detalle de empleado cambia moderadamente - cachear por 5 minutos
-export const revalidate = 300;
-export const dynamicParams = true;
+// MIGRATED: Using connection() to signal dynamic rendering for dynamic route with Date access
 
 function getDefaultRange() {
   const today = new Date();
@@ -42,6 +41,9 @@ export default async function EmpleadoDetallePage({
   params: Promise<{ legajo: string }>;
   searchParams: Promise<{ start?: string; end?: string }>;
 }) {
+  // Signal dynamic rendering for this dynamic route
+  await connection();
+
   const { legajo } = await params;
   const search = await searchParams;
   const defaults = getDefaultRange();
@@ -57,8 +59,8 @@ export default async function EmpleadoDetallePage({
   const legajoNum = parseInt(legajo, 10);
 
   // Parsear la fecha sin problemas de zona horaria
-  const [startYear, startMonthNum] = startDate.split("-").map(Number);
-  const mesStr = `${startYear}-${String(startMonthNum).padStart(2, "0")}-01`;
+  const [startYear, startMonthNum] = startDate.split('-').map(Number);
+  const mesStr = `${startYear}-${String(startMonthNum).padStart(2, '0')}-01`;
 
   const [asistencia, ausencias, resumen, excepciones, inWhitelist] =
     await Promise.all([
@@ -121,7 +123,7 @@ export default async function EmpleadoDetallePage({
             <p className="text-sm text-muted-foreground">Fecha de Ingreso</p>
             <p className="text-lg font-medium">
               {parseDateString(empleado.fechaingreso).toLocaleDateString(
-                "es-AR"
+                'es-AR',
               )}
             </p>
           </div>
@@ -205,66 +207,66 @@ export default async function EmpleadoDetallePage({
                 <tbody>
                   {excepciones.map((exc) => {
                     const tipoLabels: Record<string, string> = {
-                      vacaciones: "Vacaciones",
-                      art_8: "Art. 8 - Razones de salud",
-                      art_11: "Art. 11 - Cambio de tareas",
-                      art_12: "Art. 12 - Enfermedad familiar",
-                      art_13: "Art. 13 - Maternidad",
-                      art_15: "Art. 15 - Matrimonio",
-                      art_16: "Art. 16 - Fallecimiento familiar",
-                      art_17: "Art. 17 - Representación política",
-                      art_18: "Art. 18 - Representación gremial",
-                      art_19: "Art. 19 - Exámenes",
-                      art_21: "Art. 21 - Perfeccionamiento",
-                      art_22: "Art. 22 - Razones Particulares",
-                      art_27: "Art. 27 - Licencia especial",
-                      art_28: "Art. 28 - Cargo mayor jerarquía",
-                      art_29: "Art. 29 - Actividades deportivas",
-                      lic_gineco: "Estudios Ginecológicos",
-                      comision_servicio: "Comisión de Servicio",
-                      otro: "Otro",
+                      vacaciones: 'Vacaciones',
+                      art_8: 'Art. 8 - Razones de salud',
+                      art_11: 'Art. 11 - Cambio de tareas',
+                      art_12: 'Art. 12 - Enfermedad familiar',
+                      art_13: 'Art. 13 - Maternidad',
+                      art_15: 'Art. 15 - Matrimonio',
+                      art_16: 'Art. 16 - Fallecimiento familiar',
+                      art_17: 'Art. 17 - Representación política',
+                      art_18: 'Art. 18 - Representación gremial',
+                      art_19: 'Art. 19 - Exámenes',
+                      art_21: 'Art. 21 - Perfeccionamiento',
+                      art_22: 'Art. 22 - Razones Particulares',
+                      art_27: 'Art. 27 - Licencia especial',
+                      art_28: 'Art. 28 - Cargo mayor jerarquía',
+                      art_29: 'Art. 29 - Actividades deportivas',
+                      lic_gineco: 'Estudios Ginecológicos',
+                      comision_servicio: 'Comisión de Servicio',
+                      otro: 'Otro',
                     };
                     const tipoColors: Record<string, string> = {
                       vacaciones:
-                        "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+                        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
                       art_8:
-                        "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
+                        'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
                       art_11:
-                        "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300",
+                        'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300',
                       art_12:
-                        "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+                        'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
                       art_13:
-                        "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300",
+                        'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300',
                       art_15:
-                        "bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-300",
+                        'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-300',
                       art_16:
-                        "bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-300",
+                        'bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-300',
                       art_17:
-                        "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300",
+                        'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300',
                       art_18:
-                        "bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300",
+                        'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300',
                       art_19:
-                        "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+                        'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
                       art_21:
-                        "bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300",
+                        'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300',
                       art_22:
-                        "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
+                        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
                       art_27:
-                        "bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-300",
+                        'bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-300',
                       art_28:
-                        "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300",
+                        'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300',
                       art_29:
-                        "bg-lime-100 text-lime-800 dark:bg-lime-900 dark:text-lime-300",
+                        'bg-lime-100 text-lime-800 dark:bg-lime-900 dark:text-lime-300',
                       lic_gineco:
-                        "bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-900 dark:text-fuchsia-300",
+                        'bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-900 dark:text-fuchsia-300',
                       comision_servicio:
-                        "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
-                      otro: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300",
+                        'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
+                      otro: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
                     };
                     return (
                       <tr key={exc.id} className="border-b">
                         <td className="px-4 py-3">
-                          <Badge className={tipoColors[exc.tipo] || ""}>
+                          <Badge className={tipoColors[exc.tipo] || ''}>
                             {tipoLabels[exc.tipo] || exc.tipo}
                           </Badge>
                         </td>
@@ -278,7 +280,7 @@ export default async function EmpleadoDetallePage({
                           <Badge variant="outline">{exc.dias_excepcion}</Badge>
                         </td>
                         <td className="px-4 py-3 text-muted-foreground">
-                          {exc.descripcion || "-"}
+                          {exc.descripcion || '-'}
                         </td>
                         <td className="px-4 py-3">
                           <div>

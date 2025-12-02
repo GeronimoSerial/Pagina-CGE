@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { connection } from 'next/server';
 import { DIRECTUS_URL } from '@/shared/lib/config';
 import { FALLBACK_IMAGE_NEWS } from '@/shared/lib/config';
 
@@ -153,6 +154,9 @@ function buildDirectusUrl(params: SearchParams): string {
 }
 
 export async function GET(request: NextRequest) {
+  // Signal that this route needs dynamic rendering (must be before try block)
+  await connection();
+
   try {
     // Obtener IP para rate limiting
     const ip =
@@ -308,7 +312,5 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Configuración de Next.js para el endpoint
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
-export const revalidate = 60;
+// MIGRATED: Removed runtime, dynamic, and revalidate exports (incompatible with Cache Components)
+// Route Handlers are dynamic by default with Cache Components

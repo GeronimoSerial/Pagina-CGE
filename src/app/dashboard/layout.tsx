@@ -1,8 +1,8 @@
 import './dashboard.css';
 
-import { AppSidebar } from "@dashboard/components/app-sidebar";
-import { SiteHeader } from "@dashboard/components/site-header";
-import { SidebarInset, SidebarProvider } from "@dashboard/components/sidebar";
+import { AppSidebar } from '@dashboard/components/app-sidebar';
+import { SiteHeader } from '@dashboard/components/site-header';
+import { SidebarInset, SidebarProvider } from '@dashboard/components/sidebar';
 
 export default function DashboardLayout({
   children,
@@ -13,8 +13,8 @@ export default function DashboardLayout({
     <SidebarProvider
       style={
         {
-          "--sidebar-width": "calc(var(--spacing) * 72)",
-          "--header-height": "calc(var(--spacing) * 12)",
+          '--sidebar-width': 'calc(var(--spacing) * 72)',
+          '--header-height': 'calc(var(--spacing) * 12)',
         } as React.CSSProperties
       }
     >

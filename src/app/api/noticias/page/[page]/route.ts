@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { connection } from 'next/server';
 import { DIRECTUS_URL } from '@/shared/lib/config';
 
 interface DirectusNewsResponse {
@@ -121,6 +122,9 @@ export async function GET(
   { params }: { params: Promise<{ page: string }> },
 ): Promise<NextResponse<ApiResponse | { error: string }>> {
   try {
+    // Signal that this route needs dynamic rendering
+    await connection();
+
     // 1. Validar parámetros
     const { page } = await params;
     const pageNum = validatePageNumber(page);

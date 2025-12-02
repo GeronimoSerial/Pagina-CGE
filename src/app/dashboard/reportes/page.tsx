@@ -1,28 +1,31 @@
+import { connection } from 'next/server';
 import {
   getMesesDisponibles,
   getReporteLiquidacion,
   getAreasDisponibles,
   getDiasConMarcaMes,
-} from "@dashboard/actions/actions";
-import { LiquidationReportTable } from "@dashboard/components/liquidation-report-table";
-import { MonthSelector } from "@dashboard/components/month-selector";
-import { IconReportAnalytics } from "@tabler/icons-react";
-import { translateMonthName } from "@dashboard/lib/utils";
+} from '@dashboard/actions/actions';
+import { LiquidationReportTable } from '@dashboard/components/liquidation-report-table';
+import { MonthSelector } from '@dashboard/components/month-selector';
+import { IconReportAnalytics } from '@tabler/icons-react';
+import { translateMonthName } from '@dashboard/lib/utils';
 
-// Reportes mensuales son relativamente estáticos - cachear por 5 minutos
-export const revalidate = 300;
+// MIGRATED: Using connection() to signal dynamic rendering
 
 export default async function ReportesPage({
   searchParams,
 }: {
   searchParams: Promise<{ mes?: string }>;
 }) {
+  // Signal dynamic rendering
+  await connection();
+
   const params = await searchParams;
   const meses = await getMesesDisponibles();
   const areas = await getAreasDisponibles();
 
   // Usar el mes del query param o el más reciente disponible
-  const mesSeleccionado = params?.mes || (meses.length > 0 ? meses[0].mes : "");
+  const mesSeleccionado = params?.mes || (meses.length > 0 ? meses[0].mes : '');
 
   const reporte = mesSeleccionado
     ? await getReporteLiquidacion(mesSeleccionado)
@@ -49,7 +52,7 @@ export default async function ReportesPage({
             <p className="text-sm text-muted-foreground">
               {mesInfo
                 ? `Período: ${translateMonthName(mesInfo.mes_nombre)}`
-                : "Seleccione un período"}
+                : 'Seleccione un período'}
             </p>
           </div>
         </div>

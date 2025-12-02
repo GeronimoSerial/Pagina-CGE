@@ -1,16 +1,15 @@
-import { AuditTable } from "@dashboard/components/audit-table";
-import { DateFilter } from "@dashboard/components/date-filter";
-import { getAuditoriaOperaciones } from "@dashboard/actions/actions";
+import { connection } from 'next/server';
+import { AuditTable } from '@dashboard/components/audit-table';
+import { DateFilter } from '@dashboard/components/date-filter';
+import { getAuditoriaOperaciones } from '@dashboard/actions/actions';
 import {
   getArgentinaDate,
   formatDateArg,
   getFirstOfMonthArg,
   getArgentinaYear,
-} from "@dashboard/lib/utils";
+} from '@dashboard/lib/utils';
 
-// Auditoría debe ser tiempo real por seguridad - no cachear
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// MIGRATED: Using connection() to signal dynamic rendering before Date access
 
 function getDefaultRange() {
   const today = getArgentinaDate();
@@ -26,6 +25,9 @@ export default async function Page({
 }: {
   searchParams: Promise<{ start?: string; end?: string }>;
 }) {
+  // Signal dynamic rendering before accessing current time
+  await connection();
+
   const params = await searchParams;
   const defaults = getDefaultRange();
   const startDate = params?.start ?? defaults.start;

@@ -1,10 +1,9 @@
-import { UnifiedMarksTable } from "@dashboard/components/unified-marks-table";
-import { DateFilter } from "@dashboard/components/date-filter";
-import { getMarcacionesUnificadas } from "@dashboard/actions/actions";
+import { connection } from 'next/server';
+import { UnifiedMarksTable } from '@dashboard/components/unified-marks-table';
+import { DateFilter } from '@dashboard/components/date-filter';
+import { getMarcacionesUnificadas } from '@dashboard/actions/actions';
 
-// Vista de tiempo real - no cachear
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// MIGRATED: Using connection() to signal dynamic rendering before Date access
 
 function getDefaultRange() {
   const today = new Date();
@@ -20,6 +19,9 @@ export default async function Page({
 }: {
   searchParams: Promise<{ start?: string; end?: string }>;
 }) {
+  // Signal dynamic rendering before accessing current time
+  await connection();
+
   const params = await searchParams;
   const defaults = getDefaultRange();
   const startDate = params?.start ?? defaults.start;

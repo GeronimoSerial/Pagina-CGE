@@ -134,7 +134,9 @@ export async function safeRevalidateWithLogger(
       if (type === 'path') {
         await revalidatePath(target);
       } else {
-        await revalidateTag(target);
+        // With Cache Components, revalidateTag requires a profile parameter
+        // Using 'max' profile for background webhook revalidation (stale data acceptable during revalidation)
+        await revalidateTag(target, 'max');
       }
       const duration = Date.now() - startTime;
       logger.logOperation(type, target, duration, true, undefined, attempts);

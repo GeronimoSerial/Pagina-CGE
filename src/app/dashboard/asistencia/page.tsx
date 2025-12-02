@@ -1,9 +1,9 @@
-import { AttendanceTable } from "@dashboard/components/attendance-table";
-import { DateFilter } from "@dashboard/components/date-filter";
-import { getAsistenciaDiaria } from "@dashboard/actions/actions";
+import { connection } from 'next/server';
+import { AttendanceTable } from '@dashboard/components/attendance-table';
+import { DateFilter } from '@dashboard/components/date-filter';
+import { getAsistenciaDiaria } from '@dashboard/actions/actions';
 
-// Asistencia diaria cambia frecuentemente - cachear por 1 minuto
-export const revalidate = 60;
+// MIGRATED: Using connection() to signal dynamic rendering before Date access
 
 function getDefaultRange() {
   const today = new Date();
@@ -19,6 +19,9 @@ export default async function Page({
 }: {
   searchParams: Promise<{ start?: string; end?: string }>;
 }) {
+  // Signal dynamic rendering before accessing current time
+  await connection();
+
   const params = await searchParams;
   const defaults = getDefaultRange();
   const startDate = params?.start ?? defaults.start;
