@@ -1,5 +1,5 @@
 'use server';
-
+import { cacheLife } from 'next/cache';
 import { prisma } from '../lib/prisma';
 import {
   AsistenciaDiaria,
@@ -387,7 +387,10 @@ export async function getPromedioHorasDiario(
 
 export async function getListaEmpleados(): Promise<
   { legajo: string; nombre: string }[]
-> {
+  > {
+  "use cache";
+  cacheLife("max")
+  
   const result = await prisma.$queryRaw<{ legajo: string; nombre: string }[]>`
     SELECT DISTINCT l.cod as legajo, l.nombre
     FROM huella.legajo l

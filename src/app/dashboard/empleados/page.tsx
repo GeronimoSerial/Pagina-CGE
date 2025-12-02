@@ -6,7 +6,7 @@ import { EmployeesTable } from '@dashboard/components/employees-table';
 
 export default async function EmpleadosPage() {
   // Signal dynamic rendering
-  await connection();
+  // await connection();
 
   const empleados = await getListaEmpleados();
 

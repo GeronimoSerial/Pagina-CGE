@@ -1,12 +1,12 @@
 SELECT
-  id,
-  legajo,
-  ts,
-  tipo,
-  sensor,
-  origen,
-  duplicado
+  marcas.id,
+  marcas.legajo,
+  marcas.ts,
+  marcas.tipo,
+  marcas.sensor,
+  marcas.origen,
+  marcas.duplicado
 FROM
   marcas
 WHERE
-  (COALESCE(duplicado, false) = false);
+  (COALESCE(marcas.duplicado, false) = false);
