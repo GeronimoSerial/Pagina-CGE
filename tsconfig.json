@@ -12,7 +12,8 @@
       "@modules/*": ["src/modules/*"],
       "@types/*": ["types/*"],
       "@utils/*": ["src/utils/*"],
-      "@dashboard/*": ["src/features/dashboard/*"]
+      "@dashboard/*": ["src/features/dashboard/*"],
+      "@prisma/client": ["./prisma/generated"]
     },
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,

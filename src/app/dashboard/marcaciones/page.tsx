@@ -7,6 +7,9 @@ import {
   getFirstOfMonthArg,
 } from "@dashboard/lib/utils";
 
+// Marcaciones diarias cambian frecuentemente - cachear por 1 minuto
+export const revalidate = 60;
+
 function getDefaultRange() {
   const today = getArgentinaDate();
   const firstOfMonth = getFirstOfMonthArg();

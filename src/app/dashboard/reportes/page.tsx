@@ -9,6 +9,9 @@ import { MonthSelector } from "@dashboard/components/month-selector";
 import { IconReportAnalytics } from "@tabler/icons-react";
 import { translateMonthName } from "@dashboard/lib/utils";
 
+// Reportes mensuales son relativamente estáticos - cachear por 5 minutos
+export const revalidate = 300;
+
 export default async function ReportesPage({
   searchParams,
 }: {

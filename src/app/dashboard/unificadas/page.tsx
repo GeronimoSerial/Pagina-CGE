@@ -2,6 +2,10 @@ import { UnifiedMarksTable } from "@dashboard/components/unified-marks-table";
 import { DateFilter } from "@dashboard/components/date-filter";
 import { getMarcacionesUnificadas } from "@dashboard/actions/actions";
 
+// Vista de tiempo real - no cachear
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 function getDefaultRange() {
   const today = new Date();
   const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);

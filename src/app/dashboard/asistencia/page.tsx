@@ -2,6 +2,9 @@ import { AttendanceTable } from "@dashboard/components/attendance-table";
 import { DateFilter } from "@dashboard/components/date-filter";
 import { getAsistenciaDiaria } from "@dashboard/actions/actions";
 
+// Asistencia diaria cambia frecuentemente - cachear por 1 minuto
+export const revalidate = 60;
+
 function getDefaultRange() {
   const today = new Date();
   const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);

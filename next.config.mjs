@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverExternalPackages: ['sharp'],
-
+  cacheComponents:true,
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },

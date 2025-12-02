@@ -8,6 +8,10 @@ import {
   getArgentinaYear,
 } from "@dashboard/lib/utils";
 
+// Auditoría debe ser tiempo real por seguridad - no cachear
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 function getDefaultRange() {
   const today = getArgentinaDate();
   const firstOfMonth = getFirstOfMonthArg();

@@ -155,7 +155,7 @@ export function WhitelistTable({
       return;
     }
     try {
-      await addToWhitelist(newItem);
+      await addToWhitelist(newItem, "sistema");
       toast.success("Empleado agregado a la whitelist correctamente");
       setNewItem(null);
       setIsCreating(false);

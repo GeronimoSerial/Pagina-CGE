@@ -1,6 +1,9 @@
 import { getListaEmpleados } from "@dashboard/actions/actions";
 import { EmployeesTable } from "@dashboard/components/employees-table";
 
+// Lista de empleados cambia raramente - cachear por 1 hora
+export const revalidate = 3600;
+
 export default async function EmpleadosPage() {
   const empleados = await getListaEmpleados();
 

@@ -1,38 +1,11 @@
-"use client";
-import { useState, useEffect, useCallback } from "react";
 import { EmpleadosProblematicosTable } from "@dashboard/components/empleados-problematicos-table";
 import { getEmpleadosProblematicos } from "@dashboard/actions/actions";
-import { EmpleadoProblematico } from "@dashboard/lib/types";
-import { Skeleton } from "@/shared/ui/skeleton";
 
-export default function AtencionPage() {
-  const [empleados, setEmpleados] = useState<EmpleadoProblematico[]>([]);
-  const [loading, setLoading] = useState(true);
+// Empleados problemáticos cambian moderadamente - cachear por 5 minutos
+export const revalidate = 300;
 
-  const loadData = useCallback(async () => {
-    setLoading(true);
-    const data = await getEmpleadosProblematicos();
-    setEmpleados(data);
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  if (loading) {
-    return (
-      <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-        <div className="px-4 lg:px-6">
-          <Skeleton className="h-8 w-64 mb-2" />
-          <Skeleton className="h-4 w-96" />
-        </div>
-        <div className="px-4 lg:px-6">
-          <Skeleton className="h-[400px] w-full" />
-        </div>
-      </div>
-    );
-  }
+export default async function AtencionPage() {
+  const empleados = await getEmpleadosProblematicos();
 
   return (
     <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">

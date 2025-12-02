@@ -8,7 +8,6 @@ import {
   getEmpleadosActivos,
   getEstadisticasDiarias,
   getPromedioHorasDiario,
-  getMarcacionesIncompletas,
   getEmpleadosProblematicos,
 } from "@dashboard/actions/actions";
 import {
@@ -16,6 +15,9 @@ import {
   formatDateArg,
   getFirstOfMonthArg,
 } from "@dashboard/lib/utils";
+
+// Panel general con datos del día actual - cachear por 1 minuto
+export const revalidate = 60;
 
 export default async function Page() {
   const today = getArgentinaDate();
@@ -34,20 +36,19 @@ export default async function Page() {
     empleadosActivos,
     estadisticasDiarias,
     promedioHoras,
+    problematicos,
   ] = await Promise.all([
     getDiasSinActividad(startDate, endDate),
     getDiasConMarca(startDate, endDate),
     getEmpleadosActivos(),
     getEstadisticasDiarias(chartStartDate, endDate),
     getPromedioHorasDiario(chartStartDate, endDate),
-    getMarcacionesIncompletas(endDate, endDate),
     getEmpleadosProblematicos(),
   ]);
 
   const totalActivos = empleadosActivos.length;
   const diasSinActividadList = diasSinActividad.map((item) => item.dia);
   const diasConMarcaList = diasConMarca.map((item) => item.dia);
-  const problematicos = await getEmpleadosProblematicos();
   const problematicosMesActual = problematicos.length;
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">

@@ -7,6 +7,9 @@ import {
   getFirstOfMonthArg,
 } from "@dashboard/lib/utils";
 
+// Ausentes cambia frecuentemente - cachear por 1 minuto
+export const revalidate = 60;
+
 function getDefaultRange() {
   const today = getArgentinaDate();
   const firstOfMonth = getFirstOfMonthArg();

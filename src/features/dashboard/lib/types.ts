@@ -1,5 +1,5 @@
 export interface AsistenciaDiaria {
-  legajo: number;
+  legajo: string;
   nombre: string;
   dia: string; // Date string
   entrada: string | null; // Timestamp string

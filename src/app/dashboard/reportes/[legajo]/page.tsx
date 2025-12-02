@@ -10,6 +10,10 @@ import { Button } from "@/shared/ui/button";
 import { IconArrowLeft, IconUser } from "@tabler/icons-react";
 import { translateMonthName } from "@dashboard/lib/utils";
 
+// Reporte individual por mes es relativamente estático - cachear por 5 minutos
+export const revalidate = 300;
+export const dynamicParams = true;
+
 export default async function ReporteEmpleadoPage({
   params,
   searchParams,

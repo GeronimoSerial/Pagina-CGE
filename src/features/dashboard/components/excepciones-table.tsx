@@ -216,7 +216,7 @@ export function ExcepcionesTable({
       return;
     }
     try {
-      await createExcepcion(newExcepcion);
+      await createExcepcion(newExcepcion, "sistema");
       toast.success("Excepción creada correctamente");
       setNewExcepcion(null);
       setIsCreating(false);

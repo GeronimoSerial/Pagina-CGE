@@ -22,6 +22,10 @@ import {
   IconBeach,
 } from "@tabler/icons-react";
 
+// Detalle de empleado cambia moderadamente - cachear por 5 minutos
+export const revalidate = 300;
+export const dynamicParams = true;
+
 function getDefaultRange() {
   const today = new Date();
   const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
