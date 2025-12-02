@@ -1,8 +1,6 @@
-"use server";
+'use server';
 
-import { format } from "date-fns";
-import pool from "../lib/db";
-import {prisma} from "../lib/prisma";
+import { prisma } from '../lib/prisma';
 import {
   AsistenciaDiaria,
   AusenteDiario,
@@ -29,59 +27,66 @@ import {
   ExcepcionCreate,
   WhitelistEmpleado,
   WhitelistCreate,
-} from "@dashboard/lib/types";
-import { bigIntToNumber, formatDateToISO, formatTimestampToString, parseStringToDate } from "../lib/dateHelpers";
-import { Prisma } from "@prisma/client";
+} from '@dashboard/lib/types';
+import {
+  bigIntToNumber,
+  formatDateToISO,
+  formatTimestampToString,
+  parseStringToDate,
+} from '../lib/dateHelpers';
+import { Prisma } from '@prisma/client';
 
-
-
-export async function getAsistenciaDiaria (
+export async function getAsistenciaDiaria(
   startDate: string,
-  endDate: string
+  endDate: string,
 ): Promise<AsistenciaDiaria[]> {
-    // Prisma $queryRaw con template literals para parámetros seguros
-  const result = await prisma.$queryRaw<Array<{
-    legajo: string;
-    nombre: string | null;
-    dia: Date;
-    entrada: Date | null;
-    salida: Date | null;
-    horas_trabajadas: Prisma.Decimal | null;
-    total_marcas: bigint;
-  }>>`
-    SELECT 
-      legajo, 
-      nombre, 
+  'use cache';
+  // Prisma $queryRaw con template literals para parámetros seguros
+  const result = await prisma.$queryRaw<
+    Array<{
+      legajo: string;
+      nombre: string | null;
+      dia: Date;
+      entrada: Date | null;
+      salida: Date | null;
+      horas_trabajadas: Prisma.Decimal | null;
+      total_marcas: bigint;
+    }>
+  >`
+    SELECT
+      legajo,
+      nombre,
       dia,
       entrada,
       salida,
-      horas_trabajadas, 
+      horas_trabajadas,
       total_marcas
     FROM huella.v_asistencia_diaria
     WHERE dia BETWEEN ${startDate}::date AND ${endDate}::date
     ORDER BY dia DESC, nombre
   `;
 
-  return result.map(row => ({
+  return result.map((row) => ({
     legajo: row.legajo || '',
     nombre: row.nombre || '',
     dia: formatDateToISO(row.dia)!,
     entrada: formatTimestampToString(row.entrada),
     salida: formatTimestampToString(row.salida),
-    horas_trabajadas: row.horas_trabajadas ? row.horas_trabajadas.toNumber() : null,
+    horas_trabajadas: row.horas_trabajadas
+      ? row.horas_trabajadas.toNumber()
+      : null,
     total_marcas: bigIntToNumber(row.total_marcas),
   }));
 }
 
-
 export async function getAusentesDiarios(
   startDate: string,
-  endDate: string
+  endDate: string,
 ): Promise<AusenteDiario[]> {
   const result = await prisma.$queryRaw<AusenteDiario[]>`
-    SELECT 
+    SELECT
       legajo::int,
-      nombre, 
+      nombre,
       dia::text
     FROM huella.v_ausentes_diarios
     WHERE dia BETWEEN ${startDate}::date AND ${endDate}::date
@@ -90,18 +95,16 @@ export async function getAusentesDiarios(
   return result;
 }
 
-
-
 export async function getMarcacionesIncompletas(
   startDate: string,
-  endDate: string
+  endDate: string,
 ): Promise<MarcacionIncompleta[]> {
   const result = await prisma.$queryRaw<MarcacionIncompleta[]>`
-    SELECT 
-      legajo::int, 
-      nombre, 
-      dia::text, 
-      entradas::int, 
+    SELECT
+      legajo::int,
+      nombre,
+      dia::text,
+      entradas::int,
       salidas::int
     FROM huella.v_marcaciones_incompletas
     WHERE dia BETWEEN ${startDate}::date AND ${endDate}::date
@@ -112,16 +115,16 @@ export async function getMarcacionesIncompletas(
 
 export async function getAuditoriaOperaciones(
   startDate: string,
-  endDate: string
+  endDate: string,
 ): Promise<AuditoriaOperacion[]> {
   const result = await prisma.$queryRaw<AuditoriaOperacion[]>`
-    SELECT 
-      id::int, 
-      fecha::text, 
-      hora::text, 
-      tipo, 
-      detalle, 
-      empleado, 
+    SELECT
+      id::int,
+      fecha::text,
+      hora::text,
+      tipo,
+      detalle,
+      empleado,
       operado_por
     FROM huella.v_auditoria_operaciones
     WHERE fecha BETWEEN ${startDate}::date AND ${endDate}::date
@@ -132,8 +135,9 @@ export async function getAuditoriaOperaciones(
 
 export async function getDiasSinActividad(
   startDate: string,
-  endDate: string
+  endDate: string,
 ): Promise<DiaSinActividad[]> {
+  'use cache';
   const result = await prisma.$queryRaw<DiaSinActividad[]>`
     SELECT dia::text
     FROM huella.v_dias_sin_actividad
@@ -143,22 +147,21 @@ export async function getDiasSinActividad(
   return result;
 }
 
-
 export async function getMarcacionesUnificadas(
   startDate: string,
-  endDate: string
+  endDate: string,
 ): Promise<MarcacionUnificada[]> {
   const result = await prisma.$queryRaw<MarcacionUnificada[]>`
-    SELECT 
-      id::int, 
-      legajo::int, 
-      ts::text, 
-      tipo, 
-      sensor::text, 
-      origen, 
+    SELECT
+      id::int,
+      legajo::int,
+      ts::text,
+      tipo,
+      sensor::text,
+      origen,
       duplicado
     FROM huella.v_marcaciones_unificadas
-    WHERE ts >= ${startDate}::timestamp 
+    WHERE ts >= ${startDate}::timestamp
       AND ts <= ${endDate}::timestamp + interval '1 day'
     ORDER BY ts DESC
     LIMIT 1000
@@ -168,10 +171,10 @@ export async function getMarcacionesUnificadas(
 
 export async function getMarcacionesDiarias(
   startDate: string,
-  endDate: string
+  endDate: string,
 ): Promise<MarcacionDiaria[]> {
   const result = await prisma.$queryRaw<MarcacionDiaria[]>`
-    SELECT 
+    SELECT
       legajo::int,
       nombre,
       dia::text,
@@ -196,92 +199,81 @@ export async function getDiasConMarcaMes(mes: string): Promise<number> {
 
 export async function getDiasConMarca(
   startDate: string,
-  endDate: string
+  endDate: string,
 ): Promise<DiaConMarca[]> {
-  const client = await pool.connect();
-  try {
-    const query = `
+  'use cache';
+  const result = await prisma.$queryRaw<Array<{ dia: string }>>`
       SELECT dia::text
       FROM huella.v_dias_con_marca
-      WHERE dia BETWEEN $1 AND $2
+      WHERE dia BETWEEN ${startDate} AND ${endDate}
       ORDER BY dia;
-    `;
-    const result = await client.query(query, [startDate, endDate]);
-    return result.rows;
-  } finally {
-    client.release();
-  }
+  `;
+  return result.map((r: any) => ({ dia: r.dia }));
 }
 
 export async function getEmpleadosActivos(): Promise<EmpleadoActivo[]> {
-  const client = await pool.connect();
-  try {
-    const query = `
+  'use cache';
+  const result = await prisma.$queryRaw<EmpleadoActivo[]>`
       SELECT legajo
       FROM huella.v_empleados_activos
       ORDER BY legajo;
     `;
-    const result = await client.query(query);
-    return result.rows;
-  } finally {
-    client.release();
-  }
+  return result;
 }
 
 export async function getEmpleadoDetalle(
-  legajo: string
+  legajo: string,
 ): Promise<EmpleadoDetalle | null> {
-  const client = await pool.connect();
-  try {
-    const query = `
-      SELECT legajo, nombre, area, turno, estado, 
+  const result = await prisma.$queryRaw<Array<EmpleadoDetalle>>`
+      SELECT legajo, nombre, area, turno, estado,
              fecha_ingreso::text as fechaingreso, dni, email, inactivo
       FROM huella.v_empleado_detalle
-      WHERE legajo = $1
+      WHERE legajo = ${legajo}
       LIMIT 1;
     `;
-    const result = await client.query(query, [legajo]);
-    return result.rows[0] || null;
-  } finally {
-    client.release();
-  }
+  if (result.length === 0) return null;
+  return result[0];
 }
 
 export async function getAsistenciaPorEmpleado(
   legajo: number,
   startDate: string,
-  endDate: string
+  endDate: string,
 ): Promise<AsistenciaDiaria[]> {
-  const result = await prisma.$queryRaw<Array<{
-    legajo: number;
-    nombre: string;
-    dia: string;
-    entrada: string | null;
-    salida: string | null;
-    horas_trabajadas: Prisma.Decimal | null;
-    total_marcas: number;
-  }>>`
-    SELECT 
-      legajo::int, 
-      nombre, 
-      to_char(dia, 'YYYY-MM-DD') as dia, 
-      entrada::text, 
+  const result = await prisma.$queryRaw<
+    Array<{
+      legajo: number;
+      nombre: string;
+      dia: string;
+      entrada: string | null;
+      salida: string | null;
+      horas_trabajadas: Prisma.Decimal | null;
+      total_marcas: number;
+    }>
+  >`
+    SELECT
+      legajo::int,
+      nombre,
+      to_char(dia, 'YYYY-MM-DD') as dia,
+      entrada::text,
       salida::text,
-      horas_trabajadas, 
+      horas_trabajadas,
       total_marcas::int
     FROM huella.v_asistencia_diaria
-    WHERE legajo = ${String(legajo)} 
+    WHERE legajo = ${String(legajo)}
       AND dia BETWEEN ${startDate}::date AND ${endDate}::date
     ORDER BY dia DESC
   `;
-  
-  return result.map(row => ({
+
+  return result.map((row) => ({
     legajo: String(row.legajo),
     nombre: row.nombre,
     dia: row.dia,
     entrada: row.entrada,
     salida: row.salida,
-    horas_trabajadas: row.horas_trabajadas ? row.horas_trabajadas.toNumber() : null,
+    horas_trabajadas: row.horas_trabajadas
+      ? row.horas_trabajadas.toNumber()
+      : null,
     total_marcas: row.total_marcas,
   }));
 }
@@ -289,15 +281,15 @@ export async function getAsistenciaPorEmpleado(
 export async function getAusentesPorEmpleado(
   legajo: number,
   startDate: string,
-  endDate: string
+  endDate: string,
 ): Promise<AusenteDiario[]> {
   const result = await prisma.$queryRaw<AusenteDiario[]>`
-    SELECT 
-      legajo::int, 
-      nombre, 
+    SELECT
+      legajo::int,
+      nombre,
       to_char(dia, 'YYYY-MM-DD') as dia
     FROM huella.v_ausentes_diarios
-    WHERE legajo = ${String(legajo)} 
+    WHERE legajo = ${String(legajo)}
       AND dia BETWEEN ${startDate}::date AND ${endDate}::date
     ORDER BY dia DESC
   `;
@@ -306,32 +298,34 @@ export async function getAusentesPorEmpleado(
 
 export async function getResumenMensualEmpleado(
   legajo: number,
-  mes: string
+  mes: string,
 ): Promise<ResumenMensualEmpleado | null> {
-  const result = await prisma.$queryRaw<Array<{
-    legajo: number;
-    nombre: string;
-    mes: string;
-    dias_trabajados: number;
-    total_horas: Prisma.Decimal | null;
-    promedio_horas_dia: Prisma.Decimal | null;
-    total_marcas: number;
-  }>>`
-    SELECT 
-      legajo::int, 
-      nombre, 
-      mes::text, 
+  const result = await prisma.$queryRaw<
+    Array<{
+      legajo: number;
+      nombre: string;
+      mes: string;
+      dias_trabajados: number;
+      total_horas: Prisma.Decimal | null;
+      promedio_horas_dia: Prisma.Decimal | null;
+      total_marcas: number;
+    }>
+  >`
+    SELECT
+      legajo::int,
+      nombre,
+      mes::text,
       dias_trabajados::int,
-      total_horas, 
-      promedio_horas_dia, 
+      total_horas,
+      promedio_horas_dia,
       total_marcas::int
     FROM huella.v_resumen_mensual_empleado
     WHERE legajo = ${String(legajo)} AND mes = ${mes}::date
     LIMIT 1
   `;
-  
+
   if (!result[0]) return null;
-  
+
   const row = result[0];
   return {
     legajo: row.legajo,
@@ -339,20 +333,22 @@ export async function getResumenMensualEmpleado(
     mes: row.mes,
     dias_trabajados: row.dias_trabajados,
     total_horas: row.total_horas ? row.total_horas.toNumber() : null,
-    promedio_horas_dia: row.promedio_horas_dia ? row.promedio_horas_dia.toNumber() : null,
+    promedio_horas_dia: row.promedio_horas_dia
+      ? row.promedio_horas_dia.toNumber()
+      : null,
     total_marcas: row.total_marcas,
   };
 }
 
-
 export async function getEstadisticasDiarias(
   startDate: string,
-  endDate: string
+  endDate: string,
 ): Promise<EstadisticaDiaria[]> {
+  'use cache';
   const result = await prisma.$queryRaw<EstadisticaDiaria[]>`
-    SELECT 
-      dia::text, 
-      presentes::int, 
+    SELECT
+      dia::text,
+      presentes::int,
       ausentes::int
     FROM huella.v_estadisticas_diarias
     WHERE dia BETWEEN ${startDate}::date AND ${endDate}::date
@@ -361,26 +357,28 @@ export async function getEstadisticasDiarias(
   return result;
 }
 
-
 export async function getPromedioHorasDiario(
   startDate: string,
-  endDate: string
+  endDate: string,
 ): Promise<PromedioHorasDiario[]> {
-  const result = await prisma.$queryRaw<Array<{
-    dia: string;
-    promedio_horas: Prisma.Decimal;
-    empleados_con_registro: number;
-  }>>`
-    SELECT 
-      dia::text, 
-      promedio_horas, 
+  'use cache';
+  const result = await prisma.$queryRaw<
+    Array<{
+      dia: string;
+      promedio_horas: Prisma.Decimal;
+      empleados_con_registro: number;
+    }>
+  >`
+    SELECT
+      dia::text,
+      promedio_horas,
       empleados_con_registro::int
     FROM huella.v_promedio_horas_diario
     WHERE dia BETWEEN ${startDate}::date AND ${endDate}::date
     ORDER BY dia
   `;
-  
-  return result.map(row => ({
+
+  return result.map((row) => ({
     dia: row.dia,
     promedio_horas: row.promedio_horas.toNumber(),
     empleados_con_registro: row.empleados_con_registro,
@@ -406,8 +404,8 @@ export async function getListaEmpleados(): Promise<
 
 export async function getMesesDisponibles(): Promise<MesDisponible[]> {
   const result = await prisma.$queryRaw<MesDisponible[]>`
-    SELECT 
-      to_char(mes, 'YYYY-MM-DD') as mes, 
+    SELECT
+      to_char(mes, 'YYYY-MM-DD') as mes,
       mes_nombre
     FROM huella.v_meses_disponibles
     ORDER BY mes DESC
@@ -416,34 +414,36 @@ export async function getMesesDisponibles(): Promise<MesDisponible[]> {
   return result;
 }
 export async function getReporteLiquidacion(
-  mes: string
+  mes: string,
 ): Promise<ReporteLiquidacion[]> {
-  const result = await prisma.$queryRaw<Array<{
-    legajo: string;
-    nombre: string;
-    area: string | null;
-    turno: string | null;
-    dni: string | null;
-    mes: string;
-    dias_trabajados: number;
-    total_horas: Prisma.Decimal;
-    promedio_horas_dia: Prisma.Decimal;
-    dias_ausente: number;
-    dias_incompletos: number;
-    primer_dia_trabajado: string | null;
-    ultimo_dia_trabajado: string | null;
-    fecha_ingreso: string | null;
-    estado: string | null;
-    categoria_horas: string;
-    horas_jornada: number;
-    horas_esperadas: number;
-    porcentaje_cumplimiento: Prisma.Decimal;
-  }>>`
-    SELECT 
-      legajo, 
-      nombre, 
-      area, 
-      turno, 
+  const result = await prisma.$queryRaw<
+    Array<{
+      legajo: string;
+      nombre: string;
+      area: string | null;
+      turno: string | null;
+      dni: string | null;
+      mes: string;
+      dias_trabajados: number;
+      total_horas: Prisma.Decimal;
+      promedio_horas_dia: Prisma.Decimal;
+      dias_ausente: number;
+      dias_incompletos: number;
+      primer_dia_trabajado: string | null;
+      ultimo_dia_trabajado: string | null;
+      fecha_ingreso: string | null;
+      estado: string | null;
+      categoria_horas: string;
+      horas_jornada: number;
+      horas_esperadas: number;
+      porcentaje_cumplimiento: Prisma.Decimal;
+    }>
+  >`
+    SELECT
+      legajo,
+      nombre,
+      area,
+      turno,
       dni,
       to_char(mes, 'YYYY-MM-DD') as mes,
       dias_trabajados::int,
@@ -463,8 +463,8 @@ export async function getReporteLiquidacion(
     WHERE mes = ${mes}::date
     ORDER BY nombre
   `;
-  
-  return result.map(row => ({
+
+  return result.map((row) => ({
     legajo: row.legajo,
     nombre: row.nombre,
     area: row.area,
@@ -490,25 +490,27 @@ export async function getReporteLiquidacion(
 export async function getDetalleDiarioEmpleado(
   legajo: string,
   startDate: string,
-  endDate: string
+  endDate: string,
 ): Promise<DetalleDiarioEmpleado[]> {
-  const result = await prisma.$queryRaw<Array<{
-    legajo: string;
-    nombre: string;
-    area: string | null;
-    turno: string | null;
-    dia: string;
-    dia_semana: string;
-    entrada: string | null;
-    salida: string | null;
-    horas_trabajadas: Prisma.Decimal;
-    total_marcas: number;
-    tipo_jornada: string;
-  }>>`
-    SELECT 
-      legajo, 
-      nombre, 
-      area, 
+  const result = await prisma.$queryRaw<
+    Array<{
+      legajo: string;
+      nombre: string;
+      area: string | null;
+      turno: string | null;
+      dia: string;
+      dia_semana: string;
+      entrada: string | null;
+      salida: string | null;
+      horas_trabajadas: Prisma.Decimal;
+      total_marcas: number;
+      tipo_jornada: string;
+    }>
+  >`
+    SELECT
+      legajo,
+      nombre,
+      area,
       turno,
       to_char(dia, 'YYYY-MM-DD') as dia,
       trim(dia_semana) as dia_semana,
@@ -518,12 +520,12 @@ export async function getDetalleDiarioEmpleado(
       total_marcas::int,
       tipo_jornada
     FROM huella.v_detalle_diario_empleado
-    WHERE legajo = ${legajo} 
+    WHERE legajo = ${legajo}
       AND dia BETWEEN ${startDate}::date AND ${endDate}::date
     ORDER BY dia
   `;
-  
-  return result.map(row => ({
+
+  return result.map((row) => ({
     legajo: row.legajo,
     nombre: row.nombre,
     area: row.area,
@@ -536,44 +538,42 @@ export async function getDetalleDiarioEmpleado(
     total_marcas: row.total_marcas,
     tipo_jornada: row.tipo_jornada,
   }));
-
 }
 
 export async function getAreasDisponibles(): Promise<string[]> {
   const result = await prisma.$queryRaw<{ area: string }[]>`
-    SELECT DISTINCT area 
-    FROM huella.legajo 
+    SELECT DISTINCT area
+    FROM huella.legajo
     WHERE area IS NOT NULL AND area != ''
     ORDER BY area
   `;
   return result.map((r: any) => r.area);
-
 }
 // =====================================================
 // ACCIONES PARA FERIADOS
 // =====================================================
 
 export async function getFeriados(anio?: number): Promise<Feriado[]> {
-  const result = anio 
+  const result = anio
     ? await prisma.$queryRaw<Feriado[]>`
-        SELECT 
-          id, 
-          to_char(fecha, 'YYYY-MM-DD') as fecha, 
-          descripcion, 
+        SELECT
+          id,
+          to_char(fecha, 'YYYY-MM-DD') as fecha,
+          descripcion,
           tipo,
-          trim(dia_semana) as dia_semana, 
+          trim(dia_semana) as dia_semana,
           anio::int
         FROM huella.v_feriados
         WHERE anio = ${anio}
         ORDER BY fecha DESC
       `
     : await prisma.$queryRaw<Feriado[]>`
-        SELECT 
-          id, 
-          to_char(fecha, 'YYYY-MM-DD') as fecha, 
-          descripcion, 
+        SELECT
+          id,
+          to_char(fecha, 'YYYY-MM-DD') as fecha,
+          descripcion,
           tipo,
-          trim(dia_semana) as dia_semana, 
+          trim(dia_semana) as dia_semana,
           anio::int
         FROM huella.v_feriados
         ORDER BY fecha DESC
@@ -589,7 +589,7 @@ export async function createFeriado(feriado: FeriadoCreate): Promise<Feriado> {
       tipo: feriado.tipo,
     },
   });
-  
+
   return {
     id: created.id,
     fecha: formatDateToISO(created.fecha)!,
@@ -598,10 +598,9 @@ export async function createFeriado(feriado: FeriadoCreate): Promise<Feriado> {
   };
 }
 
-
 export async function updateFeriado(
   id: number,
-  feriado: FeriadoCreate
+  feriado: FeriadoCreate,
 ): Promise<Feriado> {
   const updated = await prisma.feriados.update({
     where: { id },
@@ -611,7 +610,7 @@ export async function updateFeriado(
       tipo: feriado.tipo,
     },
   });
-  
+
   return {
     id: updated.id,
     fecha: formatDateToISO(updated.fecha)!,
@@ -630,7 +629,7 @@ export async function getAniosFeriados(): Promise<number[]> {
     FROM huella.feriados
     ORDER BY anio DESC
   `;
-  return result.map((r:any) => r.anio);
+  return result.map((r: any) => r.anio);
 }
 
 // =====================================================
@@ -639,13 +638,13 @@ export async function getAniosFeriados(): Promise<number[]> {
 
 export async function getEmpleadosConJornada(): Promise<EmpleadoConJornada[]> {
   const result = await prisma.$queryRaw<EmpleadoConJornada[]>`
-    SELECT 
-      legajo, 
-      nombre, 
-      area, 
-      turno, 
-      dni, 
-      estado, 
+    SELECT
+      legajo,
+      nombre,
+      area,
+      turno,
+      dni,
+      estado,
       inactivo,
       horas_jornada::int,
       tipo_jornada,
@@ -658,14 +657,14 @@ export async function getEmpleadosConJornada(): Promise<EmpleadoConJornada[]> {
 }
 
 export async function getConfigJornada(
-  legajo: string
+  legajo: string,
 ): Promise<ConfigJornada | null> {
   const config = await prisma.config_jornada.findUnique({
     where: { legajo },
   });
-  
+
   if (!config) return null;
-  
+
   return {
     id: config.id,
     legajo: config.legajo,
@@ -676,14 +675,14 @@ export async function getConfigJornada(
 }
 
 export async function upsertConfigJornada(
-  config: ConfigJornada
+  config: ConfigJornada,
 ): Promise<ConfigJornada> {
   const descripcion =
     config.horas_jornada === 4
-      ? "Media jornada"
+      ? 'Media jornada'
       : config.horas_jornada === 6
-      ? "Jornada reducida"
-      : "Jornada completa";
+        ? 'Jornada reducida'
+        : 'Jornada completa';
 
   const result = await prisma.config_jornada.upsert({
     where: { legajo: config.legajo },
@@ -691,15 +690,15 @@ export async function upsertConfigJornada(
       legajo: config.legajo,
       horas_jornada: config.horas_jornada,
       descripcion,
-      vigente_desde: config.vigente_desde 
-        ? parseStringToDate(config.vigente_desde) 
+      vigente_desde: config.vigente_desde
+        ? parseStringToDate(config.vigente_desde)
         : new Date(),
     },
     update: {
       horas_jornada: config.horas_jornada,
       descripcion,
-      vigente_desde: config.vigente_desde 
-        ? parseStringToDate(config.vigente_desde) 
+      vigente_desde: config.vigente_desde
+        ? parseStringToDate(config.vigente_desde)
         : undefined,
     },
   });
@@ -713,18 +712,17 @@ export async function upsertConfigJornada(
   };
 }
 
-
 export async function updateMultipleJornadas(
-  configs: { legajo: string; horas_jornada: 4 | 6 | 8 }[]
+  configs: { legajo: string; horas_jornada: 4 | 6 | 8 }[],
 ): Promise<void> {
   await prisma.$transaction(
-    configs.map(config => {
+    configs.map((config) => {
       const descripcion =
         config.horas_jornada === 4
-          ? "Media jornada"
+          ? 'Media jornada'
           : config.horas_jornada === 6
-          ? "Jornada reducida"
-          : "Jornada completa";
+            ? 'Jornada reducida'
+            : 'Jornada completa';
 
       return prisma.config_jornada.upsert({
         where: { legajo: config.legajo },
@@ -738,7 +736,7 @@ export async function updateMultipleJornadas(
           descripcion,
         },
       });
-    })
+    }),
   );
 }
 
@@ -753,31 +751,34 @@ export async function deleteConfigJornada(legajo: string): Promise<void> {
 export async function getEmpleadosProblematicos(): Promise<
   EmpleadoProblematico[]
 > {
-  const result = await prisma.$queryRaw<Array<{
-    legajo: string;
-    nombre: string;
-    area: string | null;
-    turno: string | null;
-    dni: string | null;
-    horas_jornada: number;
-    total_ausencias: number;
-    dias_trabajados: number;
-    total_horas: Prisma.Decimal;
-    dias_incompletos: number;
-    total_dias_habiles: number;
-    horas_esperadas: number;
-    porcentaje_cumplimiento: Prisma.Decimal;
-    problema_ausencias: boolean;
-    problema_cumplimiento: boolean;
-    problema_incompletos: boolean;
-    score_severidad: Prisma.Decimal;
-    cantidad_problemas: number;
-  }>>`
-    SELECT 
-      legajo, 
-      nombre, 
-      area, 
-      turno, 
+  'use cache';
+  const result = await prisma.$queryRaw<
+    Array<{
+      legajo: string;
+      nombre: string;
+      area: string | null;
+      turno: string | null;
+      dni: string | null;
+      horas_jornada: number;
+      total_ausencias: number;
+      dias_trabajados: number;
+      total_horas: Prisma.Decimal;
+      dias_incompletos: number;
+      total_dias_habiles: number;
+      horas_esperadas: number;
+      porcentaje_cumplimiento: Prisma.Decimal;
+      problema_ausencias: boolean;
+      problema_cumplimiento: boolean;
+      problema_incompletos: boolean;
+      score_severidad: Prisma.Decimal;
+      cantidad_problemas: number;
+    }>
+  >`
+    SELECT
+      legajo,
+      nombre,
+      area,
+      turno,
       dni,
       horas_jornada::int,
       total_ausencias::int,
@@ -795,8 +796,8 @@ export async function getEmpleadosProblematicos(): Promise<
     FROM huella.v_empleados_problematicos
     ORDER BY score_severidad DESC, cantidad_problemas DESC, nombre
   `;
-  
-  return result.map(row => ({
+
+  return result.map((row) => ({
     legajo: row.legajo,
     nombre: row.nombre,
     area: row.area,
@@ -818,13 +819,12 @@ export async function getEmpleadosProblematicos(): Promise<
   }));
 }
 
-
 // =====================================================
 // FUNCIONES AUXILIARES
 // =====================================================
 
 async function getCurrentUserEmail(): Promise<string> {
-  return "sistema";
+  return 'sistema';
 }
 
 // =====================================================
@@ -832,11 +832,11 @@ async function getCurrentUserEmail(): Promise<string> {
 // =====================================================
 
 export async function getExcepciones(
-  legajo?: string
+  legajo?: string,
 ): Promise<ExcepcionAsistencia[]> {
   const result = legajo
     ? await prisma.$queryRaw<ExcepcionAsistencia[]>`
-        SELECT 
+        SELECT
           id,
           legajo,
           nombre,
@@ -854,7 +854,7 @@ export async function getExcepciones(
         ORDER BY fecha_inicio DESC
       `
     : await prisma.$queryRaw<ExcepcionAsistencia[]>`
-        SELECT 
+        SELECT
           id,
           legajo,
           nombre,
@@ -875,7 +875,7 @@ export async function getExcepciones(
 
 export async function getExcepcionesVigentes(): Promise<ExcepcionAsistencia[]> {
   const result = await prisma.$queryRaw<ExcepcionAsistencia[]>`
-    SELECT 
+    SELECT
       id,
       legajo,
       nombre,
@@ -897,7 +897,7 @@ export async function getExcepcionesVigentes(): Promise<ExcepcionAsistencia[]> {
 
 export async function createExcepcion(
   excepcion: ExcepcionCreate,
-  createdBy: string
+  createdBy: string,
 ): Promise<ExcepcionAsistencia> {
   const created = await prisma.excepciones_asistencia.create({
     data: {
@@ -925,16 +925,17 @@ export async function createExcepcion(
     created_by: created.created_by,
     created_at: created.created_at?.toISOString() ?? '',
     updated_at: created.updated_at?.toISOString() ?? '',
-    dias_excepcion: Math.ceil(
-      (created.fecha_fin.getTime() - created.fecha_inicio.getTime()) / (1000 * 60 * 60 * 24)
-    ) + 1,
+    dias_excepcion:
+      Math.ceil(
+        (created.fecha_fin.getTime() - created.fecha_inicio.getTime()) /
+          (1000 * 60 * 60 * 24),
+      ) + 1,
   };
 }
 
-
 export async function updateExcepcion(
   id: number,
-  excepcion: ExcepcionCreate
+  excepcion: ExcepcionCreate,
 ): Promise<ExcepcionAsistencia> {
   const updated = await prisma.excepciones_asistencia.update({
     where: { id },
@@ -962,9 +963,11 @@ export async function updateExcepcion(
     created_by: updated.created_by,
     created_at: updated.created_at?.toISOString() ?? '',
     updated_at: updated.updated_at?.toISOString() ?? '',
-    dias_excepcion: Math.ceil(
-      (updated.fecha_fin.getTime() - updated.fecha_inicio.getTime()) / (1000 * 60 * 60 * 24)
-    ) + 1,
+    dias_excepcion:
+      Math.ceil(
+        (updated.fecha_fin.getTime() - updated.fecha_inicio.getTime()) /
+          (1000 * 60 * 60 * 24),
+      ) + 1,
   };
 }
 
@@ -978,7 +981,7 @@ export async function deleteExcepcion(id: number): Promise<void> {
 
 export async function getWhitelist(): Promise<WhitelistEmpleado[]> {
   const result = await prisma.$queryRaw<WhitelistEmpleado[]>`
-    SELECT 
+    SELECT
       id,
       legajo,
       nombre,
@@ -996,7 +999,7 @@ export async function getWhitelist(): Promise<WhitelistEmpleado[]> {
 
 export async function getWhitelistActiva(): Promise<WhitelistEmpleado[]> {
   const result = await prisma.$queryRaw<WhitelistEmpleado[]>`
-    SELECT 
+    SELECT
       id,
       legajo,
       nombre,
@@ -1015,7 +1018,7 @@ export async function getWhitelistActiva(): Promise<WhitelistEmpleado[]> {
 
 export async function addToWhitelist(
   data: WhitelistCreate,
-  createdBy: string
+  createdBy: string,
 ): Promise<WhitelistEmpleado> {
   const created = await prisma.whitelist_empleados.create({
     data: {
@@ -1043,7 +1046,7 @@ export async function addToWhitelist(
 
 export async function updateWhitelist(
   id: number,
-  data: WhitelistCreate
+  data: WhitelistCreate,
 ): Promise<WhitelistEmpleado> {
   const updated = await prisma.whitelist_empleados.update({
     where: { id },
@@ -1068,7 +1071,7 @@ export async function updateWhitelist(
 
 export async function toggleWhitelistStatus(
   id: number,
-  activo: boolean
+  activo: boolean,
 ): Promise<void> {
   await prisma.whitelist_empleados.update({
     where: { id },
