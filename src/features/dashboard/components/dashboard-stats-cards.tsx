@@ -1,35 +1,22 @@
-"use client";
-
+import { IconUsers, IconUserCheck } from '@tabler/icons-react';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
+import Link from 'next/link';
 import {
-  IconUsers,
-  IconUserCheck,
-  IconUserX,
-  IconAlertTriangle,
-} from "@tabler/icons-react";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/shared/ui/card";
-import Link from "next/link";
+  getCantidadEmpleadosActivos,
+  getCantidadEmpleadosProblematicos,
+} from '@dashboard/actions/actions';
 
-interface DashboardStatsCardsProps {
-  totalActivos: number;
-  problematicosMesActual: number;
-}
+export async function DashboardStatsCards() {
+  const totalActivos = await getCantidadEmpleadosActivos();
+  const problematicosMesActual = await getCantidadEmpleadosProblematicos();
 
-export function DashboardStatsCards({
-  totalActivos,
-  problematicosMesActual,
-}: DashboardStatsCardsProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card className=" border-gray-200 dark:border-gray-700">
         <Link href="/dashboard/empleados">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardDescription className="text-gray-600 dark:text-gray-400">
-              Empleados Activos
+              Empleados activos
             </CardDescription>
             <IconUsers className="h-5 w-5 text-gray-500 dark:text-gray-400" />
           </CardHeader>
@@ -43,7 +30,7 @@ export function DashboardStatsCards({
         <Link href="/dashboard/atencion">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardDescription className="text-red-600 dark:text-gray-400">
-              Empleados Problemáticos
+              Empleados problemáticos
             </CardDescription>
             <IconUserCheck className="h-5 w-5 text-gray-500 dark:text-gray-400" />
           </CardHeader>

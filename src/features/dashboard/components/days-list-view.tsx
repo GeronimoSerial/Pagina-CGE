@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { parseDateString } from "@dashboard/lib/utils";
+import { parseDateString } from '@dashboard/lib/utils';
 
 interface DaysListProps {
   title: string;
   days: string[];
 }
 
-export function DaysList({ title, days }: DaysListProps) {
+export function DaysListView({ title, days }: DaysListProps) {
   return (
     <div className="rounded-md border p-4">
       <div className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
@@ -20,7 +20,7 @@ export function DaysList({ title, days }: DaysListProps) {
               key={dia}
               className="rounded-full bg-muted px-3 py-1 text-sm text-muted-foreground"
             >
-              {parseDateString(dia).toLocaleDateString("es-AR")}
+              {parseDateString(dia).toLocaleDateString('es-AR')}
             </span>
           ))}
         </div>

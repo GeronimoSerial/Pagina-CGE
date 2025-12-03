@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { connection } from 'next/server';
 import Link from 'next/link';
+import { OnlyRole } from '@/features/dashboard/providers/only-role';
 import {
   getEmpleadoDetalle,
   getAsistenciaPorEmpleado,
@@ -97,12 +98,14 @@ export default async function EmpleadoDetallePage({
               {empleado.turno && ` • ${empleado.turno}`}
             </p>
           </div>
-          {inWhitelist && (
-            <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 flex items-center gap-1">
-              <IconShieldCheck className="h-3 w-3" />
-              En Whitelist
-            </Badge>
-          )}
+          <OnlyRole roles={['owner']}>
+            {inWhitelist && (
+              <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 flex items-center gap-1">
+                <IconShieldCheck className="h-3 w-3" />
+                En Whitelist
+              </Badge>
+            )}
+          </OnlyRole>
         </div>
       </div>
 

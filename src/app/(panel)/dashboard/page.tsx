@@ -1,91 +1,104 @@
+import { Suspense } from 'react';
 import { connection } from 'next/server';
-import { DaysList } from '@dashboard/components/days-list';
-import { AttendanceChart } from '@dashboard/components/attendance-chart';
-import { HoursChart } from '@dashboard/components/hours-chart';
-import { DashboardStatsCards } from '@dashboard/components/dashboard-stats-cards';
-import {
-  getDiasSinActividad,
-  getDiasConMarca,
-  getEmpleadosActivos,
-  getEstadisticasDiarias,
-  getPromedioHorasDiario,
-  getEmpleadosProblematicos,
-} from '@dashboard/actions/actions';
 import {
   getArgentinaDate,
   formatDateArg,
   getFirstOfMonthArg,
+  getThirtyDaysAgoString,
+  getFirstOfMonthString,
+  getArgentinaDateString,
 } from '@dashboard/lib/utils';
-
-// MIGRATED: Using connection() to signal dynamic rendering before Date access
-
+import { DashboardStatsCards } from '@dashboard/components/dashboard-stats-cards';
+import { AttendanceChart } from '@dashboard/components/attendance-chart';
+import { HoursChart } from '@dashboard/components/hours-chart';
+import { DaysWithActivity } from '@dashboard/components/days-with-activity';
+import { DaysWithoutActivity } from '@dashboard/components/days-without-activity';
+import { LoadingSpinner } from '@/shared/ui/loading-spinner';
+import { getCachedSession } from '@/shared/lib/auth/session-utils';
 export default async function Page() {
   // Signal dynamic rendering before accessing current time
   await connection();
 
-  const today = getArgentinaDate();
+  const session = await getCachedSession();
+  const nombre = session?.user?.name;
+  console.log(session);
+  const todayStr = getArgentinaDateString();
+
+  // Cálculo de fechas usando strings estables
+  const thirtyDaysAgoStr = getThirtyDaysAgoString(todayStr);
+  const firstOfMonthStr = getFirstOfMonthString(todayStr);
   const firstOfMonth = getFirstOfMonthArg();
-  const startDate = formatDateArg(firstOfMonth);
-  const endDate = formatDateArg(today);
 
   // Para el gráfico, obtener los últimos 30 días
   const thirtyDaysAgo = getArgentinaDate();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
   const chartStartDate = formatDateArg(thirtyDaysAgo);
 
-  const [
-    diasSinActividad,
-    diasConMarca,
-    empleadosActivos,
-    estadisticasDiarias,
-    promedioHoras,
-    problematicos,
-  ] = await Promise.all([
-    getDiasSinActividad(startDate, endDate),
-    getDiasConMarca(startDate, endDate),
-    getEmpleadosActivos(),
-    getEstadisticasDiarias(chartStartDate, endDate),
-    getPromedioHorasDiario(chartStartDate, endDate),
-    getEmpleadosProblematicos(),
-  ]);
-
-  const totalActivos = empleadosActivos.length;
-  const diasSinActividadList = diasSinActividad.map((item) => item.dia);
-  const diasConMarcaList = diasConMarca.map((item) => item.dia);
-  const problematicosMesActual = problematicos.length;
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold md:text-2xl">Bienvenido</h1>
-        <p className="text-sm text-muted-foreground">
-          {today.toLocaleDateString('es-AR', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })}
-        </p>
+        <h1 className="text-lg font-semibold md:text-2xl">
+          Bienvenido <strong> {nombre}</strong>
+        </h1>
+        <p className="text-sm text-muted-foreground">{todayStr}</p>
       </div>
 
       {/* KPI Cards */}
-      <DashboardStatsCards
-        totalActivos={totalActivos}
-        problematicosMesActual={problematicosMesActual}
-      />
+      <Suspense fallback={<LoadingSpinner />}>
+        <DashboardStatsCards />
+      </Suspense>
 
       {/* Charts */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <AttendanceChart data={estadisticasDiarias} />
-        <HoursChart data={promedioHoras} />
+        <Suspense
+          fallback={
+            <div className="flex h-[300px] items-center justify-center rounded-xl border bg-card text-card-foreground shadow">
+              <LoadingSpinner />
+            </div>
+          }
+        >
+          <AttendanceChart
+            startDate={chartStartDate}
+            endDate={firstOfMonthStr}
+          />
+        </Suspense>
+        <Suspense
+          fallback={
+            <div className="flex h-[300px] items-center justify-center rounded-xl border bg-card text-card-foreground shadow">
+              <LoadingSpinner />
+            </div>
+          }
+        >
+          <HoursChart startDate={chartStartDate} endDate={firstOfMonthStr} />
+        </Suspense>
       </div>
 
       {/* Days Lists */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <DaysList title="Días con marca (este mes)" days={diasConMarcaList} />
-        <DaysList
-          title="Días sin actividad (este mes)"
-          days={diasSinActividadList}
-        />
+        <Suspense
+          fallback={
+            <div className="h-24 rounded-md border p-4">
+              <LoadingSpinner />
+            </div>
+          }
+        >
+          <DaysWithActivity
+            startDate={chartStartDate}
+            endDate={firstOfMonthStr}
+          />
+        </Suspense>
+        <Suspense
+          fallback={
+            <div className="h-24 rounded-md border p-4">
+              <LoadingSpinner />
+            </div>
+          }
+        >
+          <DaysWithoutActivity
+            startDate={chartStartDate}
+            endDate={firstOfMonthStr}
+          />
+        </Suspense>
       </div>
     </div>
   );

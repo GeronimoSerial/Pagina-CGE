@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useMemo } from "react";
-import Link from "next/link";
+import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import {
   Table,
   TableBody,
@@ -9,31 +9,30 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/shared/ui/table";
-import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
-import { Badge } from "@/shared/ui/badge";
+} from '@/shared/ui/table';
+import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
+import { Badge } from '@/shared/ui/badge';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/ui/select";
+} from '@/shared/ui/select';
 import {
   IconSearch,
   IconAlertTriangle,
   IconClock,
   IconCalendarX,
   IconClipboardX,
-  IconUser,
   IconExternalLink,
   IconDownload,
   IconFileTypePdf,
-} from "@tabler/icons-react";
-import { EmpleadoProblematico } from "@dashboard/lib/types";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+} from '@tabler/icons-react';
+import { EmpleadoProblematico } from '@dashboard/lib/types';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface EmpleadosProblematicosTableProps {
   empleados: EmpleadoProblematico[];
@@ -42,8 +41,8 @@ interface EmpleadosProblematicosTableProps {
 export function EmpleadosProblematicosTable({
   empleados,
 }: EmpleadosProblematicosTableProps) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterProblema, setFilterProblema] = useState<string>("todos");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterProblema, setFilterProblema] = useState<string>('todos');
 
   const filteredEmpleados = useMemo(() => {
     return empleados.filter((emp) => {
@@ -53,11 +52,11 @@ export function EmpleadosProblematicosTable({
         (emp.dni && emp.dni.includes(searchTerm));
 
       let matchesProblema = true;
-      if (filterProblema === "ausencias") {
+      if (filterProblema === 'ausencias') {
         matchesProblema = emp.problema_ausencias;
-      } else if (filterProblema === "cumplimiento") {
+      } else if (filterProblema === 'cumplimiento') {
         matchesProblema = emp.problema_cumplimiento;
-      } else if (filterProblema === "incompletos") {
+      } else if (filterProblema === 'incompletos') {
         matchesProblema = emp.problema_incompletos;
       }
 
@@ -75,46 +74,46 @@ export function EmpleadosProblematicosTable({
   }, [empleados]);
 
   const getSeverityColor = (score: number) => {
-    if (score >= 50) return "text-red-600 dark:text-red-400";
-    if (score >= 25) return "text-orange-600 dark:text-orange-400";
-    return "text-yellow-600 dark:text-yellow-400";
+    if (score >= 50) return 'text-red-600 dark:text-red-400';
+    if (score >= 25) return 'text-orange-600 dark:text-orange-400';
+    return 'text-yellow-600 dark:text-yellow-400';
   };
 
   const getSeverityBg = (score: number) => {
     if (score >= 50)
-      return "bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-800";
+      return 'bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-800';
     if (score >= 25)
-      return "bg-orange-100 dark:bg-orange-900/30 border-orange-200 dark:border-orange-800";
-    return "bg-yellow-100 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800";
+      return 'bg-orange-100 dark:bg-orange-900/30 border-orange-200 dark:border-orange-800';
+    return 'bg-yellow-100 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800';
   };
 
   const exportToCSV = () => {
     const headers = [
-      "Legajo",
-      "Nombre",
-      "DNI",
-      "Área",
-      "Turno",
-      "Jornada (hs)",
-      "Severidad",
-      "Total Ausencias",
-      "Días Trabajados",
-      "Total Horas",
-      "Horas Esperadas",
-      "% Cumplimiento",
-      "Días Incompletos",
-      "Problema Ausencias",
-      "Problema Cumplimiento",
-      "Problema Incompletos",
-      "Cantidad Problemas",
+      'Legajo',
+      'Nombre',
+      'DNI',
+      'Área',
+      'Turno',
+      'Jornada (hs)',
+      'Severidad',
+      'Total Ausencias',
+      'Días Trabajados',
+      'Total Horas',
+      'Horas Esperadas',
+      '% Cumplimiento',
+      'Días Incompletos',
+      'Problema Ausencias',
+      'Problema Cumplimiento',
+      'Problema Incompletos',
+      'Cantidad Problemas',
     ];
 
     const rows = filteredEmpleados.map((emp) => [
       emp.legajo,
       emp.nombre,
-      emp.dni || "",
-      emp.area || "",
-      emp.turno || "",
+      emp.dni || '',
+      emp.area || '',
+      emp.turno || '',
       emp.horas_jornada || 8,
       Number(emp.score_severidad).toFixed(0),
       emp.total_ausencias,
@@ -123,20 +122,20 @@ export function EmpleadosProblematicosTable({
       emp.horas_esperadas,
       `${Number(emp.porcentaje_cumplimiento).toFixed(1)}%`,
       emp.dias_incompletos,
-      emp.problema_ausencias ? "Sí" : "No",
-      emp.problema_cumplimiento ? "Sí" : "No",
-      emp.problema_incompletos ? "Sí" : "No",
+      emp.problema_ausencias ? 'Sí' : 'No',
+      emp.problema_cumplimiento ? 'Sí' : 'No',
+      emp.problema_incompletos ? 'Sí' : 'No',
       emp.cantidad_problemas,
     ]);
 
     const csvContent = [headers, ...rows]
-      .map((row) => row.map((cell) => `"${cell}"`).join(","))
-      .join("\n");
+      .map((row) => row.map((cell) => `"${cell}"`).join(','))
+      .join('\n');
 
-    const blob = new Blob(["\ufeff" + csvContent], {
-      type: "text/csv;charset=utf-8;",
+    const blob = new Blob(['\ufeff' + csvContent], {
+      type: 'text/csv;charset=utf-8;',
     });
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     const fecha = new Date().toISOString().slice(0, 10);
     link.download = `empleados_problematicos_${fecha}.csv`;
@@ -145,9 +144,9 @@ export function EmpleadosProblematicosTable({
 
   const exportToPDF = () => {
     const doc = new jsPDF({
-      orientation: "landscape",
-      unit: "mm",
-      format: "a4",
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4',
     });
 
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -155,40 +154,40 @@ export function EmpleadosProblematicosTable({
     const margin = 15;
 
     // Colores institucionales
-    const colorPrimario: [number, number, number] = [220, 38, 38]; // Rojo para atención
-    const colorSecundario: [number, number, number] = [100, 116, 139]; // Gris slate
+    const colorPrimario: [number, number, number] = [220, 38, 38];
+    const colorSecundario: [number, number, number] = [100, 116, 139];
 
     // === ENCABEZADO INSTITUCIONAL ===
     doc.setFillColor(...colorPrimario);
-    doc.rect(0, 0, pageWidth, 25, "F");
+    doc.rect(0, 0, pageWidth, 25, 'F');
 
     // Título principal
     doc.setTextColor(255, 255, 255);
-    doc.setFont("helvetica", "bold");
+    doc.setFont('helvetica', 'bold');
     doc.setFontSize(16);
-    doc.text("CONSEJO GENERAL DE EDUCACIÓN", pageWidth / 2, 10, {
-      align: "center",
+    doc.text('CONSEJO GENERAL DE EDUCACIÓN', pageWidth / 2, 10, {
+      align: 'center',
     });
 
     doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-    doc.text("Sistema automatizado de asistencias", pageWidth / 2, 17, {
-      align: "center",
+    doc.setFont('helvetica', 'normal');
+    doc.text('Sistema automatizado de asistencias', pageWidth / 2, 17, {
+      align: 'center',
     });
 
     // Subtítulo del reporte
     doc.setTextColor(0, 0, 0);
-    doc.setFont("helvetica", "bold");
+    doc.setFont('helvetica', 'bold');
     doc.setFontSize(14);
-    doc.text("REPORTE DE EMPLEADOS QUE REQUIEREN ATENCIÓN", pageWidth / 2, 35, {
-      align: "center",
+    doc.text('REPORTE DE EMPLEADOS QUE REQUIEREN ATENCIÓN', pageWidth / 2, 35, {
+      align: 'center',
     });
 
     // Período
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(11);
     doc.setTextColor(...colorSecundario);
-    doc.text("Últimos 30 días", pageWidth / 2, 42, { align: "center" });
+    doc.text('Últimos 30 días', pageWidth / 2, 42, { align: 'center' });
 
     // Línea decorativa
     doc.setDrawColor(...colorPrimario);
@@ -198,146 +197,143 @@ export function EmpleadosProblematicosTable({
     // === RESUMEN EJECUTIVO ===
     const resumenY = 52;
     doc.setFillColor(254, 242, 242); // bg-red-50
-    doc.roundedRect(margin, resumenY, pageWidth - margin * 2, 18, 2, 2, "F");
+    doc.roundedRect(margin, resumenY, pageWidth - margin * 2, 18, 2, 2, 'F');
 
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
+    doc.setFont('helvetica', 'bold');
 
     const boxWidth = (pageWidth - margin * 2) / 4;
 
     // Caja 1: Total que requieren atención
-    doc.text("REQUIEREN ATENCIÓN", margin + boxWidth * 0.5, resumenY + 6, {
-      align: "center",
+    doc.text('REQUIEREN ATENCIÓN', margin + boxWidth * 0.5, resumenY + 6, {
+      align: 'center',
     });
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(12);
     doc.setTextColor(220, 38, 38);
-    doc.text(
-      stats.total.toString(),
-      margin + boxWidth * 0.5,
-      resumenY + 13,
-      { align: "center" }
-    );
+    doc.text(stats.total.toString(), margin + boxWidth * 0.5, resumenY + 13, {
+      align: 'center',
+    });
 
     // Caja 2: Con ausencias
     doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
+    doc.setFont('helvetica', 'bold');
     doc.setTextColor(0, 0, 0);
-    doc.text(">3 AUSENCIAS", margin + boxWidth * 1.5, resumenY + 6, {
-      align: "center",
+    doc.text('>3 AUSENCIAS', margin + boxWidth * 1.5, resumenY + 6, {
+      align: 'center',
     });
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(12);
     doc.text(
       stats.conAusencias.toString(),
       margin + boxWidth * 1.5,
       resumenY + 13,
-      { align: "center" }
+      { align: 'center' },
     );
 
     // Caja 3: Bajo cumplimiento
     doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
-    doc.text("<60% CUMPLIMIENTO", margin + boxWidth * 2.5, resumenY + 6, {
-      align: "center",
+    doc.setFont('helvetica', 'bold');
+    doc.text('<60% CUMPLIMIENTO', margin + boxWidth * 2.5, resumenY + 6, {
+      align: 'center',
     });
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(12);
     doc.text(
       stats.conCumplimiento.toString(),
       margin + boxWidth * 2.5,
       resumenY + 13,
-      { align: "center" }
+      { align: 'center' },
     );
 
     // Caja 4: Días incompletos
     doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
-    doc.text(">2 INCOMPLETOS", margin + boxWidth * 3.5, resumenY + 6, {
-      align: "center",
+    doc.setFont('helvetica', 'bold');
+    doc.text('>2 INCOMPLETOS', margin + boxWidth * 3.5, resumenY + 6, {
+      align: 'center',
     });
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(12);
     doc.text(
       stats.conIncompletos.toString(),
       margin + boxWidth * 3.5,
       resumenY + 13,
-      { align: "center" }
+      { align: 'center' },
     );
 
     // === TABLA DE DATOS ===
     const tableHeaders = [
-      "Sev.",
-      "Legajo",
-      "Nombre",
-      "DNI",
-      "Área",
-      "Ausenc.",
-      "Cumpl.\n%",
-      "Horas\nTrab.",
-      "Horas\nEsper.",
-      "Incompl.",
-      "Problemas",
+      'Sev.',
+      'Legajo',
+      'Nombre',
+      'DNI',
+      'Área',
+      'Ausenc.',
+      'Cumpl.\n%',
+      'Horas\nTrab.',
+      'Horas\nEsper.',
+      'Incompl.',
+      'Problemas',
     ];
 
     const tableData = filteredEmpleados.map((emp) => [
       Number(emp.score_severidad).toFixed(0),
       emp.legajo,
       emp.nombre,
-      emp.dni || "-",
-      emp.area || "-",
+      emp.dni || '-',
+      emp.area || '-',
       emp.total_ausencias.toString(),
       `${Number(emp.porcentaje_cumplimiento).toFixed(1)}%`,
       Number(emp.total_horas).toFixed(1),
-      emp.horas_esperadas?.toString() || "-",
+      emp.horas_esperadas?.toString() || '-',
       emp.dias_incompletos.toString(),
       [
-        emp.problema_ausencias ? "Aus" : "",
-        emp.problema_cumplimiento ? "Cump" : "",
-        emp.problema_incompletos ? "Inc" : "",
+        emp.problema_ausencias ? 'Aus' : '',
+        emp.problema_cumplimiento ? 'Cump' : '',
+        emp.problema_incompletos ? 'Inc' : '',
       ]
         .filter(Boolean)
-        .join(", "),
+        .join(', '),
     ]);
 
     autoTable(doc, {
       startY: 75,
       head: [tableHeaders],
       body: tableData,
-      theme: "grid",
+      theme: 'grid',
       styles: {
         fontSize: 7,
         cellPadding: 2,
-        valign: "middle",
-        halign: "center",
+        valign: 'middle',
+        halign: 'center',
       },
       headStyles: {
         fillColor: colorPrimario,
         textColor: [255, 255, 255],
-        fontStyle: "bold",
+        fontStyle: 'bold',
         fontSize: 7,
-        halign: "center",
+        halign: 'center',
       },
       columnStyles: {
-        0: { halign: "center", cellWidth: 12 }, // Severidad
-        1: { halign: "center", cellWidth: 18 }, // Legajo
-        2: { halign: "left", cellWidth: 50 }, // Nombre
-        3: { halign: "center", cellWidth: 22 }, // DNI
-        4: { halign: "left", cellWidth: 35 }, // Área
-        5: { halign: "center", cellWidth: 18 }, // Ausencias
-        6: { halign: "center", cellWidth: 18 }, // Cumplimiento
-        7: { halign: "center", cellWidth: 18 }, // Horas Trab
-        8: { halign: "center", cellWidth: 18 }, // Horas Esper
-        9: { halign: "center", cellWidth: 18 }, // Incompletos
-        10: { halign: "center", cellWidth: 35 }, // Problemas
+        0: { halign: 'center', cellWidth: 12 }, // Severidad
+        1: { halign: 'center', cellWidth: 18 }, // Legajo
+        2: { halign: 'left', cellWidth: 50 }, // Nombre
+        3: { halign: 'center', cellWidth: 22 }, // DNI
+        4: { halign: 'left', cellWidth: 35 }, // Área
+        5: { halign: 'center', cellWidth: 18 }, // Ausencias
+        6: { halign: 'center', cellWidth: 18 }, // Cumplimiento
+        7: { halign: 'center', cellWidth: 18 }, // Horas Trab
+        8: { halign: 'center', cellWidth: 18 }, // Horas Esper
+        9: { halign: 'center', cellWidth: 18 }, // Incompletos
+        10: { halign: 'center', cellWidth: 35 }, // Problemas
       },
       alternateRowStyles: {
         fillColor: [254, 242, 242],
       },
       didParseCell: (data) => {
         // Colorear celda de severidad según valor
-        if (data.column.index === 0 && data.section === "body") {
+        if (data.column.index === 0 && data.section === 'body') {
           const value = parseFloat(data.cell.raw as string);
           if (!isNaN(value)) {
             if (value >= 50) {
@@ -347,24 +343,24 @@ export function EmpleadosProblematicosTable({
             } else {
               data.cell.styles.textColor = [202, 138, 4]; // yellow-600
             }
-            data.cell.styles.fontStyle = "bold";
+            data.cell.styles.fontStyle = 'bold';
           }
         }
         // Colorear celda de ausencias
-        if (data.column.index === 5 && data.section === "body") {
+        if (data.column.index === 5 && data.section === 'body') {
           const value = parseInt(data.cell.raw as string);
           if (value > 3) {
             data.cell.styles.textColor = [220, 38, 38]; // red-600
-            data.cell.styles.fontStyle = "bold";
+            data.cell.styles.fontStyle = 'bold';
           }
         }
         // Colorear celda de cumplimiento
-        if (data.column.index === 6 && data.section === "body") {
+        if (data.column.index === 6 && data.section === 'body') {
           const value = parseFloat(data.cell.raw as string);
           if (!isNaN(value)) {
             if (value < 60) {
               data.cell.styles.textColor = [220, 38, 38]; // red-600
-              data.cell.styles.fontStyle = "bold";
+              data.cell.styles.fontStyle = 'bold';
             }
           }
         }
@@ -386,15 +382,15 @@ export function EmpleadosProblematicosTable({
         // Texto del pie
         doc.setFontSize(8);
         doc.setTextColor(...colorSecundario);
-        doc.setFont("helvetica", "normal");
+        doc.setFont('helvetica', 'normal');
 
         // Fecha de generación
-        const fechaGeneracion = new Date().toLocaleString("es-AR", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
+        const fechaGeneracion = new Date().toLocaleString('es-AR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
         });
         doc.text(`Generado: ${fechaGeneracion}`, margin, pageHeight - 10);
 
@@ -403,16 +399,16 @@ export function EmpleadosProblematicosTable({
           `Página ${i} de ${totalPages}`,
           pageWidth / 2,
           pageHeight - 10,
-          { align: "center" }
+          { align: 'center' },
         );
 
         // Leyenda de documento oficial
-        doc.setFont("helvetica", "italic");
+        doc.setFont('helvetica', 'italic');
         doc.text(
-          "Documento de uso interno - No modificable",
+          'Documento de uso interno - No modificable',
           pageWidth - margin,
           pageHeight - 10,
-          { align: "right" }
+          { align: 'right' },
         );
       }
     };
@@ -460,7 +456,7 @@ export function EmpleadosProblematicosTable({
           <div className="flex items-center gap-2">
             <IconCalendarX className="h-4 w-4 text-orange-600" />
             <span className="text-sm text-muted-foreground">
-              {">"}3 Ausencias
+              {'>'}3 Ausencias
             </span>
           </div>
           <p className="text-2xl font-bold mt-1">{stats.conAusencias}</p>
@@ -469,7 +465,7 @@ export function EmpleadosProblematicosTable({
           <div className="flex items-center gap-2">
             <IconClock className="h-4 w-4 text-yellow-600" />
             <span className="text-sm text-muted-foreground">
-              {"<"}60% Cumplimiento
+              {'<'}60% Cumplimiento
             </span>
           </div>
           <p className="text-2xl font-bold mt-1">{stats.conCumplimiento}</p>
@@ -478,7 +474,7 @@ export function EmpleadosProblematicosTable({
           <div className="flex items-center gap-2">
             <IconClipboardX className="h-4 w-4 text-blue-600" />
             <span className="text-sm text-muted-foreground">
-              {">"}2 Incompletos
+              {'>'}2 Incompletos
             </span>
           </div>
           <p className="text-2xl font-bold mt-1">{stats.conIncompletos}</p>
@@ -549,12 +545,12 @@ export function EmpleadosProblematicosTable({
             {filteredEmpleados.map((emp, index) => (
               <TableRow
                 key={emp.legajo}
-                className={index < 3 ? getSeverityBg(emp.score_severidad) : ""}
+                className={index < 3 ? getSeverityBg(emp.score_severidad) : ''}
               >
                 <TableCell>
                   <div
                     className={`font-bold text-lg ${getSeverityColor(
-                      emp.score_severidad
+                      emp.score_severidad,
                     )}`}
                   >
                     {Number(emp.score_severidad).toFixed(0)}
@@ -570,11 +566,11 @@ export function EmpleadosProblematicosTable({
                   </div>
                 </TableCell>
                 <TableCell className="hidden md:table-cell text-muted-foreground">
-                  {emp.area || "-"}
+                  {emp.area || '-'}
                 </TableCell>
                 <TableCell className="text-center">
                   <Badge
-                    variant={emp.problema_ausencias ? "destructive" : "outline"}
+                    variant={emp.problema_ausencias ? 'destructive' : 'outline'}
                     className="font-mono"
                   >
                     {emp.total_ausencias}
@@ -584,8 +580,8 @@ export function EmpleadosProblematicosTable({
                   <span
                     className={`font-medium ${
                       emp.problema_cumplimiento
-                        ? "text-red-600 dark:text-red-400"
-                        : "text-green-600 dark:text-green-400"
+                        ? 'text-red-600 dark:text-red-400'
+                        : 'text-green-600 dark:text-green-400'
                     }`}
                   >
                     {Number(emp.porcentaje_cumplimiento).toFixed(1)}%
@@ -596,11 +592,11 @@ export function EmpleadosProblematicosTable({
                 </TableCell>
                 <TableCell className="text-center hidden sm:table-cell">
                   <Badge
-                    variant={emp.problema_incompletos ? "secondary" : "outline"}
+                    variant={emp.problema_incompletos ? 'secondary' : 'outline'}
                     className={
                       emp.problema_incompletos
-                        ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
-                        : ""
+                        ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
+                        : ''
                     }
                   >
                     {emp.dias_incompletos}

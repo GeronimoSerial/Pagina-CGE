@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import Link from "next/link";
-import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
+import * as React from 'react';
+import Link from 'next/link';
+import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/ui/select";
+} from '@/shared/ui/select';
 import {
   Table,
   TableBody,
@@ -18,33 +18,30 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/shared/ui/table";
-import { Badge } from "@/shared/ui/badge";
+} from '@/shared/ui/table';
+import { Badge } from '@/shared/ui/badge';
 import {
   IconSearch,
   IconDownload,
   IconFileSpreadsheet,
   IconFileTypePdf,
-} from "@tabler/icons-react";
-import type { ReporteLiquidacion } from "@dashboard/lib/types";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+} from '@tabler/icons-react';
+import type { ReporteLiquidacion } from '@dashboard/lib/types';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface LiquidationReportTableProps {
   data: ReporteLiquidacion[];
-  areas: string[];
   mesSeleccionado: string;
   diasConMarca: number;
 }
 
 export function LiquidationReportTable({
   data,
-  areas,
   mesSeleccionado,
   diasConMarca,
 }: LiquidationReportTableProps) {
-  const [search, setSearch] = React.useState("");
-  const [areaFilter, setAreaFilter] = React.useState<string>("todas");
+  const [search, setSearch] = React.useState('');
 
   const filteredData = React.useMemo(() => {
     let filtered = data;
@@ -55,78 +52,74 @@ export function LiquidationReportTable({
         (emp) =>
           emp.nombre.toLowerCase().includes(searchLower) ||
           emp.legajo.toString().includes(searchLower) ||
-          (emp.dni && emp.dni.includes(searchLower))
+          (emp.dni && emp.dni.includes(searchLower)),
       );
     }
 
-    if (areaFilter && areaFilter !== "todas") {
-      filtered = filtered.filter((emp) => emp.area === areaFilter);
-    }
-
     return filtered;
-  }, [data, search, areaFilter]);
+  }, [data, search]);
 
   const totales = React.useMemo(() => {
     return {
       empleados: filteredData.length,
       totalHoras: filteredData.reduce(
         (sum, emp) => sum + Number(emp.total_horas || 0),
-        0
+        0,
       ),
       totalAusencias: filteredData.reduce(
         (sum, emp) => sum + Number(emp.dias_ausente || 0),
-        0
+        0,
       ),
     };
   }, [filteredData]);
 
   const exportToCSV = () => {
     const headers = [
-      "Legajo",
-      "Nombre",
-      "DNI",
-      "Área",
-      "Turno",
-      "Jornada (hs)",
-      "Días Trabajados",
-      "Total Horas",
-      "Horas Esperadas",
-      "Cumplimiento %",
-      "Promedio Hs/Día",
-      "Días Ausente",
-      "Días Incompletos",
-      "Categoría",
-      "Fecha Ingreso",
+      'Legajo',
+      'Nombre',
+      'DNI',
+      'Área',
+      'Turno',
+      'Jornada (hs)',
+      'Días Trabajados',
+      'Total Horas',
+      'Horas Esperadas',
+      'Cumplimiento %',
+      'Promedio Hs/Día',
+      'Días Ausente',
+      'Días Incompletos',
+      'Categoría',
+      'Fecha Ingreso',
     ];
 
     const rows = filteredData.map((emp) => [
       emp.legajo,
       emp.nombre,
-      emp.dni || "",
-      emp.area || "",
-      emp.turno || "",
+      emp.dni || '',
+      emp.area || '',
+      emp.turno || '',
       emp.horas_jornada || 8,
       emp.dias_trabajados,
       Number(emp.total_horas).toFixed(2),
-      emp.horas_esperadas || "-",
+      emp.horas_esperadas || '-',
       emp.porcentaje_cumplimiento
         ? `${Number(emp.porcentaje_cumplimiento).toFixed(1)}%`
-        : "-",
+        : '-',
       Number(emp.promedio_horas_dia).toFixed(2),
       emp.dias_ausente,
       emp.dias_incompletos,
       emp.categoria_horas,
-      emp.fecha_ingreso || "",
+      emp.fecha_ingreso || '',
     ]);
 
     const csvContent = [headers, ...rows]
-      .map((row) => row.map((cell) => `"${cell}"`).join(","))
-      .join("\n");
+      .map((row) => row.map((cell) => `"${cell}"`).join(','))
+      .join('\n');
 
-    const blob = new Blob(["\ufeff" + csvContent], {
-      type: "text/csv;charset=utf-8;",
+    const blob = new Blob(['\ufeff' + csvContent], {
+      type: 'text/csv;charset=utf-8;',
     });
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `reporte_liquidacion_${mesSeleccionado}.csv`;
     link.click();
@@ -134,9 +127,9 @@ export function LiquidationReportTable({
 
   const exportToPDF = () => {
     const doc = new jsPDF({
-      orientation: "landscape",
-      unit: "mm",
-      format: "a4",
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4',
     });
 
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -144,20 +137,20 @@ export function LiquidationReportTable({
     const margin = 15;
 
     // Formatear mes para mostrar
-    const [year, month] = mesSeleccionado.split("-");
+    const [year, month] = mesSeleccionado.split('-');
     const mesesNombres = [
-      "Enero",
-      "Febrero",
-      "Marzo",
-      "Abril",
-      "Mayo",
-      "Junio",
-      "Julio",
-      "Agosto",
-      "Septiembre",
-      "Octubre",
-      "Noviembre",
-      "Diciembre",
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre',
     ];
     const mesNombre = `${mesesNombres[parseInt(month) - 1]} ${year}`;
 
@@ -168,35 +161,35 @@ export function LiquidationReportTable({
     // === ENCABEZADO INSTITUCIONAL ===
     // Banda superior
     doc.setFillColor(...colorPrimario);
-    doc.rect(0, 0, pageWidth, 25, "F");
+    doc.rect(0, 0, pageWidth, 25, 'F');
 
     // Título principal
     doc.setTextColor(255, 255, 255);
-    doc.setFont("helvetica", "bold");
+    doc.setFont('helvetica', 'bold');
     doc.setFontSize(16);
-    doc.text("CONSEJO GENERAL DE EDUCACIÓN", pageWidth / 2, 10, {
-      align: "center",
+    doc.text('CONSEJO GENERAL DE EDUCACIÓN', pageWidth / 2, 10, {
+      align: 'center',
     });
 
     doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-    doc.text("Sistema automatizado de asistencias", pageWidth / 2, 17, {
-      align: "center",
+    doc.setFont('helvetica', 'normal');
+    doc.text('Sistema automatizado de asistencias', pageWidth / 2, 17, {
+      align: 'center',
     });
 
     // Subtítulo del reporte
     doc.setTextColor(0, 0, 0);
-    doc.setFont("helvetica", "bold");
+    doc.setFont('helvetica', 'bold');
     doc.setFontSize(14);
-    doc.text("REPORTE DE ASISTENCIAS", pageWidth / 2, 35, {
-      align: "center",
+    doc.text('REPORTE DE ASISTENCIAS', pageWidth / 2, 35, {
+      align: 'center',
     });
 
     // Período
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(11);
     doc.setTextColor(...colorSecundario);
-    doc.text(`Período: ${mesNombre}`, pageWidth / 2, 42, { align: "center" });
+    doc.text(`Período: ${mesNombre}`, pageWidth / 2, 42, { align: 'center' });
 
     // Línea decorativa
     doc.setDrawColor(...colorPrimario);
@@ -206,103 +199,103 @@ export function LiquidationReportTable({
     // === RESUMEN EJECUTIVO ===
     const resumenY = 52;
     doc.setFillColor(248, 250, 252); // bg-slate-50
-    doc.roundedRect(margin, resumenY, pageWidth - margin * 2, 18, 2, 2, "F");
+    doc.roundedRect(margin, resumenY, pageWidth - margin * 2, 18, 2, 2, 'F');
 
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
+    doc.setFont('helvetica', 'bold');
 
     const boxWidth = (pageWidth - margin * 2) / 4;
 
     // Caja 1: Empleados
-    doc.text("EMPLEADOS", margin + boxWidth * 0.5, resumenY + 6, {
-      align: "center",
+    doc.text('EMPLEADOS', margin + boxWidth * 0.5, resumenY + 6, {
+      align: 'center',
     });
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(12);
     doc.text(
       totales.empleados.toString(),
       margin + boxWidth * 0.5,
       resumenY + 13,
-      { align: "center" }
+      { align: 'center' },
     );
 
     // Caja 2: Total Horas
     doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
-    doc.text("TOTAL HORAS", margin + boxWidth * 1.5, resumenY + 6, {
-      align: "center",
+    doc.setFont('helvetica', 'bold');
+    doc.text('TOTAL HORAS', margin + boxWidth * 1.5, resumenY + 6, {
+      align: 'center',
     });
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(12);
     doc.text(
       totales.totalHoras.toFixed(1),
       margin + boxWidth * 1.5,
       resumenY + 13,
-      { align: "center" }
+      { align: 'center' },
     );
 
     // Caja 3: Días con Marcas
     doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
+    doc.setFont('helvetica', 'bold');
     doc.text(
-      "DÍAS CON MARCAS REGISTRADAS",
+      'DÍAS CON MARCAS REGISTRADAS',
       margin + boxWidth * 2.5,
       resumenY + 6,
       {
-        align: "center",
-      }
+        align: 'center',
+      },
     );
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(12);
     doc.text(diasConMarca.toString(), margin + boxWidth * 2.5, resumenY + 13, {
-      align: "center",
+      align: 'center',
     });
 
     // Caja 4: Total Ausencias
     doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
-    doc.text("TOTAL AUSENCIAS", margin + boxWidth * 3.5, resumenY + 6, {
-      align: "center",
+    doc.setFont('helvetica', 'bold');
+    doc.text('TOTAL AUSENCIAS', margin + boxWidth * 3.5, resumenY + 6, {
+      align: 'center',
     });
-    doc.setFont("helvetica", "normal");
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(12);
     doc.setTextColor(220, 38, 38); // text-red-600
     doc.text(
       totales.totalAusencias.toString(),
       margin + boxWidth * 3.5,
       resumenY + 13,
-      { align: "center" }
+      { align: 'center' },
     );
 
     // === TABLA DE DATOS ===
     const tableHeaders = [
-      "Legajo",
-      "Nombre",
-      "DNI",
-      "Área",
-      "Jornada",
-      "Días\nTrab.",
-      "Horas\nTrab.",
-      "Horas\nEsper.",
-      "Cumpl.\n%",
-      "Ausenc.",
-      "Incompl.",
-      "Categoría",
+      'Legajo',
+      'Nombre',
+      'DNI',
+      'Área',
+      'Jornada',
+      'Días\nTrab.',
+      'Horas\nTrab.',
+      'Horas\nEsper.',
+      'Cumpl.\n%',
+      'Ausenc.',
+      'Incompl.',
+      'Categoría',
     ];
 
     const tableData = filteredData.map((emp) => [
       emp.legajo,
       emp.nombre,
-      emp.dni || "-",
-      emp.area || "-",
+      emp.dni || '-',
+      emp.area || '-',
       `${emp.horas_jornada || 8}hs`,
       emp.dias_trabajados.toString(),
       Number(emp.total_horas).toFixed(1),
-      emp.horas_esperadas?.toString() || "-",
+      emp.horas_esperadas?.toString() || '-',
       emp.porcentaje_cumplimiento
         ? `${Number(emp.porcentaje_cumplimiento).toFixed(1)}%`
-        : "-",
+        : '-',
       emp.dias_ausente.toString(),
       emp.dias_incompletos.toString(),
       emp.categoria_horas,
@@ -312,40 +305,40 @@ export function LiquidationReportTable({
       startY: 75,
       head: [tableHeaders],
       body: tableData,
-      theme: "grid",
+      theme: 'grid',
       styles: {
         fontSize: 7,
         cellPadding: 2,
-        valign: "middle",
-        halign: "center",
+        valign: 'middle',
+        halign: 'center',
       },
       headStyles: {
         fillColor: colorPrimario,
         textColor: [255, 255, 255],
-        fontStyle: "bold",
+        fontStyle: 'bold',
         fontSize: 7,
-        halign: "center",
+        halign: 'center',
       },
       columnStyles: {
-        0: { halign: "center", cellWidth: 15 }, // Legajo
-        1: { halign: "left", cellWidth: 45 }, // Nombre
-        2: { halign: "center", cellWidth: 22 }, // DNI
-        3: { halign: "left", cellWidth: 35 }, // Área
-        4: { halign: "center", cellWidth: 15 }, // Jornada
-        5: { halign: "center", cellWidth: 15 }, // Días Trab
-        6: { halign: "center", cellWidth: 18 }, // Horas Trab
-        7: { halign: "center", cellWidth: 18 }, // Horas Esper
-        8: { halign: "center", cellWidth: 18 }, // Cumpl %
-        9: { halign: "center", cellWidth: 16 }, // Ausencias
-        10: { halign: "center", cellWidth: 16 }, // Incompletos
-        11: { halign: "center", cellWidth: 22 }, // Categoría
+        0: { halign: 'center', cellWidth: 15 }, // Legajo
+        1: { halign: 'left', cellWidth: 45 }, // Nombre
+        2: { halign: 'center', cellWidth: 22 }, // DNI
+        3: { halign: 'left', cellWidth: 35 }, // Área
+        4: { halign: 'center', cellWidth: 15 }, // Jornada
+        5: { halign: 'center', cellWidth: 15 }, // Días Trab
+        6: { halign: 'center', cellWidth: 18 }, // Horas Trab
+        7: { halign: 'center', cellWidth: 18 }, // Horas Esper
+        8: { halign: 'center', cellWidth: 18 }, // Cumpl %
+        9: { halign: 'center', cellWidth: 16 }, // Ausencias
+        10: { halign: 'center', cellWidth: 16 }, // Incompletos
+        11: { halign: 'center', cellWidth: 22 }, // Categoría
       },
       alternateRowStyles: {
         fillColor: [248, 250, 252],
       },
       didParseCell: (data) => {
         // Colorear celda de cumplimiento según valor
-        if (data.column.index === 8 && data.section === "body") {
+        if (data.column.index === 8 && data.section === 'body') {
           const value = parseFloat(data.cell.raw as string);
           if (!isNaN(value)) {
             if (value >= 90) {
@@ -355,28 +348,28 @@ export function LiquidationReportTable({
             } else {
               data.cell.styles.textColor = [220, 38, 38]; // red-600
             }
-            data.cell.styles.fontStyle = "bold";
+            data.cell.styles.fontStyle = 'bold';
           }
         }
         // Colorear celda de ausencias
-        if (data.column.index === 9 && data.section === "body") {
+        if (data.column.index === 9 && data.section === 'body') {
           const value = parseInt(data.cell.raw as string);
           if (value > 0) {
             data.cell.styles.textColor = [220, 38, 38]; // red-600
-            data.cell.styles.fontStyle = "bold";
+            data.cell.styles.fontStyle = 'bold';
           }
         }
         // Colorear celda de categoría
-        if (data.column.index === 11 && data.section === "body") {
+        if (data.column.index === 11 && data.section === 'body') {
           const categoria = data.cell.raw as string;
-          if (categoria === "Completo") {
+          if (categoria === 'Completo') {
             data.cell.styles.textColor = [22, 163, 74];
-          } else if (categoria === "Parcial") {
+          } else if (categoria === 'Parcial') {
             data.cell.styles.textColor = [202, 138, 4];
           } else {
             data.cell.styles.textColor = [220, 38, 38];
           }
-          data.cell.styles.fontStyle = "bold";
+          data.cell.styles.fontStyle = 'bold';
         }
       },
       margin: { left: margin, right: margin },
@@ -396,15 +389,15 @@ export function LiquidationReportTable({
         // Texto del pie
         doc.setFontSize(8);
         doc.setTextColor(...colorSecundario);
-        doc.setFont("helvetica", "normal");
+        doc.setFont('helvetica', 'normal');
 
         // Fecha de generación
-        const fechaGeneracion = new Date().toLocaleString("es-AR", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
+        const fechaGeneracion = new Date().toLocaleString('es-AR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
         });
         doc.text(`Generado: ${fechaGeneracion}`, margin, pageHeight - 10);
 
@@ -413,16 +406,16 @@ export function LiquidationReportTable({
           `Página ${i} de ${totalPages}`,
           pageWidth / 2,
           pageHeight - 10,
-          { align: "center" }
+          { align: 'center' },
         );
 
         // Leyenda de documento oficial
-        doc.setFont("helvetica", "italic");
+        doc.setFont('helvetica', 'italic');
         doc.text(
-          "Documento de uso interno - No modificable",
+          'Documento de uso interno - No modificable',
           pageWidth - margin,
           pageHeight - 10,
-          { align: "right" }
+          { align: 'right' },
         );
       }
     };
@@ -435,12 +428,12 @@ export function LiquidationReportTable({
 
   const getCategoriaColor = (categoria: string) => {
     switch (categoria) {
-      case "Completo":
-        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-      case "Parcial":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+      case 'Completo':
+        return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+      case 'Parcial':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
       default:
-        return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+        return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
     }
   };
 
@@ -458,17 +451,12 @@ export function LiquidationReportTable({
               className="pl-9"
             />
           </div>
-          <Select value={areaFilter} onValueChange={setAreaFilter}>
+          <Select>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Filtrar por área" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="todas">Todas las áreas</SelectItem>
-              {areas.map((area) => (
-                <SelectItem key={area} value={area}>
-                  {area}
-                </SelectItem>
-              ))}
             </SelectContent>
           </Select>
         </div>
@@ -546,7 +534,7 @@ export function LiquidationReportTable({
                     </div>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
-                    {emp.area || "-"}
+                    {emp.area || '-'}
                   </TableCell>
                   <TableCell className="text-center hidden sm:table-cell">
                     <Badge variant="outline">{emp.horas_jornada || 8}hs</Badge>
@@ -570,16 +558,16 @@ export function LiquidationReportTable({
                       <span
                         className={`font-medium ${
                           Number(emp.porcentaje_cumplimiento) >= 90
-                            ? "text-green-600"
+                            ? 'text-green-600'
                             : Number(emp.porcentaje_cumplimiento) >= 70
-                            ? "text-yellow-600"
-                            : "text-red-600"
+                              ? 'text-yellow-600'
+                              : 'text-red-600'
                         }`}
                       >
                         {Number(emp.porcentaje_cumplimiento).toFixed(1)}%
                       </span>
                     ) : (
-                      "-"
+                      '-'
                     )}
                   </TableCell>
                   <TableCell className="text-center">
@@ -597,7 +585,7 @@ export function LiquidationReportTable({
                         {emp.dias_incompletos}
                       </span>
                     ) : (
-                      "0"
+                      '0'
                     )}
                   </TableCell>
                   <TableCell className="text-center">
@@ -622,9 +610,9 @@ export function LiquidationReportTable({
             ) : (
               <TableRow>
                 <TableCell colSpan={11} className="h-24 text-center">
-                  {search || areaFilter !== "todas"
-                    ? "No se encontraron empleados con ese criterio."
-                    : "No hay datos para el mes seleccionado."}
+                  {search
+                    ? 'No se encontraron empleados con ese criterio.'
+                    : 'No hay datos para el mes seleccionado.'}
                 </TableCell>
               </TableRow>
             )}

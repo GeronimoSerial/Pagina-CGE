@@ -2,7 +2,6 @@ import { connection } from 'next/server';
 import {
   getMesesDisponibles,
   getReporteLiquidacion,
-  getAreasDisponibles,
   getDiasConMarcaMes,
 } from '@dashboard/actions/actions';
 import { LiquidationReportTable } from '@dashboard/components/liquidation-report-table';
@@ -22,7 +21,6 @@ export default async function ReportesPage({
 
   const params = await searchParams;
   const meses = await getMesesDisponibles();
-  const areas = await getAreasDisponibles();
 
   // Usar el mes del query param o el más reciente disponible
   const mesSeleccionado = params?.mes || (meses.length > 0 ? meses[0].mes : '');
@@ -63,7 +61,6 @@ export default async function ReportesPage({
       {mesSeleccionado ? (
         <LiquidationReportTable
           data={reporte}
-          areas={areas}
           mesSeleccionado={mesSeleccionado}
           diasConMarca={diasConMarca}
         />

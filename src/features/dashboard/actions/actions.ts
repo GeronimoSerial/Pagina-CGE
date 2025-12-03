@@ -150,6 +150,7 @@ export async function getDiasSinActividad(
 }
 
 export async function getDiasConMarcaMes(mes: string): Promise<number> {
+  'use cache';
   const result = await prisma.$queryRaw<[{ total: bigint }]>`
     SELECT COUNT(*) as total
     FROM huella.v_dias_con_marca
@@ -180,6 +181,24 @@ export async function getEmpleadosActivos(): Promise<EmpleadoActivo[]> {
       ORDER BY legajo;
     `;
   return result;
+}
+
+export async function getCantidadEmpleadosActivos(): Promise<number> {
+  'use cache';
+  const result = await prisma.$queryRaw<{ total: bigint }[]>`
+    SELECT COUNT(*) as total
+    FROM huella.v_empleados_activos
+  `;
+  return bigIntToNumber(result[0]?.total ?? BigInt(0));
+}
+
+export async function getCantidadEmpleadosProblematicos(): Promise<number> {
+  'use cache';
+  const result = await prisma.$queryRaw<{ total: bigint }[]>`
+    SELECT COUNT(*) as total
+    FROM huella.v_empleados_problematicos
+  `;
+  return bigIntToNumber(result[0]?.total ?? BigInt(0));
 }
 
 export async function getEmpleadoDetalle(
@@ -367,6 +386,8 @@ export async function getListaEmpleados(): Promise<
 // =====================================================
 
 export async function getMesesDisponibles(): Promise<MesDisponible[]> {
+  'use cache';
+  cacheLife('max');
   const result = await prisma.$queryRaw<MesDisponible[]>`
     SELECT
       to_char(mes, 'YYYY-MM-DD') as mes,
@@ -380,6 +401,7 @@ export async function getMesesDisponibles(): Promise<MesDisponible[]> {
 export async function getReporteLiquidacion(
   mes: string,
 ): Promise<ReporteLiquidacion[]> {
+  'use cache';
   const result = await prisma.$queryRaw<
     Array<{
       legajo: string;
@@ -505,6 +527,8 @@ export async function getDetalleDiarioEmpleado(
 }
 
 export async function getAreasDisponibles(): Promise<string[]> {
+  'use cache';
+  cacheLife('max');
   const result = await prisma.$queryRaw<{ area: string }[]>`
     SELECT DISTINCT area
     FROM huella.legajo
