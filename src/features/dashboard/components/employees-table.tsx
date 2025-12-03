@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import Link from "next/link";
-import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
+import * as React from 'react';
+import Link from 'next/link';
+import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
 import {
   Table,
   TableBody,
@@ -11,8 +11,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/shared/ui/table";
-import { IconUser, IconSearch, IconDownload } from "@tabler/icons-react";
+} from '@/shared/ui/table';
+import { IconUser, IconSearch, IconDownload } from '@tabler/icons-react';
 
 interface Empleado {
   legajo: string;
@@ -24,7 +24,7 @@ interface EmployeesTableProps {
 }
 
 export function EmployeesTable({ data }: EmployeesTableProps) {
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = React.useState('');
 
   const filteredData = React.useMemo(() => {
     if (!search) return data;
@@ -32,21 +32,21 @@ export function EmployeesTable({ data }: EmployeesTableProps) {
     return data.filter(
       (emp) =>
         emp.nombre.toLowerCase().includes(searchLower) ||
-        emp.legajo.toString().includes(searchLower)
+        emp.legajo.toString().includes(searchLower),
     );
   }, [data, search]);
 
   const exportToCSV = () => {
-    const headers = ["Legajo", "Nombre"];
+    const headers = ['Legajo', 'Nombre'];
     const rows = filteredData.map((emp) => [emp.legajo, emp.nombre]);
     const csvContent = [headers, ...rows]
-      .map((row) => row.map((cell) => `"${cell}"`).join(","))
-      .join("\n");
+      .map((row) => row.map((cell) => `"${cell}"`).join(','))
+      .join('\n');
 
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = "empleados.csv";
+    link.download = 'empleados.csv';
     link.click();
   };
 
@@ -88,7 +88,7 @@ export function EmployeesTable({ data }: EmployeesTableProps) {
                   <TableCell className="font-medium">{emp.legajo}</TableCell>
                   <TableCell>{emp.nombre}</TableCell>
                   <TableCell className="text-right">
-                    <Link href={`/dashboard/empleado/${emp.legajo}`}>
+                    <Link href={`/dashboard/empleados/${emp.legajo}`}>
                       <Button
                         variant="outline"
                         size="sm"
@@ -105,8 +105,8 @@ export function EmployeesTable({ data }: EmployeesTableProps) {
               <TableRow>
                 <TableCell colSpan={3} className="h-24 text-center">
                   {search
-                    ? "No se encontraron empleados con ese criterio."
-                    : "No hay empleados activos."}
+                    ? 'No se encontraron empleados con ese criterio.'
+                    : 'No hay empleados activos.'}
                 </TableCell>
               </TableRow>
             )}

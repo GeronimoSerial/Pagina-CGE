@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import Link from "next/link";
+import * as React from 'react';
+import Link from 'next/link';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,9 +12,9 @@ import {
   getSortedRowModel,
   SortingState,
   useReactTable,
-} from "@tanstack/react-table";
-import { MarcacionIncompleta } from "@dashboard/lib/types";
-import { parseDateString } from "@dashboard/lib/utils";
+} from '@tanstack/react-table';
+import { MarcacionIncompleta } from '@dashboard/lib/types';
+import { parseDateString } from '@dashboard/lib/utils';
 import {
   Table,
   TableBody,
@@ -22,9 +22,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/shared/ui/table";
-import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
+} from '@/shared/ui/table';
+import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -32,10 +32,10 @@ import {
   IconChevronsRight,
   IconDownload,
   IconSearch,
-} from "@tabler/icons-react";
+} from '@tabler/icons-react';
 
 function exportToCSV(data: MarcacionIncompleta[], filename: string) {
-  const headers = ["Legajo", "Nombre", "Día", "Entradas", "Salidas"];
+  const headers = ['Legajo', 'Nombre', 'Día', 'Entradas', 'Salidas'];
   const rows = data.map((row) => [
     row.legajo,
     row.nombre,
@@ -43,27 +43,27 @@ function exportToCSV(data: MarcacionIncompleta[], filename: string) {
     row.entradas,
     row.salidas,
   ]);
-  const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join(
-    "\n"
+  const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join(
+    '\n',
   );
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  const link = document.createElement("a");
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
   link.download = `${filename}.csv`;
   link.click();
 }
 
 const columns: ColumnDef<MarcacionIncompleta>[] = [
-  { accessorKey: "legajo", header: "Legajo" },
+  { accessorKey: 'legajo', header: 'Legajo' },
   {
-    accessorKey: "nombre",
-    header: "Nombre",
+    accessorKey: 'nombre',
+    header: 'Nombre',
     cell: ({ row }) => {
-      const legajo = row.getValue("legajo") as number;
-      const nombre = row.getValue("nombre") as string;
+      const legajo = row.getValue('legajo') as number;
+      const nombre = row.getValue('nombre') as string;
       return (
         <Link
-          href={`/dashboard/empleado/${legajo}`}
+          href={`/dashboard/empleados/${legajo}`}
           className="text-primary hover:underline font-medium"
         >
           {nombre}
@@ -72,15 +72,15 @@ const columns: ColumnDef<MarcacionIncompleta>[] = [
     },
   },
   {
-    accessorKey: "dia",
-    header: "Día",
+    accessorKey: 'dia',
+    header: 'Día',
     cell: ({ row }) => {
-      const dateStr = row.getValue("dia") as string;
-      return parseDateString(dateStr).toLocaleDateString("es-AR");
+      const dateStr = row.getValue('dia') as string;
+      return parseDateString(dateStr).toLocaleDateString('es-AR');
     },
   },
-  { accessorKey: "entradas", header: "Entradas" },
-  { accessorKey: "salidas", header: "Salidas" },
+  { accessorKey: 'entradas', header: 'Entradas' },
+  { accessorKey: 'salidas', header: 'Salidas' },
 ];
 
 export function IncompleteMarksTable({
@@ -89,7 +89,7 @@ export function IncompleteMarksTable({
   data: MarcacionIncompleta[];
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [globalFilter, setGlobalFilter] = React.useState("");
+  const [globalFilter, setGlobalFilter] = React.useState('');
   const [pagination, setPagination] = React.useState({
     pageIndex: 0,
     pageSize: 10,
@@ -119,7 +119,7 @@ export function IncompleteMarksTable({
           <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Buscar por nombre o legajo..."
-            value={globalFilter ?? ""}
+            value={globalFilter ?? ''}
             onChange={(e) => setGlobalFilter(e.target.value)}
             className="pl-9"
           />
@@ -127,7 +127,7 @@ export function IncompleteMarksTable({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => exportToCSV(data, "marcaciones-incompletas")}
+          onClick={() => exportToCSV(data, 'marcaciones-incompletas')}
         >
           <IconDownload className="mr-2 h-4 w-4" />
           Exportar CSV
@@ -144,7 +144,7 @@ export function IncompleteMarksTable({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -159,7 +159,7 @@ export function IncompleteMarksTable({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -202,7 +202,7 @@ export function IncompleteMarksTable({
             <IconChevronLeft className="h-4 w-4" />
           </Button>
           <span className="text-sm">
-            Página {table.getState().pagination.pageIndex + 1} de{" "}
+            Página {table.getState().pagination.pageIndex + 1} de{' '}
             {table.getPageCount()}
           </span>
           <Button

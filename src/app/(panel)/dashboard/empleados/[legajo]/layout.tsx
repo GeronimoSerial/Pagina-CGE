@@ -7,7 +7,7 @@ export function generateStaticParams() {
   return [{ legajo: '__placeholder__' }];
 }
 
-export default function ReporteEmpleadoLayout({
+export default function EmpleadoLayout({
   children,
 }: {
   children: React.ReactNode;

@@ -625,7 +625,7 @@ export function EmpleadosProblematicosTable({
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Link href={`/dashboard/empleado/${emp.legajo}`}>
+                  <Link href={`/dashboard/empleados/${emp.legajo}`}>
                     <Button variant="ghost" size="sm">
                       <IconExternalLink className="h-4 w-4" />
                     </Button>

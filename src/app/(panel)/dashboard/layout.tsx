@@ -37,14 +37,7 @@ async function DashboardContent({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Componente de loading para el Suspense
-function DashboardSkeleton() {
-  return (
-    <div className="flex h-screen w-full items-center justify-center">
-      <div className="animate-pulse text-muted-foreground">Cargando...</div>
-    </div>
-  );
-}
+import Loading from '@/shared/components/Loading';
 
 export default function DashboardLayout({
   children,
@@ -52,7 +45,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Suspense fallback={<DashboardSkeleton />}>
+    <Suspense fallback={<Loading />}>
       <DashboardContent>{children}</DashboardContent>
     </Suspense>
   );

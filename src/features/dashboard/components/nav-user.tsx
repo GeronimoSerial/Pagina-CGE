@@ -4,7 +4,7 @@ import { IconLogout } from '@tabler/icons-react';
 
 import { signOut } from '@/shared/lib/auth/auth-client';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
+import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,7 +44,7 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg grayscale">
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarFallback className="rounded-lg">CGE</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{userName}</span>

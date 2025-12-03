@@ -57,7 +57,7 @@ const columns: ColumnDef<AusenteDiario>[] = [
       const nombre = row.getValue("nombre") as string;
       return (
         <Link
-          href={`/dashboard/empleado/${legajo}`}
+          href={`/dashboard/empleados/${legajo}`}
           className="text-primary hover:underline font-medium"
         >
           {nombre}

@@ -126,7 +126,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={filteredNavSecondary} className="mt-auto" />
       </SidebarContent>
 
-      <SidebarFooter>
+      <SidebarFooter className="cursor-pointer ">
         <NavUser />
       </SidebarFooter>
     </Sidebar>

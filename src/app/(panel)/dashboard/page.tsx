@@ -36,8 +36,8 @@ export default async function Page() {
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold md:text-2xl">
-          Bienvenido <strong> {nombre}</strong>
+        <h1 className="text-3xl text-pretty md:text-2xl">
+          Hola, <strong> {nombre}</strong> 👋
         </h1>
         <p className="text-sm text-muted-foreground">{todayStr}</p>
       </div>

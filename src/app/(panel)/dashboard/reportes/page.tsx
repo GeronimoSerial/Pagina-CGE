@@ -9,7 +9,6 @@ import { MonthSelector } from '@dashboard/components/month-selector';
 import { IconReportAnalytics } from '@tabler/icons-react';
 import { translateMonthName } from '@dashboard/lib/utils';
 
-// MIGRATED: Using connection() to signal dynamic rendering
 
 export default async function ReportesPage({
   searchParams,
