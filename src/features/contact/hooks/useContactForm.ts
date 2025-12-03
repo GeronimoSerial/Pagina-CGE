@@ -29,7 +29,7 @@ export const useContactForm = () => {
   }, []);
 
   const onSubmit = async (data: ContactForm) => {
-    if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
+    if (!TEMPLATE_ID || !PUBLIC_KEY) {
       setError(
         'El servicio de contacto no está configurado. Intenta más tarde.',
       );
