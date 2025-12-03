@@ -46,3 +46,5 @@ pnpm-lock.yaml
 .windsurf/rules/
 src/app/api/webhook-test
 prisma/generated
+scripts/seed-auth.ts
+test-login.ts
