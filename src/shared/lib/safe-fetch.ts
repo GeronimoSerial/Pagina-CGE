@@ -34,7 +34,10 @@ export async function safeFetchJson<T = any>(
           : error;
 
       // Último intento o error de timeout: salir
-      if (attempt === retries) {
+      if (
+        attempt === retries ||
+        (error instanceof Error && error.name === 'AbortError')
+      ) {
         break;
       }
 
