@@ -32,8 +32,12 @@ jobs:
       - name: Install dependencies
         run: npm i
 
+      - name: Generate Prisma Client
+        run: npx prisma generate --schema=./prisma/schema.prisma
+
       - name: Build Next.js app
         env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_STRAPI_URL: ${{ vars.NEXT_PUBLIC_STRAPI_URL }}
           NEXT_PUBLIC_PUBLIC_KEY: ${{ vars.NEXT_PUBLIC_PUBLIC_KEY }}
@@ -48,10 +52,10 @@ jobs:
           chmod 600 private_key
 
           rsync -az --delete -e "ssh -i private_key -o StrictHostKeyChecking=no" \
-            .next public package.json package-lock.json \
+            .next public package.json package-lock.json prisma \
             root@${{secrets.VPS_IP}}:/home/frontend/Pagina-CGE/
-      # deploy.sh -> por nvm en la vps impide encontrar el path
-      - name: Reinstall dependencies and restart app
+
+      - name: Deploy and restart app
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
