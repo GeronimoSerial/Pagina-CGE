@@ -107,6 +107,7 @@ export default async function NoticiaPage({ params }: PageProps) {
   if (!noticia) {
     return notFound();
   }
+  const coverUrl = getCover({ noticia }) || '/images/hero2.png';
 
   const relatedFinal = await getRelatedNews(noticia.categoria, slug).catch(
     () => [],
@@ -189,7 +190,7 @@ export default async function NoticiaPage({ params }: PageProps) {
 
                 {noticia.portada && (
                   <Image
-                    src={getCover({ noticia }) || ''}
+                    src={coverUrl}
                     alt={noticia.titulo}
                     className="object-cover mb-8 w-full max-h-96 rounded"
                     width={1200}
