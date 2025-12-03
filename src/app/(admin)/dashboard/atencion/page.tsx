@@ -2,10 +2,7 @@ import { connection } from 'next/server';
 import { EmpleadosProblematicosTable } from '@dashboard/components/empleados-problematicos-table';
 import { getEmpleadosProblematicos } from '@dashboard/actions/actions';
 
-// MIGRATED: Using connection() to signal dynamic rendering
-
 export default async function AtencionPage() {
-  // Signal dynamic rendering
   await connection();
 
   const empleados = await getEmpleadosProblematicos();

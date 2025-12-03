@@ -1,17 +1,10 @@
-"use client"
+'use client';
 
-import {
-  IconCreditCard,
-  IconLogout,
-  IconNotification,
-  IconUserCircle,
-} from "@tabler/icons-react"
+import { IconLogout } from '@tabler/icons-react';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/shared/ui/avatar"
+import { signOut } from '@/shared/lib/auth/auth-client';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,24 +13,26 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/shared/ui/dropdown-menu"
+} from '@/shared/ui/dropdown-menu';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@dashboard/components/sidebar"
+} from '@dashboard/components/sidebar';
+import { useRouter } from 'next/navigation';
+import { useUser } from '../session-provider';
 export function NavUser() {
-  const { isMobile } = useSidebar()
-  
-  // Static user for build without Clerk
-  const user = {
-    fullName: "Administrador",
-    imageUrl: "", // Empty or a placeholder URL
-    primaryEmailAddress: {
-      emailAddress: "admin@cge.gob.ar"
-    }
-  }
+  const { isMobile } = useSidebar();
+  const router = useRouter();
+
+  const userName = useUser()?.name;
+  const userEmail = useUser()?.email;
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push('/login');
+  };
 
   return (
     <SidebarMenu>
@@ -49,54 +44,39 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg grayscale">
-                <AvatarImage src={user.imageUrl} alt={user.fullName || ""} />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.fullName}</span>
+                <span className="truncate font-medium">{userName}</span>
                 <span className="text-muted-foreground truncate text-xs">
-                  {user.primaryEmailAddress?.emailAddress}
+                  {userEmail}
                 </span>
               </div>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={4}
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.imageUrl} alt={user.fullName || ""} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.fullName}</span>
+                  <span className="truncate font-medium">{userName}</span>
                   <span className="text-muted-foreground truncate text-xs">
-                    {user.primaryEmailAddress?.emailAddress}
+                    {userEmail}
                   </span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Mi cuenta
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconCreditCard />
-                Facturación
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconNotification />
-                Notificaciones
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
+            <DropdownMenuGroup></DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleSignOut}>
               <IconLogout />
               Cerrar sesión
             </DropdownMenuItem>
@@ -104,5 +84,5 @@ export function NavUser() {
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

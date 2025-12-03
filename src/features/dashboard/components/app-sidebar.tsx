@@ -1,13 +1,10 @@
-"use client";
+'use client';
 
-import * as React from "react";
+import * as React from 'react';
 import {
   IconAlertTriangle,
-  IconCamera,
-  IconChartBar,
   IconDashboard,
   IconDatabase,
-  IconFileAi,
   IconFileDescription,
   IconInnerShadowTop,
   IconListDetails,
@@ -16,11 +13,13 @@ import {
   IconSettings,
   IconUsers,
   IconUserSearch,
-} from "@tabler/icons-react";
+} from '@tabler/icons-react';
 
-import { NavMain } from "@dashboard/components/nav-main";
-import { NavSecondary } from "@dashboard/components/nav-secondary";
-import { NavUser } from "@dashboard/components/nav-user";
+import { useRole } from '../session-provider';
+
+import { NavMain } from '@dashboard/components/nav-main';
+import { NavSecondary } from '@dashboard/components/nav-secondary';
+import { NavUser } from '@dashboard/components/nav-user';
 import {
   Sidebar,
   SidebarContent,
@@ -29,124 +28,85 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@dashboard/components/sidebar";
+} from '@dashboard/components/sidebar';
 
-const data = {
-  user: {
-    name: "Geronimo",
-    email: "dev@geroserial.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
+const baseData = {
   navMain: [
     {
-      title: "Panel",
-      url: "/dashboard",
+      title: 'Panel',
+      url: '/dashboard',
       icon: IconDashboard,
     },
     {
-      title: "Asistencia",
-      url: "/dashboard/asistencia",
+      title: 'Asistencia',
+      url: '/dashboard/asistencia',
       icon: IconListDetails,
     },
     {
-      title: "Empleados",
-      url: "/dashboard/empleados",
+      title: 'Empleados',
+      url: '/dashboard/empleados',
       icon: IconUserSearch,
     },
     {
-      title: "Marcaciones",
-      url: "/dashboard/marcaciones",
-      icon: IconChartBar,
-    },
-    {
-      title: "Ausentes",
-      url: "/dashboard/ausentes",
+      title: 'Ausentes',
+      url: '/dashboard/ausentes',
       icon: IconUsers,
     },
     {
-      title: "Incompletas",
-      url: "/dashboard/incompletas",
+      title: 'Incompletas',
+      url: '/dashboard/incompletas',
       icon: IconFileDescription,
     },
     {
-      title: "Unificadas",
-      url: "/dashboard/unificadas",
+      title: 'Unificadas',
+      url: '/dashboard/unificadas',
       icon: IconDatabase,
     },
     {
-      title: "Auditoría",
-      url: "/dashboard/auditoria",
+      title: 'Auditoría',
+      url: '/dashboard/auditoria',
       icon: IconReport,
     },
     {
-      title: "Reportes",
-      url: "/dashboard/reportes",
+      title: 'Reportes',
+      url: '/dashboard/reportes',
       icon: IconReportAnalytics,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: IconCamera,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: IconFileDescription,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: IconFileAi,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
+      requiredRole: ['admin', 'owner'],
     },
   ],
   navSecondary: [
     {
-      title: "Atención",
-      url: "/dashboard/atencion",
+      title: 'Atención',
+      url: '/dashboard/atencion',
       icon: IconAlertTriangle,
+      requiredRole: ['admin', 'owner'],
     },
     {
-      title: "Configuración",
-      url: "/dashboard/configuracion",
+      title: 'Configuración',
+      url: '/dashboard/configuracion',
       icon: IconSettings,
+      requiredRole: ['admin', 'owner'],
     },
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const userRole = useRole();
+
+  const filteredNavSecondary = baseData.navSecondary.filter((item) => {
+    if (item.requiredRole) {
+      return item.requiredRole.includes(userRole as string);
+    }
+    return true;
+  });
+
+  const filteredNav = baseData.navMain.filter((item) => {
+    if (item.requiredRole) {
+      return item.requiredRole.includes(userRole as string);
+    }
+    return true;
+  });
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -164,10 +124,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={filteredNav} />
+
+        <NavSecondary items={filteredNavSecondary} className="mt-auto" />
       </SidebarContent>
+
       <SidebarFooter>
         <NavUser />
       </SidebarFooter>

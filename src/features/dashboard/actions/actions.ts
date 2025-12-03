@@ -169,24 +169,7 @@ export async function getMarcacionesUnificadas(
   return result;
 }
 
-export async function getMarcacionesDiarias(
-  startDate: string,
-  endDate: string,
-): Promise<MarcacionDiaria[]> {
-  const result = await prisma.$queryRaw<MarcacionDiaria[]>`
-    SELECT
-      legajo::int,
-      nombre,
-      dia::text,
-      primera_marca::text,
-      ultima_marca::text,
-      total_marcas::int
-    FROM huella.v_marcaciones_diarias
-    WHERE dia BETWEEN ${startDate}::date AND ${endDate}::date
-    ORDER BY dia DESC, nombre
-  `;
-  return result;
-}
+
 
 export async function getDiasConMarcaMes(mes: string): Promise<number> {
   const result = await prisma.$queryRaw<[{ total: bigint }]>`
