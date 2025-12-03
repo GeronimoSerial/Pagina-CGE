@@ -7,7 +7,7 @@ WITH rango AS (
             SELECT
               min(date(v_marcaciones_unificadas.ts)) AS min
             FROM
-              v_marcaciones_unificadas
+              huella.v_marcaciones_unificadas
           )
         ) :: timestamp WITH time zone,
         (
@@ -15,7 +15,7 @@ WITH rango AS (
             SELECT
               max(date(v_marcaciones_unificadas.ts)) AS max
             FROM
-              v_marcaciones_unificadas
+              huella.v_marcaciones_unificadas
           )
         ) :: timestamp WITH time zone,
         '1 day' :: INTERVAL
@@ -27,7 +27,7 @@ SELECT
 FROM
   (
     rango r
-    LEFT JOIN v_dias_con_marca d ON ((d.dia = r.dia))
+    LEFT JOIN huella.v_dias_con_marca d ON ((d.dia = r.dia))
   )
 WHERE
   (d.dia IS NULL)

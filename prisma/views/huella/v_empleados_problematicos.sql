@@ -7,7 +7,7 @@ whitelist AS (
   SELECT
     whitelist_empleados.legajo
   FROM
-    whitelist_empleados
+    huella.whitelist_empleados
   WHERE
     (whitelist_empleados.activo = TRUE)
 ),
@@ -16,7 +16,7 @@ ausencias_periodo AS (
     v_ausentes_diarios.legajo,
     count(*) AS total_ausencias
   FROM
-    v_ausentes_diarios,
+    huella.v_ausentes_diarios,
     periodo p
   WHERE
     (
@@ -33,7 +33,7 @@ asistencia_periodo AS (
     sum(v_asistencia_diaria.horas_trabajadas) AS total_horas,
     avg(v_asistencia_diaria.horas_trabajadas) AS promedio_horas_dia
   FROM
-    v_asistencia_diaria,
+    huella.v_asistencia_diaria,
     periodo p
   WHERE
     (
@@ -48,7 +48,7 @@ incompletas_periodo AS (
     v_marcaciones_incompletas.legajo,
     count(*) AS dias_incompletos
   FROM
-    v_marcaciones_incompletas,
+    huella.v_marcaciones_incompletas,
     periodo p
   WHERE
     (
@@ -68,7 +68,7 @@ dias_habiles_periodo AS (
         (CURRENT_DATE) :: timestamp without time zone,
         '1 day' :: INTERVAL
       ) d(d)
-      LEFT JOIN feriados f ON ((f.fecha = (d.d) :: date))
+      LEFT JOIN huella.feriados f ON ((f.fecha = (d.d) :: date))
     )
   WHERE
     (
@@ -233,8 +233,8 @@ FROM
           (
             (
               (
-                legajo l
-                JOIN v_empleados_activos ea ON ((ea.legajo = l.cod))
+                huella.legajo l
+                JOIN huella.v_empleados_activos ea ON ((ea.legajo = l.cod))
               )
               CROSS JOIN dias_habiles_periodo dh
             )
@@ -246,7 +246,7 @@ FROM
       )
       LEFT JOIN incompletas_periodo i ON ((i.legajo = l.cod))
     )
-    LEFT JOIN config_jornada cj ON (((cj.legajo) :: text = l.cod))
+    LEFT JOIN huella.config_jornada cj ON (((cj.legajo) :: text = l.cod))
   )
 WHERE
   (

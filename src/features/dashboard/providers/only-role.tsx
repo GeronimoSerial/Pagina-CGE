@@ -10,11 +10,7 @@ export async function OnlyRole({
   const session = await getCachedSession();
 
   if (!session || !roles.includes(session?.user?.role as string)) {
-    return (
-      <div className="text-center">
-        Usted no tiene permiso para acceder a esta página.
-      </div>
-    );
+    return null;
   }
 
   return <>{children}</>;

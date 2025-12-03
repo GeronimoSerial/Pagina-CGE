@@ -13,7 +13,7 @@ WITH clas AS (
         (v_marcaciones_unificadas.tipo ~~* 'salida' :: text)
     ) AS salidas
   FROM
-    v_marcaciones_unificadas
+    huella.v_marcaciones_unificadas
   GROUP BY
     v_marcaciones_unificadas.legajo,
     (date(v_marcaciones_unificadas.ts))
@@ -27,7 +27,7 @@ SELECT
 FROM
   (
     clas c
-    LEFT JOIN legajo l ON ((l.cod = c.legajo))
+    LEFT JOIN huella.legajo l ON ((l.cod = c.legajo))
   )
 WHERE
   (

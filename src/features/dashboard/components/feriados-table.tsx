@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -8,17 +8,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/shared/ui/table";
-import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
-import { Badge } from "@/shared/ui/badge";
+} from '@/shared/ui/table';
+import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
+import { Badge } from '@/shared/ui/badge';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/ui/select";
+} from '@/shared/ui/select';
 import {
   IconPlus,
   IconTrash,
@@ -26,42 +26,42 @@ import {
   IconCheck,
   IconX,
   IconDownload,
-} from "@tabler/icons-react";
-import { Feriado, FeriadoCreate } from "@dashboard/lib/types";
-import { createFeriado, updateFeriado, deleteFeriado } from "@dashboard/actions/actions";
-import { translateDayName } from "@dashboard/lib/utils";
-import { toast } from "sonner";
+} from '@tabler/icons-react';
+import { Feriado, FeriadoCreate } from '@dashboard/lib/types';
+import {
+  createFeriado,
+  updateFeriado,
+  deleteFeriado,
+} from '@dashboard/actions/actions';
+import { translateDayName } from '@dashboard/lib/utils';
+import { toast } from 'sonner';
 
 interface FeriadosTableProps {
   feriados: Feriado[];
-  aniosDisponibles: number[];
   anioSeleccionado?: number;
-  onAnioChange: (anio: number | undefined) => void;
   onDataChange: () => void;
 }
 
 export function FeriadosTable({
   feriados,
-  aniosDisponibles,
   anioSeleccionado,
-  onAnioChange,
   onDataChange,
 }: FeriadosTableProps) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState<FeriadoCreate>({
-    fecha: "",
-    descripcion: "",
-    tipo: "nacional",
+    fecha: '',
+    descripcion: '',
+    tipo: 'nacional',
   });
   const [newFeriado, setNewFeriado] = useState<FeriadoCreate | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
   const tipoColors: Record<string, string> = {
-    nacional: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+    nacional: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
     provincial:
-      "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+      'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
     administrativo:
-      "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
+      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
   };
 
   const handleStartEdit = (feriado: Feriado) => {
@@ -75,39 +75,39 @@ export function FeriadosTable({
 
   const handleCancelEdit = () => {
     setEditingId(null);
-    setEditForm({ fecha: "", descripcion: "", tipo: "nacional" });
+    setEditForm({ fecha: '', descripcion: '', tipo: 'nacional' });
   };
 
   const handleSaveEdit = async () => {
     if (!editingId) return;
     try {
       await updateFeriado(editingId, editForm);
-      toast.success("Feriado actualizado correctamente");
+      toast.success('Feriado actualizado correctamente');
       setEditingId(null);
       onDataChange();
     } catch (error) {
-      toast.error("Error al actualizar el feriado");
+      toast.error('Error al actualizar el feriado');
       console.error(error);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("¿Está seguro de eliminar este feriado?")) return;
+    if (!confirm('¿Está seguro de eliminar este feriado?')) return;
     try {
       await deleteFeriado(id);
-      toast.success("Feriado eliminado correctamente");
+      toast.success('Feriado eliminado correctamente');
       onDataChange();
     } catch (error) {
-      toast.error("Error al eliminar el feriado");
+      toast.error('Error al eliminar el feriado');
       console.error(error);
     }
   };
 
   const handleStartCreate = () => {
     setNewFeriado({
-      fecha: "",
-      descripcion: "",
-      tipo: "nacional",
+      fecha: '',
+      descripcion: '',
+      tipo: 'nacional',
     });
     setIsCreating(true);
   };
@@ -120,35 +120,35 @@ export function FeriadosTable({
   const handleSaveCreate = async () => {
     if (!newFeriado) return;
     if (!newFeriado.fecha || !newFeriado.descripcion) {
-      toast.error("Complete todos los campos requeridos");
+      toast.error('Complete todos los campos requeridos');
       return;
     }
     try {
       await createFeriado(newFeriado);
-      toast.success("Feriado creado correctamente");
+      toast.success('Feriado creado correctamente');
       setNewFeriado(null);
       setIsCreating(false);
       onDataChange();
     } catch (error) {
-      toast.error("Error al crear el feriado");
+      toast.error('Error al crear el feriado');
       console.error(error);
     }
   };
 
   const exportToCSV = () => {
-    const headers = ["Fecha", "Descripción", "Tipo", "Día"];
+    const headers = ['Fecha', 'Descripción', 'Tipo', 'Día'];
     const rows = feriados.map((f) => [
       f.fecha,
       f.descripcion,
       f.tipo,
-      translateDayName(f.dia_semana) || "",
+      translateDayName(f.dia_semana) || '',
     ]);
-    const csv = [headers, ...rows].map((r) => r.join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const csv = [headers, ...rows].map((r) => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = url;
-    link.download = `feriados_${anioSeleccionado || "todos"}.csv`;
+    link.download = `feriados_${anioSeleccionado || 'todos'}.csv`;
     link.click();
   };
 
@@ -157,26 +157,9 @@ export function FeriadosTable({
       {/* Filtros y acciones */}
       <div className="flex flex-wrap items-center gap-4 justify-between">
         <div className="flex items-center gap-2">
-          <Select
-            value={anioSeleccionado?.toString() || "todos"}
-            onValueChange={(v) =>
-              onAnioChange(v === "todos" ? undefined : Number(v))
-            }
-          >
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Filtrar por año" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todos">Todos los años</SelectItem>
-              {aniosDisponibles.map((anio) => (
-                <SelectItem key={anio} value={anio.toString()}>
-                  {anio}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
           <span className="text-sm text-muted-foreground">
-            {feriados.length} feriados
+            {feriados.length} feriados en el año{' '}
+            <strong>{anioSeleccionado}</strong>
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -325,7 +308,11 @@ export function FeriadosTable({
                       </SelectContent>
                     </Select>
                   ) : (
-                    <Badge className={tipoColors[feriado.tipo] || ""}>
+                    <Badge
+                      className={
+                        'uppercase ' + (tipoColors[feriado.tipo] || '')
+                      }
+                    >
                       {feriado.tipo}
                     </Badge>
                   )}

@@ -70,8 +70,6 @@ export async function DELETE(request: NextRequest) {
 
   const previousCount = clearWebhookLogs();
 
-  console.log(`🧹 Logs de webhook limpiados (${previousCount} eventos)`);
-
   return NextResponse.json({
     message: 'Logs limpiados exitosamente',
     previousCount,

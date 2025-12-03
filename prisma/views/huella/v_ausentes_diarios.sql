@@ -2,14 +2,14 @@ WITH dias AS (
   SELECT
     v_dias_con_marca.dia
   FROM
-    v_dias_con_marca
+    huella.v_dias_con_marca
 ),
 marcas_dias AS (
   SELECT
     DISTINCT v_marcaciones_unificadas.legajo,
     date(v_marcaciones_unificadas.ts) AS dia
   FROM
-    v_marcaciones_unificadas
+    huella.v_marcaciones_unificadas
 ),
 trabaja_finde AS (
   SELECT
@@ -23,7 +23,7 @@ feriados_list AS (
   SELECT
     feriados.fecha
   FROM
-    feriados
+    huella.feriados
 ),
 excepciones_list AS (
   SELECT
@@ -31,13 +31,13 @@ excepciones_list AS (
     excepciones_asistencia.fecha_inicio,
     excepciones_asistencia.fecha_fin
   FROM
-    excepciones_asistencia
+    huella.excepciones_asistencia
 ),
 whitelist AS (
   SELECT
     whitelist_empleados.legajo
   FROM
-    whitelist_empleados
+    huella.whitelist_empleados
   WHERE
     (whitelist_empleados.activo = TRUE)
 )
@@ -53,8 +53,8 @@ FROM
           (
             (
               (
-                legajo l
-                JOIN v_empleados_activos ea ON ((ea.legajo = l.cod))
+                huella.legajo l
+                JOIN huella.v_empleados_activos ea ON ((ea.legajo = l.cod))
               )
               CROSS JOIN dias d
             )

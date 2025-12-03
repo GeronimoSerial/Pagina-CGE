@@ -10,8 +10,8 @@ SELECT
   w.activo
 FROM
   (
-    whitelist_empleados w
-    LEFT JOIN legajo l ON ((l.cod = (w.legajo) :: text))
+    huella.whitelist_empleados w
+    LEFT JOIN huella.legajo l ON ((l.cod = (w.legajo) :: text))
   )
 ORDER BY
   w.activo DESC,

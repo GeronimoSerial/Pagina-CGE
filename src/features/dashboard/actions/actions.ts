@@ -83,6 +83,7 @@ export async function getAusentesDiarios(
   startDate: string,
   endDate: string,
 ): Promise<AusenteDiario[]> {
+  'use cache';
   const result = await prisma.$queryRaw<AusenteDiario[]>`
     SELECT
       legajo::int,
@@ -99,6 +100,7 @@ export async function getMarcacionesIncompletas(
   startDate: string,
   endDate: string,
 ): Promise<MarcacionIncompleta[]> {
+  'use cache';
   const result = await prisma.$queryRaw<MarcacionIncompleta[]>`
     SELECT
       legajo::int,
@@ -146,30 +148,6 @@ export async function getDiasSinActividad(
   `;
   return result;
 }
-
-export async function getMarcacionesUnificadas(
-  startDate: string,
-  endDate: string,
-): Promise<MarcacionUnificada[]> {
-  const result = await prisma.$queryRaw<MarcacionUnificada[]>`
-    SELECT
-      id::int,
-      legajo::int,
-      ts::text,
-      tipo,
-      sensor::text,
-      origen,
-      duplicado
-    FROM huella.v_marcaciones_unificadas
-    WHERE ts >= ${startDate}::timestamp
-      AND ts <= ${endDate}::timestamp + interval '1 day'
-    ORDER BY ts DESC
-    LIMIT 1000
-  `;
-  return result;
-}
-
-
 
 export async function getDiasConMarcaMes(mes: string): Promise<number> {
   const result = await prisma.$queryRaw<[{ total: bigint }]>`
@@ -370,10 +348,10 @@ export async function getPromedioHorasDiario(
 
 export async function getListaEmpleados(): Promise<
   { legajo: string; nombre: string }[]
-  > {
-  "use cache";
-  cacheLife("max")
-  
+> {
+  'use cache';
+  cacheLife('max');
+
   const result = await prisma.$queryRaw<{ legajo: string; nombre: string }[]>`
     SELECT DISTINCT l.cod as legajo, l.nombre
     FROM huella.legajo l

@@ -26,12 +26,12 @@ FROM
   (
     (
       (
-        legajo l
-        JOIN v_empleados_activos ea ON ((ea.legajo = l.cod))
+        huella.legajo l
+        JOIN huella.v_empleados_activos ea ON ((ea.legajo = l.cod))
       )
-      LEFT JOIN config_jornada cj ON (((cj.legajo) :: text = l.cod))
+      LEFT JOIN huella.config_jornada cj ON (((cj.legajo) :: text = l.cod))
     )
-    LEFT JOIN whitelist_empleados w ON (((w.legajo) :: text = l.cod))
+    LEFT JOIN huella.whitelist_empleados w ON (((w.legajo) :: text = l.cod))
   )
 WHERE
   (COALESCE(l.inactivo, false) = false)

@@ -7,8 +7,8 @@ SELECT
   count(*) AS total_marcas
 FROM
   (
-    marcas m
-    LEFT JOIN legajo l ON ((l.cod = m.legajo))
+    huella.marcas m
+    LEFT JOIN huella.legajo l ON ((l.cod = m.legajo))
   )
 GROUP BY
   m.legajo,

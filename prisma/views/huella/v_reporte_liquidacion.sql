@@ -13,7 +13,7 @@ WITH asistencia_mes AS (
     min(v_asistencia_diaria.dia) AS primer_dia_trabajado,
     max(v_asistencia_diaria.dia) AS ultimo_dia_trabajado
   FROM
-    v_asistencia_diaria
+    huella.v_asistencia_diaria
   GROUP BY
     v_asistencia_diaria.legajo,
     (
@@ -34,7 +34,7 @@ ausencias_mes AS (
     ) :: date AS mes,
     count(*) AS dias_ausente
   FROM
-    v_ausentes_diarios
+    huella.v_ausentes_diarios
   GROUP BY
     v_ausentes_diarios.legajo,
     (
@@ -55,7 +55,7 @@ incompletas_mes AS (
     ) :: date AS mes,
     count(*) AS dias_incompletos
   FROM
-    v_marcaciones_incompletas
+    huella.v_marcaciones_incompletas
   GROUP BY
     v_marcaciones_incompletas.legajo,
     (
@@ -77,7 +77,7 @@ dias_habiles AS (
             SELECT
               min(v_asistencia_diaria.dia) AS min
             FROM
-              v_asistencia_diaria
+              huella.v_asistencia_diaria
           )
         ) :: timestamp WITH time zone,
         (
@@ -85,12 +85,12 @@ dias_habiles AS (
             SELECT
               max(v_asistencia_diaria.dia) AS max
             FROM
-              v_asistencia_diaria
+              huella.v_asistencia_diaria
           )
         ) :: timestamp WITH time zone,
         '1 day' :: INTERVAL
       ) d(d)
-      LEFT JOIN feriados f ON ((f.fecha = (d.d) :: date))
+      LEFT JOIN huella.feriados f ON ((f.fecha = (d.d) :: date))
     )
   WHERE
     (
@@ -110,7 +110,7 @@ whitelist AS (
   SELECT
     whitelist_empleados.legajo
   FROM
-    whitelist_empleados
+    huella.whitelist_empleados
   WHERE
     (whitelist_empleados.activo = TRUE)
 )
@@ -203,8 +203,8 @@ FROM
           (
             (
               (
-                legajo l
-                JOIN v_empleados_activos ea ON ((ea.legajo = l.cod))
+                huella.legajo l
+                JOIN huella.v_empleados_activos ea ON ((ea.legajo = l.cod))
               )
               LEFT JOIN asistencia_mes a ON ((a.legajo = l.cod))
             )
@@ -222,7 +222,7 @@ FROM
             )
           )
         )
-        LEFT JOIN config_jornada cj ON (((cj.legajo) :: text = l.cod))
+        LEFT JOIN huella.config_jornada cj ON (((cj.legajo) :: text = l.cod))
       )
       LEFT JOIN dias_habiles dh ON ((dh.mes = COALESCE(a.mes, au.mes)))
     )

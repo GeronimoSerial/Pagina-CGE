@@ -1,17 +1,15 @@
 SELECT
-  v_asistencia_diaria.dia,
-  avg(v_asistencia_diaria.horas_trabajadas) AS promedio_horas,
+  dia,
+  avg(horas_trabajadas) AS promedio_horas,
   count(*) AS empleados_con_registro
 FROM
-  v_asistencia_diaria
+  huella.v_asistencia_diaria
 WHERE
   (
-    (v_asistencia_diaria.horas_trabajadas IS NOT NULL)
-    AND (
-      v_asistencia_diaria.horas_trabajadas > (0) :: numeric
-    )
+    (horas_trabajadas IS NOT NULL)
+    AND (horas_trabajadas > (0) :: numeric)
   )
 GROUP BY
-  v_asistencia_diaria.dia
+  dia
 ORDER BY
-  v_asistencia_diaria.dia;
+  dia;

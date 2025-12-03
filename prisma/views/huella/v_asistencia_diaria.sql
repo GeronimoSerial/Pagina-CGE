@@ -6,7 +6,7 @@ WITH diario AS (
     max(v_marcaciones_unificadas.ts) AS salida,
     count(*) AS total_marcas
   FROM
-    v_marcaciones_unificadas
+    huella.v_marcaciones_unificadas
   GROUP BY
     v_marcaciones_unificadas.legajo,
     (date(v_marcaciones_unificadas.ts))
@@ -28,5 +28,5 @@ SELECT
 FROM
   (
     diario d
-    LEFT JOIN legajo l ON ((l.cod = d.legajo))
+    LEFT JOIN huella.legajo l ON ((l.cod = d.legajo))
   );

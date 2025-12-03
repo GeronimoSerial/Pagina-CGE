@@ -1,34 +1,25 @@
 SELECT
-  v_asistencia_diaria.legajo,
-  v_asistencia_diaria.nombre,
+  legajo,
+  nombre,
   (
-    date_trunc(
-      'month' :: text,
-      (v_asistencia_diaria.dia) :: timestamp WITH time zone
-    )
+    date_trunc('month' :: text, (dia) :: timestamp WITH time zone)
   ) :: date AS mes,
   count(*) AS dias_trabajados,
-  sum(v_asistencia_diaria.horas_trabajadas) AS total_horas,
-  avg(v_asistencia_diaria.horas_trabajadas) AS promedio_horas_dia,
-  sum(v_asistencia_diaria.total_marcas) AS total_marcas
+  sum(horas_trabajadas) AS total_horas,
+  avg(horas_trabajadas) AS promedio_horas_dia,
+  sum(total_marcas) AS total_marcas
 FROM
-  v_asistencia_diaria
+  huella.v_asistencia_diaria
 GROUP BY
-  v_asistencia_diaria.legajo,
-  v_asistencia_diaria.nombre,
+  legajo,
+  nombre,
   (
-    date_trunc(
-      'month' :: text,
-      (v_asistencia_diaria.dia) :: timestamp WITH time zone
-    )
+    date_trunc('month' :: text, (dia) :: timestamp WITH time zone)
   )
 ORDER BY
   (
     (
-      date_trunc(
-        'month' :: text,
-        (v_asistencia_diaria.dia) :: timestamp WITH time zone
-      )
+      date_trunc('month' :: text, (dia) :: timestamp WITH time zone)
     ) :: date
   ),
-  v_asistencia_diaria.legajo;
+  legajo;

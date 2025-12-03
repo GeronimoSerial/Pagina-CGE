@@ -162,7 +162,7 @@ export default function VideoGallery({ noticia }: VideoGalleryProps) {
       const timer = setTimeout(() => {
         if (videoRef.current) {
           videoRef.current.play().catch((error) => {
-            console.log('Autoplay failed:', error);
+            console.error('Error al reproducir el video:', error);
           });
         }
       }, 100);

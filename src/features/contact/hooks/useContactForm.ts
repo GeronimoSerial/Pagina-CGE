@@ -70,7 +70,7 @@ export const useContactForm = () => {
         }, 5000);
       }
     } catch (error) {
-      console.log('Error al enviar el mensaje:', error);
+      console.error('Error al enviar el mensaje:', error);
       setError('Hubo un error al enviar el mensaje');
       setButtonState('idle');
     }

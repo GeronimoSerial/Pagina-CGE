@@ -58,11 +58,6 @@ const baseData = {
       icon: IconFileDescription,
     },
     {
-      title: 'Unificadas',
-      url: '/dashboard/unificadas',
-      icon: IconDatabase,
-    },
-    {
       title: 'Auditoría',
       url: '/dashboard/auditoria',
       icon: IconReport,

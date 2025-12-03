@@ -13,8 +13,8 @@ SELECT
   ((e.fecha_fin - e.fecha_inicio) + 1) AS dias_excepcion
 FROM
   (
-    excepciones_asistencia e
-    LEFT JOIN legajo l ON ((l.cod = (e.legajo) :: text))
+    huella.excepciones_asistencia e
+    LEFT JOIN huella.legajo l ON ((l.cod = (e.legajo) :: text))
   )
 ORDER BY
   e.fecha_inicio DESC,

@@ -1,12 +1,12 @@
 SELECT
-  l.cod AS legajo,
-  l.nombre,
-  l.area,
-  l.turno,
-  l.estado,
-  l.fecha_ingreso,
-  l.dni,
-  l.email,
-  l.inactivo
+  cod AS legajo,
+  nombre,
+  area,
+  turno,
+  estado,
+  fecha_ingreso,
+  dni,
+  email,
+  inactivo
 FROM
-  legajo l;
+  huella.legajo l;

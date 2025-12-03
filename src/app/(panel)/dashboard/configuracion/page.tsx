@@ -1,5 +1,3 @@
-import { auth } from '@/shared/lib/auth/auth';
-import { useSession } from '@/shared/lib/auth/auth-client';
 import { redirect } from 'next/navigation';
 import {
   getFeriados,
@@ -11,7 +9,6 @@ import {
 } from '@dashboard/actions/actions';
 import { getArgentinaYear } from '@dashboard/lib/utils';
 import { ConfigurationTabs } from './configuration-tabs';
-import { headers } from 'next/headers';
 import { getCachedSession } from '@/shared/lib/auth/session-utils';
 export type TabData = {
   feriados?: any;
@@ -38,8 +35,6 @@ export default async function ConfiguracionPage({
 
   // 3. CARGA CONDICIONAL: Solo cargamos lo necesario para la tab actual
   const data: TabData = {};
-
-  console.log(`Cargando datos para tab: ${currentTab}`);
 
   switch (currentTab) {
     case 'feriados':

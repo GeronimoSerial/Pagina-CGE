@@ -17,8 +17,8 @@ SELECT
   END AS tipo_jornada
 FROM
   (
-    v_asistencia_diaria a
-    LEFT JOIN legajo l ON ((l.cod = a.legajo))
+    huella.v_asistencia_diaria a
+    LEFT JOIN huella.legajo l ON ((l.cod = a.legajo))
   )
 ORDER BY
   a.legajo,

@@ -1,18 +1,15 @@
 SELECT
-  feriados.id,
-  feriados.fecha,
-  feriados.descripcion,
-  feriados.tipo,
-  to_char(
-    (feriados.fecha) :: timestamp WITH time zone,
-    'TMDay' :: text
-  ) AS dia_semana,
+  id,
+  fecha,
+  descripcion,
+  tipo,
+  to_char((fecha) :: timestamp WITH time zone, 'TMDay' :: text) AS dia_semana,
   EXTRACT(
     year
     FROM
-      feriados.fecha
+      fecha
   ) AS anio
 FROM
-  feriados
+  huella.feriados
 ORDER BY
-  feriados.fecha DESC;
+  fecha DESC;
