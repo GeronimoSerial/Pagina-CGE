@@ -21,7 +21,6 @@ export default async function Page() {
 
   const session = await getCachedSession();
   const nombre = session?.user?.name;
-  console.log(session);
   const todayStr = getArgentinaDateString();
 
   // Cálculo de fechas usando strings estables

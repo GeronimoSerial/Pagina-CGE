@@ -1,118 +1,264 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { signIn } from "@/shared/lib/auth/auth-client";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import React, { useState } from 'react';
+import {
+  Mail,
+  Lock,
+  ArrowRight,
+  Loader2,
+  ShieldCheck,
+  ArrowLeft,
+} from 'lucide-react';
+import { signIn } from '@/shared/lib/auth/auth-client';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-    const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setError("");
+  const router = useRouter();
 
-        await signIn.email({
-            email,
-            password,
-        }, {
-            onSuccess: () => {
-                router.push("/dashboard");
-            },
-            onError: (ctx) => {
-                setError(ctx.error.message);
-                setLoading(false);
-            }
-        });
-    };
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
-    return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-            <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg border border-gray-100">
-                <div className="text-center">
-                    {/* Placeholder for Logo - You can replace with actual Image component if logo exists */}
-                    <div className="mx-auto h-12 w-12 bg-blue-600 rounded-full flex items-center justify-center mb-4">
-                        <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.131A8 8 0 008 8m0 0a8 8 0 00-8 8c0 2.472.345 4.865.99 7.131M8 8a8 8 0 008 8m0 0a8 8 0 008-8m0 0a8 8 0 00-8-8m0 0a8 8 0 00-8 8" />
-                        </svg>
-                    </div>
-                    <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-                        Consejo General de Educación
-                    </h2>
-                    <p className="mt-2 text-sm text-gray-600">
-                        Ingrese sus credenciales para acceder al sistema
-                    </p>
-                </div>
-                <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-                    <div className="rounded-md shadow-sm -space-y-px">
-                        <div>
-                            <label htmlFor="email-address" className="sr-only">
-                                Email
-                            </label>
-                            <input
-                                id="email-address"
-                                name="email"
-                                type="email"
-                                autoComplete="email"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                                placeholder="Correo electrónico"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="password" className="sr-only">
-                                Contraseña
-                            </label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                autoComplete="current-password"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                                placeholder="Contraseña"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </div>
-                    </div>
+    try {
+      await signIn.email(
+        { email, password },
+        {
+          onSuccess: () => {
+            setLoading(false);
+            router.push('/dashboard');
+          },
+          onError: (ctx) => {
+            setError(ctx.error.message);
+            setLoading(false);
+          },
+        },
+      );
+    } catch (err) {
+      setError('Ocurrió un error inesperado al iniciar sesión.');
+      setLoading(false);
+    }
+  };
 
-                    {error && (
-                        <div className="text-red-500 text-sm text-center">
-                            {error}
-                        </div>
-                    )}
+  return (
+    <div className="flex min-h-screen w-full bg-slate-50 font-sans selection:bg-emerald-100 selection:text-emerald-900">
+      {/* SECCIÓN IZQUIERDA: Visual / Institucional / Inspiracional */}
+      <div className="hidden lg:flex w-1/2 relative overflow-hidden bg-slate-900">
+        {/* Fondo Abstracto y Sofisticado */}
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop')] bg-cover bg-center opacity-40 mix-blend-overlay scale-105" />
+        {/* Gradiente cambiado a Emerald */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 opacity-90" />
 
-                    <div>
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {loading ? (
-                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                            ) : (
-                                <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                                    <svg className="h-5 w-5 text-blue-500 group-hover:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                                    </svg>
-                                </span>
-                            )}
-                            {loading ? "Iniciando sesión..." : "Ingresar"}
-                        </button>
-                    </div>
-                </form>
-            </div>
+        {/* Elementos Decorativos de Fondo */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl" />
         </div>
-    );
+
+        <div className="relative z-10 flex flex-col justify-between p-16 w-full text-white">
+          <Link
+            href="/"
+            className="flex items-center gap-3 animate-fade-in group hover:opacity-80 transition-opacity"
+          >
+            <div className="p-2 bg-white/10 backdrop-blur-md rounded-lg border border-white/20 group-hover:bg-white/20 transition-colors">
+              <ArrowLeft className="h-6 w-6 text-emerald-200" />
+            </div>
+            <span className="text-sm font-medium tracking-widest text-emerald-100 uppercase">
+              Volver
+            </span>
+          </Link>
+
+          <div className="max-w-lg animate-fade-in-up">
+            <h1 className="text-5xl font-bold leading-tight mb-6 tracking-tight">
+              Consejo General de Educación
+            </h1>
+            <p className="text-lg text-emerald-100/80 font-light leading-relaxed">
+              Gestión y acompañamiento pedagógico integral en la educación
+              inicial, primaria y de adultos de nuestra provincia.
+            </p>
+          </div>
+
+          <div className="text-xs text-emerald-200/50 flex justify-between items-center">
+            <span>© 2025 Consejo General de Educación</span>
+            <span>v3.1.1</span>
+          </div>
+        </div>
+      </div>
+
+      {/* SECCIÓN DERECHA: Formulario Interactivo */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-16 bg-white relative">
+        <div className="w-full max-w-md space-y-8 animate-fade-in">
+          {/* Encabezado Móvil (Solo visible en pantallas pequeñas) */}
+          <div className="lg:hidden text-center mb-8">
+            <div className="mx-auto h-12 w-12 bg-emerald-600 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-emerald-600/30">
+              <ShieldCheck className="h-6 w-6 text-white" />
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900">
+              Consejo General de Educación
+            </h2>
+          </div>
+
+          <div className="text-center lg:text-left space-y-2">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+              Bienvenido de nuevo
+            </h2>
+            <p className="text-slate-500">
+              Ingrese sus credenciales institucionales para continuar.
+            </p>
+          </div>
+
+          <form onSubmit={handleLogin} className="mt-8 space-y-6">
+            {/* Input Groups */}
+            <div className="space-y-5">
+              <div className="relative group">
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5 block ml-1">
+                  Correo Electrónico
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-emerald-600 transition-colors">
+                    <Mail className="h-5 w-5" />
+                  </div>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 bg-slate-50 focus:bg-white hover:bg-white"
+                    placeholder="nombre@educacion.gob.ar"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="relative group">
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5 block ml-1">
+                  Contraseña
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-emerald-600 transition-colors">
+                    <Lock className="h-5 w-5" />
+                  </div>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 bg-slate-50 focus:bg-white hover:bg-white"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="rounded-lg bg-red-50 border border-red-100 p-4 animate-pulse">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <svg
+                      className="h-5 w-5 text-red-400"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-red-800">
+                      Error de autenticación
+                    </h3>
+                    <div className="mt-1 text-sm text-red-700">{error}</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <input
+                  id="remember-me"
+                  name="remember-me"
+                  type="checkbox"
+                  className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded cursor-pointer"
+                />
+                <label
+                  htmlFor="remember-me"
+                  className="ml-2 block text-sm text-slate-600 cursor-pointer select-none"
+                >
+                  Recordarme
+                </label>
+              </div>
+
+              <div className="text-sm">
+                <a
+                  href="#"
+                  className="font-medium text-emerald-600 hover:text-emerald-500 transition-colors"
+                >
+                  ¿Olvidó su contraseña?
+                </a>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="group relative w-full flex justify-center py-3.5 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 hover:scale-[1.01] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-emerald-600/30 transition-all duration-200 overflow-hidden"
+            >
+              {loading ? (
+                <div className="flex items-center">
+                  <Loader2 className="animate-spin -ml-1 mr-2 h-5 w-5" />
+                  Validando credenciales...
+                </div>
+              ) : (
+                <div className="flex items-center">
+                  Ingresar al Sistema
+                  <ArrowRight className="ml-2 h-4 w-4 opacity-70 group-hover:translate-x-1 transition-transform" />
+                </div>
+              )}
+            </button>
+          </form>
+
+          {/* Footer Secundario */}
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-slate-500">
+                  ¿Necesita soporte técnico?
+                </span>
+              </div>
+            </div>
+            <div className="mt-6 flex justify-center gap-4 text-sm text-slate-400">
+              <a href="#" className="hover:text-emerald-600 transition-colors">
+                Mesa de Ayuda
+              </a>
+              <span>•</span>
+              <a href="#" className="hover:text-emerald-600 transition-colors">
+                Manual de Usuario
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }

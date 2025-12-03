@@ -14,6 +14,7 @@ import {
   ClipboardList,
   Building,
   Phone,
+  LogIn,
 } from 'lucide-react';
 import {
   NavigationMenu,
@@ -103,6 +104,18 @@ const Header = () => {
             </NavigationMenuList>
           </NavigationMenu>
 
+          <div className="hidden lg:flex items-center ml-4">
+            <Link href="/login">
+              <Button
+                variant="ghost"
+                className="text-gray-600 hover:text-[#2D6628] hover:bg-green-50 gap-2"
+              >
+                <LogIn className="h-4 w-4" />
+                <span className="font-medium">Ingresar</span>
+              </Button>
+            </Link>
+          </div>
+
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild className="lg:hidden">
               <Button
@@ -144,6 +157,14 @@ const Header = () => {
                   );
                 })}
               </nav>
+              <div className="mt-6 pt-6 border-t border-gray-100">
+                <Link href="/login" onClick={() => setIsMenuOpen(false)}>
+                  <Button className="w-full bg-[#2D6628] hover:bg-[#22551F] text-white gap-2">
+                    <LogIn className="h-4 w-4" />
+                    Panel de Administración
+                  </Button>
+                </Link>
+              </div>
             </SheetContent>
           </Sheet>
         </div>
