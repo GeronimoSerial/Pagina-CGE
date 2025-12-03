@@ -2,9 +2,13 @@ import { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { ContactForm } from '@/shared/interfaces';
 
-const SERVICE_ID = process.env.NEXT_PUBLIC_SERVICE_ID || '';
-const TEMPLATE_ID = process.env.NEXT_PUBLIC_TEMPLATE_ID || '';
-const PUBLIC_KEY = process.env.NEXT_PUBLIC_PUBLIC_KEY || '';
+const SERVICE_ID = process.env.NEXT_PUBLIC_SERVICE_ID || 'default_service';
+const TEMPLATE_ID = process.env.NEXT_PUBLIC_TEMPLATE_ID || 'default_template';
+const PUBLIC_KEY = process.env.NEXT_PUBLIC_PUBLIC_KEY || 'default_public_key';
+
+if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
+  throw new Error('Missing required environment variables for EmailJS.');
+}
 
 export const useContactForm = () => {
   const [sent, setSent] = useState(false);
@@ -29,13 +33,6 @@ export const useContactForm = () => {
   }, []);
 
   const onSubmit = async (data: ContactForm) => {
-    if (!TEMPLATE_ID || !PUBLIC_KEY) {
-      setError(
-        'El servicio de contacto no está configurado. Intenta más tarde.',
-      );
-      return;
-    }
-
     setButtonState('loading');
     try {
       const emailjs = await import('@emailjs/browser');
