@@ -33,46 +33,50 @@ export interface Article {
 
 // 1. Navegación de trámites agrupada por categoría
 export async function getProceduresNavigation(): Promise<NavSection[]> {
-  const response = await fetch(
-    `${DIRECTUS_URL}/items/tramites?fields=categoria,titulo,slug&sort=categoria,titulo&limit=200`,
-    {
-      next: {
-        tags: ['tramites-all', 'tramites-navigation'],
-        revalidate: false,
+  try {
+    const response = await fetch(
+      `${DIRECTUS_URL}/items/tramites?fields=categoria,titulo,slug&sort=categoria,titulo&limit=200`,
+      {
+        next: {
+          tags: ['tramites-all', 'tramites-navigation'],
+          revalidate: false,
+        },
       },
-    },
-  );
+    );
 
-  if (!response.ok) {
-    console.error('Error fetching tramites navigation:', response.statusText);
+    if (!response.ok) {
+      console.error('Error fetching tramites navigation:', response.statusText);
+      return [];
+    }
+
+    const { data: tramites } = await response.json();
+    if (!tramites) return [];
+    const grouped: Record<string, NavSection> = {};
+    tramites.forEach((t: any) => {
+      const cat = t.categoria;
+      if (!grouped[cat]) {
+        grouped[cat] = {
+          id: cat.toLowerCase().replace(/\s+/g, '-'),
+          title: cat,
+          items: [],
+        };
+      }
+      grouped[cat].items.push({
+        id: t.slug,
+        title: t.titulo,
+        href: `/tramites/${t.slug}`,
+      });
+    });
+    const sortedSections = Object.values(grouped).sort((a, b) => {
+      if (a.title === 'General') return -1;
+      if (b.title === 'General') return 1;
+      return a.title.localeCompare(b.title);
+    });
+    return sortedSections;
+  } catch (error) {
+    console.error('Error in getProceduresNavigation:', error);
     return [];
   }
-
-  const { data: tramites } = await response.json();
-  if (!tramites) return [];
-  if (!tramites) return [];
-  const grouped: Record<string, NavSection> = {};
-  tramites.forEach((t: any) => {
-    const cat = t.categoria;
-    if (!grouped[cat]) {
-      grouped[cat] = {
-        id: cat.toLowerCase().replace(/\s+/g, '-'),
-        title: cat,
-        items: [],
-      };
-    }
-    grouped[cat].items.push({
-      id: t.slug,
-      title: t.titulo,
-      href: `/tramites/${t.slug}`,
-    });
-  });
-  const sortedSections = Object.values(grouped).sort((a, b) => {
-    if (a.title === 'General') return -1;
-    if (b.title === 'General') return 1;
-    return a.title.localeCompare(b.title);
-  });
-  return sortedSections;
 }
 
 // 2. Obtener artículo/trámite por slug

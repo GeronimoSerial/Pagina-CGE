@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DIRECTUS_URL } from '@/shared/lib/config';
+import { safeFetchJson } from '@/shared/lib/safe-fetch';
 
 interface DirectusNewsResponse {
   data: Array<{
@@ -138,25 +139,19 @@ export async function GET(
       categoria && `noticias-categoria-${categoria}`,
     ].filter(Boolean) as string[];
 
-    // 4. Fetch con ISR cache
-    const response = await fetch(directusUrl, {
-      next: {
-        revalidate: false, // Cache hasta invalidación por webhook
-        tags: cacheTags,
+    const directusData = await safeFetchJson<DirectusNewsResponse>(
+      directusUrl,
+      {
+        next: {
+          revalidate: false,
+          tags: cacheTags,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      console.error(
-        `Directus API error: ${response.status} ${response.statusText}`,
-      );
-      throw new Error(`Error del servidor de contenidos: ${response.status}`);
-    }
-
-    const directusData: DirectusNewsResponse = await response.json();
+      { timeoutMs: 8000, retries: 1 },
+    );
 
     // 5. Transformar datos
     const transformedData = directusData.data.map((noticia) => ({
@@ -211,6 +206,18 @@ export async function GET(
         error.message.includes('debe estar'))
     ) {
       return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    if (error instanceof Error) {
+      const isTimeout =
+        error.name === 'AbortError' || error.message.includes('Timeout');
+      const isHttp = error.message.startsWith('HTTP');
+      if (isTimeout || isHttp) {
+        return NextResponse.json(
+          { error: 'Servicio de contenidos no disponible' },
+          { status: 502 },
+        );
+      }
     }
 
     // Error genérico del servidor
