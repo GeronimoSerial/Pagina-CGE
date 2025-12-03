@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
-import { FeriadosTable } from "@dashboard/components/feriados-table";
-import { JornadaConfigTable } from "@dashboard/components/jornada-config-table";
-import { ExcepcionesTable } from "@dashboard/components/excepciones-table";
-import { WhitelistTable } from "@dashboard/components/whitelist-table";
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
+import { FeriadosTable } from '@dashboard/components/feriados-table';
+import { JornadaConfigTable } from '@dashboard/components/jornada-config-table';
+import { ExcepcionesTable } from '@dashboard/components/excepciones-table';
+import { WhitelistTable } from '@dashboard/components/whitelist-table';
 import { UserManagement } from './user-management';
 import {
   IconCalendarEvent,
   IconClock,
   IconBeach,
   IconShieldCheck,
-  IconUsers
-} from "@tabler/icons-react";
-import { TabData } from "./page"; 
+  IconUsers,
+} from '@tabler/icons-react';
+import { TabData } from './page';
 
 interface ConfigurationTabsProps {
   data: TabData;
@@ -23,11 +23,11 @@ interface ConfigurationTabsProps {
   userRole: string;
 }
 
-export function ConfigurationTabs({ 
-  data, 
-  currentTab, 
+export function ConfigurationTabs({
+  data,
+  currentTab,
   currentAnio,
-  userRole 
+  userRole,
 }: ConfigurationTabsProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -38,7 +38,7 @@ export function ConfigurationTabs({
     params.set('tab', value);
     // Limpiamos params específicos al cambiar de tab principal
     if (value !== 'feriados') params.delete('anio');
-    
+
     router.push(`?${params.toString()}`);
   };
 
@@ -60,7 +60,11 @@ export function ConfigurationTabs({
   return (
     <div className="px-4 lg:px-6">
       {/* Controlamos el valor de Tabs con la prop currentTab que viene de la URL */}
-      <Tabs value={currentTab} onValueChange={handleTabChange} className="w-full">
+      <Tabs
+        value={currentTab}
+        onValueChange={handleTabChange}
+        className="w-full"
+      >
         <TabsList className="grid w-full grid-cols-5 max-w-3xl">
           <TabsTrigger value="feriados" className="gap-2">
             <IconCalendarEvent className="h-4 w-4" />
@@ -79,10 +83,10 @@ export function ConfigurationTabs({
             <span className="hidden sm:inline">Whitelist</span>
           </TabsTrigger>
           {userRole === 'owner' && (
-             <TabsTrigger value="usuarios" className="gap-2">
-             <IconUsers className="h-4 w-4" />
-             <span className="hidden sm:inline">Usuarios</span>
-           </TabsTrigger>
+            <TabsTrigger value="usuarios" className="gap-2">
+              <IconUsers className="h-4 w-4" />
+              <span className="hidden sm:inline">Usuarios</span>
+            </TabsTrigger>
           )}
         </TabsList>
 
@@ -94,7 +98,9 @@ export function ConfigurationTabs({
         <TabsContent value="feriados" className="mt-6">
           {currentTab === 'feriados' && data.feriados && (
             <div className="rounded-lg border bg-card p-6">
-              <h2 className="text-lg font-semibold mb-1">Gestión de Feriados</h2>
+              <h2 className="text-lg font-semibold mb-1">
+                Gestión de Feriados
+              </h2>
               <FeriadosTable
                 feriados={data.feriados}
                 aniosDisponibles={data.aniosFeriados}
@@ -109,7 +115,9 @@ export function ConfigurationTabs({
         <TabsContent value="jornadas" className="mt-6">
           {currentTab === 'jornadas' && data.empleados && (
             <div className="rounded-lg border bg-card p-6">
-              <h2 className="text-lg font-semibold mb-1">Configuración de Jornada</h2>
+              <h2 className="text-lg font-semibold mb-1">
+                Configuración de Jornada
+              </h2>
               <JornadaConfigTable
                 empleados={data.empleados}
                 onDataChange={handleRefresh}
@@ -132,7 +140,7 @@ export function ConfigurationTabs({
         </TabsContent>
 
         <TabsContent value="whitelist" className="mt-6">
-            {currentTab === 'whitelist' && data.whitelist && (
+          {currentTab === 'whitelist' && data.whitelist && (
             <div className="rounded-lg border bg-card p-6">
               <h2 className="text-lg font-semibold mb-1">Whitelist</h2>
               <WhitelistTable
@@ -141,17 +149,16 @@ export function ConfigurationTabs({
                 onDataChange={handleRefresh}
               />
             </div>
-            )}
+          )}
         </TabsContent>
-        
+
         {userRole === 'owner' && (
           <TabsContent value="usuarios" className="mt-6">
-             <div className="rounded-lg border bg-card p-6">
-                <UserManagement currentUserRole={userRole} />
-             </div>
+            <div className="rounded-lg border bg-card p-6">
+              <UserManagement currentUserRole={userRole} />
+            </div>
           </TabsContent>
         )}
-
       </Tabs>
     </div>
   );

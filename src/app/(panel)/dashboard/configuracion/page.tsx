@@ -1,6 +1,6 @@
-import { auth } from "@/shared/lib/auth/auth";
-import { useSession } from "@/shared/lib/auth/auth-client";
-import { redirect } from "next/navigation";
+import { auth } from '@/shared/lib/auth/auth';
+import { useSession } from '@/shared/lib/auth/auth-client';
+import { redirect } from 'next/navigation';
 import {
   getFeriados,
   getAniosFeriados,
@@ -10,8 +10,9 @@ import {
   getListaEmpleados,
 } from '@dashboard/actions/actions';
 import { getArgentinaYear } from '@dashboard/lib/utils';
-import { ConfigurationTabs } from "./configuration-tabs";
-import { headers } from "next/headers";
+import { ConfigurationTabs } from './configuration-tabs';
+import { headers } from 'next/headers';
+import { getCachedSession } from '@/shared/lib/auth/session-utils';
 export type TabData = {
   feriados?: any;
   aniosFeriados?: any;
@@ -26,10 +27,8 @@ export default async function ConfiguracionPage({
 }: {
   searchParams: Promise<{ tab?: string; anio?: string }>;
 }) {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user?.id) redirect('/login');
-  
-  const userRole = session.user.role;
+  const session = await getCachedSession();
+  const userRole = session?.user?.role;
   if (userRole !== 'admin' && userRole !== 'owner') redirect('/dashboard');
 
   // 2. Determinar qué tab y qué filtros están activos
@@ -47,7 +46,7 @@ export default async function ConfiguracionPage({
       // Para feriados necesitamos los feriados del año y la lista de años disponibles
       const [feriadosData, aniosData] = await Promise.all([
         getFeriados(currentAnio),
-        getAniosFeriados()
+        getAniosFeriados(),
       ]);
       data.feriados = feriadosData;
       data.aniosFeriados = aniosData.length > 0 ? aniosData : [currentAnio];
@@ -61,7 +60,7 @@ export default async function ConfiguracionPage({
       // Excepciones suele necesitar la lista de empleados para el select
       const [excepcionesData, listaParaExcepciones] = await Promise.all([
         getExcepciones(),
-        getListaEmpleados()
+        getListaEmpleados(),
       ]);
       data.excepciones = excepcionesData;
       data.listaEmpleados = listaParaExcepciones;
@@ -70,15 +69,15 @@ export default async function ConfiguracionPage({
     case 'whitelist':
       const [whitelistData, listaParaWhitelist] = await Promise.all([
         getWhitelist(),
-        getListaEmpleados()
+        getListaEmpleados(),
       ]);
       data.whitelist = whitelistData;
       data.listaEmpleados = listaParaWhitelist;
       break;
-      
+
     case 'usuarios':
-        // No necesita carga de datos iniciales complejos si se maneja internamente
-        break;
+      // No necesita carga de datos iniciales complejos si se maneja internamente
+      break;
   }
 
   return (
@@ -90,9 +89,9 @@ export default async function ConfiguracionPage({
         </p>
       </div>
 
-      <ConfigurationTabs 
-        data={data} 
-        currentTab={currentTab} 
+      <ConfigurationTabs
+        data={data}
+        currentTab={currentTab}
         currentAnio={currentAnio}
         userRole={userRole}
       />

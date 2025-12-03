@@ -21,7 +21,7 @@ import {
   useSidebar,
 } from '@dashboard/components/sidebar';
 import { useRouter } from 'next/navigation';
-import { useUser } from '../session-provider';
+import { useUser } from '../providers/session-provider';
 export function NavUser() {
   const { isMobile } = useSidebar();
   const router = useRouter();

@@ -5,13 +5,11 @@ import { SiteHeader } from '@dashboard/components/site-header';
 import { SidebarInset, SidebarProvider } from '@dashboard/components/sidebar';
 import { getCachedSession } from '@/shared/lib/auth/session-utils';
 import { redirect } from 'next/navigation';
-import { SessionProvider } from '@/features/dashboard/session-provider';
+import { SessionProvider } from '@/features/dashboard/providers/session-provider';
+import { Suspense } from 'react';
 
-export default async function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+// Componente interno que maneja la sesión (dinámico)
+async function DashboardContent({ children }: { children: React.ReactNode }) {
   const session = await getCachedSession();
   if (!session) redirect('/login');
 
@@ -36,5 +34,26 @@ export default async function DashboardLayout({
         </SidebarInset>
       </SidebarProvider>
     </SessionProvider>
+  );
+}
+
+// Componente de loading para el Suspense
+function DashboardSkeleton() {
+  return (
+    <div className="flex h-screen w-full items-center justify-center">
+      <div className="animate-pulse text-muted-foreground">Cargando...</div>
+    </div>
+  );
+}
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense fallback={<DashboardSkeleton />}>
+      <DashboardContent>{children}</DashboardContent>
+    </Suspense>
   );
 }

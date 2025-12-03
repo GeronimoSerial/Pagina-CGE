@@ -15,7 +15,7 @@ import {
   IconUserSearch,
 } from '@tabler/icons-react';
 
-import { useRole } from '../session-provider';
+import { useRole } from '../providers/session-provider';
 
 import { NavMain } from '@dashboard/components/nav-main';
 import { NavSecondary } from '@dashboard/components/nav-secondary';

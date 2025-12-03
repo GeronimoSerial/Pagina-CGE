@@ -1,6 +1,7 @@
 import { connection } from 'next/server';
 import { EmpleadosProblematicosTable } from '@dashboard/components/empleados-problematicos-table';
 import { getEmpleadosProblematicos } from '@dashboard/actions/actions';
+import { OnlyRole } from '@/features/dashboard/providers/only-role';
 
 export default async function AtencionPage() {
   await connection();
@@ -22,7 +23,9 @@ export default async function AtencionPage() {
 
       <div className="px-4 lg:px-6">
         <div className="rounded-lg border bg-card p-6">
-          <EmpleadosProblematicosTable empleados={empleados} />
+          <OnlyRole roles={['owner', 'admin']}>
+            <EmpleadosProblematicosTable empleados={empleados} />
+          </OnlyRole>
         </div>
       </div>
     </div>
