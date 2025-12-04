@@ -7,8 +7,6 @@ import {
   MarcacionIncompleta,
   AuditoriaOperacion,
   DiaSinActividad,
-  MarcacionUnificada,
-  MarcacionDiaria,
   DiaConMarca,
   EmpleadoActivo,
   EmpleadoDetalle,

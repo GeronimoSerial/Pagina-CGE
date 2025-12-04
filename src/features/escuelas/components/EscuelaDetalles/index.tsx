@@ -126,7 +126,7 @@ const EscuelaDetalles = memo(({ escuela, onClose }: EscuelaDetallesProps) => {
                   <div className="flex items-center gap-2 mb-3">
                     <Info className="h-4 w-4 text-[#217A4B]" />
                     <h3 className="text-lg font-semibold text-[#205C3B]">
-                      Ubicación y Contacto
+                      Ubicación y contacto
                     </h3>
                   </div>
 

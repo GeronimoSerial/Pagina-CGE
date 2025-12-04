@@ -11,6 +11,10 @@ import {
   IconSettings,
   IconUsers,
   IconUserSearch,
+  IconSchool,
+  IconMap,
+  IconShieldCheck,
+  IconUserCheck,
   type Icon,
 } from '@tabler/icons-react';
 import * as React from 'react';
@@ -96,6 +100,50 @@ const baseData: {
       title: 'Documentos',
       url: '/dashboard/documentos',
       icon: IconFileDescription,
+    },
+    {
+      title: 'Escuelas',
+      url: '#',
+      icon: IconSchool,
+      items: [
+        {
+          title: 'General',
+          url: '/dashboard/escuelas',
+          icon: IconDashboard,
+        },
+        {
+          title: 'Buscador',
+          url: '/dashboard/escuelas/buscador',
+          icon: IconUserSearch,
+        },
+        {
+          title: 'Geografía',
+          url: '/dashboard/escuelas/geografia',
+          icon: IconMap,
+        },
+        {
+          title: 'Calidad de Datos',
+          url: '/dashboard/escuelas/calidad',
+          icon: IconShieldCheck,
+        },
+      ],
+    },
+    {
+      title: 'Supervisión',
+      url: '#',
+      icon: IconUserCheck,
+      items: [
+        {
+          title: 'General',
+          url: '/dashboard/supervision',
+          icon: IconDashboard,
+        },
+        {
+          title: 'Listado',
+          url: '/dashboard/supervision/listado',
+          icon: IconListDetails,
+        },
+      ],
     },
   ],
   navSecondary: [

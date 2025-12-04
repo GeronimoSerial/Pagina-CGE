@@ -960,6 +960,8 @@ view v_escuela_completa {
   departamento     String?   @db.VarChar(50)
   supervisor       String?
   id_supervisor    Int?
+  director         String?
+  id_director      Int?
   tiene_modalidad  Boolean?
   tiene_categoria  Boolean?
   tiene_zona       Boolean?
