@@ -1,6 +1,8 @@
 SELECT
-  DISTINCT legajo
+  DISTINCT v_marcaciones_unificadas.legajo
 FROM
   huella.v_marcaciones_unificadas
 WHERE
-  (ts >= date_trunc('year' :: text, NOW()));
+  (
+    v_marcaciones_unificadas.ts >= date_trunc('year' :: text, NOW())
+  );

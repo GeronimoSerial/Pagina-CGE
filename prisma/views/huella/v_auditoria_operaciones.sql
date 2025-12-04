@@ -1,13 +1,13 @@
 SELECT
-  id,
-  dia AS fecha,
-  hora,
-  tipo,
-  interno AS detalle,
-  nombre AS empleado,
-  usuario AS operado_por
+  auditoria.id,
+  auditoria.dia AS fecha,
+  auditoria.hora,
+  auditoria.tipo,
+  auditoria.interno AS detalle,
+  auditoria.nombre AS empleado,
+  auditoria.usuario AS operado_por
 FROM
   huella.auditoria
 ORDER BY
-  dia DESC,
-  hora DESC;
+  auditoria.dia DESC,
+  auditoria.hora DESC;

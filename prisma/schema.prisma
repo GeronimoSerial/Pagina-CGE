@@ -7,7 +7,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["auth", "huella", "public"]
+  schemas  = ["auth", "geografia", "huella", "infraestructura", "institucional", "normativa", "programas", "public", "relevamiento", "rrhh", "supervision", "vacantes"]
 }
 
 model auditoria {
@@ -93,6 +93,7 @@ model legajo {
   @@schema("huella")
 }
 
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model marcas {
   id        BigInt   @id
   legajo    String
@@ -164,16 +165,17 @@ model session {
 }
 
 model user {
-  id            String    @id
-  name          String
-  email         String    @unique(map: "user_email_unique")
-  emailVerified Boolean   @default(false) @map("email_verified")
-  image         String?
-  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt     DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
-  role          String    @default("user")
-  account       account[]
-  session       session[]
+  id                 String               @id
+  name               String
+  email              String               @unique(map: "user_email_unique")
+  emailVerified      Boolean              @default(false) @map("email_verified")
+  image              String?
+  createdAt          DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime             @default(now()) @map("updated_at") @db.Timestamptz(6)
+  role               String               @default("user")
+  account            account[]
+  session            session[]
+  planilla_novedades planilla_novedades[]
 
   @@schema("auth")
 }
@@ -188,6 +190,484 @@ model verification {
 
   @@index([identifier])
   @@schema("auth")
+}
+
+model mv_refresh_log {
+  id            Int       @id @default(autoincrement())
+  view_name     String
+  started_at    DateTime? @default(now()) @db.Timestamptz(6)
+  completed_at  DateTime? @db.Timestamptz(6)
+  duration_ms   Int?
+  success       Boolean?  @default(true)
+  error_message String?
+
+  @@schema("huella")
+}
+
+model departamento {
+  id_departamento Int         @id(map: "pk_departamento") @default(autoincrement())
+  nombre          String      @db.VarChar(50)
+  id_provincia    Int
+  provincia       provincia   @relation(fields: [id_provincia], references: [id_provincia], onDelete: NoAction, onUpdate: NoAction, map: "fk_departamento_provincia")
+  localidad       localidad[]
+
+  @@index([id_provincia], map: "idx_departamento_provincia")
+  @@schema("geografia")
+}
+
+model domicilio {
+  id_domicilio Int        @id(map: "pk_domicilio") @default(autoincrement())
+  calle        String     @db.VarChar(50)
+  altura       Int
+  id_localidad Int
+  localidad    localidad  @relation(fields: [id_localidad], references: [id_localidad], onDelete: NoAction, onUpdate: NoAction, map: "fk_domicilio_localidad")
+  edificio     edificio[]
+
+  @@index([id_localidad], map: "idx_domicilio_localidad")
+  @@schema("geografia")
+}
+
+model localidad {
+  id_localidad    Int          @id(map: "pk_localidad") @default(autoincrement())
+  nombre          String       @db.VarChar(50)
+  id_departamento Int
+  domicilio       domicilio[]
+  departamento    departamento @relation(fields: [id_departamento], references: [id_departamento], onDelete: NoAction, onUpdate: NoAction, map: "fk_localidad_departamento")
+
+  @@index([id_departamento], map: "idx_localidad_departamento")
+  @@schema("geografia")
+}
+
+model provincia {
+  id_provincia Int            @id(map: "pk_provincia") @default(autoincrement())
+  nombre       String         @db.VarChar(50)
+  departamento departamento[]
+
+  @@schema("geografia")
+}
+
+model calidad_servicio {
+  id_calidad_servicio Int                 @id(map: "pk_calidad_servicio") @default(autoincrement())
+  descripcion         String              @db.VarChar(50)
+  edificio_conexion   edificio_conexion[]
+
+  @@schema("infraestructura")
+}
+
+model edificio {
+  id_edificio       Int                 @id(map: "pk_edificio") @default(autoincrement())
+  id_domicilio      Int
+  domicilio         domicilio           @relation(fields: [id_domicilio], references: [id_domicilio], onDelete: NoAction, onUpdate: NoAction, map: "fk_edificio_domicilio")
+  edificio_conexion edificio_conexion[]
+
+  @@index([id_domicilio], map: "idx_edificio_domicilio")
+  @@schema("infraestructura")
+}
+
+model edificio_conexion {
+  id_edificio_conexion Int              @id(map: "pk_edificio_conexion") @default(autoincrement())
+  id_edificio          Int
+  id_proveedor         Int
+  id_tecnologia        Int
+  id_calidad_servicio  Int
+  fecha_relevamiento   DateTime?        @default(dbgenerated("CURRENT_DATE")) @db.Date
+  observaciones        String?          @db.VarChar(200)
+  created_at           DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime         @default(now()) @db.Timestamptz(6)
+  calidad_servicio     calidad_servicio @relation(fields: [id_calidad_servicio], references: [id_calidad_servicio], onDelete: NoAction, onUpdate: NoAction, map: "fk_ec_calidad_servicio")
+  edificio             edificio         @relation(fields: [id_edificio], references: [id_edificio], onDelete: NoAction, onUpdate: NoAction, map: "fk_ec_edificio")
+  proveedor            proveedor        @relation(fields: [id_proveedor], references: [id_proveedor], onDelete: NoAction, onUpdate: NoAction, map: "fk_ec_proveedor")
+  tecnologia           tecnologia       @relation(fields: [id_tecnologia], references: [id_tecnologia], onDelete: NoAction, onUpdate: NoAction, map: "fk_ec_tecnologia")
+
+  @@schema("infraestructura")
+}
+
+model proveedor {
+  id_proveedor      Int                 @id(map: "pk_proveedor") @default(autoincrement())
+  nombre            String              @unique(map: "uq_proveedor") @db.VarChar(50)
+  edificio_conexion edificio_conexion[]
+
+  @@schema("infraestructura")
+}
+
+model tecnologia {
+  id_tecnologia     Int                 @id(map: "pk_tecnologia") @default(autoincrement())
+  descripcion       String              @db.VarChar(50)
+  edificio_conexion edificio_conexion[]
+
+  @@schema("infraestructura")
+}
+
+model ambito_escuela {
+  id_ambito Int       @id(map: "pk_ambito") @default(autoincrement())
+  codigo    String    @unique(map: "uq_ambito_codigo") @db.VarChar(20)
+  activo    Boolean   @default(true)
+  escuela   escuela[]
+
+  @@schema("institucional")
+}
+
+model categoria {
+  id_categoria Int       @id(map: "pk_categoria")
+  codigo       Int       @unique(map: "uq_categoria_codigo")
+  descripcion  String    @db.VarChar(100)
+  escuela      escuela[]
+
+  @@schema("institucional")
+}
+
+model director_escuela {
+  id_director_escuela Int       @id(map: "pk_director_escuela") @default(autoincrement())
+  id_plaza            Int
+  id_escuela          Int
+  id_persona          Int
+  fecha_inicio        DateTime  @default(dbgenerated("CURRENT_DATE")) @db.Date
+  fecha_fin           DateTime? @db.Date
+  persona             persona   @relation(fields: [id_persona], references: [id_persona], onDelete: NoAction, onUpdate: NoAction, map: "fk_director_persona")
+  plaza               plaza     @relation(fields: [id_plaza, id_escuela], references: [id_plaza, id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_director_plaza_escuela")
+
+  @@index([id_persona], map: "idx_director_escuela_persona")
+  @@index([id_plaza, id_escuela], map: "idx_director_escuela_plaza")
+  @@index([fecha_inicio, fecha_fin], map: "idx_director_fechas")
+  @@schema("institucional")
+}
+
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model escuela {
+  cue                  BigInt                 @unique(map: "uq_escuela_cue")
+  nombre               String                 @db.VarChar(100)
+  fecha_fundacion      DateTime?              @db.Date
+  telefono             String                 @db.VarChar(20)
+  mail                 String                 @unique(map: "uq_escuela_mail") @db.VarChar(100)
+  id_escuela           Int                    @id(map: "pk_escuela") @default(autoincrement())
+  cabecera_id          Int?
+  id_serv_comida       Int
+  id_categoria         Int
+  id_zona              Int
+  id_modalidad         Int
+  id_turno             Int
+  anexo                String?                @default("00") @db.Char(2)
+  id_ambito            Int?
+  created_at           DateTime               @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime               @default(now()) @db.Timestamptz(6)
+  ambito_escuela       ambito_escuela?        @relation(fields: [id_ambito], references: [id_ambito], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_ambito")
+  escuela              escuela?               @relation("escuelaToescuela", fields: [cabecera_id], references: [id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_cabecera")
+  other_escuela        escuela[]              @relation("escuelaToescuela")
+  categoria            categoria              @relation(fields: [id_categoria], references: [id_categoria], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_categoria")
+  modalidad            modalidad              @relation(fields: [id_modalidad], references: [id_modalidad], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_modalidad")
+  servicio_comida      servicio_comida        @relation(fields: [id_serv_comida], references: [id_serv_comida], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_servicio_comida")
+  turno                turno                  @relation(fields: [id_turno], references: [id_turno], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_turno")
+  zona                 zona                   @relation(fields: [id_zona], references: [id_zona], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_zona")
+  planilla_novedades   planilla_novedades[]
+  escuela_programa     escuela_programa[]
+  escuela_problematica escuela_problematica[]
+  matricula            matricula[]
+  personal             personal[]
+  supervisor_escuela   supervisor_escuela?
+  plaza                plaza[]
+
+  @@index([id_ambito], map: "idx_escuela_ambito")
+  @@index([cabecera_id], map: "idx_escuela_cabecera")
+  @@index([id_categoria], map: "idx_escuela_categoria")
+  @@index([id_categoria, id_zona], map: "idx_escuela_categoria_zona")
+  @@index([created_at], map: "idx_escuela_created_at")
+  @@index([id_modalidad], map: "idx_escuela_modalidad")
+  @@index([id_modalidad, id_turno], map: "idx_escuela_modalidad_turno")
+  @@index([nombre(ops: raw("gin_trgm_ops"))], map: "idx_escuela_nombre_trgm", type: Gin)
+  @@index([id_serv_comida], map: "idx_escuela_servicio_comida")
+  @@index([id_turno], map: "idx_escuela_turno")
+  @@index([id_zona], map: "idx_escuela_zona")
+  @@schema("institucional")
+}
+
+model modalidad {
+  id_modalidad Int       @id(map: "pk_modalidad") @default(autoincrement())
+  descripcion  String    @db.VarChar(100)
+  escuela      escuela[]
+
+  @@schema("institucional")
+}
+
+model planilla_novedades {
+  id_planilla   BigInt   @id(map: "pk_planilla_novedades") @default(autoincrement())
+  id_escuela    Int
+  mes           Int
+  anio          Int
+  fecha_envio   DateTime @default(now()) @db.Timestamptz(6)
+  usuario_envio String
+  datos         Json
+  estado        String   @default("ENVIADA") @db.VarChar(20)
+  escuela       escuela  @relation(fields: [id_escuela], references: [id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_planilla_escuela")
+  user          user     @relation(fields: [usuario_envio], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_planilla_usuario")
+
+  @@unique([id_escuela, mes, anio], map: "uq_planilla_escuela_mes_anio")
+  @@index([anio, mes], map: "idx_planilla_anio_mes")
+  @@index([id_escuela, estado], map: "idx_planilla_escuela_estado")
+  @@index([estado], map: "idx_planilla_estado")
+  @@index([fecha_envio], map: "idx_planilla_fecha_envio")
+  @@index([usuario_envio], map: "idx_planilla_usuario")
+  @@schema("institucional")
+}
+
+model servicio_comida {
+  id_serv_comida Int       @id(map: "pk_servicio_comida") @default(autoincrement())
+  nombre         String    @db.VarChar(50)
+  escuela        escuela[]
+
+  @@schema("institucional")
+}
+
+model turno {
+  id_turno    Int       @id(map: "pk_turno") @default(autoincrement())
+  descripcion String?   @db.VarChar(50)
+  escuela     escuela[]
+  plaza       plaza[]
+
+  @@schema("institucional")
+}
+
+model zona {
+  id_zona     Int       @id(map: "pk_zona")
+  codigo      String    @unique(map: "uq_zona_codigo") @db.Char(1)
+  descripcion String    @db.VarChar(100)
+  escuela     escuela[]
+
+  @@schema("institucional")
+}
+
+model autoridad {
+  id_autoridad       Int                  @id(map: "pk_autoridad") @default(autoincrement())
+  nombre             String               @unique(map: "uq_autoridad_nombre") @db.VarChar(50)
+  sigla              String               @unique(map: "uq_autoridad_sigla") @db.VarChar(5)
+  descripcion        String               @db.VarChar(100)
+  supervisor_escuela supervisor_escuela[]
+  asignacion         asignacion[]
+
+  @@schema("normativa")
+}
+
+model disposicion {
+  id_disposicion Int          @id(map: "pk_disposicion") @default(autoincrement())
+  numero         Int
+  anio           Int
+  fecha          DateTime     @default(dbgenerated("CURRENT_DATE")) @db.Date
+  titulo         String?      @db.VarChar(100)
+  observaciones  String?      @db.VarChar(300)
+  created_at     DateTime     @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime     @default(now()) @db.Timestamptz(6)
+  asignacion     asignacion[]
+  vacante        vacante[]
+
+  @@unique([numero, anio], map: "uq_disposicion_numero_anio")
+  @@index([anio], map: "idx_disposicion_anio")
+  @@index([fecha], map: "idx_disposicion_fecha")
+  @@schema("normativa")
+}
+
+model escuela_programa {
+  id_programa             Int
+  id_escuela              Int
+  escuela                 escuela                 @relation(fields: [id_escuela], references: [id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_ep_escuela")
+  programa_acompanamiento programa_acompanamiento @relation(fields: [id_programa], references: [id_programa], onDelete: NoAction, onUpdate: NoAction, map: "fk_ep_programa")
+
+  @@id([id_programa, id_escuela], map: "pk_escuela_programa")
+  @@schema("programas")
+}
+
+model programa_acompanamiento {
+  id_programa      Int                @id(map: "pk_programa_acompanamiento") @default(autoincrement())
+  descripcion      String             @db.VarChar(100)
+  escuela_programa escuela_programa[]
+
+  @@schema("programas")
+}
+
+model escuela_problematica {
+  id_problematica Int
+  id_escuela      Int
+  escuela         escuela      @relation(fields: [id_escuela], references: [id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_ep_escuela")
+  problematica    problematica @relation(fields: [id_problematica], references: [id_problematica], onDelete: NoAction, onUpdate: NoAction, map: "fk_ep_problematica")
+
+  @@id([id_problematica, id_escuela], map: "pk_escuela_problematica")
+  @@schema("relevamiento")
+}
+
+model matricula {
+  id_escuela Int
+  anio       Int
+  cantidad   Int
+  escuela    escuela @relation(fields: [id_escuela], references: [id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_matricula_escuela")
+
+  @@id([id_escuela, anio], map: "pk_matricula")
+  @@index([anio], map: "idx_matricula_anio")
+  @@schema("relevamiento")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model personal {
+  id_escuela       Int
+  anio             Int
+  id_personal_tipo Int
+  cantidad         Int
+  observaciones    String?       @db.VarChar(200)
+  escuela          escuela       @relation(fields: [id_escuela], references: [id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_personal_escuela")
+  personal_tipo    personal_tipo @relation(fields: [id_personal_tipo], references: [id_personal_tipo], onDelete: NoAction, onUpdate: NoAction, map: "fk_personal_tipo")
+
+  @@id([id_escuela, anio, id_personal_tipo], map: "pk_personal")
+  @@index([anio], map: "idx_personal_anio")
+  @@index([id_escuela, anio, id_personal_tipo], map: "idx_personal_escuela_anio_tipo")
+  @@index([id_escuela, anio], map: "ix_personal_escuela_anio")
+  @@index([id_personal_tipo], map: "ix_personal_tipo")
+  @@schema("relevamiento")
+}
+
+model personal_tipo {
+  id_personal_tipo Int        @id(map: "pk_personal_tipo") @default(autoincrement())
+  codigo           String     @unique(map: "uq_personal_tipo_codigo") @db.VarChar(20)
+  nombre           String     @db.VarChar(100)
+  id_rol           Int?
+  activo           Boolean    @default(true)
+  personal         personal[]
+  rol              rol?       @relation(fields: [id_rol], references: [id_rol], onDelete: NoAction, onUpdate: NoAction, map: "fk_personal_tipo_rol")
+
+  @@index([id_rol], map: "idx_personal_tipo_rol")
+  @@schema("relevamiento")
+}
+
+model problematica {
+  id_problematica      Int                    @id(map: "pk_problematica") @default(autoincrement())
+  dimension            String                 @db.VarChar(50)
+  descripcion          String?                @db.VarChar(50)
+  escuela_problematica escuela_problematica[]
+
+  @@schema("relevamiento")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model persona {
+  id_persona         Int                  @id(map: "pk_persona") @default(autoincrement())
+  dni                Int                  @unique(map: "uq_persona_dni")
+  nombre             String               @db.VarChar(50)
+  apellido           String               @db.VarChar(50)
+  telefono           String               @db.VarChar(20)
+  mail               String               @unique(map: "uq_persona_mail") @db.VarChar(100)
+  created_at         DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime             @default(now()) @db.Timestamptz(6)
+  director_escuela   director_escuela[]
+  supervisor_escuela supervisor_escuela[]
+  asignacion         asignacion[]
+
+  @@index([apellido], map: "idx_persona_apellido")
+  @@index([apellido, nombre], map: "idx_persona_apellido_nombre")
+  @@index([created_at], map: "idx_persona_created_at")
+  @@schema("rrhh")
+}
+
+model rol {
+  id_rol        Int             @id(map: "pk_rol") @default(autoincrement())
+  codigo        String          @unique(map: "uq_rol_codigo") @db.VarChar(20)
+  personal_tipo personal_tipo[]
+  cargo         cargo[]
+
+  @@schema("rrhh")
+}
+
+model supervisor_escuela {
+  id_persona   Int
+  id_cargo     Int
+  id_escuela   Int       @id(map: "pk_supervisor_escuela")
+  id_autoridad Int
+  autoridad    autoridad @relation(fields: [id_autoridad], references: [id_autoridad], onDelete: NoAction, onUpdate: NoAction, map: "fk_se_autoridad")
+  cargo        cargo     @relation(fields: [id_cargo], references: [id_cargo], onDelete: NoAction, onUpdate: NoAction, map: "fk_se_cargo")
+  escuela      escuela   @relation(fields: [id_escuela], references: [id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_se_escuela")
+  persona      persona   @relation(fields: [id_persona], references: [id_persona], onDelete: NoAction, onUpdate: NoAction, map: "fk_se_persona")
+
+  @@index([id_persona], map: "idx_se_por_persona")
+  @@schema("supervision")
+}
+
+model asignacion {
+  id_vacante       Int
+  id_escuela       Int
+  id_persona       Int
+  id_autoridad     Int
+  id_disposicion   Int
+  fecha_asignacion DateTime    @default(dbgenerated("CURRENT_DATE")) @db.Date
+  created_at       DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime    @default(now()) @db.Timestamptz(6)
+  autoridad        autoridad   @relation(fields: [id_autoridad], references: [id_autoridad], onDelete: NoAction, onUpdate: NoAction, map: "fk_asignacion_autoridad")
+  disposicion      disposicion @relation(fields: [id_disposicion], references: [id_disposicion], onDelete: NoAction, onUpdate: NoAction, map: "fk_asignacion_disposicion")
+  persona          persona     @relation(fields: [id_persona], references: [id_persona], onDelete: NoAction, onUpdate: NoAction, map: "fk_asignacion_persona")
+  vacante          vacante     @relation(fields: [id_vacante, id_escuela], references: [id_vacante, id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_asignacion_vacante")
+
+  @@id([id_vacante, id_escuela], map: "pk_asignacion")
+  @@index([id_autoridad], map: "idx_asignacion_autoridad")
+  @@index([id_disposicion], map: "idx_asignacion_disposicion")
+  @@index([id_persona], map: "ix_asignacion_persona")
+  @@schema("vacantes")
+}
+
+model cargo {
+  id_cargo           Int                  @id(map: "pk_cargo") @default(autoincrement())
+  prefijo            Int
+  sufijo             Int
+  descripcion        String?              @db.VarChar(100)
+  id_rol             Int
+  codigo_display     String?              @default(dbgenerated("((lpad((prefijo)::text, 2, '0'::text) || '-'::text) || lpad((sufijo)::text, 3, '0'::text))")) @db.VarChar(20)
+  supervisor_escuela supervisor_escuela[]
+  rol                rol                  @relation(fields: [id_rol], references: [id_rol], onDelete: NoAction, onUpdate: NoAction, map: "fk_cargo_rol")
+  plaza              plaza[]
+
+  @@unique([prefijo, sufijo], map: "uq_cargo_prefijo_sufijo")
+  @@index([id_rol], map: "idx_cargo_rol")
+  @@schema("vacantes")
+}
+
+model plaza {
+  id_plaza         Int                @default(autoincrement())
+  id_escuela       Int
+  prefijo          Int
+  sufijo           Int
+  codigo_display   String?            @default(dbgenerated("((lpad((prefijo)::text, 2, '0'::text) || '-'::text) || lpad((sufijo)::text, 3, '0'::text))")) @db.VarChar(20)
+  descripcion      String?            @db.VarChar(150)
+  id_turno         Int
+  id_cargo         Int
+  director_escuela director_escuela[]
+  cargo            cargo              @relation(fields: [id_cargo], references: [id_cargo], onDelete: NoAction, onUpdate: NoAction, map: "fk_plaza_cargo")
+  escuela          escuela            @relation(fields: [id_escuela], references: [id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_plaza_escuela")
+  turno            turno              @relation(fields: [id_turno], references: [id_turno], onDelete: NoAction, onUpdate: NoAction, map: "fk_plaza_turno")
+  vacante          vacante[]
+
+  @@id([id_plaza, id_escuela], map: "pk_plaza")
+  @@unique([id_escuela, prefijo, sufijo], map: "uq_plaza_codigo_por_escuela")
+  @@index([id_cargo], map: "idx_plaza_cargo")
+  @@index([id_turno], map: "idx_plaza_turno")
+  @@index([id_escuela, id_cargo], map: "ix_plaza_escuela_cargo")
+  @@schema("vacantes")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model vacante {
+  id_vacante     Int         @default(autoincrement())
+  id_escuela     Int
+  id_plaza       Int
+  estado         String      @db.VarChar(20)
+  fecha_vacante  DateTime    @default(dbgenerated("CURRENT_DATE")) @db.Date
+  motivo         String?     @db.VarChar(50)
+  id_disposicion Int
+  created_at     DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime    @default(now()) @db.Timestamptz(6)
+  asignacion     asignacion?
+  disposicion    disposicion @relation(fields: [id_disposicion], references: [id_disposicion], onDelete: NoAction, onUpdate: NoAction, map: "fk_vacante_disposicion")
+  plaza          plaza       @relation(fields: [id_plaza, id_escuela], references: [id_plaza, id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_vacante_plaza_escuela")
+
+  @@id([id_vacante, id_escuela], map: "pk_vacante")
+  @@index([created_at], map: "idx_vacante_created_at")
+  @@index([id_disposicion], map: "idx_vacante_disposicion")
+  @@index([estado], map: "idx_vacante_estado")
+  @@index([id_escuela, estado], map: "ix_vacante_estado_escuela")
+  @@schema("vacantes")
 }
 
 view v_marcaciones_unificadas {
