@@ -19,7 +19,7 @@ export function NavSecondary({
   items: {
     title: string;
     url: string;
-    icon: Icon;
+    icon?: Icon;
   }[];
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   const pathname = usePathname();
@@ -38,7 +38,7 @@ export function NavSecondary({
                   className={isActive ? 'bg-accent text-accent-foreground' : ''}
                 >
                   <a href={item.url}>
-                    <item.icon />
+                    {item.icon && <item.icon />}
                     <span>{item.title}</span>
                   </a>
                 </SidebarMenuButton>

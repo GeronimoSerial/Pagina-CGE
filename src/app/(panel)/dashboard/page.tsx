@@ -7,6 +7,7 @@ import {
   getArgentinaDateString,
 } from '@dashboard/lib/utils';
 import { DashboardStatsCards } from '@dashboard/components/cards/dashboard-stats-cards';
+import { StaticStatsCards } from '@dashboard/components/cards/static-stats-cards';
 import { AttendanceChart } from '@dashboard/components/charts/attendance-chart';
 import { HoursChart } from '@dashboard/components/charts/hours-chart';
 import { DaysWithActivity } from '@dashboard/components/cards/days-with-activity';
@@ -42,6 +43,9 @@ export default async function Page() {
       <Suspense fallback={<LoadingSpinner />}>
         <DashboardStatsCards />
       </Suspense>
+
+      {/* Static Stats */}
+      <StaticStatsCards />
 
       {/* Charts */}
       <div className="grid gap-6 lg:grid-cols-2">

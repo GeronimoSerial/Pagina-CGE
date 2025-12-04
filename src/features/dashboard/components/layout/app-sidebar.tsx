@@ -1,19 +1,14 @@
 'use client';
 
-import * as React from 'react';
 import {
   IconAlertTriangle,
   IconDashboard,
-  IconDatabase,
-  IconFileDescription,
   IconInnerShadowTop,
   IconListDetails,
-  IconReport,
-  IconReportAnalytics,
   IconSettings,
-  IconUsers,
-  IconUserSearch,
+  type Icon,
 } from '@tabler/icons-react';
+import * as React from 'react';
 
 import { useRole } from '../../providers/session-provider';
 
@@ -30,7 +25,23 @@ import {
   SidebarMenuItem,
 } from './sidebar';
 
-const baseData = {
+type NavItem = {
+  title: string;
+  url: string;
+  icon?: Icon;
+  isActive?: boolean;
+  requiredRole?: string[];
+  items?: {
+    title: string;
+    url: string;
+    requiredRole?: string[];
+  }[];
+};
+
+const baseData: {
+  navMain: NavItem[];
+  navSecondary: NavItem[];
+} = {
   navMain: [
     {
       title: 'Panel',
@@ -38,35 +49,36 @@ const baseData = {
       icon: IconDashboard,
     },
     {
-      title: 'Asistencia',
-      url: '/dashboard/asistencia',
+      title: 'Asistencia CGE',
+      url: '#', // Placeholder URL for the group
       icon: IconListDetails,
-    },
-    {
-      title: 'Empleados',
-      url: '/dashboard/empleados',
-      icon: IconUserSearch,
-    },
-    {
-      title: 'Ausentes',
-      url: '/dashboard/ausentes',
-      icon: IconUsers,
-    },
-    {
-      title: 'Incompletas',
-      url: '/dashboard/incompletas',
-      icon: IconFileDescription,
-    },
-    {
-      title: 'Auditoría',
-      url: '/dashboard/auditoria',
-      icon: IconReport,
-    },
-    {
-      title: 'Reportes',
-      url: '/dashboard/reportes',
-      icon: IconReportAnalytics,
-      requiredRole: ['admin', 'owner'],
+      items: [
+        {
+          title: 'Asistencia',
+          url: '/dashboard/asistencia',
+        },
+        {
+          title: 'Empleados',
+          url: '/dashboard/empleados',
+        },
+        {
+          title: 'Ausentes',
+          url: '/dashboard/ausentes',
+        },
+        {
+          title: 'Incompletas',
+          url: '/dashboard/incompletas',
+        },
+        {
+          title: 'Auditoría',
+          url: '/dashboard/auditoria',
+        },
+        {
+          title: 'Reportes',
+          url: '/dashboard/reportes',
+          requiredRole: ['admin', 'owner'],
+        },
+      ],
     },
   ],
   navSecondary: [
@@ -95,12 +107,39 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return true;
   });
 
-  const filteredNav = baseData.navMain.filter((item) => {
-    if (item.requiredRole) {
-      return item.requiredRole.includes(userRole as string);
-    }
-    return true;
-  });
+  const filteredNav = baseData.navMain
+    .map((item) => {
+      // If the item has sub-items, filter them
+      if (item.items) {
+        const filteredItems = item.items.filter((subItem) => {
+          if (subItem.requiredRole) {
+            return subItem.requiredRole.includes(userRole as string);
+          }
+          return true;
+        });
+
+        // Return the item with filtered sub-items
+        return {
+          ...item,
+          items: filteredItems,
+        };
+      }
+
+      // If no sub-items, return as is (will be filtered by the next step if it has a role itself)
+      return item;
+    })
+    .filter((item) => {
+      // Filter the top-level item itself
+      if (item.requiredRole) {
+        return item.requiredRole.includes(userRole as string);
+      }
+      // If it's a group (has items) and all items were filtered out, maybe we should hide the group?
+      // For now, let's keep it if it has no role requirement, or if it has remaining items.
+      // If we want to hide empty groups:
+      // if (item.items && item.items.length === 0) return false;
+
+      return true;
+    });
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
