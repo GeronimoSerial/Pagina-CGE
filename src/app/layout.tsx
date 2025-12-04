@@ -4,8 +4,15 @@ import { Lora, Inter } from 'next/font/google';
 
 import metadata from './metadata';
 import Header from '@/shared/components/Header';
+import type { Viewport } from 'next';
 
 export { metadata };
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 const inter = Inter({ subsets: ['latin'] });
 const lora = Lora({

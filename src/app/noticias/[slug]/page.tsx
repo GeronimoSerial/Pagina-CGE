@@ -150,7 +150,7 @@ export default async function NoticiaPage({ params }: PageProps) {
       <div className="flex flex-1">
         <main className="flex-1 transition-all duration-300">
           <div className="wide-container section-spacing">
-            <nav className="flex items-center text-sm text-gray-500">
+            <nav className="flex flex-wrap items-center text-sm text-gray-500">
               <Link href="/" className="hover:text-green-800">
                 Inicio
               </Link>
@@ -159,10 +159,12 @@ export default async function NoticiaPage({ params }: PageProps) {
                 Noticias
               </Link>
               <span className="mx-2">/</span>
-              <span className="text-gray-900">{noticia.titulo}</span>
+              <span className="text-gray-900 truncate max-w-[200px] sm:max-w-none">
+                {noticia.titulo}
+              </span>
             </nav>
 
-            <article className="element-spacing bg-white rounded-xl shadow-xs">
+            <article className="element-spacing bg-white rounded-xl shadow-xs overflow-hidden">
               <div className="p-6 sm:p-8">
                 <header className="mb-8">
                   <div className="flex flex-wrap gap-4 items-center mb-2 text-sm text-gray-500">
@@ -201,7 +203,7 @@ export default async function NoticiaPage({ params }: PageProps) {
                 )}
                 <HTMLContent
                   content={noticia.contenido}
-                  className="mb-8 max-w-none prose prose-lg"
+                  className="mb-8 max-w-full prose prose-lg overflow-x-hidden"
                 />
                 {documentosConId && documentosConId.length > 0 && (
                   <>
