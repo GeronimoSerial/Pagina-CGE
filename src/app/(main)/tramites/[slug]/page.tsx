@@ -17,13 +17,13 @@ interface PageProps {
 
 export async function generateStaticParams() {
   const slugs = await getAllProcedureSlugs();
-  
+
   // Cache Components requires at least one result from generateStaticParams
   // If no slugs are returned, provide a placeholder that will 404 at runtime
   if (slugs.length === 0) {
     return [{ slug: '__placeholder__' }];
   }
-  
+
   return slugs.map((slug) => ({ slug }));
 }
 

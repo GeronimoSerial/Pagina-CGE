@@ -36,13 +36,13 @@ export async function generateStaticParams() {
     )
     .slice(0, 50)
     .map((noticia: any) => ({ slug: noticia.slug }));
-  
+
   // Cache Components requires at least one result from generateStaticParams
   // If no noticias are returned, provide a placeholder that will 404 at runtime
   if (validNoticias.length === 0) {
     return [{ slug: '__placeholder__' }];
   }
-  
+
   return validNoticias;
 }
 
