@@ -22,35 +22,25 @@ import {
 } from '@/shared/ui/table';
 import {
   IconUser,
-  IconSchool,
-  IconMapPin,
   IconPhone,
   IconMail,
   IconArrowLeft,
-  IconBuildingCommunity,
 } from '@tabler/icons-react';
 import {
   getSupervisorEstadisticas,
   getEscuelasDeSupervisor,
   getDistribucionZonaSupervisor,
   getDistribucionModalidadSupervisor,
-  getDistribucionDepartamentoSupervisor,
-} from '@dashboard/actions/escuelas';
+} from '@dashboard/actions/supervisores/supervisores-actions';
 
 async function SupervisorProfile({ id }: { id: number }) {
-  const [
-    supervisor,
-    escuelas,
-    distribucionZona,
-    distribucionModalidad,
-    distribucionDepartamento,
-  ] = await Promise.all([
-    getSupervisorEstadisticas(id),
-    getEscuelasDeSupervisor(id),
-    getDistribucionZonaSupervisor(id),
-    getDistribucionModalidadSupervisor(id),
-    getDistribucionDepartamentoSupervisor(id),
-  ]);
+  const [supervisor, escuelas, distribucionZona, distribucionModalidad] =
+    await Promise.all([
+      getSupervisorEstadisticas(id),
+      getEscuelasDeSupervisor(id),
+      getDistribucionZonaSupervisor(id),
+      getDistribucionModalidadSupervisor(id),
+    ]);
 
   if (!supervisor) {
     notFound();

@@ -284,3 +284,13 @@ export interface SupervisorListItem {
   nombre_completo: string;
   total_escuelas: number;
 }
+
+/**
+ * Datos de relevamiento de cocina
+ */
+export interface RelevamientoCocina {
+  id_cocina: number;
+  id_escuela: number;
+  fecha: Date;
+  datos: Record<string, any>; // JSONB field
+}

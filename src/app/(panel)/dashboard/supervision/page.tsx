@@ -9,9 +9,9 @@ import {
 } from '@tabler/icons-react';
 import {
   getSupervisoresConEscuelas,
-  getEstadisticasSistema,
   getSupervisoresPorDepartamento,
-} from '@dashboard/actions/escuelas';
+} from '@dashboard/actions/supervisores/supervisores-actions';
+import { getEstadisticasSistema } from '@/features/dashboard/actions/escuelas';
 
 async function SupervisionStats() {
   const [supervisores, stats, supervisoresPorDepartamento] = await Promise.all([

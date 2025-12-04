@@ -25,10 +25,8 @@ import {
   IconUsers,
   IconChartBar,
 } from '@tabler/icons-react';
-import {
-  getListaSupervisores,
-  getEstadisticasSistema,
-} from '@dashboard/actions/escuelas';
+import { getEstadisticasSistema } from '@dashboard/actions/escuelas';
+import { getListaSupervisores } from '@dashboard/actions/supervisores/supervisores-actions';
 
 async function SupervisorsTable() {
   const [supervisores, stats] = await Promise.all([

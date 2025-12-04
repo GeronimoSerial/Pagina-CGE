@@ -363,6 +363,7 @@ model escuela {
   zona                 zona                   @relation(fields: [id_zona], references: [id_zona], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_zona")
   planilla_novedades   planilla_novedades[]
   escuela_programa     escuela_programa[]
+  cocina               cocina[]
   escuela_problematica escuela_problematica[]
   matricula            matricula[]
   personal             personal[]
@@ -671,6 +672,17 @@ model vacante {
   @@index([estado], map: "idx_vacante_estado")
   @@index([id_escuela, estado], map: "ix_vacante_estado_escuela")
   @@schema("vacantes")
+}
+
+model cocina {
+  id_cocina  Int      @id(map: "pk_cocina") @default(autoincrement())
+  id_escuela Int
+  fecha      DateTime @db.Date
+  datos      Json
+  escuela    escuela  @relation(fields: [id_escuela], references: [id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_cocina_escuela")
+
+  @@index([id_escuela], map: "idx_cocina_escuela")
+  @@schema("relevamiento")
 }
 
 view v_marcaciones_unificadas {

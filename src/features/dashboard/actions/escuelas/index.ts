@@ -66,15 +66,6 @@ export {
 } from './escuelas-reportes';
 
 // Supervisores - Funciones relacionadas con supervisores
-export {
-  getSupervisoresConEscuelas,
-  getEscuelasPorSupervisor,
-  getSupervisoresPorDepartamento,
-  getSupervisorDetails,
-  getListaSupervisores,
-  getSupervisorEstadisticas,
-  getEscuelasDeSupervisor,
-  getDistribucionZonaSupervisor,
-  getDistribucionModalidadSupervisor,
-  getDistribucionDepartamentoSupervisor,
-} from './supervisores-actions';
+
+// Relevamiento - Funciones de relevamiento
+export { getRelevamientoCocina } from './escuelas-relevamiento';
