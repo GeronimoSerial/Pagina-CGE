@@ -1,6 +1,6 @@
 import { connection } from 'next/server';
-import { IncompleteMarksTable } from '@dashboard/components/incomplete-marks-table';
-import { DateFilter } from '@dashboard/components/date-filter';
+import { IncompleteMarksTable } from '@dashboard/components/tables/incomplete-marks-table';
+import { DateFilter } from '@dashboard/components/filters/date-filter';
 import { getMarcacionesIncompletas } from '@dashboard/actions/actions';
 import {
   getArgentinaDate,

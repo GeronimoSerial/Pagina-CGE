@@ -4,11 +4,10 @@ import {
   getReporteLiquidacion,
   getDiasConMarcaMes,
 } from '@dashboard/actions/actions';
-import { LiquidationReportTable } from '@dashboard/components/liquidation-report-table';
-import { MonthSelector } from '@dashboard/components/month-selector';
+import { LiquidationReportTable } from '@dashboard/components/tables/liquidation-report-table';
+import { MonthSelector } from '@dashboard/components/filters/month-selector';
 import { IconReportAnalytics } from '@tabler/icons-react';
 import { translateMonthName } from '@dashboard/lib/utils';
-
 
 export default async function ReportesPage({
   searchParams,

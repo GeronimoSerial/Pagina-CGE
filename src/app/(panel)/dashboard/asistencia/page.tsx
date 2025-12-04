@@ -1,6 +1,6 @@
 import { connection } from 'next/server';
-import { AttendanceTable } from '@dashboard/components/attendance-table';
-import { DateFilter } from '@dashboard/components/date-filter';
+import { AttendanceTable } from '@dashboard/components/tables/attendance-table';
+import { DateFilter } from '@dashboard/components/filters/date-filter';
 import { getAsistenciaDiaria } from '@dashboard/actions/actions';
 
 // MIGRATED: Using connection() to signal dynamic rendering before Date access

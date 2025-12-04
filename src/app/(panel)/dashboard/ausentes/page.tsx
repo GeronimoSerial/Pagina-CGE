@@ -1,6 +1,6 @@
 import { connection } from 'next/server';
-import { AbsencesTable } from '@dashboard/components/absences-table';
-import { DateFilter } from '@dashboard/components/date-filter';
+import { AbsencesTable } from '@dashboard/components/tables/absences-table';
+import { DateFilter } from '@dashboard/components/filters/date-filter';
 import { getAusentesDiarios } from '@dashboard/actions/actions';
 import {
   getArgentinaDate,

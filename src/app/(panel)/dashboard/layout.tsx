@@ -1,8 +1,11 @@
 import './dashboard.css';
 
-import { AppSidebar } from '@dashboard/components/app-sidebar';
-import { SiteHeader } from '@dashboard/components/site-header';
-import { SidebarInset, SidebarProvider } from '@dashboard/components/sidebar';
+import { AppSidebar } from '@dashboard/components/layout/app-sidebar';
+import { SiteHeader } from '@dashboard/components/layout/site-header';
+import {
+  SidebarInset,
+  SidebarProvider,
+} from '@dashboard/components/layout/sidebar';
 import { getCachedSession } from '@/shared/lib/auth/session-utils';
 import { redirect } from 'next/navigation';
 import { SessionProvider } from '@/features/dashboard/providers/session-provider';

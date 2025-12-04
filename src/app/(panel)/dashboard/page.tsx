@@ -6,11 +6,11 @@ import {
   getFirstOfMonthString,
   getArgentinaDateString,
 } from '@dashboard/lib/utils';
-import { DashboardStatsCards } from '@dashboard/components/dashboard-stats-cards';
-import { AttendanceChart } from '@dashboard/components/attendance-chart';
-import { HoursChart } from '@dashboard/components/hours-chart';
-import { DaysWithActivity } from '@dashboard/components/days-with-activity';
-import { DaysWithoutActivity } from '@dashboard/components/days-without-activity';
+import { DashboardStatsCards } from '@dashboard/components/cards/dashboard-stats-cards';
+import { AttendanceChart } from '@dashboard/components/charts/attendance-chart';
+import { HoursChart } from '@dashboard/components/charts/hours-chart';
+import { DaysWithActivity } from '@dashboard/components/cards/days-with-activity';
+import { DaysWithoutActivity } from '@dashboard/components/cards/days-without-activity';
 import { LoadingSpinner } from '@/shared/ui/loading-spinner';
 import { getCachedSession } from '@/shared/lib/auth/session-utils';
 export default async function Page() {

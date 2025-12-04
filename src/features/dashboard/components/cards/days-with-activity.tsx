@@ -1,5 +1,5 @@
 import { getDiasConMarca } from '@dashboard/actions/actions';
-import { DaysListView } from './days-list-view';
+import { DaysListView } from '../filters/days-list-view';
 
 interface DaysWithActivityProps {
   startDate: string;

@@ -1,5 +1,5 @@
 import { connection } from 'next/server';
-import { EmpleadosProblematicosTable } from '@dashboard/components/empleados-problematicos-table';
+import { EmpleadosProblematicosTable } from '@dashboard/components/tables/empleados-problematicos-table';
 import { getEmpleadosProblematicos } from '@dashboard/actions/actions';
 import { OnlyRole } from '@/features/dashboard/providers/only-role';
 

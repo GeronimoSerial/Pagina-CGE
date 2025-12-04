@@ -19,9 +19,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from '@dashboard/components/sidebar';
+} from './sidebar';
 import { useRouter } from 'next/navigation';
-import { useUser } from '../providers/session-provider';
+import { useUser } from '../../providers/session-provider';
 export function NavUser() {
   const { isMobile } = useSidebar();
   const router = useRouter();

@@ -1,6 +1,6 @@
 import { connection } from 'next/server';
-import { AuditTable } from '@dashboard/components/audit-table';
-import { DateFilter } from '@dashboard/components/date-filter';
+import { AuditTable } from '@dashboard/components/tables/audit-table';
+import { DateFilter } from '@dashboard/components/filters/date-filter';
 import { getAuditoriaOperaciones } from '@dashboard/actions/actions';
 import {
   getArgentinaDate,

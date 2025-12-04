@@ -15,11 +15,11 @@ import {
   IconUserSearch,
 } from '@tabler/icons-react';
 
-import { useRole } from '../providers/session-provider';
+import { useRole } from '../../providers/session-provider';
 
-import { NavMain } from '@dashboard/components/nav-main';
-import { NavSecondary } from '@dashboard/components/nav-secondary';
-import { NavUser } from '@dashboard/components/nav-user';
+import { NavMain } from './nav-main';
+import { NavSecondary } from './nav-secondary';
+import { NavUser } from './nav-user';
 import {
   Sidebar,
   SidebarContent,
@@ -28,7 +28,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@dashboard/components/sidebar';
+} from './sidebar';
 
 const baseData = {
   navMain: [

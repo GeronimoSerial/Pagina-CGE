@@ -2,10 +2,10 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
-import { FeriadosTable } from '@dashboard/components/feriados-table';
-import { JornadaConfigTable } from '@dashboard/components/jornada-config-table';
-import { ExcepcionesTable } from '@dashboard/components/excepciones-table';
-import { WhitelistTable } from '@dashboard/components/whitelist-table';
+import { FeriadosTable } from '@dashboard/components/tables/feriados-table';
+import { JornadaConfigTable } from '@dashboard/components/tables/jornada-config-table';
+import { ExcepcionesTable } from '@dashboard/components/tables/excepciones-table';
+import { WhitelistTable } from '@dashboard/components/tables/whitelist-table';
 import { UserManagement } from './user-management';
 import {
   IconCalendarEvent,

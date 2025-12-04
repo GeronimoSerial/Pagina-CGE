@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import * as React from 'react';
 import { usePathname } from 'next/navigation';
 import { type Icon } from '@tabler/icons-react';
 
@@ -10,41 +10,37 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@dashboard/components/sidebar';
+} from './sidebar';
 
-export function NavMain({
+export function NavSecondary({
   items,
+  ...props
 }: {
   items: {
     title: string;
     url: string;
-    icon?: Icon;
+    icon: Icon;
   }[];
-}) {
+} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   const pathname = usePathname();
 
   return (
-    <SidebarGroup>
-      <SidebarGroupContent className="flex flex-col gap-2">
-        <SidebarMenu></SidebarMenu>
+    <SidebarGroup {...props}>
+      <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => {
-            // Verificar si es exactamente la ruta o es una subruta pero no /dashboard
             const isActive =
-              pathname === item.url ||
-              (pathname.startsWith(item.url + '/') &&
-                item.url !== '/dashboard');
+              pathname === item.url || pathname.startsWith(item.url + '/');
             return (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
                   asChild
-                  tooltip={item.title}
                   className={isActive ? 'bg-accent text-accent-foreground' : ''}
                 >
-                  <Link href={item.url}>
-                    {item.icon && <item.icon />}
+                  <a href={item.url}>
+                    <item.icon />
                     <span>{item.title}</span>
-                  </Link>
+                  </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             );

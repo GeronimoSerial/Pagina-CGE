@@ -1,6 +1,6 @@
 import { connection } from 'next/server';
 import { getListaEmpleados } from '@dashboard/actions/actions';
-import { EmployeesTable } from '@dashboard/components/employees-table';
+import { EmployeesTable } from '@dashboard/components/tables/employees-table';
 
 // MIGRATED: Using connection() to signal dynamic rendering
 

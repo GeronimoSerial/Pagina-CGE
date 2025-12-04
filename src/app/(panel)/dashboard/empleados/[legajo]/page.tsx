@@ -10,10 +10,10 @@ import {
   getExcepciones,
   isEmpleadoInWhitelist,
 } from '@dashboard/actions/actions';
-import { MonthlyCalendar } from '@dashboard/components/monthly-calendar';
-import { EmployeeStatsCards } from '@dashboard/components/employee-stats-cards';
-import { EmployeeAttendanceTable } from '@dashboard/components/employee-attendance-table';
-import { DateFilter } from '@dashboard/components/date-filter';
+import { MonthlyCalendar } from '@dashboard/components/filters/monthly-calendar';
+import { EmployeeStatsCards } from '@dashboard/components/cards/employee-stats-cards';
+import { EmployeeAttendanceTable } from '@dashboard/components/tables/employee-attendance-table';
+import { DateFilter } from '@dashboard/components/filters/date-filter';
 import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import { parseDateString } from '@dashboard/lib/utils';

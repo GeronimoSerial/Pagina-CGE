@@ -6,7 +6,7 @@ import {
   getDetalleDiarioEmpleado,
   getMesesDisponibles,
 } from '@dashboard/actions/actions';
-import { EmployeeDailyReportTable } from '@dashboard/components/employee-daily-report-table';
+import { EmployeeDailyReportTable } from '@dashboard/components/tables/employee-daily-report-table';
 import { Button } from '@/shared/ui/button';
 import { IconArrowLeft, IconUser } from '@tabler/icons-react';
 import { translateMonthName } from '@dashboard/lib/utils';
