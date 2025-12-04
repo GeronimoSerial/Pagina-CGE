@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import {
   getEscuelasPorDepartamento,
   getTopLocalidades,
-} from '@dashboard/actions/escuelas-actions';
+} from '@dashboard/actions/escuelas';
 import { EscuelasPorDepartamentoChart } from '@dashboard/components/escuelas/geografia/escuelas-por-departamento-chart';
 import { EscuelasPorLocalidadTable } from '@dashboard/components/escuelas/geografia/escuelas-por-localidad-table';
 import { Skeleton } from '@/shared/ui/skeleton';

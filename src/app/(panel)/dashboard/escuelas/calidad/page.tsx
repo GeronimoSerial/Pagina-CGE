@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import {
   getMetricasCalidad,
   getEscuelasConDatosFaltantes,
-} from '@dashboard/actions/escuelas-actions';
+} from '@dashboard/actions/escuelas';
 import { CalidadStatsCards } from '@dashboard/components/escuelas/calidad/calidad-stats-cards';
 import { EscuelasDatosFaltantesList } from '@dashboard/components/escuelas/calidad/escuelas-datos-faltantes-list';
 import { Skeleton } from '@/shared/ui/skeleton';

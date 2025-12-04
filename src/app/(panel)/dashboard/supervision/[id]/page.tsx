@@ -35,7 +35,7 @@ import {
   getDistribucionZonaSupervisor,
   getDistribucionModalidadSupervisor,
   getDistribucionDepartamentoSupervisor,
-} from '@dashboard/actions/escuelas-actions';
+} from '@dashboard/actions/escuelas';
 
 async function SupervisorProfile({ id }: { id: number }) {
   const [

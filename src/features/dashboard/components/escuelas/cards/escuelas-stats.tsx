@@ -5,7 +5,7 @@ import {
   IconMapPin,
 } from '@tabler/icons-react';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
-import { getEstadisticasSistema } from '@dashboard/actions/escuelas-actions';
+import { getEstadisticasSistema } from '@dashboard/actions/escuelas';
 
 export async function EscuelasStats() {
   const stats = await getEstadisticasSistema();

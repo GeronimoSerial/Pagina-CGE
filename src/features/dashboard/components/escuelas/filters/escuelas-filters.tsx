@@ -4,7 +4,7 @@ import {
   getTodasCategorias,
   getTodosDepartamentos,
   getTodosSupervisores,
-} from '@dashboard/actions/escuelas-actions';
+} from '@dashboard/actions/escuelas';
 import { EscuelasFiltersView } from './escuelas-filters-view';
 
 export async function EscuelasFilters() {

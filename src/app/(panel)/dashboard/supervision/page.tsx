@@ -11,7 +11,7 @@ import {
   getSupervisoresConEscuelas,
   getEstadisticasSistema,
   getSupervisoresPorDepartamento,
-} from '@dashboard/actions/escuelas-actions';
+} from '@dashboard/actions/escuelas';
 
 async function SupervisionStats() {
   const [supervisores, stats, supervisoresPorDepartamento] = await Promise.all([

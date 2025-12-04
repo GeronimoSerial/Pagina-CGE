@@ -28,7 +28,7 @@ import {
 import {
   getListaSupervisores,
   getEstadisticasSistema,
-} from '@dashboard/actions/escuelas-actions';
+} from '@dashboard/actions/escuelas';
 
 async function SupervisorsTable() {
   const [supervisores, stats] = await Promise.all([
