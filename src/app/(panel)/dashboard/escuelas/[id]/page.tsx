@@ -18,7 +18,7 @@ import {
   CheckCircle2,
   School,
   Hash,
-} from 'lucide-react'; // Usamos Lucide para consistencia con el componente anterior
+} from 'lucide-react';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -36,7 +36,6 @@ export default async function EscuelaDetallePage(props: PageProps) {
 
   const relevamientosCocina = await getRelevamientoCocina(id);
 
-  // Helper para el estado de datos (Data Integrity Check)
   const dataChecks = [
     { label: 'Modalidad', valid: escuela.tiene_modalidad },
     { label: 'Categoría', valid: escuela.tiene_categoria },
@@ -49,7 +48,6 @@ export default async function EscuelaDetallePage(props: PageProps) {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      {/* 1. HEADER TÁCTICO: Jerarquía Visual Clara */}
       <header className="border-b bg-card px-6 py-6 shadow-sm">
         <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
           <div className="space-y-2">
