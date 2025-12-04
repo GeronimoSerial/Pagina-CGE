@@ -23,17 +23,15 @@
   --ring: 222.2 84% 4.9%;
   --radius: 0.5rem;
 
-  /* CGE Brand Colors */
   --institutional-green: 115 44% 38%;
   --institutional-green-foreground: 115 44% 38%;
 
-  /* Header Heights */
-  --header-height: 3.5rem; /* 56px - h-14 */
+  --header-height: 3.5rem;
 }
 
 @media (min-width: 640px) {
   :root {
-    --header-height: 3.5rem; /* 56px - h-14 (mismo en todos los tamaños) */
+    --header-height: 3.5rem;
   }
 }
 
@@ -64,10 +62,13 @@
   box-sizing: border-box;
 }
 
-*,
+*:not(svg):not([style*='position: absolute']):not([style*='position: fixed']) {
+  max-width: 100%;
+}
+
 *::before,
 *::after {
-  max-width: 100%;
+  box-sizing: border-box;
 }
 
 html,
@@ -94,7 +95,6 @@ html {
   scroll-padding-top: 5rem;
 }
 
-/* Corregir cursor pointer en botones y elementos interactivos */
 button,
 [role='button'],
 input[type='submit'],
@@ -103,7 +103,6 @@ input[type='button'],
   cursor: pointer;
 }
 
-/* Asegurar fondo blanco sólido en dropdowns y popovers */
 [role='menu'],
 [data-radix-menu-content],
 [data-radix-popper-content-wrapper],
@@ -113,13 +112,11 @@ input[type='button'],
   backdrop-filter: none !important;
 }
 
-/* Específico para shadcn/ui components */
 [data-state='open'][role='menu'],
 [data-state='open'][data-radix-menu-content] {
   background-color: hsl(var(--popover)) !important;
 }
 
-/* CGE Design System - Container Components */
 .page-container {
   margin-left: auto;
   margin-right: auto;
@@ -250,12 +247,10 @@ input[type='button'],
   display: none;
 }
 
-/* Animation utilidad personalizada para reemplazar Framer Motion */
 .animate-fade-in-up {
   animation: fade-in-up 0.7s ease-out;
 }
 
-/* Keyframes para animaciones personalizadas */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -267,14 +262,12 @@ input[type='button'],
   }
 }
 
-/* Skeleton optimization */
 .group:has(img[src]):not(:has(img[src=''])) .skeleton {
   display: none;
 }
 
 /* Performance optimizations para móviles */
 @media (max-width: 768px) {
-  /* Desactivar efectos hover y animaciones decorativas */
   .group:hover img.transition-transform,
   .group:hover img.scale-105,
   .group:active img.scale-105 {
@@ -282,7 +275,6 @@ input[type='button'],
     transition: none !important;
   }
 
-  /* Desactivar otras animaciones decorativas */
   .group img {
     transition: none !important;
   }
@@ -311,7 +303,6 @@ input[type='button'],
   background-color: rgb(34 197 94 / 0.4);
 }
 
-/* Habilitar animaciones decorativas solo si el dispositivo lo soporta y prefiere animaciones */
 @media (prefers-reduced-motion: no-preference) and (min-width: 769px) {
   .group:hover img {
     transform: scale(1.05);
