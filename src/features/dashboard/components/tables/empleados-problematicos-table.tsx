@@ -29,10 +29,15 @@ import {
   IconExternalLink,
   IconDownload,
   IconFileTypePdf,
+  IconChevronLeft,
+  IconChevronRight,
 } from '@tabler/icons-react';
 import { EmpleadoProblematico } from '@dashboard/lib/types';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+
+// Cantidad de filas por página
+const ROWS_PER_PAGE = 25;
 
 interface EmpleadosProblematicosTableProps {
   empleados: EmpleadoProblematico[];
@@ -43,6 +48,7 @@ export function EmpleadosProblematicosTable({
 }: EmpleadosProblematicosTableProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterProblema, setFilterProblema] = useState<string>('todos');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filteredEmpleados = useMemo(() => {
     return empleados.filter((emp) => {
@@ -63,6 +69,18 @@ export function EmpleadosProblematicosTable({
       return matchesSearch && matchesProblema;
     });
   }, [empleados, searchTerm, filterProblema]);
+
+  // Paginación
+  const totalPages = Math.ceil(filteredEmpleados.length / ROWS_PER_PAGE);
+  const paginatedEmpleados = useMemo(() => {
+    const start = (currentPage - 1) * ROWS_PER_PAGE;
+    return filteredEmpleados.slice(start, start + ROWS_PER_PAGE);
+  }, [filteredEmpleados, currentPage]);
+
+  // Reset página cuando cambia el filtro
+  useMemo(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filterProblema]);
 
   const stats = useMemo(() => {
     return {
@@ -524,7 +542,7 @@ export function EmpleadosProblematicosTable({
         </div>
       </div>
 
-      {/* Tabla */}
+      {/* Tabla con Paginación */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -542,99 +560,109 @@ export function EmpleadosProblematicosTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredEmpleados.map((emp, index) => (
-              <TableRow
-                key={emp.legajo}
-                className={index < 3 ? getSeverityBg(emp.score_severidad) : ''}
-              >
-                <TableCell>
-                  <div
-                    className={`font-bold text-lg ${getSeverityColor(
-                      emp.score_severidad,
-                    )}`}
-                  >
-                    {Number(emp.score_severidad).toFixed(0)}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div>
-                    <p className="font-medium">{emp.nombre}</p>
-                    <p className="text-xs text-muted-foreground">
-                      Leg: {emp.legajo}
-                      {emp.dni && ` • DNI: ${emp.dni}`}
-                    </p>
-                  </div>
-                </TableCell>
-                <TableCell className="hidden md:table-cell text-muted-foreground">
-                  {emp.area || '-'}
-                </TableCell>
-                <TableCell className="text-center">
-                  <Badge
-                    variant={emp.problema_ausencias ? 'destructive' : 'outline'}
-                    className="font-mono"
-                  >
-                    {emp.total_ausencias}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-center">
-                  <span
-                    className={`font-medium ${
-                      emp.problema_cumplimiento
-                        ? 'text-red-600 dark:text-red-400'
-                        : 'text-green-600 dark:text-green-400'
-                    }`}
-                  >
-                    {Number(emp.porcentaje_cumplimiento).toFixed(1)}%
-                  </span>
-                  <span className="text-xs text-muted-foreground block">
-                    {Number(emp.total_horas).toFixed(0)}/{emp.horas_esperadas}hs
-                  </span>
-                </TableCell>
-                <TableCell className="text-center hidden sm:table-cell">
-                  <Badge
-                    variant={emp.problema_incompletos ? 'secondary' : 'outline'}
-                    className={
-                      emp.problema_incompletos
-                        ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
-                        : ''
-                    }
-                  >
-                    {emp.dias_incompletos}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-center">
-                  <div className="flex items-center justify-center gap-1">
-                    {emp.problema_ausencias && (
-                      <IconCalendarX
-                        className="h-4 w-4 text-orange-500"
-                        title="Muchas ausencias"
-                      />
-                    )}
-                    {emp.problema_cumplimiento && (
-                      <IconClock
-                        className="h-4 w-4 text-red-500"
-                        title="Bajo cumplimiento"
-                      />
-                    )}
-                    {emp.problema_incompletos && (
-                      <IconClipboardX
-                        className="h-4 w-4 text-yellow-500"
-                        title="Días incompletos"
-                      />
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Link href={`/dashboard/empleados/${emp.legajo}`}>
-                    <Button variant="ghost" size="sm">
-                      <IconExternalLink className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                </TableCell>
-              </TableRow>
-            ))}
+            {paginatedEmpleados.map((emp, index) => {
+              const globalIndex = (currentPage - 1) * ROWS_PER_PAGE + index;
+              return (
+                <TableRow
+                  key={emp.legajo}
+                  className={
+                    globalIndex < 3 ? getSeverityBg(emp.score_severidad) : ''
+                  }
+                >
+                  <TableCell className="w-[60px]">
+                    <div
+                      className={`font-bold text-lg ${getSeverityColor(
+                        emp.score_severidad,
+                      )}`}
+                    >
+                      {Number(emp.score_severidad).toFixed(0)}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div>
+                      <p className="font-medium">{emp.nombre}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Leg: {emp.legajo}
+                        {emp.dni && ` • DNI: ${emp.dni}`}
+                      </p>
+                    </div>
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell text-muted-foreground">
+                    {emp.area || '-'}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Badge
+                      variant={
+                        emp.problema_ausencias ? 'destructive' : 'outline'
+                      }
+                      className="font-mono"
+                    >
+                      {emp.total_ausencias}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <span
+                      className={`font-medium ${
+                        emp.problema_cumplimiento
+                          ? 'text-red-600 dark:text-red-400'
+                          : 'text-green-600 dark:text-green-400'
+                      }`}
+                    >
+                      {Number(emp.porcentaje_cumplimiento).toFixed(1)}%
+                    </span>
+                    <span className="text-xs text-muted-foreground block">
+                      {Number(emp.total_horas).toFixed(0)}/{emp.horas_esperadas}
+                      hs
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-center hidden sm:table-cell">
+                    <Badge
+                      variant={
+                        emp.problema_incompletos ? 'secondary' : 'outline'
+                      }
+                      className={
+                        emp.problema_incompletos
+                          ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
+                          : ''
+                      }
+                    >
+                      {emp.dias_incompletos}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <div className="flex items-center justify-center gap-1">
+                      {emp.problema_ausencias && (
+                        <IconCalendarX
+                          className="h-4 w-4 text-orange-500"
+                          title="Muchas ausencias"
+                        />
+                      )}
+                      {emp.problema_cumplimiento && (
+                        <IconClock
+                          className="h-4 w-4 text-red-500"
+                          title="Bajo cumplimiento"
+                        />
+                      )}
+                      {emp.problema_incompletos && (
+                        <IconClipboardX
+                          className="h-4 w-4 text-yellow-500"
+                          title="Días incompletos"
+                        />
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="w-[80px]">
+                    <Link href={`/dashboard/empleados/${emp.legajo}`}>
+                      <Button variant="ghost" size="sm">
+                        <IconExternalLink className="h-4 w-4" />
+                      </Button>
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
 
-            {filteredEmpleados.length === 0 && (
+            {paginatedEmpleados.length === 0 && (
               <TableRow>
                 <TableCell
                   colSpan={8}
@@ -647,6 +675,38 @@ export function EmpleadosProblematicosTable({
           </TableBody>
         </Table>
       </div>
+
+      {/* Paginación */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-muted-foreground">
+            Mostrando {(currentPage - 1) * ROWS_PER_PAGE + 1} a{' '}
+            {Math.min(currentPage * ROWS_PER_PAGE, filteredEmpleados.length)} de{' '}
+            {filteredEmpleados.length} empleados
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              <IconChevronLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-sm">
+              Página {currentPage} de {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
+              <IconChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Leyenda */}
       <div className="flex flex-wrap gap-4 text-xs text-muted-foreground border-t pt-4">

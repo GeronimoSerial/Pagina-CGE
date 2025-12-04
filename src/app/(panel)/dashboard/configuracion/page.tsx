@@ -17,6 +17,7 @@ export type TabData = {
   excepciones?: any;
   whitelist?: any;
   listaEmpleados?: any;
+  usuarios?: any;
 };
 
 export default async function ConfiguracionPage({
@@ -71,7 +72,10 @@ export default async function ConfiguracionPage({
       break;
 
     case 'usuarios':
-      // No necesita carga de datos iniciales complejos si se maneja internamente
+      if (userRole === 'owner') {
+        const { getUsers } = await import('@dashboard/actions/auth-actions');
+        data.usuarios = await getUsers();
+      }
       break;
   }
 

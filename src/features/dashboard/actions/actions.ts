@@ -1,5 +1,5 @@
 'use server';
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import { prisma } from '../lib/prisma';
 import {
   AsistenciaDiaria,
@@ -41,6 +41,8 @@ export async function getAsistenciaDiaria(
   endDate: string,
 ): Promise<AsistenciaDiaria[]> {
   'use cache';
+  cacheLife('hours');
+  cacheTag('dashboard', 'asistencia');
   // Prisma $queryRaw con template literals para parámetros seguros
   const result = await prisma.$queryRaw<
     Array<{
@@ -84,6 +86,8 @@ export async function getAusentesDiarios(
   endDate: string,
 ): Promise<AusenteDiario[]> {
   'use cache';
+  cacheLife('hours');
+  cacheTag('dashboard', 'ausentes');
   const result = await prisma.$queryRaw<AusenteDiario[]>`
     SELECT
       legajo::int,
@@ -101,6 +105,8 @@ export async function getMarcacionesIncompletas(
   endDate: string,
 ): Promise<MarcacionIncompleta[]> {
   'use cache';
+  cacheLife('hours');
+  cacheTag('dashboard', 'marcaciones-incompletas');
   const result = await prisma.$queryRaw<MarcacionIncompleta[]>`
     SELECT
       legajo::int,
@@ -140,6 +146,8 @@ export async function getDiasSinActividad(
   endDate: string,
 ): Promise<DiaSinActividad[]> {
   'use cache';
+  cacheLife('hours');
+  cacheTag('dashboard', 'dias-sin-actividad');
   const result = await prisma.$queryRaw<DiaSinActividad[]>`
     SELECT dia::text
     FROM huella.v_dias_sin_actividad
@@ -151,6 +159,8 @@ export async function getDiasSinActividad(
 
 export async function getDiasConMarcaMes(mes: string): Promise<number> {
   'use cache';
+  cacheLife('hours');
+  cacheTag('dashboard', 'dias-con-marca');
   const result = await prisma.$queryRaw<[{ total: bigint }]>`
     SELECT COUNT(*) as total
     FROM huella.v_dias_con_marca
@@ -164,6 +174,8 @@ export async function getDiasConMarca(
   endDate: string,
 ): Promise<DiaConMarca[]> {
   'use cache';
+  cacheLife('hours');
+  cacheTag('dashboard', 'dias-con-marca');
   const result = await prisma.$queryRaw<Array<{ dia: string }>>`
       SELECT dia::text
       FROM huella.v_dias_con_marca
@@ -175,6 +187,8 @@ export async function getDiasConMarca(
 
 export async function getEmpleadosActivos(): Promise<EmpleadoActivo[]> {
   'use cache';
+  cacheLife('hours');
+  cacheTag('empleados', 'empleados-activos');
   const result = await prisma.$queryRaw<EmpleadoActivo[]>`
       SELECT legajo
       FROM huella.v_empleados_activos
@@ -185,6 +199,8 @@ export async function getEmpleadosActivos(): Promise<EmpleadoActivo[]> {
 
 export async function getCantidadEmpleadosActivos(): Promise<number> {
   'use cache';
+  cacheLife('hours');
+  cacheTag('dashboard', 'empleados-activos');
   const result = await prisma.$queryRaw<{ total: bigint }[]>`
     SELECT COUNT(*) as total
     FROM huella.v_empleados_activos
@@ -194,10 +210,19 @@ export async function getCantidadEmpleadosActivos(): Promise<number> {
 
 export async function getCantidadEmpleadosProblematicos(): Promise<number> {
   'use cache';
+  cacheLife('hours');
+  cacheTag('dashboard', 'empleados-problematicos');
+  // Usa vista materializada si existe, fallback a vista normal
   const result = await prisma.$queryRaw<{ total: bigint }[]>`
     SELECT COUNT(*) as total
-    FROM huella.v_empleados_problematicos
-  `;
+    FROM huella.mv_empleados_problematicos
+  `.catch(
+    () =>
+      prisma.$queryRaw<{ total: bigint }[]>`
+      SELECT COUNT(*) as total
+      FROM huella.v_empleados_problematicos
+    `,
+  );
   return bigIntToNumber(result[0]?.total ?? BigInt(0));
 }
 
@@ -325,15 +350,29 @@ export async function getEstadisticasDiarias(
   endDate: string,
 ): Promise<EstadisticaDiaria[]> {
   'use cache';
+  cacheLife('hours');
+  cacheTag('dashboard', 'estadisticas');
+  // Usa vista materializada si existe, fallback a vista normal
   const result = await prisma.$queryRaw<EstadisticaDiaria[]>`
     SELECT
       dia::text,
       presentes::int,
       ausentes::int
-    FROM huella.v_estadisticas_diarias
+    FROM huella.mv_estadisticas_diarias
     WHERE dia BETWEEN ${startDate}::date AND ${endDate}::date
     ORDER BY dia
-  `;
+  `.catch(
+    () =>
+      prisma.$queryRaw<EstadisticaDiaria[]>`
+      SELECT
+        dia::text,
+        presentes::int,
+        ausentes::int
+      FROM huella.v_estadisticas_diarias
+      WHERE dia BETWEEN ${startDate}::date AND ${endDate}::date
+      ORDER BY dia
+    `,
+  );
   return result;
 }
 
@@ -342,6 +381,8 @@ export async function getPromedioHorasDiario(
   endDate: string,
 ): Promise<PromedioHorasDiario[]> {
   'use cache';
+  cacheLife('hours');
+  cacheTag('dashboard', 'promedio-horas');
   const result = await prisma.$queryRaw<
     Array<{
       dia: string;
@@ -370,6 +411,7 @@ export async function getListaEmpleados(): Promise<
 > {
   'use cache';
   cacheLife('max');
+  cacheTag('empleados', 'lista-empleados');
 
   const result = await prisma.$queryRaw<{ legajo: string; nombre: string }[]>`
     SELECT DISTINCT l.cod as legajo, l.nombre
@@ -388,6 +430,7 @@ export async function getListaEmpleados(): Promise<
 export async function getMesesDisponibles(): Promise<MesDisponible[]> {
   'use cache';
   cacheLife('max');
+  cacheTag('reportes', 'meses-disponibles');
   const result = await prisma.$queryRaw<MesDisponible[]>`
     SELECT
       to_char(mes, 'YYYY-MM-DD') as mes,
@@ -402,6 +445,8 @@ export async function getReporteLiquidacion(
   mes: string,
 ): Promise<ReporteLiquidacion[]> {
   'use cache';
+  cacheLife('hours');
+  cacheTag('reportes', 'liquidacion');
   const result = await prisma.$queryRaw<
     Array<{
       legajo: string;
@@ -529,6 +574,7 @@ export async function getDetalleDiarioEmpleado(
 export async function getAreasDisponibles(): Promise<string[]> {
   'use cache';
   cacheLife('max');
+  cacheTag('empleados', 'areas');
   const result = await prisma.$queryRaw<{ area: string }[]>`
     SELECT DISTINCT area
     FROM huella.legajo
@@ -740,6 +786,9 @@ export async function getEmpleadosProblematicos(): Promise<
   EmpleadoProblematico[]
 > {
   'use cache';
+  cacheLife('hours');
+  cacheTag('dashboard', 'empleados-problematicos');
+  // Usa vista materializada si existe, fallback a vista normal
   const result = await prisma.$queryRaw<
     Array<{
       legajo: string;
@@ -781,9 +830,55 @@ export async function getEmpleadosProblematicos(): Promise<
       problema_incompletos,
       COALESCE(score_severidad, 0) as score_severidad,
       cantidad_problemas::int
-    FROM huella.v_empleados_problematicos
+    FROM huella.mv_empleados_problematicos
     ORDER BY score_severidad DESC, cantidad_problemas DESC, nombre
-  `;
+  `.catch(
+    () =>
+      prisma.$queryRaw<
+        Array<{
+          legajo: string;
+          nombre: string;
+          area: string | null;
+          turno: string | null;
+          dni: string | null;
+          horas_jornada: number;
+          total_ausencias: number;
+          dias_trabajados: number;
+          total_horas: Prisma.Decimal;
+          dias_incompletos: number;
+          total_dias_habiles: number;
+          horas_esperadas: number;
+          porcentaje_cumplimiento: Prisma.Decimal;
+          problema_ausencias: boolean;
+          problema_cumplimiento: boolean;
+          problema_incompletos: boolean;
+          score_severidad: Prisma.Decimal;
+          cantidad_problemas: number;
+        }>
+      >`
+      SELECT
+        legajo,
+        nombre,
+        area,
+        turno,
+        dni,
+        horas_jornada::int,
+        total_ausencias::int,
+        dias_trabajados::int,
+        COALESCE(total_horas, 0) as total_horas,
+        dias_incompletos::int,
+        total_dias_habiles::int,
+        horas_esperadas::int,
+        COALESCE(porcentaje_cumplimiento, 0) as porcentaje_cumplimiento,
+        problema_ausencias,
+        problema_cumplimiento,
+        problema_incompletos,
+        COALESCE(score_severidad, 0) as score_severidad,
+        cantidad_problemas::int
+      FROM huella.v_empleados_problematicos
+      ORDER BY score_severidad DESC, cantidad_problemas DESC, nombre
+    `,
+  );
 
   return result.map((row) => ({
     legajo: row.legajo,

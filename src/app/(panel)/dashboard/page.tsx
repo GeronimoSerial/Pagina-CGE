@@ -12,7 +12,11 @@ import { AttendanceChart } from '@dashboard/components/charts/attendance-chart';
 import { HoursChart } from '@dashboard/components/charts/hours-chart';
 import { DaysWithActivity } from '@dashboard/components/cards/days-with-activity';
 import { DaysWithoutActivity } from '@dashboard/components/cards/days-without-activity';
-import { LoadingSpinner } from '@/shared/ui/loading-spinner';
+import {
+  StatsCardsGridSkeleton,
+  ChartSkeleton,
+  CompactTableSkeleton,
+} from '@dashboard/components/skeletons';
 import { getCachedSession } from '@/shared/lib/auth/session-utils';
 export default async function Page() {
   // Signal dynamic rendering before accessing current time
@@ -39,60 +43,39 @@ export default async function Page() {
         <p className="text-sm text-muted-foreground">{todayStr}</p>
       </div>
 
-      {/* KPI Cards */}
-      <Suspense fallback={<LoadingSpinner />}>
-        <DashboardStatsCards />
-      </Suspense>
-
+      <h2 className="text-lg font-semibold">Estadísticas generales</h2>
+      <hr />
       {/* Static Stats */}
       <StaticStatsCards />
+      <hr />
 
+      <h2 className="text-lg font-semibold">Información del establecimiento</h2>
+      {/* KPI Cards */}
+      <Suspense fallback={<StatsCardsGridSkeleton />}>
+        <DashboardStatsCards />
+      </Suspense>
       {/* Charts */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <Suspense
-          fallback={
-            <div className="flex h-[300px] items-center justify-center rounded-xl border bg-card text-card-foreground shadow">
-              <LoadingSpinner />
-            </div>
-          }
-        >
+        <Suspense fallback={<ChartSkeleton height={300} />}>
           <AttendanceChart
             startDate={chartStartDate}
             endDate={firstOfMonthStr}
           />
         </Suspense>
-        <Suspense
-          fallback={
-            <div className="flex h-[300px] items-center justify-center rounded-xl border bg-card text-card-foreground shadow">
-              <LoadingSpinner />
-            </div>
-          }
-        >
+        <Suspense fallback={<ChartSkeleton height={300} />}>
           <HoursChart startDate={chartStartDate} endDate={firstOfMonthStr} />
         </Suspense>
       </div>
 
       {/* Days Lists */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <Suspense
-          fallback={
-            <div className="h-24 rounded-md border p-4">
-              <LoadingSpinner />
-            </div>
-          }
-        >
+        <Suspense fallback={<CompactTableSkeleton columns={3} rows={4} />}>
           <DaysWithActivity
             startDate={chartStartDate}
             endDate={firstOfMonthStr}
           />
         </Suspense>
-        <Suspense
-          fallback={
-            <div className="h-24 rounded-md border p-4">
-              <LoadingSpinner />
-            </div>
-          }
-        >
+        <Suspense fallback={<CompactTableSkeleton columns={3} rows={4} />}>
           <DaysWithoutActivity
             startDate={chartStartDate}
             endDate={firstOfMonthStr}

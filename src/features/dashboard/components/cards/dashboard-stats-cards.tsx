@@ -1,14 +1,14 @@
 import { IconUsers, IconUserCheck } from '@tabler/icons-react';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
 import Link from 'next/link';
-import {
-  getCantidadEmpleadosActivos,
-  getCantidadEmpleadosProblematicos,
-} from '@dashboard/actions/actions';
+import { getDashboardStats } from '@dashboard/lib/cached-queries';
 
 export async function DashboardStatsCards() {
-  const totalActivos = await getCantidadEmpleadosActivos();
-  const problematicosMesActual = await getCantidadEmpleadosProblematicos();
+  // Query consolidada: reduce 2 roundtrips a 1
+  const {
+    totalEmpleadosActivos: totalActivos,
+    totalEmpleadosProblematicos: problematicosMesActual,
+  } = await getDashboardStats();
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

@@ -25,10 +25,15 @@ import {
   IconDownload,
   IconFileSpreadsheet,
   IconFileTypePdf,
+  IconChevronLeft,
+  IconChevronRight,
 } from '@tabler/icons-react';
 import type { ReporteLiquidacion } from '@dashboard/lib/types';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+
+// Cantidad de filas por página
+const ROWS_PER_PAGE = 25;
 
 interface LiquidationReportTableProps {
   data: ReporteLiquidacion[];
@@ -42,6 +47,7 @@ export function LiquidationReportTable({
   diasConMarca,
 }: LiquidationReportTableProps) {
   const [search, setSearch] = React.useState('');
+  const [currentPage, setCurrentPage] = React.useState(1);
 
   const filteredData = React.useMemo(() => {
     let filtered = data;
@@ -58,6 +64,18 @@ export function LiquidationReportTable({
 
     return filtered;
   }, [data, search]);
+
+  // Paginación
+  const totalPages = Math.ceil(filteredData.length / ROWS_PER_PAGE);
+  const paginatedData = React.useMemo(() => {
+    const start = (currentPage - 1) * ROWS_PER_PAGE;
+    return filteredData.slice(start, start + ROWS_PER_PAGE);
+  }, [filteredData, currentPage]);
+
+  // Reset página cuando cambia el filtro
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
 
   const totales = React.useMemo(() => {
     return {
@@ -496,7 +514,7 @@ export function LiquidationReportTable({
         </div>
       </div>
 
-      {/* Tabla */}
+      {/* Tabla con Paginación */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -519,10 +537,12 @@ export function LiquidationReportTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredData.length ? (
-              filteredData.map((emp) => (
+            {paginatedData.length > 0 ? (
+              paginatedData.map((emp) => (
                 <TableRow key={emp.legajo}>
-                  <TableCell className="font-medium">{emp.legajo}</TableCell>
+                  <TableCell className="font-medium w-[80px]">
+                    {emp.legajo}
+                  </TableCell>
                   <TableCell>
                     <div>
                       <p className="font-medium">{emp.nombre}</p>
@@ -596,7 +616,7 @@ export function LiquidationReportTable({
                       {emp.categoria_horas}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right w-[100px]">
                     <Link
                       href={`/dashboard/reportes/${emp.legajo}?mes=${mesSeleccionado}`}
                     >
@@ -619,6 +639,38 @@ export function LiquidationReportTable({
           </TableBody>
         </Table>
       </div>
+
+      {/* Paginación */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-muted-foreground">
+            Mostrando {(currentPage - 1) * ROWS_PER_PAGE + 1} a{' '}
+            {Math.min(currentPage * ROWS_PER_PAGE, filteredData.length)} de{' '}
+            {filteredData.length} empleados
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              <IconChevronLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-sm">
+              Página {currentPage} de {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
+              <IconChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

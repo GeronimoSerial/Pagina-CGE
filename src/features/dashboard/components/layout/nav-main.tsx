@@ -58,27 +58,25 @@ export function NavMain({
           // Determine if the group should be open by default
           const defaultOpen = item.isActive || isChildActive;
 
-          return (
-            <Collapsible
-              key={item.title}
-              asChild
-              defaultOpen={defaultOpen}
-              className="group/collapsible"
-            >
-              <SidebarMenuItem>
-                <CollapsibleTrigger asChild>
-                  <SidebarMenuButton
-                    tooltip={item.title}
-                    isActive={isItemActive || isChildActive}
-                  >
-                    {item.icon && <item.icon />}
-                    <span>{item.title}</span>
-                    {item.items && item.items.length > 0 && (
+          if (item.items && item.items.length > 0) {
+            return (
+              <Collapsible
+                key={item.title}
+                asChild
+                defaultOpen={defaultOpen}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      isActive={isItemActive || isChildActive}
+                    >
+                      {item.icon && <item.icon />}
+                      <span>{item.title}</span>
                       <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                    )}
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
-                {item.items && item.items.length > 0 && (
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
                       {item.items.map((subItem) => {
@@ -101,9 +99,24 @@ export function NavMain({
                       })}
                     </SidebarMenuSub>
                   </CollapsibleContent>
-                )}
-              </SidebarMenuItem>
-            </Collapsible>
+                </SidebarMenuItem>
+              </Collapsible>
+            );
+          }
+
+          return (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton
+                asChild
+                tooltip={item.title}
+                isActive={isItemActive}
+              >
+                <Link href={item.url}>
+                  {item.icon && <item.icon />}
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           );
         })}
       </SidebarMenu>

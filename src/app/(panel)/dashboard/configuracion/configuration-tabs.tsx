@@ -138,7 +138,10 @@ export function ConfigurationTabs({
         {userRole === 'owner' && (
           <TabsContent value="usuarios" className="mt-6">
             <div className="rounded-lg border bg-card p-6">
-              <UserManagement currentUserRole={userRole} />
+              <UserManagement
+                currentUserRole={userRole}
+                users={data.usuarios}
+              />
             </div>
           </TabsContent>
         )}
