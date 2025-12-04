@@ -3,9 +3,14 @@
 import {
   IconAlertTriangle,
   IconDashboard,
+  IconFileDescription,
   IconInnerShadowTop,
   IconListDetails,
+  IconReport,
+  IconReportAnalytics,
   IconSettings,
+  IconUsers,
+  IconUserSearch,
   type Icon,
 } from '@tabler/icons-react';
 import * as React from 'react';
@@ -34,6 +39,7 @@ type NavItem = {
   items?: {
     title: string;
     url: string;
+    icon?: Icon;
     requiredRole?: string[];
   }[];
 };
@@ -56,26 +62,32 @@ const baseData: {
         {
           title: 'Asistencia',
           url: '/dashboard/asistencia',
+          icon: IconListDetails,
         },
         {
           title: 'Empleados',
           url: '/dashboard/empleados',
+          icon: IconUserSearch,
         },
         {
           title: 'Ausentes',
           url: '/dashboard/ausentes',
+          icon: IconUsers,
         },
         {
           title: 'Incompletas',
           url: '/dashboard/incompletas',
+          icon: IconFileDescription,
         },
         {
           title: 'Auditoría',
           url: '/dashboard/auditoria',
+          icon: IconReport,
         },
         {
           title: 'Reportes',
           url: '/dashboard/reportes',
+          icon: IconReportAnalytics,
           requiredRole: ['admin', 'owner'],
         },
       ],
