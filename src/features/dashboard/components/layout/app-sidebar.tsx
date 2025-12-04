@@ -54,14 +54,14 @@ const baseData: {
 } = {
   navMain: [
     {
-      title: 'Panel',
+      title: 'Inicio',
       url: '/dashboard',
       icon: IconDashboard,
     },
     {
-      title: 'Asistencia CGE',
+      title: 'Gestión de Personal',
       url: '#',
-      icon: IconListDetails,
+      icon: IconUsers,
       items: [
         {
           title: 'Asistencia',
@@ -76,7 +76,7 @@ const baseData: {
         {
           title: 'Ausentes',
           url: '/dashboard/ausentes',
-          icon: IconUsers,
+          icon: IconAlertTriangle,
         },
         {
           title: 'Incompletas',
@@ -97,17 +97,12 @@ const baseData: {
       ],
     },
     {
-      title: 'Documentos',
-      url: '/dashboard/documentos',
-      icon: IconFileDescription,
-    },
-    {
-      title: 'Escuelas',
+      title: 'Gestión Institucional',
       url: '#',
       icon: IconSchool,
       items: [
         {
-          title: 'General',
+          title: 'Escuelas',
           url: '/dashboard/escuelas',
           icon: IconDashboard,
         },
@@ -117,7 +112,7 @@ const baseData: {
           icon: IconUserSearch,
         },
         {
-          title: 'Geografía',
+          title: 'Mapa Educativo',
           url: '/dashboard/escuelas/geografia',
           icon: IconMap,
         },
@@ -127,7 +122,7 @@ const baseData: {
           icon: IconShieldCheck,
         },
         {
-          title: 'Sin información',
+          title: 'Sin Información',
           url: '/dashboard/escuelas/sin-informacion',
           icon: IconAlertTriangle,
         },
@@ -139,7 +134,7 @@ const baseData: {
       icon: IconUserCheck,
       items: [
         {
-          title: 'General',
+          title: 'Tablero de Control',
           url: '/dashboard/supervision',
           icon: IconDashboard,
         },
@@ -149,6 +144,11 @@ const baseData: {
           icon: IconListDetails,
         },
       ],
+    },
+    {
+      title: 'Documentos',
+      url: '/dashboard/documentos',
+      icon: IconFileDescription,
     },
   ],
   navSecondary: [

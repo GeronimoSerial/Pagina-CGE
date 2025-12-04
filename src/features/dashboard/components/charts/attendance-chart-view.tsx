@@ -27,6 +27,7 @@ import { parseDateString } from '@dashboard/lib/utils';
 
 interface AttendanceChartProps {
   data: EstadisticaDiaria[];
+  className?: string;
 }
 
 const chartConfig = {
@@ -40,7 +41,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function AttendanceChartView({ data }: AttendanceChartProps) {
+export function AttendanceChartView({ data, className }: AttendanceChartProps) {
   const chartData = data.map((item) => ({
     date: item.dia,
     presentes: item.presentes,
@@ -48,7 +49,7 @@ export function AttendanceChartView({ data }: AttendanceChartProps) {
   }));
 
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader>
         <CardTitle>Asistencia diaria</CardTitle>
         <CardDescription>Presentes / ausentes por día</CardDescription>

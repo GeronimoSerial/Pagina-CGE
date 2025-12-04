@@ -52,14 +52,17 @@ jobs:
           chmod 600 private_key
 
           rsync -az --delete -e "ssh -i private_key -o StrictHostKeyChecking=no" \
-            .next public package.json package-lock.json prisma \
+            .next public package.json package-lock.json prisma deploy.sh \
             root@${{secrets.VPS_IP}}:/home/frontend/Pagina-CGE/
 
       - name: Deploy and restart app
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key
           chmod 600 private_key
 
-          ssh -i private_key -o StrictHostKeyChecking=no root@${{secrets.VPS_IP}} 'bash /root/deploy.sh'
+          ssh -i private_key -o StrictHostKeyChecking=no root@${{secrets.VPS_IP}} "echo 'DATABASE_URL=$DATABASE_URL' > /home/frontend/Pagina-CGE/.env"
+
+          ssh -i private_key -o StrictHostKeyChecking=no root@${{secrets.VPS_IP}} 'bash /home/frontend/Pagina-CGE/deploy.sh'

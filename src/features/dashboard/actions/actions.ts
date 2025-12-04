@@ -1173,3 +1173,48 @@ export async function isEmpleadoInWhitelist(legajo: string): Promise<boolean> {
   });
   return count > 0;
 }
+
+export interface AlertsSummary {
+  absentes: number;
+  incompletas: number;
+  problematicos: number;
+}
+
+export async function getAlertsSummary(): Promise<AlertsSummary> {
+  'use cache';
+  cacheLife('hours');
+  cacheTag('dashboard', 'alerts');
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayStr = formatDateToISO(today)!;
+
+  // Obtener ausentes de hoy
+  const ausentes = await prisma.$queryRaw<[{ count: bigint }]>`
+    SELECT COUNT(*) as count
+    FROM huella.v_ausentes_diarios
+    WHERE dia = ${todayStr}::date
+  `;
+
+  // Obtener marcaciones incompletas de hoy
+  const incompletas = await prisma.$queryRaw<[{ count: bigint }]>`
+    SELECT COUNT(*) as count
+    FROM huella.v_marcaciones_incompletas
+    WHERE dia = ${todayStr}::date
+  `;
+
+  // Obtener empleados problemáticos (vista ya contiene los últimos 30 días)
+  const problematicos = await prisma.$queryRaw<[{ count: bigint }]>`
+    SELECT COUNT(*) as count
+    FROM huella.v_empleados_problematicos
+    WHERE problema_ausencias = true 
+       OR problema_cumplimiento = true 
+       OR problema_incompletos = true
+  `;
+
+  return {
+    absentes: Number(ausentes[0]?.count ?? 0),
+    incompletas: Number(incompletas[0]?.count ?? 0),
+    problematicos: Number(problematicos[0]?.count ?? 0),
+  };
+}

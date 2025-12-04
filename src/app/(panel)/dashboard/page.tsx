@@ -6,17 +6,12 @@ import {
   getFirstOfMonthString,
   getArgentinaDateString,
 } from '@dashboard/lib/utils';
-import { DashboardStatsCards } from '@dashboard/components/cards/dashboard-stats-cards';
-import { StaticStatsCards } from '@dashboard/components/cards/static-stats-cards';
-import { AttendanceChart } from '@dashboard/components/charts/attendance-chart';
-import { HoursChart } from '@dashboard/components/charts/hours-chart';
-import { DaysWithActivity } from '@dashboard/components/cards/days-with-activity';
-import { DaysWithoutActivity } from '@dashboard/components/cards/days-without-activity';
-import {
-  StatsCardsGridSkeleton,
-  ChartSkeleton,
-  CompactTableSkeleton,
-} from '@dashboard/components/skeletons';
+import { DashboardHeader } from '@dashboard/components/layout/dashboard-header';
+import { KeyMetricsGrid } from '@dashboard/components/layout/key-metrics-grid';
+import { TrendAnalysisSection } from '@dashboard/components/layout/trend-analysis-section';
+import { DetailedActivityPanel } from '@dashboard/components/layout/detailed-activity-panel';
+import { AlertsPanel } from '@dashboard/components/layout/alerts-panel';
+import { CompactTableSkeleton } from '@dashboard/components/skeletons';
 import { getCachedSession } from '@/shared/lib/auth/session-utils';
 export default async function Page() {
   // Signal dynamic rendering before accessing current time
@@ -36,52 +31,34 @@ export default async function Page() {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl text-pretty md:text-2xl">
-          Hola, <strong> {nombre}</strong> 👋
-        </h1>
-        <p className="text-sm text-muted-foreground">{todayStr}</p>
+      <DashboardHeader userName={nombre} dateString={todayStr} />
+
+      <hr className="my-2" />
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <KeyMetricsGrid />
+        </div>
+        <div>
+          <Suspense fallback={<CompactTableSkeleton columns={2} rows={3} />}>
+            <AlertsPanel />
+          </Suspense>
+        </div>
       </div>
 
-      <h2 className="text-lg font-semibold">Estadísticas generales</h2>
-      <hr />
-      {/* Static Stats */}
-      <StaticStatsCards />
-      <hr />
+      <hr className="my-2" />
 
-      <h2 className="text-lg font-semibold">Información del establecimiento</h2>
-      {/* KPI Cards */}
-      <Suspense fallback={<StatsCardsGridSkeleton />}>
-        <DashboardStatsCards />
-      </Suspense>
-      {/* Charts */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Suspense fallback={<ChartSkeleton height={300} />}>
-          <AttendanceChart
-            startDate={chartStartDate}
-            endDate={firstOfMonthStr}
-          />
-        </Suspense>
-        <Suspense fallback={<ChartSkeleton height={300} />}>
-          <HoursChart startDate={chartStartDate} endDate={firstOfMonthStr} />
-        </Suspense>
-      </div>
+      <TrendAnalysisSection
+        chartStartDate={chartStartDate}
+        chartEndDate={firstOfMonthStr}
+      />
 
-      {/* Days Lists */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Suspense fallback={<CompactTableSkeleton columns={3} rows={4} />}>
-          <DaysWithActivity
-            startDate={chartStartDate}
-            endDate={firstOfMonthStr}
-          />
-        </Suspense>
-        <Suspense fallback={<CompactTableSkeleton columns={3} rows={4} />}>
-          <DaysWithoutActivity
-            startDate={chartStartDate}
-            endDate={firstOfMonthStr}
-          />
-        </Suspense>
-      </div>
+      <hr className="my-2" />
+
+      <DetailedActivityPanel
+        chartStartDate={chartStartDate}
+        chartEndDate={firstOfMonthStr}
+      />
     </div>
   );
 }
