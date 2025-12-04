@@ -23,7 +23,6 @@ import {
   FileText,
   MessageSquare,
   Send,
-  Phone,
   CheckCircle2,
   Building2,
 } from 'lucide-react';

@@ -56,32 +56,32 @@ const SANITIZE_CONFIG = {
 };
 
 const TAG_CLASS_MAP: Record<string, string> = {
-  h1: 'text-3xl font-bold text-slate-900 mt-8 mb-4 border-b pb-1 border-slate-200',
-  h2: 'text-2xl font-semibold mt-6 mb-3 text-slate-900',
-  h3: 'text-xl font-medium mt-6 mb-3 text-slate-900',
-  a: 'text-gray-800 underline hover:text-blue-800 hover:underline transition-colors font-medium',
-  img: 'rounded-xl shadow-xl my-8 w-full',
+  h1: 'text-3xl font-bold text-slate-900 mt-8 mb-4 border-b pb-1 border-slate-200 break-words',
+  h2: 'text-2xl font-semibold mt-6 mb-3 text-slate-900 break-words',
+  h3: 'text-xl font-medium mt-6 mb-3 text-slate-900 break-words',
+  a: 'text-gray-800 underline hover:text-blue-800 hover:underline transition-colors font-medium break-words',
+  img: 'rounded-xl shadow-xl my-8 w-full h-auto',
   blockquote:
     'border-l-4 border-slate-400 bg-slate-50 pl-5 py-3 my-8 italic rounded-r-lg text-slate-700',
   code: 'bg-slate-100 px-2 py-0.5 rounded text-slate-700 font-mono text-sm',
   pre: 'bg-slate-800 text-slate-100 rounded-xl p-5 overflow-x-auto my-8 shadow-md text-sm',
   ul: 'list-disc pl-6 my-5 space-y-2 marker:text-slate-500',
   ol: 'list-decimal pl-6 my-5 space-y-2 marker:text-slate-500',
-  li: 'mb-2 leading-relaxed',
+  li: 'mb-2 leading-relaxed break-words',
   table:
     'w-full border border-slate-200 rounded-xl overflow-hidden text-sm sm:text-base',
   th: 'border border-slate-200 px-2 py-1.5 sm:px-4 sm:py-2.5 bg-slate-100 text-left text-slate-700 font-medium',
   td: 'border border-slate-200 px-2 py-1.5 sm:px-4 sm:py-2.5',
-  p: 'mb-6 text-slate-800 leading-relaxed text-base',
-  b: 'font-bold text-slate-900',
-  strong: 'font-bold text-slate-900',
+  p: 'mb-6 text-slate-800 leading-relaxed text-base break-words',
+  b: 'font-bold text-slate-900 break-words',
+  strong: 'font-bold text-slate-900 break-words',
 };
 
 const wrapTablesWithResponsiveContainer = (html: string): string => {
   const tableRegex = /<table[^>]*>[\s\S]*?<\/table>/gi;
   return html.replace(
     tableRegex,
-    '<div class="overflow-x-auto -mx-6 sm:-mx-8 my-6"><div class="inline-block min-w-full px-6 sm:px-8">$&</div></div>',
+    '<div class="overflow-x-auto my-6 w-full">$&</div>',
   );
 };
 
@@ -89,7 +89,7 @@ const addClassesToTags = (html: string): string => {
   const classAttrRegex = /class\s*=\s*(['"])(.*?)\1/;
 
   return html.replace(
-    /<(\/)?([a-zA-Z0-9]+)([^>]*)>/g, 
+    /<(\/)?([a-zA-Z0-9]+)([^>]*)>/g,
     (match, slash, tag, attrs) => {
       const tagName = tag.toLowerCase();
       if (slash) return match;

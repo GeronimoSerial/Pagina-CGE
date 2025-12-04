@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connection } from 'next/server';
 import { DIRECTUS_URL } from '@/shared/lib/config';
+import { safeFetchJson } from '@/shared/lib/safe-fetch';
 
 interface DirectusNewsResponse {
   data: Array<{
@@ -97,26 +98,20 @@ export async function GET(
     const directusUrl = buildDirectusUrl(limit);
 
     // 3. Fetch con ISR cache optimizado para featured news
-    const response = await fetch(directusUrl, {
-      next: {
-        revalidate: false, // Cache hasta invalidación por webhook
-        tags: ['noticias', 'noticias-featured'],
+    const directusData = await safeFetchJson<DirectusNewsResponse>(
+      directusUrl,
+      {
+        next: {
+          revalidate: false,
+          tags: ['noticias', 'noticias-featured'],
+        },
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+      { timeoutMs: 8000, retries: 1 },
+    );
 
-    if (!response.ok) {
-      console.error(
-        `Directus API error: ${response.status} ${response.statusText}`,
-      );
-      throw new Error(`Error del servidor de contenidos: ${response.status}`);
-    }
-
-    const directusData: DirectusNewsResponse = await response.json();
-
-    // 4. Transformar datos para carousel
     const transformedData = directusData.data.map((noticia) => ({
       id: noticia.id,
       titulo: noticia.titulo,
@@ -154,7 +149,18 @@ export async function GET(
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    // Error genérico del servidor
+    if (error instanceof Error) {
+      const isTimeout =
+        error.name === 'AbortError' || error.message.includes('Timeout');
+      const isHttp = error.message.startsWith('HTTP');
+      if (isTimeout || isHttp) {
+        return NextResponse.json(
+          { error: 'Servicio de contenidos no disponible' },
+          { status: 502 },
+        );
+      }
+    }
+
     return NextResponse.json(
       { error: 'Error interno del servidor' },
       { status: 500 },

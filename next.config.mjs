@@ -10,30 +10,6 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'cms.geroserial.com',
-        port: '',
-        pathname: '/assets/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'cms.geroserial.com',
-        port: '',
-        pathname: '/cdn-cgi/image/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'devcms.geroserial.com',
-        port: '',
-        pathname: '/cdn-cgi/image/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'devcms.geroserial.com',
-        port: '',
-        pathname: '/assets/**',
-      },
-      {
-        protocol: 'https',
         hostname: 'consejo.geroserial.com',
         port: '',
         pathname: '/cdn-cgi/image/**',

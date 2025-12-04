@@ -2,12 +2,12 @@ import directus from '@/shared/lib/directus';
 import { NewsItem } from '@/shared/interfaces';
 import { cfImages } from '@/shared/lib/cloudflare-images';
 import { DIRECTUS_URL } from '@/shared/lib/config';
+import { safeFetchJson } from '@/shared/lib/safe-fetch';
 
-// ------------> Directus SDK for News <------------
-// 1. Obtener todas las noticias (solo slugs) - fetch directo con tags
+
 export async function getAllNews() {
   try {
-    const response = await fetch(
+    const { data: noticias } = await safeFetchJson(
       `${DIRECTUS_URL}/items/noticias?fields=slug&limit=-1`,
       {
         next: {
@@ -15,14 +15,8 @@ export async function getAllNews() {
           revalidate: false, // Cache hasta invalidación por webhook
         },
       },
+      { timeoutMs: 8000, retries: 1 },
     );
-
-    if (!response.ok) {
-      console.error('Error fetching all news slugs:', response.statusText);
-      return [];
-    }
-
-    const { data: noticias } = await response.json();
     return noticias || [];
   } catch (error) {
     console.error('Error in getAllNews:', error);
@@ -45,7 +39,7 @@ export async function getPaginatedNews(
       filterQuery = `&filter[categoria][_eq]=${encodeURIComponent(filters.categoria)}`;
     }
 
-    const response = await fetch(
+    const { data: noticias } = await safeFetchJson(
       `${DIRECTUS_URL}/items/noticias?fields=id,titulo,resumen,date_created,date_updated,fecha,categoria,esImportante,slug,portada.*&sort=-fecha,-id&limit=${Math.min(pageSize, 20)}&offset=${offset}${filterQuery}`,
       {
         next: {
@@ -53,22 +47,8 @@ export async function getPaginatedNews(
           revalidate: false, // Cache hasta invalidación por webhook
         },
       },
+      { timeoutMs: 8000, retries: 1 },
     );
-
-    if (!response.ok) {
-      console.error('Error fetching paginated news:', response.statusText);
-      return {
-        noticias: [],
-        pagination: {
-          page,
-          pageCount: 1,
-          pageSize,
-          total: 0,
-        },
-      };
-    }
-
-    const { data: noticias } = await response.json();
 
     return {
       noticias: noticias || [],
@@ -96,7 +76,7 @@ export async function getPaginatedNews(
 // 3. Obtener noticia por slug (fetch directo con tags)
 export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
   try {
-    const response = await fetch(
+    const { data: noticias } = await safeFetchJson(
       `${DIRECTUS_URL}/items/noticias?filter[slug][_eq]=${encodeURIComponent(slug)}&fields=*,portada.*,imagenes.directus_files_id.*,videos.directus_files_id.*&limit=1`,
       {
         next: {
@@ -104,14 +84,8 @@ export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
           revalidate: false, // Cache hasta invalidación por webhook
         },
       },
+      { timeoutMs: 8000, retries: 1 },
     );
-
-    if (!response.ok) {
-      console.error('Error fetching news by slug:', response.statusText);
-      return null;
-    }
-
-    const { data: noticias } = await response.json();
     if (!noticias || noticias.length === 0) return null;
 
     const n = noticias[0];
@@ -150,7 +124,7 @@ export async function getRelatedNews(categoria: string, excludeSlug?: string) {
       filterQuery += `&filter[slug][_neq]=${encodeURIComponent(excludeSlug)}`;
     }
 
-    const response = await fetch(
+    const { data: noticias } = await safeFetchJson(
       `${DIRECTUS_URL}/items/noticias?${filterQuery}&fields=titulo,resumen,fecha,categoria,slug,portada.*&sort=-fecha&limit=2`,
       {
         next: {
@@ -158,14 +132,8 @@ export async function getRelatedNews(categoria: string, excludeSlug?: string) {
           revalidate: false, // Cache hasta invalidación por webhook
         },
       },
+      { timeoutMs: 8000, retries: 1 },
     );
-
-    if (!response.ok) {
-      console.error('Error fetching related news:', response.statusText);
-      return [];
-    }
-
-    const { data: noticias } = await response.json();
     return noticias || [];
   } catch (error) {
     console.error('Error in getRelatedNews:', error);
@@ -244,7 +212,7 @@ export async function getNewsCategories(): Promise<
   Array<{ id: number; nombre: string }>
 > {
   try {
-    const response = await fetch(
+    const { data: noticias } = await safeFetchJson(
       `${DIRECTUS_URL}/items/noticias?fields=categoria&limit=-1`,
       {
         next: {
@@ -252,14 +220,8 @@ export async function getNewsCategories(): Promise<
           revalidate: false, // Cache hasta invalidación por webhook
         },
       },
+      { timeoutMs: 8000, retries: 1 },
     );
-
-    if (!response.ok) {
-      console.error('Error fetching news categories:', response.statusText);
-      return [];
-    }
-
-    const { data: noticias } = await response.json();
     if (!noticias) return [];
 
     const categoriasUnicas = Array.from(
@@ -280,7 +242,7 @@ export async function getNewsCategories(): Promise<
 // 8. Noticias destacadas (fetch directo - estructura corregida)
 export async function getFeaturedNews(count: number = 3): Promise<NewsItem[]> {
   try {
-    const response = await fetch(
+    const { data: noticias } = await safeFetchJson(
       `${DIRECTUS_URL}/items/noticias?filter[esImportante][_eq]=true&fields=id,titulo,resumen,fecha,date_created,date_updated,categoria,esImportante,slug,portada.*&sort=-fecha,-id&limit=${count}`,
       {
         next: {
@@ -288,14 +250,8 @@ export async function getFeaturedNews(count: number = 3): Promise<NewsItem[]> {
           revalidate: false, // Cache hasta invalidación por webhook
         },
       },
+      { timeoutMs: 8000, retries: 1 },
     );
-
-    if (!response.ok) {
-      console.error('Error fetching featured news:', response.statusText);
-      return [];
-    }
-
-    const { data: noticias } = await response.json();
     if (!noticias) return [];
 
     return noticias.map((n: any) => ({
@@ -352,7 +308,7 @@ export async function fetchNewsPage(
     const offset = (page - 1) * pageSize;
 
     // Primero obtener el total para la paginación
-    const countResponse = await fetch(
+    const { data: countData } = await safeFetchJson(
       `${DIRECTUS_URL}/items/noticias?aggregate[count]=*`,
       {
         next: {
@@ -360,18 +316,13 @@ export async function fetchNewsPage(
           revalidate: false, // Cache hasta invalidación por webhook
         },
       },
+      { timeoutMs: 8000, retries: 1 },
     );
-
-    if (!countResponse.ok) {
-      throw new Error(`Error getting count: ${countResponse.status}`);
-    }
-
-    const { data: countData } = await countResponse.json();
     const totalItems = countData?.[0]?.count || 0;
     const totalPages = Math.ceil(totalItems / pageSize);
 
     // Obtener las noticias de la página
-    const response = await fetch(
+    const { data: noticias } = await safeFetchJson(
       `${DIRECTUS_URL}/items/noticias?fields=id,titulo,resumen,fecha,date_created,date_updated,categoria,esImportante,slug,portada.*&sort=-fecha,-id&limit=${pageSize}&offset=${offset}`,
       {
         next: {
@@ -379,16 +330,8 @@ export async function fetchNewsPage(
           revalidate: false, // Cache hasta invalidación por webhook
         },
       },
+      { timeoutMs: 8000, retries: 1 },
     );
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        return null;
-      }
-      throw new Error(`API Error: ${response.status}`);
-    }
-
-    const { data: noticias } = await response.json();
 
     const transformedData = noticias.map((n: any) => ({
       id: n.id,
@@ -437,6 +380,20 @@ export async function fetchNewsPage(
     };
   } catch (error) {
     console.error('Error fetching news page:', error);
-    return null;
+    return {
+      data: [],
+      pagination: {
+        currentPage: page,
+        totalPages: 1,
+        totalItems: 0,
+        pageSize,
+        hasNextPage: false,
+        hasPrevPage: page > 1,
+      },
+      meta: {
+        timestamp: new Date().toISOString(),
+        cached: false,
+      },
+    };
   }
 }

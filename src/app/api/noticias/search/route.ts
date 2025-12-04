@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connection } from 'next/server';
 import { DIRECTUS_URL } from '@/shared/lib/config';
 import { FALLBACK_IMAGE_NEWS } from '@/shared/lib/config';
+import { safeFetchJson } from '@/shared/lib/safe-fetch';
 
 interface SearchParams {
   q?: string;
@@ -205,27 +206,21 @@ export async function GET(request: NextRequest) {
     const page = parseInt(params.page || '1', 10);
     const pageSize = parseInt(params.pageSize || '6', 10);
 
-    // Realizar consulta a Directus con fetch
-    let fetchResponse: Response;
     let directusData: any;
 
     try {
-      fetchResponse = await fetch(directusUrl, {
-        headers: {
-          'Content-Type': 'application/json',
+      directusData = await safeFetchJson(
+        directusUrl,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          next: {
+            revalidate: 60,
+          },
         },
-        next: {
-          revalidate: 60, // Cache de 60 segundos
-        },
-      });
-
-      if (!fetchResponse.ok) {
-        throw new Error(
-          `Directus responded with ${fetchResponse.status}: ${fetchResponse.statusText}`,
-        );
-      }
-
-      directusData = await fetchResponse.json();
+        { timeoutMs: 8000, retries: 1 },
+      );
     } catch (directusError) {
       console.error('Error en consulta Directus:', directusError);
       return NextResponse.json(
