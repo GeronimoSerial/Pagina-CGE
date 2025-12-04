@@ -1,4 +1,4 @@
-import '../dashboard.css';
+import './dashboard.css';
 
 import { AppSidebar } from '@dashboard/components/app-sidebar';
 import { SiteHeader } from '@dashboard/components/site-header';
@@ -7,8 +7,6 @@ import { getCachedSession } from '@/shared/lib/auth/session-utils';
 import { redirect } from 'next/navigation';
 import { SessionProvider } from '@/features/dashboard/providers/session-provider';
 import { Suspense } from 'react';
-
-// Componente interno que maneja la sesión (dinámico)
 async function DashboardContent({ children }: { children: React.ReactNode }) {
   const session = await getCachedSession();
   if (!session) redirect('/login');

@@ -32,7 +32,7 @@ export default function Login() {
         {
           onSuccess: () => {
             setLoading(false);
-            router.push('/dashboard');
+            window.location.replace('/dashboard');
           },
           onError: (ctx) => {
             setError(ctx.error.message);
@@ -203,15 +203,6 @@ export default function Login() {
                 >
                   Recordarme
                 </label>
-              </div>
-
-              <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-medium text-emerald-600 hover:text-emerald-500 transition-colors"
-                >
-                  ¿Olvidó su contraseña?
-                </a>
               </div>
             </div>
 

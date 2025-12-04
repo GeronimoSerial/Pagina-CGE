@@ -28,19 +28,22 @@ import { Button } from '@/shared/ui/button';
 // Content is now dynamic by default - add "use cache" if caching is needed
 
 export async function generateStaticParams() {
-  try {
-    const noticias = await getAllNews();
-    return noticias
-      .filter(
-        (noticia: any) =>
-          typeof noticia.slug === 'string' && noticia.slug.length > 0,
-      )
-      .slice(0, 50)
-      .map((noticia: any) => ({ slug: noticia.slug }));
-  } catch (error) {
-    console.warn('Error generating static params for noticias:', error);
-    return [];
+  const noticias = await getAllNews();
+  const validNoticias = noticias
+    .filter(
+      (noticia: any) =>
+        typeof noticia.slug === 'string' && noticia.slug.length > 0,
+    )
+    .slice(0, 50)
+    .map((noticia: any) => ({ slug: noticia.slug }));
+  
+  // Cache Components requires at least one result from generateStaticParams
+  // If no noticias are returned, provide a placeholder that will 404 at runtime
+  if (validNoticias.length === 0) {
+    return [{ slug: '__placeholder__' }];
   }
+  
+  return validNoticias;
 }
 
 export async function generateMetadata({

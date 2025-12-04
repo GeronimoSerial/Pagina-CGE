@@ -3,45 +3,19 @@
     "target": "es5",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "@src/*": [
-        "src/*"
-      ],
-      "@components/*": [
-        "src/shared/components/*"
-      ],
-      "@hooks/*": [
-        "src/hooks/*"
-      ],
-      "@lib/*": [
-        "src/lib/*"
-      ],
-      "@interfaces/*": [
-        "src/interfaces/*"
-      ],
-      "@modules/*": [
-        "src/modules/*"
-      ],
-      "@types/*": [
-        "types/*"
-      ],
-      "@utils/*": [
-        "src/utils/*"
-      ],
-      "@dashboard/*": [
-        "src/features/dashboard/*"
-      ],
-      "@prisma/client": [
-        "./prisma/generated"
-      ]
+      "@/*": ["src/*"],
+      "@src/*": ["src/*"],
+      "@components/*": ["src/shared/components/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@lib/*": ["src/lib/*"],
+      "@interfaces/*": ["src/interfaces/*"],
+      "@modules/*": ["src/modules/*"],
+      "@types/*": ["types/*"],
+      "@utils/*": ["src/utils/*"],
+      "@dashboard/*": ["src/features/dashboard/*"],
+      "@prisma/client": ["./prisma/generated"]
     },
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -67,7 +41,5 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

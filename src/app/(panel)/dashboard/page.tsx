@@ -3,8 +3,6 @@ import { connection } from 'next/server';
 import {
   getArgentinaDate,
   formatDateArg,
-  getFirstOfMonthArg,
-  getThirtyDaysAgoString,
   getFirstOfMonthString,
   getArgentinaDateString,
 } from '@dashboard/lib/utils';
@@ -24,9 +22,7 @@ export default async function Page() {
   const todayStr = getArgentinaDateString();
 
   // Cálculo de fechas usando strings estables
-  const thirtyDaysAgoStr = getThirtyDaysAgoString(todayStr);
   const firstOfMonthStr = getFirstOfMonthString(todayStr);
-  const firstOfMonth = getFirstOfMonthArg();
 
   // Para el gráfico, obtener los últimos 30 días
   const thirtyDaysAgo = getArgentinaDate();

@@ -1,7 +1,8 @@
-import '../index.css';
+import './index.css';
 import Footer from '@/shared/components/Footer';
 import { Lora, Inter } from 'next/font/google';
 import Header from '@/shared/components/Header';
+export { default as metadata } from './metadata';
 
 const inter = Inter({ subsets: ['latin'] });
 const lora = Lora({
