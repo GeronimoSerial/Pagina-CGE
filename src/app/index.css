@@ -62,7 +62,11 @@
   box-sizing: border-box;
 }
 
-*:not(svg):not([style*='position: absolute']):not([style*='position: fixed']) {
+*:not(svg):not([style*='position: absolute']):not(
+    [style*='position: fixed']
+  ):not(.page-container):not(.content-container):not(.wide-container):not(
+    .form-container
+  ) {
   max-width: 100%;
 }
 
