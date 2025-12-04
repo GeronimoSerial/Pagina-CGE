@@ -233,6 +233,7 @@ model localidad {
   id_departamento Int
   domicilio       domicilio[]
   departamento    departamento @relation(fields: [id_departamento], references: [id_departamento], onDelete: NoAction, onUpdate: NoAction, map: "fk_localidad_departamento")
+  escuela         escuela[]
 
   @@index([id_departamento], map: "idx_localidad_departamento")
   @@schema("geografia")
@@ -350,10 +351,12 @@ model escuela {
   id_ambito            Int?
   created_at           DateTime               @default(now()) @db.Timestamptz(6)
   updated_at           DateTime               @default(now()) @db.Timestamptz(6)
+  id_localidad         Int?
   ambito_escuela       ambito_escuela?        @relation(fields: [id_ambito], references: [id_ambito], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_ambito")
   escuela              escuela?               @relation("escuelaToescuela", fields: [cabecera_id], references: [id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_cabecera")
   other_escuela        escuela[]              @relation("escuelaToescuela")
   categoria            categoria              @relation(fields: [id_categoria], references: [id_categoria], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_categoria")
+  localidad            localidad?             @relation(fields: [id_localidad], references: [id_localidad], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_localidad")
   modalidad            modalidad              @relation(fields: [id_modalidad], references: [id_modalidad], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_modalidad")
   servicio_comida      servicio_comida        @relation(fields: [id_serv_comida], references: [id_serv_comida], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_servicio_comida")
   turno                turno                  @relation(fields: [id_turno], references: [id_turno], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_turno")
@@ -921,4 +924,49 @@ view v_whitelist_empleados {
   activo     Boolean?
 
   @@schema("huella")
+}
+
+view v_distribucion_zona_modalidad {
+  zona               String? @db.VarChar(100)
+  zona_codigo        String? @db.Char(1)
+  comun              BigInt?
+  especial           BigInt?
+  adultos            BigInt?
+  inicial            BigInt?
+  hospitalaria       BigInt?
+  contextos_encierro BigInt?
+  sin_modalidad      BigInt?
+  total              BigInt?
+
+  @@schema("institucional")
+}
+
+view v_escuela_completa {
+  id_escuela       Int?
+  cue              BigInt?
+  nombre           String?   @db.VarChar(100)
+  telefono         String?   @db.VarChar(20)
+  mail             String?   @db.VarChar(100)
+  fecha_fundacion  DateTime? @db.Date
+  anexo            String?   @db.Char(2)
+  modalidad        String?   @db.VarChar(100)
+  categoria        String?   @db.VarChar(100)
+  zona             String?   @db.VarChar(100)
+  zona_codigo      String?   @db.Char(1)
+  turno            String?   @db.VarChar(50)
+  servicio_comida  String?   @db.VarChar(50)
+  ambito           String?   @db.VarChar(20)
+  localidad        String?   @db.VarChar(50)
+  departamento     String?   @db.VarChar(50)
+  supervisor       String?
+  id_supervisor    Int?
+  tiene_modalidad  Boolean?
+  tiene_categoria  Boolean?
+  tiene_zona       Boolean?
+  tiene_localidad  Boolean?
+  tiene_supervisor Boolean?
+  created_at       DateTime? @db.Timestamptz(6)
+  updated_at       DateTime? @db.Timestamptz(6)
+
+  @@schema("institucional")
 }
