@@ -126,6 +126,11 @@ const baseData: {
           url: '/dashboard/escuelas/calidad',
           icon: IconShieldCheck,
         },
+        {
+          title: 'Sin información',
+          url: '/dashboard/escuelas/sin-informacion',
+          icon: IconAlertTriangle,
+        },
       ],
     },
     {

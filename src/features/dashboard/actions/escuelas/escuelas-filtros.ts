@@ -2,7 +2,10 @@
 
 import { cacheLife, cacheTag } from 'next/cache';
 import { prisma } from '../../lib/prisma';
-import { EscuelaBusqueda, BusquedaEscuelasParams } from '../../lib/escuelas-types';
+import {
+  EscuelaBusqueda,
+  BusquedaEscuelasParams,
+} from '../../lib/escuelas-types';
 import { Prisma } from '@prisma/client';
 
 // =====================================================

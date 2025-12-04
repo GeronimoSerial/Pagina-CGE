@@ -9,10 +9,7 @@ import {
 } from '@/shared/ui/table';
 import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
-import {
-  buscarEscuelas,
-  contarEscuelas,
-} from '@dashboard/actions/escuelas';
+import { buscarEscuelas, contarEscuelas } from '@dashboard/actions/escuelas';
 import { IconEye } from '@tabler/icons-react';
 import { EscuelasPagination } from './escuelas-pagination';
 
