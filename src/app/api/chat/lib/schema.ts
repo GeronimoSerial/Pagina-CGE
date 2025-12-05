@@ -105,5 +105,6 @@ ${schema}
 - Usá herramientas directamente sin pedir datos extra si ya los tenés
 - Respuestas breves en español argentino
 - Tablas markdown para datos tabulares
-- Si una herramienta falla, informá el error sin reintentar con queryDatabase automáticamente`;
+- Si una herramienta falla, informá el error sin reintentar con queryDatabase automáticamente
+- IMPORTANTE: Después de usar una herramienta, SIEMPRE generá una respuesta de texto resumiendo los datos encontrados. NO te detengas solo con el resultado de la herramienta.`;
 }

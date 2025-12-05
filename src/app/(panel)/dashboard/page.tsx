@@ -38,13 +38,13 @@ export default async function Page() {
 
       <hr className="my-2" />
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-6 lg:grid-cols-2">
         <div className="lg:col-span-2">
           <KeyMetricsGrid />
         </div>
         <div>
           <Suspense fallback={<CompactTableSkeleton columns={2} rows={3} />}>
-            <AlertsPanel />
+            {/* <AlertsPanel /> */}
           </Suspense>
         </div>
       </div>

@@ -95,6 +95,12 @@ const baseData: {
           icon: IconReportAnalytics,
           requiredRole: ['admin', 'owner'],
         },
+        {
+          title: 'Atención',
+          url: '/dashboard/atencion',
+          icon: IconAlertTriangle,
+          requiredRole: ['admin', 'owner'],
+        },
       ],
     },
     {
@@ -158,12 +164,6 @@ const baseData: {
     },
   ],
   navSecondary: [
-    {
-      title: 'Atención',
-      url: '/dashboard/atencion',
-      icon: IconAlertTriangle,
-      requiredRole: ['admin', 'owner'],
-    },
     {
       title: 'Configuración',
       url: '/dashboard/configuracion',
