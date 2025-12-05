@@ -7,7 +7,12 @@ import { tool } from 'ai';
 import { z } from 'zod';
 import { prisma } from '@/features/dashboard/lib/prisma';
 import { sanitizeSQL } from './sql-sanitizer';
-import { buildNameFilter, buildSchoolNameFilter } from './search-utils';
+import {
+  findSchoolId,
+  fuzzyFindLegajosByName,
+  fuzzyFindPersonByName,
+  fuzzyFindSchoolIds,
+} from './search-utils';
 
 /**
  * Raw SQL query tool - LAST RESORT
@@ -87,48 +92,116 @@ export const getEmployeeInfoTool = tool({
         };
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let whereClause: any = {};
-
       if (legajo) {
-        whereClause = { cod: legajo };
-      } else if (dni) {
-        whereClause = { dni: dni };
-      } else if (nombre) {
-        whereClause = buildNameFilter(nombre);
-      }
-
-      const employees = await prisma.legajo.findMany({
-        where: whereClause,
-        take: 10,
-      });
-
-      if (employees.length === 0) {
+        const employees = await prisma.legajo.findMany({
+          where: { cod: legajo },
+          take: 5,
+        });
+        if (employees.length === 0) {
+          return { error: `No se encontró empleado con legajo ${legajo}` };
+        }
         return {
-          error: legajo
-            ? `No se encontró empleado con legajo ${legajo}`
-            : dni
-              ? `No se encontró empleado con DNI ${dni}`
-              : `No se encontraron empleados con nombre "${nombre}"`,
+          success: true,
+          data: employees.map((emp) => ({
+            legajo: emp.cod,
+            nombre: emp.nombre,
+            area: emp.area,
+            turno: emp.turno,
+            estado: emp.estado,
+            dni: emp.dni,
+            email: emp.email,
+            fechaIngreso: emp.fecha_ingreso,
+          })),
+          totalEncontrados: employees.length,
         };
       }
 
-      const result = employees.map((emp) => ({
-        legajo: emp.cod,
-        nombre: emp.nombre,
-        area: emp.area,
-        turno: emp.turno,
-        estado: emp.estado,
-        dni: emp.dni,
-        email: emp.email,
-        fechaIngreso: emp.fecha_ingreso,
-      }));
+      if (dni) {
+        const employees = await prisma.legajo.findMany({
+          where: { dni },
+          take: 5,
+        });
+        if (employees.length === 0) {
+          return { error: `No se encontró empleado con DNI ${dni}` };
+        }
+        return {
+          success: true,
+          data: employees.map((emp) => ({
+            legajo: emp.cod,
+            nombre: emp.nombre,
+            area: emp.area,
+            turno: emp.turno,
+            estado: emp.estado,
+            dni: emp.dni,
+            email: emp.email,
+            fechaIngreso: emp.fecha_ingreso,
+          })),
+          totalEncontrados: employees.length,
+        };
+      }
 
-      return {
-        success: true,
-        data: employees.length === 1 ? result[0] : result,
-        totalEncontrados: employees.length,
-      };
+      // Fuzzy por nombre
+      if (nombre) {
+        const matches = await fuzzyFindLegajosByName(nombre, 10);
+        if (matches.length === 0) {
+          return {
+            error: `No se encontraron empleados con nombre similar a "${nombre}"`,
+          };
+        }
+
+        const best = matches[0];
+        const HIGH_CONFIDENCE = 0.8;
+        const MEDIUM_CONFIDENCE = 0.6;
+        const mapped = matches.map((m) => ({
+          legajo: m.item.cod,
+          nombre: m.item.nombre,
+          area: m.item.area,
+          turno: m.item.turno,
+          estado: m.item.estado,
+          dni: m.item.dni,
+          email: m.item.email,
+          fechaIngreso: m.item.fecha_ingreso,
+          score: m.score,
+        }));
+
+        if (best.score >= HIGH_CONFIDENCE || matches.length === 1) {
+          return {
+            success: true,
+            data: mapped[0],
+            totalEncontrados: matches.length,
+            fuzzy: { tipo: 'nombre', confianza: 'alta', score: best.score },
+          };
+        }
+
+        if (best.score >= MEDIUM_CONFIDENCE) {
+          return {
+            success: true,
+            data: mapped.slice(0, 3),
+            totalEncontrados: matches.length,
+            fuzzy: {
+              tipo: 'nombre',
+              confianza: 'media',
+              aclaracion: 'Varias coincidencias, confirma cuál querés.',
+              mejorLegajoSugerido: best.item.cod,
+            },
+          };
+        }
+
+        return {
+          success: true,
+          data: mapped.slice(0, 5),
+          totalEncontrados: matches.length,
+          fuzzy: {
+            tipo: 'nombre',
+            confianza: 'baja',
+            aclaracion:
+              'Coincidencia débil. Confirmá cuál de estos empleados es el correcto.',
+            mejorLegajoSugerido: best.item.cod,
+          },
+        };
+      }
+
+      return { error: 'Parámetros insuficientes' };
     } catch (error) {
       return {
         error: `Error: ${error instanceof Error ? error.message : 'Error desconocido'}`,
@@ -163,21 +236,34 @@ export const getAttendanceStatsTool = tool({
   execute: async ({ legajo, nombre, mes, anio }) => {
     try {
       let targetLegajo = legajo;
+      let matchScore: number | null = null;
 
       // Find employee by name if no legajo provided
       if (!targetLegajo && nombre) {
-        const whereClause = buildNameFilter(nombre);
-        const employee = await prisma.legajo.findFirst({
-          where: whereClause,
-        });
-
-        if (!employee) {
+        const matches = await fuzzyFindLegajosByName(nombre, 5);
+        if (matches.length === 0) {
           return {
             error: `No se encontró empleado con nombre "${nombre}"`,
           };
         }
 
-        targetLegajo = employee.cod;
+        const best = matches[0];
+        targetLegajo = best.item.cod;
+        matchScore = best.score;
+
+        // Si la coincidencia es débil, devolvemos advertencia pero continuamos
+        if (best.score < 0.55 && matches.length > 1) {
+          return {
+            success: true,
+            warning:
+              'Coincidencia débil, por favor confirma el empleado antes de usar los datos de asistencia.',
+            candidatos: matches.slice(0, 3).map((m) => ({
+              legajo: m.item.cod,
+              nombre: m.item.nombre,
+              score: m.score,
+            })),
+          };
+        }
       }
 
       if (!targetLegajo) {
@@ -256,6 +342,10 @@ export const getAttendanceStatsTool = tool({
               ? Math.round((diasConMarcas / diasLaborables) * 100)
               : 0,
         },
+        fuzzy:
+          matchScore !== null
+            ? { tipo: 'nombre', score: matchScore, aclaracion: 'Resolución de legajo por fuzzy' }
+            : undefined,
       };
     } catch (error) {
       return {
@@ -289,8 +379,12 @@ export const getSchoolInfoTool = tool({
       .describe(
         'Nombre de la localidad para filtrar escuelas. Ej: "Bella Vista"',
       ),
+    departamento: z
+      .string()
+      .optional()
+      .describe('Departamento para filtrar escuelas. Ej: "Goya", "Capital"'),
   }),
-  execute: async ({ cue, nombre, localidad }) => {
+  execute: async ({ cue, nombre, localidad, departamento }) => {
     try {
       if (!cue && !nombre && !localidad) {
         return {
@@ -362,88 +456,12 @@ export const getSchoolInfoTool = tool({
       }
 
       // 2. Fuzzy Search by Name and/or Localidad
-      let escuelasIds: number[] = [];
-
-      // Helper to clean search terms
-      const cleanTerm = (term: string) => term.trim().replace(/\s+/g, ' ');
-
-      if (nombre) {
-        const searchTerm = cleanTerm(nombre);
-        const localidadTerm = localidad ? cleanTerm(localidad) : null;
-
-        // Use pg_trgm for similarity search
-        // We order by similarity to the search term
-        // If localidad is provided, we filter by it (also fuzzy or exact)
-
-        let query = `
-          SELECT e.id_escuela, 
-                 similarity(e.nombre, $1) as sim_score
-          FROM institucional.escuela e
-        `;
-
-        const params: any[] = [searchTerm];
-        let paramIdx = 2;
-
-        if (localidadTerm) {
-          query += `
-            JOIN geografia.localidad l ON e.id_localidad = l.id_localidad
-            WHERE l.nombre ILIKE $${paramIdx}
-          `;
-          params.push(`%${localidadTerm}%`);
-          paramIdx++;
-        }
-
-        // Add similarity threshold and ordering
-        // If we didn't filter by localidad in WHERE, we add WHERE for similarity
-        if (!localidadTerm) {
-          query += ` WHERE e.nombre % $1 `; // % operator uses pg_trgm similarity threshold
-        } else {
-          query += ` AND e.nombre % $1 `;
-        }
-
-        query += ` ORDER BY sim_score DESC LIMIT 20`;
-
-        try {
-          // Set a lower threshold for this transaction if needed, but default 0.3 is usually fine.
-          // await prisma.$executeRawUnsafe(`SET pg_trgm.similarity_threshold = 0.1;`);
-
-          const results = await prisma.$queryRawUnsafe<
-            { id_escuela: number; sim_score: number }[]
-          >(query, ...params);
-          escuelasIds = results.map((r) => r.id_escuela);
-        } catch (e) {
-          console.error('Error in fuzzy search:', e);
-          // Fallback to simple ILIKE if pg_trgm fails or is not installed (though we checked)
-          const fallbackResults = await prisma.escuela.findMany({
-            where: {
-              nombre: { contains: searchTerm, mode: 'insensitive' },
-              ...(localidadTerm
-                ? {
-                    localidad: {
-                      nombre: { contains: localidadTerm, mode: 'insensitive' },
-                    },
-                  }
-                : {}),
-            },
-            select: { id_escuela: true },
-            take: 20,
-          });
-          escuelasIds = fallbackResults.map((r) => r.id_escuela);
-        }
-      } else if (localidad) {
-        // Only localidad provided
-        const localidadTerm = cleanTerm(localidad);
-        const results = await prisma.escuela.findMany({
-          where: {
-            localidad: {
-              nombre: { contains: localidadTerm, mode: 'insensitive' },
-            },
-          },
-          select: { id_escuela: true },
-          take: 20,
-        });
-        escuelasIds = results.map((r) => r.id_escuela);
-      }
+      const escuelasIds = await fuzzyFindSchoolIds(
+        nombre,
+        localidad,
+        departamento,
+        20,
+      );
 
       if (escuelasIds.length === 0) {
         return {
@@ -533,7 +551,6 @@ export const getSchoolInfoTool = tool({
 /**
  * All available tools for the chat API
  */
-import { findSchoolId } from './search-utils';
 
 /**
  * School Infrastructure Tool
@@ -647,19 +664,34 @@ export const getSupervisorInfoTool = tool({
       .string()
       .optional()
       .describe('Nombre de la escuela para buscar su supervisor'),
+    localidad: z
+      .string()
+      .optional()
+      .describe('Localidad/departamento de la escuela para desambiguar'),
+    departamento: z
+      .string()
+      .optional()
+      .describe('Departamento de la escuela para desambiguar'),
     supervisor_nombre: z
       .string()
       .optional()
       .describe('Nombre del supervisor para buscar sus escuelas'),
   }),
-  execute: async ({ escuela_nombre, supervisor_nombre }) => {
+  execute: async ({
+    escuela_nombre,
+    supervisor_nombre,
+    localidad,
+    departamento,
+  }) => {
     try {
       if (escuela_nombre) {
-        // Note: We didn't add departamento to this tool's input schema yet,
-        // but findSchoolId supports it.
-        // The user usually asks "who supervises School X", rarely "School X in Dept Y".
-        // But let's leave it simple for now unless requested.
-        const idEscuela = await findSchoolId(escuela_nombre);
+        // Si viene un supervisor_nombre junto con escuela_nombre, lo ignoramos (probable localidad).
+        const idEscuela = await findSchoolId(
+          escuela_nombre,
+          localidad,
+          undefined,
+          departamento,
+        );
         if (!idEscuela) return { error: 'No se encontró la escuela.' };
 
         const supervisor = await prisma.supervisor_escuela.findFirst({
@@ -690,28 +722,25 @@ export const getSupervisorInfoTool = tool({
       }
 
       if (supervisor_nombre) {
-        const personas = await prisma.persona.findMany({
-          where: {
-            OR: [
-              { nombre: { contains: supervisor_nombre, mode: 'insensitive' } },
-              {
-                apellido: { contains: supervisor_nombre, mode: 'insensitive' },
-              },
-            ],
-          },
-          take: 5,
-        });
+        const personas = await fuzzyFindPersonByName(supervisor_nombre, 5);
 
         if (personas.length === 0)
           return {
             error: `No se encontró ninguna persona con nombre "${supervisor_nombre}"`,
           };
-        if (personas.length > 1)
+        const best = personas[0];
+
+        if (personas.length > 1 && best.score < 0.65)
           return {
-            error: `Se encontraron varias personas, por favor sé más específico: ${personas.map((p) => p.nombre + ' ' + p.apellido).join(', ')}`,
+            error:
+              'Se encontraron varias personas, por favor sé más específico.',
+            candidatos: personas.slice(0, 3).map((p) => ({
+              nombre: `${p.item.nombre} ${p.item.apellido}`,
+              score: p.score,
+            })),
           };
 
-        const persona = personas[0];
+        const persona = best.item;
         const escuelasSupervisadas = await prisma.supervisor_escuela.findMany({
           where: { id_persona: persona.id_persona },
           include: {

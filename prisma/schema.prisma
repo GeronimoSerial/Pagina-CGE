@@ -76,6 +76,7 @@ model feriados {
   @@schema("huella")
 }
 
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model legajo {
   cod                                                          String                   @id
   nombre                                                       String?
@@ -204,6 +205,7 @@ model mv_refresh_log {
   @@schema("huella")
 }
 
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model departamento {
   id_departamento Int         @id(map: "pk_departamento") @default(autoincrement())
   nombre          String      @db.VarChar(50)
@@ -227,6 +229,7 @@ model domicilio {
   @@schema("geografia")
 }
 
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model localidad {
   id_localidad    Int          @id(map: "pk_localidad") @default(autoincrement())
   nombre          String       @db.VarChar(50)

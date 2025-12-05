@@ -3,6 +3,8 @@
  * Supports token-based search for names and special handling for school numbers
  */
 
+import { prisma } from '@/features/dashboard/lib/prisma';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PrismaWhereClause = any;
 
@@ -131,10 +133,169 @@ export function buildSchoolNameFilter(nombreInput: string): PrismaWhereClause {
 }
 
 /**
- * Finds a school ID using fuzzy search on name and optional locality
- * Uses pg_trgm similarity if available, falls back to ILIKE
+ * Normalizes free-text for fuzzy search:
+ * - lowercases
+ * - strips diacritics
+ * - removes non-alphanumeric (keeps spaces)
+ * - collapses whitespace
  */
-import { prisma } from '@/features/dashboard/lib/prisma';
+export function normalizeText(input: string): string {
+  return input
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+type FuzzyMatch<T> = {
+  item: T;
+  score: number;
+};
+
+/**
+ * Generic fuzzy finder for legajos (empleados) usando pg_trgm + unaccent.
+ * Devuelve top N ordenados por score. Fallback a contains si falla.
+ */
+export async function fuzzyFindLegajosByName(
+  nombre: string,
+  limit = 5,
+): Promise<FuzzyMatch<{
+  cod: string;
+  nombre: string;
+  area: string | null;
+  turno: string | null;
+  estado: string | null;
+  dni: string | null;
+  email: string | null;
+  fecha_ingreso: Date | null;
+}>[]> {
+  const term = normalizeText(nombre);
+  if (!term) return [];
+
+  try {
+    const results = await prisma.$queryRawUnsafe<
+      {
+        cod: string;
+        nombre: string;
+        area: string | null;
+        turno: string | null;
+        estado: string | null;
+        dni: string | null;
+        email: string | null;
+        fecha_ingreso: Date | null;
+        score: number;
+      }[]
+    >(
+      `
+        SELECT 
+          cod, nombre, area, turno, estado, dni, email, fecha_ingreso,
+          word_similarity(public.immutable_unaccent(nombre), public.immutable_unaccent($1)) AS score
+        FROM huella.legajo
+        WHERE public.immutable_unaccent(nombre) % public.immutable_unaccent($1)
+        ORDER BY score DESC
+        LIMIT $2
+      `,
+      term,
+      limit,
+    );
+
+    return results.map((r) => ({ item: r, score: r.score }));
+  } catch (error) {
+    console.error('Error in fuzzyFindLegajosByName, falling back:', error);
+    const tokens = term.split(' ').filter(Boolean);
+    const whereClause =
+      tokens.length === 1
+        ? {
+            nombre: { contains: tokens[0], mode: 'insensitive' as const },
+          }
+        : {
+            AND: tokens.map((token) => ({
+              nombre: { contains: token, mode: 'insensitive' as const },
+            })),
+          };
+
+    const fallback = await prisma.legajo.findMany({
+      where: whereClause,
+      take: limit,
+      select: {
+        cod: true,
+        nombre: true,
+        area: true,
+        turno: true,
+        estado: true,
+        dni: true,
+        email: true,
+        fecha_ingreso: true,
+      },
+    });
+
+    return fallback.map((item) => ({ item, score: 0.5 }));
+  }
+}
+
+/**
+ * Fuzzy finder para personas (rrhh.persona), usado en supervisores.
+ */
+export async function fuzzyFindPersonByName(
+  nombre: string,
+  limit = 5,
+): Promise<
+  FuzzyMatch<{
+    id_persona: number;
+    nombre: string;
+    apellido: string;
+    telefono: string | null;
+    mail: string | null;
+  }>[]
+> {
+  const term = normalizeText(nombre);
+  if (!term) return [];
+
+  try {
+    const results = await prisma.$queryRawUnsafe<
+      {
+        id_persona: number;
+        nombre: string;
+        apellido: string;
+        telefono: string | null;
+        mail: string | null;
+        score: number;
+      }[]
+    >(
+      `
+        SELECT 
+          id_persona, nombre, apellido, telefono, mail,
+          word_similarity(public.immutable_unaccent(nombre || ' ' || apellido), public.immutable_unaccent($1)) AS score
+        FROM rrhh.persona
+        WHERE public.immutable_unaccent(nombre || ' ' || apellido) % public.immutable_unaccent($1)
+        ORDER BY score DESC
+        LIMIT $2
+      `,
+      term,
+      limit,
+    );
+
+    return results.map((r) => ({ item: r, score: r.score }));
+  } catch (error) {
+    console.error('Error in fuzzyFindPersonByName, falling back:', error);
+    const tokens = term.split(' ').filter(Boolean);
+    const fallback = await prisma.persona.findMany({
+      where: {
+        AND: tokens.map((token) => ({
+          OR: [
+            { nombre: { contains: token, mode: 'insensitive' as const } },
+            { apellido: { contains: token, mode: 'insensitive' as const } },
+          ],
+        })),
+      },
+      take: limit,
+    });
+
+    return fallback.map((item) => ({ item, score: 0.5 }));
+  }
+}
 
 export async function findSchoolId(
   nombre?: string,
@@ -156,13 +317,15 @@ export async function findSchoolId(
   let escuelasIds: number[] = [];
 
   if (nombre) {
-    const searchTerm = cleanTerm(nombre);
-    const localidadTerm = localidad ? cleanTerm(localidad) : null;
-    const departamentoTerm = departamento ? cleanTerm(departamento) : null;
+    const searchTerm = normalizeText(cleanTerm(nombre));
+    const localidadTerm = localidad ? normalizeText(cleanTerm(localidad)) : null;
+    const departamentoTerm = departamento
+      ? normalizeText(cleanTerm(departamento))
+      : null;
 
     let query = `
-      SELECT e.id_escuela, 
-             similarity(e.nombre, $1) as sim_score
+      SELECT e.id_escuela,
+             word_similarity(public.immutable_unaccent(e.nombre), public.immutable_unaccent($1)) as sim_score
       FROM institucional.escuela e
     `;
 
@@ -172,9 +335,9 @@ export async function findSchoolId(
     if (localidadTerm) {
       query += `
         JOIN geografia.localidad l ON e.id_localidad = l.id_localidad
-        WHERE l.nombre ILIKE $${paramIdx}
+        WHERE public.immutable_unaccent(l.nombre) ILIKE '%' || public.immutable_unaccent($${paramIdx}) || '%'
       `;
-      params.push(`%${localidadTerm}%`);
+      params.push(localidadTerm);
       paramIdx++;
     } else if (departamentoTerm) {
       // If filtering by department but NOT locality
@@ -182,20 +345,18 @@ export async function findSchoolId(
       query += `
         JOIN geografia.localidad l ON e.id_localidad = l.id_localidad
         JOIN geografia.departamento d ON l.id_departamento = d.id_departamento
-        WHERE d.nombre ILIKE $${paramIdx}
+        WHERE public.immutable_unaccent(d.nombre) ILIKE '%' || public.immutable_unaccent($${paramIdx}) || '%'
       `;
-      params.push(`%${departamentoTerm}%`);
+      params.push(departamentoTerm);
       paramIdx++;
     }
 
-    // Add similarity condition
-    // If we added a WHERE clause above, we use AND, otherwise WHERE
     const hasWhere = localidadTerm || departamentoTerm;
 
     if (!hasWhere) {
-      query += ` WHERE e.nombre % $1 `;
+      query += ` WHERE public.immutable_unaccent(e.nombre) % public.immutable_unaccent($1) `;
     } else {
-      query += ` AND e.nombre % $1 `;
+      query += ` AND public.immutable_unaccent(e.nombre) % public.immutable_unaccent($1) `;
     }
 
     query += ` ORDER BY sim_score DESC LIMIT 1`;
@@ -271,4 +432,103 @@ export async function findSchoolId(
   }
 
   return null;
+}
+
+/**
+ * Devuelve una lista ordenada de IDs de escuela usando fuzzy search por nombre
+ * y opcionalmente filtrando por localidad/departamento.
+ */
+export async function fuzzyFindSchoolIds(
+  nombre?: string,
+  localidad?: string,
+  departamento?: string,
+  limit = 20,
+): Promise<number[]> {
+  if (!nombre && !localidad && !departamento) return [];
+
+  const cleanTerm = (term: string) => term.trim().replace(/\s+/g, ' ');
+  const searchTerm = nombre ? normalizeText(cleanTerm(nombre)) : null;
+  const localidadTerm = localidad ? normalizeText(cleanTerm(localidad)) : null;
+  const departamentoTerm = departamento
+    ? normalizeText(cleanTerm(departamento))
+    : null;
+
+  // When there is a name, use similarity ordering
+  if (searchTerm) {
+    let query = `
+      SELECT e.id_escuela,
+             word_similarity(public.immutable_unaccent(e.nombre), public.immutable_unaccent($1)) as sim_score
+      FROM institucional.escuela e
+    `;
+
+    const params: any[] = [searchTerm];
+    let paramIdx = 2;
+
+    if (localidadTerm) {
+      query += `
+        JOIN geografia.localidad l ON e.id_localidad = l.id_localidad
+        WHERE public.immutable_unaccent(l.nombre) ILIKE '%' || public.immutable_unaccent($${paramIdx}) || '%'
+      `;
+      params.push(localidadTerm);
+      paramIdx++;
+    } else if (departamentoTerm) {
+      query += `
+        JOIN geografia.localidad l ON e.id_localidad = l.id_localidad
+        JOIN geografia.departamento d ON l.id_departamento = d.id_departamento
+        WHERE public.immutable_unaccent(d.nombre) ILIKE '%' || public.immutable_unaccent($${paramIdx}) || '%'
+      `;
+      params.push(departamentoTerm);
+      paramIdx++;
+    }
+
+    const hasWhere = localidadTerm || departamentoTerm;
+    if (!hasWhere) {
+      query += ` WHERE public.immutable_unaccent(e.nombre) % public.immutable_unaccent($1) `;
+    } else {
+      query += ` AND public.immutable_unaccent(e.nombre) % public.immutable_unaccent($1) `;
+    }
+
+    query += ` ORDER BY sim_score DESC LIMIT ${limit}`;
+
+    try {
+      const results = await prisma.$queryRawUnsafe<
+        { id_escuela: number; sim_score: number }[]
+      >(query, ...params);
+      return results.map((r) => r.id_escuela);
+    } catch (error) {
+      console.error('Error in fuzzyFindSchoolIds, falling back:', error);
+    }
+  }
+
+  // Fallback: location-only or query failed
+  const fallback = await prisma.escuela.findMany({
+    where: {
+      ...(searchTerm
+        ? { nombre: { contains: searchTerm, mode: 'insensitive' as const } }
+        : {}),
+      ...(localidadTerm
+        ? {
+            localidad: {
+              nombre: { contains: localidadTerm, mode: 'insensitive' as const },
+            },
+          }
+        : {}),
+      ...(departamentoTerm
+        ? {
+            localidad: {
+              departamento: {
+                nombre: {
+                  contains: departamentoTerm,
+                  mode: 'insensitive' as const,
+                },
+              },
+            },
+          }
+        : {}),
+    },
+    select: { id_escuela: true },
+    take: limit,
+  });
+
+  return fallback.map((r) => r.id_escuela);
 }
