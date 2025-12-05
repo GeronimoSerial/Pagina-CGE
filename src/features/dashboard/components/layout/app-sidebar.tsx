@@ -15,6 +15,7 @@ import {
   IconMap,
   IconShieldCheck,
   IconUserCheck,
+  IconSparkles,
   type Icon,
 } from '@tabler/icons-react';
 import * as React from 'react';
@@ -97,17 +98,17 @@ const baseData: {
       ],
     },
     {
-      title: 'Gestión Institucional',
+      title: 'Gestión Escolar',
       url: '#',
       icon: IconSchool,
       items: [
         {
-          title: 'Escuelas',
+          title: 'General',
           url: '/dashboard/escuelas',
           icon: IconDashboard,
         },
         {
-          title: 'Buscador',
+          title: 'Buscador de Escuelas',
           url: '/dashboard/escuelas/buscador',
           icon: IconUserSearch,
         },
@@ -149,6 +150,11 @@ const baseData: {
       title: 'Documentos',
       url: '/dashboard/documentos',
       icon: IconFileDescription,
+    },
+    {
+      title: 'Consultas con IA',
+      url: '/dashboard/consultas',
+      icon: IconSparkles,
     },
   ],
   navSecondary: [

@@ -47,7 +47,9 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  if (pathname.startsWith('/dashboard')) {
+  const noRenderPaths = ['/login', '/admin'];
+
+  if (noRenderPaths.some((path) => pathname.startsWith(path))) {
     return null;
   }
 

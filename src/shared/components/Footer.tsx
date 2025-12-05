@@ -8,12 +8,8 @@ import { MAIL_CONTACT, WHATSAPP_CONTACT } from '../lib/config';
 
 const Footer = () => {
   const path = usePathname();
-
-  if (
-    path.startsWith('/tramites') ||
-    path === '/noticias' ||
-    path.startsWith('/dashboard')
-  ) {
+  const noRenderPaths = ['/tramites', '/noticias', '/dashboard', '/login'];
+  if (noRenderPaths.some((p) => path.startsWith(p))) {
     return null;
   }
 

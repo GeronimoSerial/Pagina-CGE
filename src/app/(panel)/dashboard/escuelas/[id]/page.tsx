@@ -1,7 +1,15 @@
 import { notFound } from 'next/navigation';
 import { getEscuelaById } from '@dashboard/actions/escuelas';
-import { getRelevamientoCocina } from '@dashboard/actions/escuelas';
+import {
+  getRelevamientoCocina,
+  getInfraestructuraEscuela,
+  getPersonalEscuela,
+  getProblematicasEscuela,
+} from '@dashboard/actions/escuelas';
 import { RelevamientoCocinaSection } from '@dashboard/components/escuelas/relevamiento-cocina-section';
+import { InfraestructuraGeneralCard } from '@dashboard/components/escuelas/infraestructura-general-card';
+import { PersonalNoDocenteCard } from '@dashboard/components/escuelas/personal-no-docente-card';
+import { ProblematicasCard } from '@dashboard/components/escuelas/problematicas-card';
 import { Badge } from '@/shared/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { Button } from '@/shared/ui/button';
@@ -35,6 +43,9 @@ export default async function EscuelaDetallePage(props: PageProps) {
   if (!escuela) notFound();
 
   const relevamientosCocina = await getRelevamientoCocina(id);
+  const infraestructura = await getInfraestructuraEscuela(id);
+  const personal = await getPersonalEscuela(id);
+  const problematicas = await getProblematicasEscuela(id);
 
   const dataChecks = [
     { label: 'Modalidad', valid: escuela.tiene_modalidad },
@@ -123,14 +134,18 @@ export default async function EscuelaDetallePage(props: PageProps) {
               >
                 Ficha Técnica
               </TabsTrigger>
-              {relevamientosCocina.length > 0 && (
-                <TabsTrigger
-                  value="relevamiento"
-                  className="relative h-9 rounded-none border-b-2 border-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
-                >
-                  Infraestructura: Cocina
-                </TabsTrigger>
-              )}
+              <TabsTrigger
+                value="infraestructura"
+                className="relative h-9 rounded-none border-b-2 border-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+              >
+                Infraestructura
+              </TabsTrigger>
+              <TabsTrigger
+                value="problematicas"
+                className="relative h-9 rounded-none border-b-2 border-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+              >
+                Problemáticas
+              </TabsTrigger>
             </TabsList>
           </div>
 
@@ -251,6 +266,8 @@ export default async function EscuelaDetallePage(props: PageProps) {
                   </div>
                 </section>
 
+                <PersonalNoDocenteCard personal={personal} />
+
                 <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-950/20">
                   <div className="flex items-start gap-3">
                     <School className="mt-0.5 h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -270,10 +287,20 @@ export default async function EscuelaDetallePage(props: PageProps) {
           </TabsContent>
 
           <TabsContent
-            value="relevamiento"
+            value="infraestructura"
+            className="animate-in slide-in-from-bottom-2 duration-300 space-y-6"
+          >
+            <InfraestructuraGeneralCard infraestructura={infraestructura} />
+            {relevamientosCocina.length > 0 && (
+              <RelevamientoCocinaSection relevamientos={relevamientosCocina} />
+            )}
+          </TabsContent>
+
+          <TabsContent
+            value="problematicas"
             className="animate-in slide-in-from-bottom-2 duration-300"
           >
-            <RelevamientoCocinaSection relevamientos={relevamientosCocina} />
+            <ProblematicasCard problematicas={problematicas} />
           </TabsContent>
         </Tabs>
       </main>

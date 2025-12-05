@@ -6,6 +6,7 @@ import {
   EscuelaCompleta,
   EstadisticasSistema,
   DistribucionZonaModalidad,
+  InfraestructuraEscuela,
 } from '../../lib/escuelas-types';
 import { Prisma } from '@prisma/client';
 
@@ -260,4 +261,31 @@ export async function getDistribucionZonaModalidad(): Promise<
     sin_modalidad: Number(row.sin_modalidad),
     total: Number(row.total),
   }));
+}
+
+/**
+ * Obtiene la infraestructura de una escuela
+ */
+export async function getInfraestructuraEscuela(
+  id_escuela: number,
+): Promise<InfraestructuraEscuela | null> {
+  'use cache';
+  cacheLife('hours');
+  cacheTag('escuelas', `infraestructura-${id_escuela}`);
+
+  const result = await prisma.$queryRaw<InfraestructuraEscuela[]>`
+    SELECT 
+      id_escuela::integer,
+      cue::integer,
+      nombre,
+      zona,
+      edificio_propio,
+      tiene_empresa_limpieza,
+      comparte_edificio,
+      empresa_limpieza
+    FROM institucional.v_infraestructura_escuela
+    WHERE id_escuela = ${id_escuela}
+  `;
+
+  return result[0] || null;
 }

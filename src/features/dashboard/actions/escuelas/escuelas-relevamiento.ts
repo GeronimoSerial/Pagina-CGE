@@ -1,7 +1,12 @@
 'use server';
 
 import { prisma } from '../../lib/prisma';
-import { RelevamientoCocina } from '@dashboard/lib/escuelas-types';
+import {
+  RelevamientoCocina,
+  PersonalEscuela,
+  ProblematicaEscuela,
+  DistribucionProblematica,
+} from '@dashboard/lib/escuelas-types';
 
 /**
  * Obtiene los datos de relevamiento de cocina para una escuela
@@ -96,6 +101,95 @@ export const getEscuelasComedorStats = unstable_cache(
   ['dashboard-escuelas-comedor-stats'],
   {
     revalidate: 3600, // 1 hora
+    tags: ['dashboard-relevamiento'],
+  },
+);
+
+/**
+ * Obtiene el personal no docente de una escuela
+ */
+export const getPersonalEscuela = unstable_cache(
+  async (id_escuela: number): Promise<PersonalEscuela | null> => {
+    try {
+      const result = await prisma.$queryRaw<PersonalEscuela[]>`
+        SELECT 
+          id_escuela::integer,
+          cue::integer,
+          escuela,
+          administrativos::integer,
+          porteros::integer,
+          total_personal_no_docente::integer
+        FROM relevamiento.v_personal_escuela
+        WHERE id_escuela = ${id_escuela}
+      `;
+      return result[0] || null;
+    } catch (error) {
+      console.error('Error al obtener personal de escuela:', error);
+      return null;
+    }
+  },
+  ['dashboard-personal-escuela'],
+  {
+    revalidate: 3600,
+    tags: ['dashboard-relevamiento'],
+  },
+);
+
+/**
+ * Obtiene las problemáticas reportadas de una escuela
+ */
+export const getProblematicasEscuela = unstable_cache(
+  async (id_escuela: number): Promise<ProblematicaEscuela | null> => {
+    try {
+      const result = await prisma.$queryRaw<ProblematicaEscuela[]>`
+        SELECT 
+          id_escuela::integer,
+          cue::integer,
+          escuela,
+          zona,
+          dimensiones_problematicas,
+          cantidad_problematicas::integer
+        FROM relevamiento.v_problematicas_escuela
+        WHERE id_escuela = ${id_escuela}
+      `;
+      return result[0] || null;
+    } catch (error) {
+      console.error('Error al obtener problemáticas de escuela:', error);
+      return null;
+    }
+  },
+  ['dashboard-problematicas-escuela'],
+  {
+    revalidate: 3600,
+    tags: ['dashboard-relevamiento'],
+  },
+);
+
+/**
+ * Obtiene la distribución global de problemáticas
+ */
+export const getDistribucionProblematicas = unstable_cache(
+  async (): Promise<DistribucionProblematica[]> => {
+    'use cache';
+    try {
+      const result = await prisma.$queryRaw<DistribucionProblematica[]>`
+        SELECT 
+          dimension,
+          descripcion,
+          escuelas_afectadas::integer,
+          porcentaje_total::float
+        FROM relevamiento.v_distribucion_problematicas
+        ORDER BY escuelas_afectadas DESC
+      `;
+      return result;
+    } catch (error) {
+      console.error('Error al obtener distribución de problemáticas:', error);
+      return [];
+    }
+  },
+  ['dashboard-distribucion-problematicas'],
+  {
+    revalidate: 3600,
     tags: ['dashboard-relevamiento'],
   },
 );

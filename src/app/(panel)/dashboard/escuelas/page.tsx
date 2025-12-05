@@ -6,6 +6,7 @@ import {
   StatsCardsGridSkeleton,
   ChartSkeleton,
 } from '@dashboard/components/skeletons';
+import { DistribucionProblematicasChart } from '@/features/dashboard/components/charts/distribucion-problematicas-chart';
 
 export default async function EscuelasPage() {
   return (
@@ -23,13 +24,10 @@ export default async function EscuelasPage() {
       <Suspense fallback={<StatsCardsGridSkeleton />}>
         <RelevamientoGeneralStats />
       </Suspense>
-
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-        <div className="col-span-4">
-          <Suspense fallback={<ChartSkeleton height={400} />}>
-            <EscuelasDistributionChart />
-          </Suspense>
-        </div>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Suspense fallback={<ChartSkeleton height={400} />}>
+          <DistribucionProblematicasChart />
+        </Suspense>
       </div>
     </div>
   );

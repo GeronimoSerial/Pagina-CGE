@@ -15,8 +15,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/shared/ui/chart';
-import { Button } from '@/shared/ui/button';
-import { Download, Filter } from 'lucide-react';
 import { DistribucionZonaModalidad } from '@dashboard/lib/escuelas-types';
 
 interface EscuelasDistributionChartViewProps {

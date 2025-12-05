@@ -14,17 +14,14 @@ import { AlertsPanel } from '@dashboard/components/layout/alerts-panel';
 import { CompactTableSkeleton } from '@dashboard/components/skeletons';
 import { getCachedSession } from '@/shared/lib/auth/session-utils';
 export default async function Page() {
-  // Signal dynamic rendering before accessing current time
   await connection();
 
   const session = await getCachedSession();
   const nombre = session?.user?.name;
   const todayStr = getArgentinaDateString();
 
-  // Cálculo de fechas usando strings estables
   const firstOfMonthStr = getFirstOfMonthString(todayStr);
 
-  // Para el gráfico, obtener los últimos 30 días
   const thirtyDaysAgo = getArgentinaDate();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
   const chartStartDate = formatDateArg(thirtyDaysAgo);

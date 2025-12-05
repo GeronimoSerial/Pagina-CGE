@@ -294,3 +294,51 @@ export interface RelevamientoCocina {
   fecha: Date;
   datos: Record<string, any>; // JSONB field
 }
+
+/**
+ * Personal de escuela (vista v_personal_escuela)
+ */
+export interface PersonalEscuela {
+  id_escuela: number;
+  cue: number;
+  escuela: string;
+  administrativos: number;
+  porteros: number;
+  total_personal_no_docente: number;
+}
+
+/**
+ * Problemáticas de escuela (vista v_problematicas_escuela)
+ */
+export interface ProblematicaEscuela {
+  id_escuela: number;
+  cue: number;
+  escuela: string;
+  zona: string | null;
+  dimensiones_problematicas: string | null;
+  cantidad_problematicas: number;
+}
+
+/**
+ * Distribución de problemáticas (vista v_distribucion_problematicas)
+ */
+export interface DistribucionProblematica {
+  dimension: string;
+  descripcion: string | null;
+  escuelas_afectadas: number;
+  porcentaje_total: number;
+}
+
+/**
+ * Infraestructura de escuela (vista v_infraestructura_escuela)
+ */
+export interface InfraestructuraEscuela {
+  id_escuela: number;
+  cue: number;
+  nombre: string;
+  zona: string | null;
+  edificio_propio: boolean;
+  tiene_empresa_limpieza: boolean;
+  comparte_edificio: string;
+  empresa_limpieza: string | null;
+}

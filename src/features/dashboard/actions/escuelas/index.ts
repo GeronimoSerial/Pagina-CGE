@@ -20,6 +20,7 @@ export {
   getEscuelaById,
   getEstadisticasSistema,
   getDistribucionZonaModalidad,
+  getInfraestructuraEscuela,
 } from './escuelas-core';
 
 // Filtros - Helpers para búsqueda y filtrado
@@ -68,4 +69,4 @@ export {
 // Supervisores - Funciones relacionadas con supervisores
 
 // Relevamiento - Funciones de relevamiento
-export { getRelevamientoCocina } from './escuelas-relevamiento';
+export * from './escuelas-relevamiento';

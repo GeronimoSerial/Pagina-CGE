@@ -6,6 +6,8 @@ import {
 import { EscuelasPorDepartamentoChart } from '@dashboard/components/escuelas/geografia/escuelas-por-departamento-chart';
 import { EscuelasPorLocalidadTable } from '@dashboard/components/escuelas/geografia/escuelas-por-localidad-table';
 import { Skeleton } from '@/shared/ui/skeleton';
+import { ChartSkeleton } from '@/features/dashboard/components/skeletons';
+import { EscuelasDistributionChart } from '@/features/dashboard/components/escuelas/charts/escuelas-distribution-chart';
 
 export default async function EscuelasGeografiaPage() {
   const [porDepartamento, topLocalidades] = await Promise.all([
@@ -30,6 +32,10 @@ export default async function EscuelasGeografiaPage() {
           <EscuelasPorLocalidadTable data={topLocalidades} />
         </Suspense>
       </div>
+
+      <Suspense fallback={<ChartSkeleton height={400} />}>
+        <EscuelasDistributionChart />
+      </Suspense>
     </div>
   );
 }
