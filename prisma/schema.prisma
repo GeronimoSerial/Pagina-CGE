@@ -335,40 +335,45 @@ model director_escuela {
 
 /// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model escuela {
-  cue                  BigInt                 @unique(map: "uq_escuela_cue")
-  nombre               String                 @db.VarChar(100)
-  fecha_fundacion      DateTime?              @db.Date
-  telefono             String                 @db.VarChar(20)
-  mail                 String                 @unique(map: "uq_escuela_mail") @db.VarChar(100)
-  id_escuela           Int                    @id(map: "pk_escuela") @default(autoincrement())
-  cabecera_id          Int?
-  id_serv_comida       Int
-  id_categoria         Int
-  id_zona              Int
-  id_modalidad         Int
-  id_turno             Int
-  anexo                String?                @default("00") @db.Char(2)
-  id_ambito            Int?
-  created_at           DateTime               @default(now()) @db.Timestamptz(6)
-  updated_at           DateTime               @default(now()) @db.Timestamptz(6)
-  id_localidad         Int?
-  ambito_escuela       ambito_escuela?        @relation(fields: [id_ambito], references: [id_ambito], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_ambito")
-  escuela              escuela?               @relation("escuelaToescuela", fields: [cabecera_id], references: [id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_cabecera")
-  other_escuela        escuela[]              @relation("escuelaToescuela")
-  categoria            categoria              @relation(fields: [id_categoria], references: [id_categoria], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_categoria")
-  localidad            localidad?             @relation(fields: [id_localidad], references: [id_localidad], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_localidad")
-  modalidad            modalidad              @relation(fields: [id_modalidad], references: [id_modalidad], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_modalidad")
-  servicio_comida      servicio_comida        @relation(fields: [id_serv_comida], references: [id_serv_comida], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_servicio_comida")
-  turno                turno                  @relation(fields: [id_turno], references: [id_turno], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_turno")
-  zona                 zona                   @relation(fields: [id_zona], references: [id_zona], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_zona")
-  planilla_novedades   planilla_novedades[]
-  escuela_programa     escuela_programa[]
-  cocina               cocina[]
-  escuela_problematica escuela_problematica[]
-  matricula            matricula[]
-  personal             personal[]
-  supervisor_escuela   supervisor_escuela?
-  plaza                plaza[]
+  cue                     BigInt                    @unique(map: "uq_escuela_cue")
+  nombre                  String                    @db.VarChar(100)
+  fecha_fundacion         DateTime?                 @db.Date
+  telefono                String                    @db.VarChar(20)
+  mail                    String                    @unique(map: "uq_escuela_mail") @db.VarChar(100)
+  id_escuela              Int                       @id(map: "pk_escuela") @default(autoincrement())
+  cabecera_id             Int?
+  id_serv_comida          Int
+  id_categoria            Int
+  id_zona                 Int
+  id_modalidad            Int
+  id_turno                Int
+  anexo                   String?                   @default("00") @db.Char(2)
+  id_ambito               Int?
+  created_at              DateTime                  @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime                  @default(now()) @db.Timestamptz(6)
+  id_localidad            Int?
+  comparte_edificio       String?                   @db.VarChar(200)
+  edificio_propio         Boolean?
+  tiene_empresa_limpieza  Boolean?
+  obs_limpieza            String?                   @db.VarChar(300)
+  ambito_escuela          ambito_escuela?           @relation(fields: [id_ambito], references: [id_ambito], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_ambito")
+  escuela                 escuela?                  @relation("escuelaToescuela", fields: [cabecera_id], references: [id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_cabecera")
+  other_escuela           escuela[]                 @relation("escuelaToescuela")
+  categoria               categoria                 @relation(fields: [id_categoria], references: [id_categoria], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_categoria")
+  localidad               localidad?                @relation(fields: [id_localidad], references: [id_localidad], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_localidad")
+  modalidad               modalidad                 @relation(fields: [id_modalidad], references: [id_modalidad], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_modalidad")
+  servicio_comida         servicio_comida           @relation(fields: [id_serv_comida], references: [id_serv_comida], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_servicio_comida")
+  turno                   turno                     @relation(fields: [id_turno], references: [id_turno], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_turno")
+  zona                    zona                      @relation(fields: [id_zona], references: [id_zona], onDelete: NoAction, onUpdate: NoAction, map: "fk_escuela_zona")
+  escuela_servicio_comida escuela_servicio_comida[]
+  planilla_novedades      planilla_novedades[]
+  escuela_programa        escuela_programa[]
+  cocina                  cocina[]
+  escuela_problematica    escuela_problematica[]
+  matricula               matricula[]
+  personal                personal[]
+  supervisor_escuela      supervisor_escuela?
+  plaza                   plaza[]
 
   @@index([id_ambito], map: "idx_escuela_ambito")
   @@index([cabecera_id], map: "idx_escuela_cabecera")
@@ -414,9 +419,10 @@ model planilla_novedades {
 }
 
 model servicio_comida {
-  id_serv_comida Int       @id(map: "pk_servicio_comida") @default(autoincrement())
-  nombre         String    @db.VarChar(50)
-  escuela        escuela[]
+  id_serv_comida          Int                       @id(map: "pk_servicio_comida") @default(autoincrement())
+  nombre                  String                    @db.VarChar(50)
+  escuela                 escuela[]
+  escuela_servicio_comida escuela_servicio_comida[]
 
   @@schema("institucional")
 }
@@ -541,7 +547,7 @@ model personal_tipo {
 model problematica {
   id_problematica      Int                    @id(map: "pk_problematica") @default(autoincrement())
   dimension            String                 @db.VarChar(50)
-  descripcion          String?                @db.VarChar(50)
+  descripcion          String?                @db.VarChar(200)
   escuela_problematica escuela_problematica[]
 
   @@schema("relevamiento")
@@ -683,6 +689,16 @@ model cocina {
 
   @@index([id_escuela], map: "idx_cocina_escuela")
   @@schema("relevamiento")
+}
+
+model escuela_servicio_comida {
+  id_escuela      Int
+  id_serv_comida  Int
+  escuela         escuela         @relation(fields: [id_escuela], references: [id_escuela], onDelete: NoAction, onUpdate: NoAction, map: "fk_esc_serv_escuela")
+  servicio_comida servicio_comida @relation(fields: [id_serv_comida], references: [id_serv_comida], onDelete: NoAction, onUpdate: NoAction, map: "fk_esc_serv_servicio")
+
+  @@id([id_escuela, id_serv_comida], map: "pk_escuela_servicio_comida")
+  @@schema("institucional")
 }
 
 view v_marcaciones_unificadas {
@@ -981,6 +997,65 @@ view v_escuela_completa {
   tiene_supervisor Boolean?
   created_at       DateTime? @db.Timestamptz(6)
   updated_at       DateTime? @db.Timestamptz(6)
+
+  @@schema("institucional")
+}
+
+view v_personal_cocina {
+  escuelas_con_especialistas BigInt?
+  escuelas_sin_especialistas BigInt?
+  total                      BigInt?
+
+  @@schema("relevamiento")
+}
+
+view v_escuelas_con_comedor {
+  porcentaje_con_comedor Decimal? @db.Decimal
+  total_escuelas         BigInt?
+
+  @@schema("relevamiento")
+}
+
+view v_personal_escuela {
+  id_escuela                Int?
+  cue                       BigInt?
+  escuela                   String? @db.VarChar(100)
+  administrativos           Int?
+  porteros                  Int?
+  total_personal_no_docente Int?
+
+  @@schema("relevamiento")
+}
+
+view v_problematicas_escuela {
+  id_escuela                Int?
+  cue                       BigInt?
+  escuela                   String? @db.VarChar(100)
+  zona                      String? @db.VarChar(100)
+  dimensiones_problematicas String?
+  cantidad_problematicas    BigInt?
+
+  @@schema("relevamiento")
+}
+
+view v_distribucion_problematicas {
+  dimension          String?  @db.VarChar(50)
+  descripcion        String?  @db.VarChar(200)
+  escuelas_afectadas BigInt?
+  porcentaje_total   Decimal? @db.Decimal
+
+  @@schema("relevamiento")
+}
+
+view v_infraestructura_escuela {
+  id_escuela             Int?
+  cue                    BigInt?
+  nombre                 String?  @db.VarChar(100)
+  zona                   String?  @db.VarChar(100)
+  edificio_propio        Boolean?
+  tiene_empresa_limpieza Boolean?
+  comparte_edificio      String?  @db.VarChar
+  empresa_limpieza       String?  @db.VarChar(300)
 
   @@schema("institucional")
 }
