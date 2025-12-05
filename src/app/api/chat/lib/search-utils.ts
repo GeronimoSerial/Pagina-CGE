@@ -42,72 +42,233 @@ export function buildNameFilter(nombre: string): PrismaWhereClause {
  */
 export function buildSchoolNameFilter(nombreInput: string): PrismaWhereClause {
   const tokens = nombreInput.split(/\s+/).filter((t) => t.length > 0);
-  const hasNumber = tokens.some((t) => /^\d+$/.test(t));
 
-  // Single token
-  if (tokens.length === 1) {
-    const token = tokens[0];
+  // Extraer primer número que aparezca en el texto (ej: "Escuela N° 17 Juan XXIII")
+  const numberMatch = nombreInput.match(/\d+/);
+  const schoolNumber = numberMatch ? numberMatch[0] : null;
 
-    // If it's just a number, search for various formats
-    if (/^\d+$/.test(token)) {
-      return {
-        OR: [
-          { nombre: { contains: ` ${token}`, mode: 'insensitive' as const } },
-          { nombre: { contains: `N° ${token}`, mode: 'insensitive' as const } },
-          { nombre: { contains: `Nº ${token}`, mode: 'insensitive' as const } },
-          { nombre: { contains: `N°${token}`, mode: 'insensitive' as const } },
-          { nombre: { contains: `Nº${token}`, mode: 'insensitive' as const } },
-        ],
-      };
-    }
-
+  // Caso: solo un token
+  if (tokens.length === 1 && !schoolNumber) {
+    // Búsqueda simple por contains
     return {
       nombre: {
-        contains: token,
+        contains: tokens[0],
         mode: 'insensitive' as const,
       },
     };
   }
 
-  // Multiple tokens with number handling
-  if (hasNumber) {
-    const nonNumericTokens = tokens.filter((t) => !/^\d+$/.test(t));
-    const numericToken = tokens.find((t) => /^\d+$/.test(t));
+  // Condiciones por tokens de texto (no numéricos)
+  const nonNumericTokens = tokens.filter((t) => !/^\d+$/.test(t));
+  const textConditions = nonNumericTokens.map((token) => ({
+    nombre: {
+      contains: token,
+      mode: 'insensitive' as const,
+    },
+  }));
 
-    const conditions = nonNumericTokens.map((token) => ({
-      nombre: {
-        contains: token,
-        mode: 'insensitive' as const,
-      },
-    }));
-
-    // Add number search with OR for various formats
-    if (numericToken) {
-      conditions.push({
-        OR: [
-          {
-            nombre: { contains: ` ${numericToken}`, mode: 'insensitive' },
+  // Si hay número (ej: "17", "Escuela 17", "Escuela N° 17")
+  let numberCondition = {};
+  if (schoolNumber) {
+    numberCondition = {
+      OR: [
+        {
+          nombre: {
+            contains: ` ${schoolNumber}`,
+            mode: 'insensitive' as const,
           },
-          {
-            nombre: { contains: `N° ${numericToken}`, mode: 'insensitive' },
+        }, // "... 17"
+        {
+          nombre: {
+            contains: ` ${schoolNumber} `,
+            mode: 'insensitive' as const,
           },
-          {
-            nombre: { contains: `Nº ${numericToken}`, mode: 'insensitive' },
+        }, // " 17 "
+        {
+          nombre: {
+            contains: `N°${schoolNumber}`,
+            mode: 'insensitive' as const,
           },
-        ],
-      } as PrismaWhereClause);
-    }
-
-    return { AND: conditions };
+        }, // "N°17"
+        {
+          nombre: {
+            contains: `Nº${schoolNumber}`,
+            mode: 'insensitive' as const,
+          },
+        }, // "Nº17"
+        {
+          nombre: {
+            contains: `N° ${schoolNumber}`,
+            mode: 'insensitive' as const,
+          },
+        }, // "N° 17"
+        {
+          nombre: {
+            contains: `Nº ${schoolNumber}`,
+            mode: 'insensitive' as const,
+          },
+        }, // "Nº 17"
+      ],
+    };
   }
 
-  // Multiple tokens without numbers
+  // Si solo hay número y nada más (ej: nombre = "17")
+  if (schoolNumber && nonNumericTokens.length === 0) {
+    return numberCondition;
+  }
+
+  // Si hay texto + número, combinamos: todos los textos AND la condición numérica
+  if (schoolNumber) {
+    return {
+      AND: [...textConditions, numberCondition] as any,
+    };
+  }
+
+  // Caso genérico sin número: AND por tokens de texto
   return {
-    AND: tokens.map((token) => ({
-      nombre: {
-        contains: token,
-        mode: 'insensitive' as const,
-      },
-    })),
+    AND: textConditions,
   };
+}
+
+/**
+ * Finds a school ID using fuzzy search on name and optional locality
+ * Uses pg_trgm similarity if available, falls back to ILIKE
+ */
+import { prisma } from '@/features/dashboard/lib/prisma';
+
+export async function findSchoolId(
+  nombre?: string,
+  localidad?: string,
+  cue?: string,
+  departamento?: string,
+): Promise<number | null> {
+  if (cue) {
+    const escuela = await prisma.escuela.findUnique({
+      where: { cue: BigInt(cue) },
+      select: { id_escuela: true },
+    });
+    return escuela?.id_escuela || null;
+  }
+
+  if (!nombre && !localidad && !departamento) return null;
+
+  const cleanTerm = (term: string) => term.trim().replace(/\s+/g, ' ');
+  let escuelasIds: number[] = [];
+
+  if (nombre) {
+    const searchTerm = cleanTerm(nombre);
+    const localidadTerm = localidad ? cleanTerm(localidad) : null;
+    const departamentoTerm = departamento ? cleanTerm(departamento) : null;
+
+    let query = `
+      SELECT e.id_escuela, 
+             similarity(e.nombre, $1) as sim_score
+      FROM institucional.escuela e
+    `;
+
+    const params: any[] = [searchTerm];
+    let paramIdx = 2;
+
+    if (localidadTerm) {
+      query += `
+        JOIN geografia.localidad l ON e.id_localidad = l.id_localidad
+        WHERE l.nombre ILIKE $${paramIdx}
+      `;
+      params.push(`%${localidadTerm}%`);
+      paramIdx++;
+    } else if (departamentoTerm) {
+      // If filtering by department but NOT locality
+      // We need to join locality then department because escuela -> localidad -> departamento
+      query += `
+        JOIN geografia.localidad l ON e.id_localidad = l.id_localidad
+        JOIN geografia.departamento d ON l.id_departamento = d.id_departamento
+        WHERE d.nombre ILIKE $${paramIdx}
+      `;
+      params.push(`%${departamentoTerm}%`);
+      paramIdx++;
+    }
+
+    // Add similarity condition
+    // If we added a WHERE clause above, we use AND, otherwise WHERE
+    const hasWhere = localidadTerm || departamentoTerm;
+
+    if (!hasWhere) {
+      query += ` WHERE e.nombre % $1 `;
+    } else {
+      query += ` AND e.nombre % $1 `;
+    }
+
+    query += ` ORDER BY sim_score DESC LIMIT 1`;
+
+    try {
+      const results = await prisma.$queryRawUnsafe<
+        { id_escuela: number; sim_score: number }[]
+      >(query, ...params);
+      if (results.length > 0) return results[0].id_escuela;
+    } catch (e) {
+      console.error('Error in fuzzy search helper:', e);
+      // Fallback
+      const fallbackResults = await prisma.escuela.findMany({
+        where: {
+          nombre: { contains: searchTerm, mode: 'insensitive' },
+          ...(localidadTerm
+            ? {
+                localidad: {
+                  nombre: { contains: localidadTerm, mode: 'insensitive' },
+                },
+              }
+            : {}),
+          ...(departamentoTerm
+            ? {
+                localidad: {
+                  departamento: {
+                    nombre: { contains: departamentoTerm, mode: 'insensitive' },
+                  },
+                },
+              }
+            : {}),
+        },
+        select: { id_escuela: true },
+        take: 1,
+      });
+      if (fallbackResults.length > 0) return fallbackResults[0].id_escuela;
+    }
+  } else {
+    // No name provided, searching by location only
+    // This usually returns a list, but findSchoolId is designed to return ONE ID (the best match).
+    // If the user asks "schools in Capital", they probably want a list tool, not this helper.
+    // BUT, if this helper is used by a tool that expects a single school (like "infra of school in Capital"),
+    // it implies there's a name missing or implied.
+    // However, if we just return the first one, it might be random.
+    // Let's support it for consistency but it's weak without a name.
+
+    const localidadTerm = localidad ? cleanTerm(localidad) : null;
+    const departamentoTerm = departamento ? cleanTerm(departamento) : null;
+
+    const results = await prisma.escuela.findMany({
+      where: {
+        ...(localidadTerm
+          ? {
+              localidad: {
+                nombre: { contains: localidadTerm, mode: 'insensitive' },
+              },
+            }
+          : {}),
+        ...(departamentoTerm
+          ? {
+              localidad: {
+                departamento: {
+                  nombre: { contains: departamentoTerm, mode: 'insensitive' },
+                },
+              },
+            }
+          : {}),
+      },
+      select: { id_escuela: true },
+      take: 1,
+    });
+    if (results.length > 0) return results[0].id_escuela;
+  }
+
+  return null;
 }

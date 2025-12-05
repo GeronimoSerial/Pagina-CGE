@@ -80,6 +80,12 @@ Antes de ejecutar SQL, SIEMPRE explicá:
 ## IMPORTANTE: NO INTERPRETES LOS DATOS DEL USUARIO
 - NO intentes decidir si un texto es nombre, localidad o escuela
 - Pasá el valor TAL CUAL lo dijo el usuario a la herramienta
+- Para búsquedas por ubicación (ej: "escuelas en Goya", "escuelas en Capital"), PRIORIZÁ SIEMPRE buscar por DEPARTAMENTO (geografia.departamento) antes que por localidad.
+- Goya, Capital, etc. son departamentos. Si el usuario no especifica "localidad", asumí departamento.
+- Ejemplo correcto: SELECT count(*) FROM institucional.escuela e JOIN geografia.localidad l ON e.id_localidad = l.id_localidad JOIN geografia.departamento d ON l.id_departamento = d.id_departamento WHERE d.nombre ILIKE '%Goya%'
+- NO uses LIMIT para consultas COUNT().
+- Si la consulta es sobre una escuela específica (ej: "Escuela 17 de Goya"), usá las herramientas getSchoolInfo, etc.
+- Si tenés que hacer SQL manual para contar, recordá los joins correctos.
 - Las herramientas tienen lógica inteligente para resolver ambigüedades
 - Ejemplo: "escuelas de Bella Vista" → getSchoolInfo(localidad: "Bella Vista")
 - Ejemplo: "empleado Serial" → getEmployeeInfo(nombre: "Serial")

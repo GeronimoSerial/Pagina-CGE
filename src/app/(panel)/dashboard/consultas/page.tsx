@@ -6,5 +6,6 @@ export const metadata: Metadata = {
 };
 
 export default function ConsultasPage() {
+  
   return <ConsultasClientPage />;
 }

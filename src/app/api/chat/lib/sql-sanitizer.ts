@@ -56,8 +56,15 @@ export function sanitizeSQL(query: string): SanitizeResult {
     }
   }
 
-  // Check for heavy queries without LIMIT
+  // Check for heavy queries without LIMIT (excluding simple counts)
+  // We allow COUNT(*) even without WHERE as it's optimized in Postgres for many cases,
+  // and definitely needed for "total schools" queries.
+  const isCountQuery = /select\s+count\s*\(/i.test(trimmed);
+
   for (const pattern of HEAVY_QUERY_PATTERNS) {
+    // Skip heavy pattern check if it's a count query (unless it's a cross join which is always bad)
+    if (isCountQuery && !pattern.source.includes('cross')) continue;
+
     if (pattern.test(query) && !trimmed.includes('limit')) {
       return {
         safe: false,
@@ -66,11 +73,12 @@ export function sanitizeSQL(query: string): SanitizeResult {
     }
   }
 
-  // Ensure LIMIT exists (max 100)
-  if (!trimmed.includes('limit')) {
+  // Ensure LIMIT exists (max 100) UNLESS it's a count query
+  if (!trimmed.includes('limit') && !isCountQuery) {
     return {
       safe: false,
-      error: 'Debés incluir LIMIT en la consulta (máx 100).',
+      error:
+        'Debés incluir LIMIT en la consulta (máx 100), excepto para consultas COUNT().',
     };
   }
 
