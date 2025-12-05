@@ -1,27 +1,23 @@
-"use client"
-import React, { createContext, useContext } from "react"
+'use client';
+import React, { createContext, useContext } from 'react';
 
 type User = {
-    name: string;
-    email: string;
-    image?: string | null;
-    role?: string | null;
-}
+  name: string;
+  email: string;
+  image?: string | null;
+  role?: string | null;
+};
 
 type Session = {
-    user: User;
-    session: {
-        id: string,
-        expiresAt: Date,
-        ipAddress?: string | null;
-
-    };
-
+  user: User;
+  session: {
+    id: string;
+    expiresAt: Date;
+    ipAddress?: string | null;
+  };
 } | null;
 
-
 const SessionContext = createContext<Session>(null);
-
 
 export function SessionProvider({
   children,
@@ -37,17 +33,20 @@ export function SessionProvider({
   );
 }
 
-export function useSessionContext(){
-    return useContext(SessionContext);
+export function useSessionContext() {
+  return useContext(SessionContext);
 }
 
 export function useUser() {
-    const session = useSessionContext();
-    return session?.user;
+  const session = useSessionContext();
+  return session?.user;
+}
+export function useUserName() {
+  const session = useSessionContext();
+  return session?.user?.name;
 }
 
 export function useRole() {
-    const session = useSessionContext();
-    return session?.user?.role;
+  const session = useSessionContext();
+  return session?.user?.role;
 }
-

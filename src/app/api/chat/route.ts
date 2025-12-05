@@ -1,36 +1,45 @@
-import { openai } from '@ai-sdk/openai';
-import { streamText } from 'ai';
-import { z } from 'zod';
-import { prisma } from '@/features/dashboard/lib/prisma';
+import { streamText, UIMessage, convertToModelMessages } from 'ai';
+import { google } from '@ai-sdk/google';
 
-// Allow streaming responses up to 30 seconds
-export const maxDuration = 30;
+// Allow streaming responses up to 60 seconds
+export const maxDuration = 60;
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  // Extract the `messages` from the body of the request
+  const { messages }: { messages: UIMessage[] } = await req.json();
 
+  // Get a language model
+  const model = google('gemini-2.0-flash');
+
+  // Call the language model with the prompt
   const result = streamText({
-    model: openai('gpt-4-turbo'),
-    messages,
-    system: `You are a helpful assistant for the CGE (Consejo General de Educación) dashboard system. 
-    You can help users query information about schools (escuelas), employees (empleados), 
-    attendance (asistencia), supervision, and statistics (estadísticas).
-    
-   Always be clear, concise, and helpful in your responses.
-    Format data in a readable way using tables or bullet points when appropriate.
-    
-    Database schemas available:
-    - institucional: schools, employees, supervisors, departments
-    - asistencia: attendance records
-    - relevamiento: school surveys and data collection
-    
-    When discussing data, remember:
-    - CUE is the unique identifier for schools
-    - Legajo is the unique identifier for employees
-    - Provide context and explanations with any information you share
-    
-    You can query the database directly to get real-time information. Ask the user what they would like to know!`,
+    model,
+    system: `Sos un asistente de IA del panel de control del CGE (Consejo General de Educación) de Corrientes, Argentina.
+Ayudás a los usuarios a consultar información sobre escuelas, empleados, asistencia, supervisión y estadísticas del sistema educativo.
+
+Pautas de respuesta:
+- Sé claro, conciso y útil en tus respuestas
+- Respondé siempre en español argentino
+- Formateá los datos de manera legible usando listas o tablas markdown cuando sea apropiado
+- Si no tenés información específica, indicalo claramente
+
+Contexto del sistema:
+- CUE es el identificador único de escuelas
+- Legajo es el identificador único de empleados
+- El sistema maneja datos de asistencia biométrica (huella)
+- Las escuelas están organizadas por supervisión y departamento
+
+Esquemas de base de datos disponibles:
+- institucional: escuelas, empleados, supervisores, departamentos
+- huella (asistencia): registros de asistencia biométrica
+- relevamiento: encuestas y recolección de datos de escuelas
+
+Cuando discutas datos, proporcioná contexto y explicaciones junto con cualquier información que compartas.`,
+    messages: convertToModelMessages(messages),
+    temperature: 0.7,
+    topP: 1,
   });
 
-  return result.toTextStreamResponse();
+  // Respond with a streaming response
+  return result.toUIMessageStreamResponse();
 }
