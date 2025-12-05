@@ -3,6 +3,11 @@ import { getListaEmpleados } from '@dashboard/actions/actions';
 import { EmployeesTable } from '@dashboard/components/tables/employees-table';
 
 // MIGRATED: Using connection() to signal dynamic rendering
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Empleados | Dashboard CGE',
+};
 
 export default async function EmpleadosPage() {
   // Signal dynamic rendering

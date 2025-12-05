@@ -4,6 +4,11 @@ import { DateFilter } from '@dashboard/components/filters/date-filter';
 import { getAsistenciaDiaria } from '@dashboard/actions/actions';
 
 // MIGRATED: Using connection() to signal dynamic rendering before Date access
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Asistencia | Dashboard CGE',
+};
 
 function getDefaultRange() {
   const today = new Date();

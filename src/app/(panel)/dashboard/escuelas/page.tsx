@@ -7,6 +7,11 @@ import {
   ChartSkeleton,
 } from '@dashboard/components/skeletons';
 import { DistribucionProblematicasChart } from '@/features/dashboard/components/charts/distribucion-problematicas-chart';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Escuelas | Dashboard CGE',
+};
 
 export default async function EscuelasPage() {
   return (

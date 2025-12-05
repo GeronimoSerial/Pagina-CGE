@@ -166,6 +166,12 @@ async function SupervisionStats() {
   );
 }
 
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Supervisión | Dashboard CGE',
+};
+
 export default function SupervisionPage() {
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">

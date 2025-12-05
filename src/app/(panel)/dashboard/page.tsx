@@ -13,6 +13,12 @@ import { DetailedActivityPanel } from '@dashboard/components/layout/detailed-act
 import { AlertsPanel } from '@dashboard/components/layout/alerts-panel';
 import { CompactTableSkeleton } from '@dashboard/components/skeletons';
 import { getCachedSession } from '@/shared/lib/auth/session-utils';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Dashboard | CGE',
+};
+
 export default async function Page() {
   await connection();
 

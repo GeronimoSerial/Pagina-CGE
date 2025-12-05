@@ -8,6 +8,11 @@ import { LiquidationReportTable } from '@dashboard/components/tables/liquidation
 import { MonthSelector } from '@dashboard/components/filters/month-selector';
 import { IconReportAnalytics } from '@tabler/icons-react';
 import { translateMonthName } from '@dashboard/lib/utils';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Reportes | Dashboard CGE',
+};
 
 export default async function ReportesPage({
   searchParams,
