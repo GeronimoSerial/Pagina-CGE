@@ -16,7 +16,7 @@ export async function POST(req: Request) {
   // Log user input
   const lastMessage = messages[messages.length - 1];
   console.log('--- NEW CHAT REQUEST ---');
-  console.log('User Input:', lastMessage.content);
+  console.log('User Input:', lastMessage);
 
   const model = google('gemini-2.5-flash-lite');
   const schema = getSchema();

@@ -84,7 +84,7 @@ async function EscuelasSinInformacionTable() {
                   </TableCell>
                 </TableRow>
               ) : (
-                escuelas.map((escuela) => (
+                escuelas.map((escuela: any) => (
                   <TableRow
                     key={escuela.id_escuela}
                     className="hover:bg-muted/50 transition-colors"
@@ -97,7 +97,7 @@ async function EscuelasSinInformacionTable() {
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1.5">
-                        {escuela.faltantes.map((item) => (
+                        {escuela.faltantes.map((item: any) => (
                           <Badge
                             key={item}
                             variant="outline"
