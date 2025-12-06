@@ -12,6 +12,8 @@ import {
   fuzzyFindLegajosByName,
   fuzzyFindPersonByName,
   fuzzyFindSchoolIds,
+  normalizeText,
+  findBestDepartmentName,
 } from './search-utils';
 
 /**
@@ -775,6 +777,149 @@ export const getSupervisorInfoTool = tool({
 });
 
 /**
+ * Department Supervisor Tool
+ * Busca supervisores asociados a escuelas de un departamento (ej: "Capital", "Goya").
+ */
+export const getDepartmentSupervisorsTool = tool({
+  description:
+    'Busca supervisores de escuelas en un departamento. Úsalo cuando pregunten "quién es el supervisor de <departamento>". Devuelve supervisores y las escuelas que cubren en ese departamento.',
+  inputSchema: z.object({
+    departamento: z
+      .string()
+      .describe(
+        'Nombre del departamento (ej: "Goya", "Capital", "Bella Vista"). Se hace búsqueda difusa.',
+      ),
+  }),
+  execute: async ({ departamento }) => {
+    try {
+      const bestDept = await findBestDepartmentName(departamento);
+      if (!bestDept) {
+        return { error: 'Debés proporcionar un departamento' };
+      }
+
+      const supervisors = await prisma.supervisor_escuela.findMany({
+        where: {
+          escuela: {
+            localidad: {
+              departamento: {
+                nombre: { equals: bestDept, mode: 'insensitive' },
+              },
+            },
+          },
+        },
+        include: {
+          persona: true,
+          cargo: true,
+          autoridad: true,
+          escuela: {
+            include: {
+              localidad: {
+                include: { departamento: true },
+              },
+            },
+          },
+        },
+      });
+
+      if (supervisors.length === 0) {
+        return {
+          error: `No se encontraron supervisores para el departamento "${departamento}".`,
+        };
+      }
+
+      // Agrupar por persona para evitar duplicados si cubre varias escuelas
+      const byPersona = new Map<
+        number,
+        {
+          nombre: string;
+          telefono: string | null;
+          mail: string | null;
+          cargo: string | null;
+          autoridad: string | null;
+          escuelas: { nombre: string; cue: string; localidad?: string | null }[];
+        }
+      >();
+
+      for (const s of supervisors) {
+        const personaId = s.persona.id_persona;
+        if (!byPersona.has(personaId)) {
+          byPersona.set(personaId, {
+            nombre: `${s.persona.nombre} ${s.persona.apellido}`,
+            telefono: s.persona.telefono,
+            mail: s.persona.mail,
+            cargo: s.cargo?.descripcion || null,
+            autoridad: s.autoridad?.descripcion || null,
+            escuelas: [],
+          });
+        }
+        const entry = byPersona.get(personaId)!;
+        entry.escuelas.push({
+          nombre: s.escuela.nombre,
+          cue: s.escuela.cue.toString(),
+          localidad: s.escuela.localidad?.nombre,
+        });
+      }
+
+      return {
+        success: true,
+        departamento: bestDept,
+        supervisores: Array.from(byPersona.values()).map((s) => ({
+          ...s,
+          escuelas: s.escuelas.slice(0, 20), // limitar respuesta
+          totalEscuelas: s.escuelas.length,
+        })),
+        totalSupervisores: byPersona.size,
+      };
+    } catch (error) {
+      return {
+        error: `Error: ${error instanceof Error ? error.message : 'Error desconocido'}`,
+      };
+    }
+  },
+});
+
+/**
+ * School count by department tool
+ */
+export const getSchoolCountByDepartmentTool = tool({
+  description:
+    'Cuenta la cantidad de escuelas en un departamento (ej: "Capital", "Goya", "Paso de los Libres"). Usa búsqueda difusa para el nombre del departamento.',
+  inputSchema: z.object({
+    departamento: z.string().describe('Nombre del departamento a contar'),
+  }),
+  execute: async ({ departamento }) => {
+    try {
+      const bestDept = await findBestDepartmentName(departamento);
+      if (!bestDept) {
+        return {
+          error: `No se pudo reconocer el departamento "${departamento}".`,
+        };
+      }
+
+      const count = await prisma.escuela.count({
+        where: {
+          localidad: {
+            departamento: {
+              nombre: { equals: bestDept, mode: 'insensitive' },
+            },
+          },
+        },
+      });
+
+      return {
+        success: true,
+        departamento: bestDept,
+        totalEscuelas: count,
+      };
+    } catch (error) {
+      return {
+        error: `Error: ${error instanceof Error ? error.message : 'Error desconocido'}`,
+      };
+    }
+  },
+});
+
+/**
  * School Programs Tool
  */
 export const getSchoolProgramsTool = tool({
@@ -936,6 +1081,8 @@ export const chatTools = {
   getSchoolInfrastructure: getSchoolInfrastructureTool,
   getSchoolEnrollment: getSchoolEnrollmentTool,
   getSupervisorInfo: getSupervisorInfoTool,
+  getDepartmentSupervisors: getDepartmentSupervisorsTool,
+  getSchoolCountByDepartment: getSchoolCountByDepartmentTool,
   getSchoolPrograms: getSchoolProgramsTool,
   getSchoolKitchenSurvey: getSchoolKitchenSurveyTool,
   getSchoolProblematics: getSchoolProblematicsTool,

@@ -532,3 +532,41 @@ export async function fuzzyFindSchoolIds(
 
   return fallback.map((r) => r.id_escuela);
 }
+
+/**
+ * Devuelve el nombre normalizado de un departamento que coincida difusamente
+ * con el término provisto. Útil para resolver "Capital", "Paso de los Libres", etc.
+ */
+export async function findBestDepartmentName(
+  departamento: string,
+): Promise<string | null> {
+  const term = normalizeText(departamento);
+  if (!term) return null;
+
+  try {
+    const results = await prisma.$queryRawUnsafe<
+      { nombre: string; score: number }[]
+    >(
+      `
+        SELECT nombre,
+               word_similarity(public.immutable_unaccent(nombre), public.immutable_unaccent($1)) AS score
+        FROM geografia.departamento
+        WHERE public.immutable_unaccent(nombre) % public.immutable_unaccent($1)
+        ORDER BY score DESC
+        LIMIT 1
+      `,
+      term,
+    );
+    if (results.length > 0) {
+      return results[0].nombre;
+    }
+  } catch (error) {
+    console.error('Error in findBestDepartmentName:', error);
+  }
+
+  const fallback = await prisma.departamento.findFirst({
+    where: { nombre: { contains: term, mode: 'insensitive' as const } },
+    select: { nombre: true },
+  });
+  return fallback?.nombre || null;
+}
