@@ -137,7 +137,17 @@ npm run format             # Formateo Prettier
 
 ```bash
 NEXT_PUBLIC_DIRECTUS_URL= "directus link"
+FAIL_BUILD_ON_API_ERROR= "true|false"  # Por defecto: true en producción, false en desarrollo
 ```
+
+### FAIL_BUILD_ON_API_ERROR
+
+Esta variable controla el comportamiento del build cuando las llamadas a la API de Directus fallan durante la generación estática de páginas:
+
+- **`true` (por defecto en producción)**: El build falla si la API no está disponible o retorna errores (HTTP 502, timeouts, etc.). Esto previene que se despliegue un sitio con contenido incompleto o vacío.
+- **`false` (por defecto en desarrollo)**: El build continúa con datos vacíos o de respaldo. Útil para desarrollo local cuando el backend no está disponible.
+
+**Recomendación**: Mantener en `true` para builds de producción para garantizar que nunca se despliegue un sitio sin contenido.
 
 ---
 

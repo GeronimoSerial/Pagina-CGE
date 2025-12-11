@@ -38,6 +38,7 @@ jobs:
           NEXT_PUBLIC_STRAPI_URL: ${{ vars.NEXT_PUBLIC_STRAPI_URL }}
           NEXT_PUBLIC_PUBLIC_KEY: ${{ vars.NEXT_PUBLIC_PUBLIC_KEY }}
           NEXT_PUBLIC_TEMPLATE_ID: ${{ vars.NEXT_PUBLIC_TEMPLATE_ID }}
+          FAIL_BUILD_ON_API_ERROR: 'true'
         run: npm run build
 
       - name: Upload artifacts directly to VPS

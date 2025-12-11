@@ -1,4 +1,5 @@
 import { DIRECTUS_URL } from '@/shared/lib/config';
+import { handleBuildTimeError } from '@/shared/lib/build-time-error';
 
 export interface NavSection {
   id: string;
@@ -45,8 +46,7 @@ export async function getProceduresNavigation(): Promise<NavSection[]> {
     );
 
     if (!response.ok) {
-      console.error('Error fetching tramites navigation:', response.statusText);
-      return [];
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
     const { data: tramites } = await response.json();
@@ -74,8 +74,7 @@ export async function getProceduresNavigation(): Promise<NavSection[]> {
     });
     return sortedSections;
   } catch (error) {
-    console.error('Error in getProceduresNavigation:', error);
-    return [];
+    return handleBuildTimeError(error, 'fetch tramites navigation', []);
   }
 }
 
@@ -139,16 +138,14 @@ export async function getAllProcedureSlugs(): Promise<string[]> {
     );
 
     if (!response.ok) {
-      console.error('Error fetching tramites slugs:', response.statusText);
-      return [];
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
     const { data: tramites } = await response.json();
     if (!tramites) return [];
     return tramites.map((t: any) => t.slug);
   } catch (error) {
-    console.error('Error in getAllProcedureSlugs:', error);
-    return [];
+    return handleBuildTimeError(error, 'fetch tramites slugs', []);
   }
 }
 

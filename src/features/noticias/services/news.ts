@@ -3,6 +3,7 @@ import { NewsItem } from '@/shared/interfaces';
 import { cfImages } from '@/shared/lib/cloudflare-images';
 import { DIRECTUS_URL } from '@/shared/lib/config';
 import { safeFetchJson } from '@/shared/lib/safe-fetch';
+import { handleBuildTimeError } from '@/shared/lib/build-time-error';
 
 
 export async function getAllNews() {
@@ -19,8 +20,7 @@ export async function getAllNews() {
     );
     return noticias || [];
   } catch (error) {
-    console.error('Error in getAllNews:', error);
-    return [];
+    return handleBuildTimeError(error, 'fetch all news items', []);
   }
 }
 
