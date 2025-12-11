@@ -1,14 +1,29 @@
 import { FAIL_BUILD_ON_API_ERROR } from './config';
 
 /**
- * Handles errors during build-time data fetching.
- * In production (or when FAIL_BUILD_ON_API_ERROR=true), throws an error to fail the build.
- * In development (or when FAIL_BUILD_ON_API_ERROR=false), logs error and returns fallback.
+ * Handles errors during build-time static generation (e.g., in generateStaticParams()).
+ * This is specifically for BUILD TIME, not runtime API errors.
  * 
- * @param error - The caught error
- * @param context - Description of what failed (e.g., "fetch news slugs")
- * @param fallback - Value to return in development mode
- * @throws Error in production mode to fail the build
+ * Behavior:
+ * - Production (FAIL_BUILD_ON_API_ERROR=true): Throws error → Build fails → Deployment blocked
+ * - Development (FAIL_BUILD_ON_API_ERROR=false): Logs warning → Returns fallback → Build continues
+ * 
+ * @example
+ * ```typescript
+ * export async function getAllNews() {
+ *   try {
+ *     const response = await fetch('/api/news');
+ *     return await response.json();
+ *   } catch (error) {
+ *     return handleBuildTimeError(error, 'fetch all news items', []);
+ *   }
+ * }
+ * ```
+ * 
+ * @param error - The caught error from the API call
+ * @param context - Human-readable description of what failed (e.g., "fetch news slugs")
+ * @param fallback - Value to return in development mode when build continues
+ * @throws {Error} In production mode to fail the build with a descriptive message
  * @returns The fallback value in development mode
  */
 export function handleBuildTimeError<T>(
