@@ -21,7 +21,7 @@ import { FAIL_BUILD_ON_API_ERROR } from './config';
  * ```
  * 
  * @param error - The caught error from the API call
- * @param context - Human-readable description of what failed (e.g., "fetch news slugs")
+ * @param context - Verb phrase describing the action that failed (e.g., "fetch news slugs", "fetch tramites navigation"). Used to complete "Unable to {context}" in error messages.
  * @param fallback - Value to return in development mode when build continues
  * @throws {Error} In production mode to fail the build with a descriptive message
  * @returns The fallback value in development mode
