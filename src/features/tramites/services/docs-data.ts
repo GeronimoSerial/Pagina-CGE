@@ -1,4 +1,4 @@
-import { DIRECTUS_URL } from '@/shared/lib/config';
+import { DIRECTUS_URL, FAIL_BUILD_ON_API_ERROR } from '@/shared/lib/config';
 
 export interface NavSection {
   id: string;
@@ -45,7 +45,12 @@ export async function getProceduresNavigation(): Promise<NavSection[]> {
     );
 
     if (!response.ok) {
-      console.error('Error fetching tramites navigation:', response.statusText);
+      const errorMsg = `Error fetching tramites navigation: ${response.statusText}`;
+      console.error(errorMsg);
+      // During build time, fail if API is unavailable to prevent deploying incomplete site
+      if (FAIL_BUILD_ON_API_ERROR) {
+        throw new Error(errorMsg);
+      }
       return [];
     }
 
@@ -75,6 +80,12 @@ export async function getProceduresNavigation(): Promise<NavSection[]> {
     return sortedSections;
   } catch (error) {
     console.error('Error in getProceduresNavigation:', error);
+    // During build time, fail if API is unavailable to prevent deploying incomplete site
+    if (FAIL_BUILD_ON_API_ERROR) {
+      throw new Error(
+        `Failed to fetch tramites navigation for static generation: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
+    }
     return [];
   }
 }
@@ -139,7 +150,12 @@ export async function getAllProcedureSlugs(): Promise<string[]> {
     );
 
     if (!response.ok) {
-      console.error('Error fetching tramites slugs:', response.statusText);
+      const errorMsg = `Error fetching tramites slugs: ${response.statusText}`;
+      console.error(errorMsg);
+      // During build time, fail if API is unavailable to prevent deploying incomplete site
+      if (FAIL_BUILD_ON_API_ERROR) {
+        throw new Error(errorMsg);
+      }
       return [];
     }
 
@@ -148,6 +164,12 @@ export async function getAllProcedureSlugs(): Promise<string[]> {
     return tramites.map((t: any) => t.slug);
   } catch (error) {
     console.error('Error in getAllProcedureSlugs:', error);
+    // During build time, fail if API is unavailable to prevent deploying incomplete site
+    if (FAIL_BUILD_ON_API_ERROR) {
+      throw new Error(
+        `Failed to fetch tramites slugs for static generation: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
+    }
     return [];
   }
 }

@@ -9,3 +9,10 @@ export const MAIL_CONTACT =
   'mailto:cge@mec.gob.ar?subject=Consulta&body=Hola, me gustaría realizar una consulta...';
 export const WHATSAPP_CONTACT =
   'https://wa.me/5403794424264?text=Hola%2C%20me%20comunico%20con%20el%20Consejo%20para%20realizar%20una%20consulta.%20Agradecer%C3%ADa%20su%20orientaci%C3%B3n.%20Muchas%20gracias.';
+
+// Build-time configuration
+// When true, build will fail if critical API calls fail during static generation
+// When false, build continues with empty/fallback data (useful for local dev)
+export const FAIL_BUILD_ON_API_ERROR =
+  process.env.FAIL_BUILD_ON_API_ERROR === 'true' ||
+  process.env.NODE_ENV === 'production';
