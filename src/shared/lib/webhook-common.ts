@@ -134,7 +134,9 @@ export async function safeRevalidateWithLogger(
       if (type === 'path') {
         await revalidatePath(target);
       } else {
-        await revalidateTag(target);
+        // Next.js 16: revalidateTag now requires a profile parameter
+        // Using 'max' for background invalidation in Route Handlers
+        await revalidateTag(target, 'max');
       }
       const duration = Date.now() - startTime;
       logger.logOperation(type, target, duration, true, undefined, attempts);
