@@ -1,8 +1,9 @@
 import directus from '@/shared/lib/directus';
 import { NewsItem } from '@/shared/interfaces';
 import { cfImages } from '@/shared/lib/cloudflare-images';
-import { DIRECTUS_URL, FAIL_BUILD_ON_API_ERROR } from '@/shared/lib/config';
+import { DIRECTUS_URL } from '@/shared/lib/config';
 import { safeFetchJson } from '@/shared/lib/safe-fetch';
+import { handleBuildTimeError } from '@/shared/lib/build-time-error';
 
 
 export async function getAllNews() {
@@ -19,14 +20,7 @@ export async function getAllNews() {
     );
     return noticias || [];
   } catch (error) {
-    console.error('Error in getAllNews:', error);
-    // During build time, fail if API is unavailable to prevent deploying incomplete site
-    if (FAIL_BUILD_ON_API_ERROR) {
-      throw new Error(
-        `Failed to fetch news slugs for static generation: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
-    }
-    return [];
+    return handleBuildTimeError(error, 'fetch all news items', []);
   }
 }
 

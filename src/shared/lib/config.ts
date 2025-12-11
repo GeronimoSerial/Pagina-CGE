@@ -13,6 +13,11 @@ export const WHATSAPP_CONTACT =
 // Build-time configuration
 // When true, build will fail if critical API calls fail during static generation
 // When false, build continues with empty/fallback data (useful for local dev)
-export const FAIL_BUILD_ON_API_ERROR =
-  process.env.FAIL_BUILD_ON_API_ERROR === 'true' ||
-  process.env.NODE_ENV === 'production';
+// Priority: explicit env var > NODE_ENV=production > default false
+export const FAIL_BUILD_ON_API_ERROR = (() => {
+  const explicitValue = process.env.FAIL_BUILD_ON_API_ERROR;
+  if (explicitValue === 'true') return true;
+  if (explicitValue === 'false') return false;
+  // Default: fail in production, continue in development
+  return process.env.NODE_ENV === 'production';
+})();

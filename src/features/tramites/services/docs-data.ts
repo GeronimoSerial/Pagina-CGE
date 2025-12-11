@@ -1,4 +1,5 @@
-import { DIRECTUS_URL, FAIL_BUILD_ON_API_ERROR } from '@/shared/lib/config';
+import { DIRECTUS_URL } from '@/shared/lib/config';
+import { handleBuildTimeError } from '@/shared/lib/build-time-error';
 
 export interface NavSection {
   id: string;
@@ -45,13 +46,7 @@ export async function getProceduresNavigation(): Promise<NavSection[]> {
     );
 
     if (!response.ok) {
-      const errorMsg = `Error fetching tramites navigation: ${response.statusText}`;
-      console.error(errorMsg);
-      // During build time, fail if API is unavailable to prevent deploying incomplete site
-      if (FAIL_BUILD_ON_API_ERROR) {
-        throw new Error(errorMsg);
-      }
-      return [];
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
     const { data: tramites } = await response.json();
@@ -79,14 +74,7 @@ export async function getProceduresNavigation(): Promise<NavSection[]> {
     });
     return sortedSections;
   } catch (error) {
-    console.error('Error in getProceduresNavigation:', error);
-    // During build time, fail if API is unavailable to prevent deploying incomplete site
-    if (FAIL_BUILD_ON_API_ERROR) {
-      throw new Error(
-        `Failed to fetch tramites navigation for static generation: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
-    }
-    return [];
+    return handleBuildTimeError(error, 'fetch tramites navigation', []);
   }
 }
 
@@ -150,27 +138,14 @@ export async function getAllProcedureSlugs(): Promise<string[]> {
     );
 
     if (!response.ok) {
-      const errorMsg = `Error fetching tramites slugs: ${response.statusText}`;
-      console.error(errorMsg);
-      // During build time, fail if API is unavailable to prevent deploying incomplete site
-      if (FAIL_BUILD_ON_API_ERROR) {
-        throw new Error(errorMsg);
-      }
-      return [];
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
     const { data: tramites } = await response.json();
     if (!tramites) return [];
     return tramites.map((t: any) => t.slug);
   } catch (error) {
-    console.error('Error in getAllProcedureSlugs:', error);
-    // During build time, fail if API is unavailable to prevent deploying incomplete site
-    if (FAIL_BUILD_ON_API_ERROR) {
-      throw new Error(
-        `Failed to fetch tramites slugs for static generation: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
-    }
-    return [];
+    return handleBuildTimeError(error, 'fetch tramites slugs', []);
   }
 }
 
