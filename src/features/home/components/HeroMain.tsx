@@ -33,7 +33,7 @@ export default function HeroMain() {
             Consejo General de Educación
           </h1>
 
-          <p className="text-md md:text-xl text-gray-300 mb-8 font-medium text-balance">
+          <p className="text-md md:text-xl text-gray-300 mb-8 font-medium text-balance !max-w-2xl">
             Gestión y acompañamiento pedagógico integral en la educación
             inicial, primaria y de adultos de nuestra provincia.
           </p>
